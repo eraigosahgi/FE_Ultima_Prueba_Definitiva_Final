@@ -162,6 +162,25 @@ namespace HGInetUBLv2_1
 				empleador.DepartamentoEstado = empresa.DepartamentoEstado;
 				empleador.Pais = empresa.Pais;
 
+				//Se agrega por que no se esta haciendo validaciones y ahi es donde se llena, se requiere para la representacion grafica
+				try
+				{
+					ListaPaises list_paises = new ListaPaises();
+					ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(empleador.Pais)).FirstOrDefault();
+					empresa.PaisNombre = pais.Descripcion;
+
+					ListaMunicipio list_municipio = new ListaMunicipio();
+					ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(empleador.MunicipioCiudad)).FirstOrDefault();
+					empresa.CiudadNombre = municipio.Nombre;
+
+					ListaDepartamentos list_depart = new ListaDepartamentos();
+					ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(empleador.DepartamentoEstado)).FirstOrDefault();
+					empresa.DepartamentoNombre = departamento.Nombre;
+				}
+				catch (Exception)
+				{
+				}
+
 				return empleador;
 			}
 			catch (Exception excepcion)
@@ -204,6 +223,25 @@ namespace HGInetUBLv2_1
 				empleado.Sueldo = trabajador.Sueldo;
 				empleado.CodigoTrabajador = trabajador.CodigoTrabajador;
 
+				//Se agrega por que no se esta haciendo validaciones y ahi es donde se llena, se requiere para la representacion grafica
+				try
+				{
+					ListaPaises list_paises = new ListaPaises();
+					ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(trabajador.LugarTrabajoPais)).FirstOrDefault();
+					trabajador.PaisNombre = pais.Descripcion;
+
+					ListaMunicipio list_municipio = new ListaMunicipio();
+					ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(trabajador.LugarTrabajoMunicipioCiudad)).FirstOrDefault();
+					trabajador.CiudadNombre = municipio.Nombre;
+
+					ListaDepartamentos list_depart = new ListaDepartamentos();
+					ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(trabajador.LugarTrabajoDepartamentoEstado)).FirstOrDefault();
+					trabajador.DepartamentoNombre = departamento.Nombre;
+				}
+				catch (Exception)
+				{
+				}
+
 
 
 				return empleado;
@@ -244,6 +282,25 @@ namespace HGInetUBLv2_1
 				empleador.MunicipioCiudad = empresa.MunicipioCiudad;
 				empleador.DepartamentoEstado = empresa.DepartamentoEstado;
 				empleador.Pais = empresa.Pais;
+
+				//Se agrega por que no se esta haciendo validaciones y ahi es donde se llena, se requiere para la representacion grafica
+				try
+				{
+					ListaPaises list_paises = new ListaPaises();
+					ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(empleador.Pais)).FirstOrDefault();
+					empresa.PaisNombre = pais.Descripcion;
+
+					ListaMunicipio list_municipio = new ListaMunicipio();
+					ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(empleador.MunicipioCiudad)).FirstOrDefault();
+					empresa.CiudadNombre = municipio.Nombre;
+
+					ListaDepartamentos list_depart = new ListaDepartamentos();
+					ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(empleador.DepartamentoEstado)).FirstOrDefault();
+					empresa.DepartamentoNombre = departamento.Nombre;
+				}
+				catch (Exception)
+				{
+				}
 
 				return empleador;
 			}
