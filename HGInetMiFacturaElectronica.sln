@@ -357,6 +357,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso603306", "Caso603306", 
 		Documentacion\Liberaciones\Caso603306\Campo-IntValorPagar.txt = Documentacion\Liberaciones\Caso603306\Campo-IntValorPagar.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso612411", "Caso612411", "{A0BD85EF-B35A-42FC-BE77-B690F89F3467}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso612411\Campo IntInteroperabilidad-TblEmpresas.txt = Documentacion\Liberaciones\Caso612411\Campo IntInteroperabilidad-TblEmpresas.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -555,5 +560,6 @@ Global
 		{227A9F03-6B68-4526-A617-5AD89C6BAFC4} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{04725DF0-4044-4FAC-BDA5-728109147048} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{08B5CDFA-9AFD-4DAC-8E73-861A735D1282} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{A0BD85EF-B35A-42FC-BE77-B690F89F3467} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal

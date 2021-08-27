@@ -161,6 +161,7 @@
           <Property Name="IntPagosPermiteConsTodos" Type="bit" Nullable="false" />
           <Property Name="ComercioConfigId" Type="uniqueidentifier" />
           <Property Name="ComercioConfigDescrip" Type="varchar" MaxLength="150" />
+          <Property Name="IntInteroperabilidad" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -1431,6 +1432,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="ComercioConfigDescrip" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="TblPagosElectronicos" Relationship="Modelo.FK_TblPagosElectronicos_TblEmpresas" FromRole="TblEmpresas" ToRole="TblPagosElectronicos" />
           <NavigationProperty Name="TblPagosElectronicos1" Relationship="Modelo.FK_TblPagosElectronicos_TblEmpresas1" FromRole="TblEmpresas" ToRole="TblPagosElectronicos" />
+          <Property Name="IntInteroperabilidad" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -2022,6 +2024,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntInteroperabilidad" ColumnName="IntInteroperabilidad" />
                 <ScalarProperty Name="ComercioConfigDescrip" ColumnName="ComercioConfigDescrip" />
                 <ScalarProperty Name="ComercioConfigId" ColumnName="ComercioConfigId" />
                 <ScalarProperty Name="IntPagosPermiteConsTodos" ColumnName="IntPagosPermiteConsTodos" />
