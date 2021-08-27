@@ -178,6 +178,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public decimal BaseImpuestoIva { get; set; }
 
+		/// <summary>
+		/// Informacion relacionado con el tipo de Ingreso del Mandato: 0 - B/S ingreso propio, 1 - B/S Ingresos Recibidos para Terceros
+		/// </summary>
+		public string TipoIngresoMandato { get; set; }
+
 		#endregion
 
 

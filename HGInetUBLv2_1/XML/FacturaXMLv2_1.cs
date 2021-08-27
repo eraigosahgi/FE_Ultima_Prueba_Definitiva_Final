@@ -2206,11 +2206,20 @@ namespace HGInetUBLv2_1
 							Mandantario.PowerOfAttorney[0] = power;
 
 							Item.InformationContentProviderParty = Mandantario;
-
-							if (!identificiacion_Obligado.Equals(DocDet.DatosMandatario.Identificacion))
-								InvoiceLineType1.ID.schemeID = "1";
+							
+							//Se valida y si no estan enviando la propiedad se asigna
+							if (string.IsNullOrEmpty(DocDet.TipoIngresoMandato))
+							{
+								if (!identificiacion_Obligado.Equals(DocDet.DatosMandatario.Identificacion))
+									InvoiceLineType1.ID.schemeID = "1";
+								else
+									InvoiceLineType1.ID.schemeID = "0";
+							}
 							else
-								InvoiceLineType1.ID.schemeID = "0";
+							{
+								InvoiceLineType1.ID.schemeID = DocDet.TipoIngresoMandato.ToString();
+							}
+							
 						}
 
 
