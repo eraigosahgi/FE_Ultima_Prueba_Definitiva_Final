@@ -1,5 +1,6 @@
 ﻿using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBLv2_1.DianListas;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,10 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				string msg_custom = "Generacion de Empleador";
+
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -127,6 +132,10 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				string msg_custom = "Generacion de Trabajador";
+
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -185,6 +194,10 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				string msg_custom = "Generacion de Empleador en Reemplazo";
+
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -248,6 +261,10 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				string msg_custom = "Generacion de Trabajador en Reemplazo";
+
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
@@ -306,6 +323,10 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				string msg_custom = "Generacion de Empleador en Eliminacion";
+
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}

@@ -1,6 +1,7 @@
 ﻿using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -508,6 +509,10 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				string msg_custom = "Generacion de Devengados";
+
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
@@ -523,19 +528,25 @@ namespace HGInetUBLv2_1
 
 				NominaIndividualTypeDeducciones deduccion = new NominaIndividualTypeDeducciones();
 
-				deduccion.Salud = new NominaIndividualTypeDeduccionesSalud();
-				deduccion.Salud.Deduccion = deduccion_doc.Salud.Deduccion;
-				if (deduccion_doc.Salud.Porcentaje.Equals(4))
+				if (deduccion_doc.Salud != null)
 				{
-					deduccion.Salud.Porcentaje = deduccion_doc.Salud.Porcentaje;//25.00M;//
+					deduccion.Salud = new NominaIndividualTypeDeduccionesSalud();
+					deduccion.Salud.Deduccion = deduccion_doc.Salud.Deduccion;
+					if (deduccion_doc.Salud.Porcentaje.Equals(4))
+					{
+						deduccion.Salud.Porcentaje = deduccion_doc.Salud.Porcentaje;//25.00M;//
+					}
 				}
 				
-
-				deduccion.FondoPension = new NominaIndividualTypeDeduccionesFondoPension();
-				deduccion.FondoPension.Deduccion = deduccion_doc.Pension.Deduccion;
-				if (deduccion_doc.Pension.Porcentaje.Equals(4))
+				
+				if (deduccion_doc.Pension != null)
 				{
-					deduccion.FondoPension.Porcentaje = deduccion_doc.Pension.Porcentaje;//25.00M;//
+					deduccion.FondoPension = new NominaIndividualTypeDeduccionesFondoPension();
+					deduccion.FondoPension.Deduccion = deduccion_doc.Pension.Deduccion;
+					if (deduccion_doc.Pension.Porcentaje.Equals(4))
+					{
+						deduccion.FondoPension.Porcentaje = deduccion_doc.Pension.Porcentaje;//25.00M;//
+					}
 				}
 				
 
@@ -636,6 +647,10 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				string msg_custom = "Generacion de Deduccion";
+
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
@@ -1137,6 +1152,10 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				string msg_custom = "Generacion de Devengados en Reemplazo";
+
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
@@ -1265,6 +1284,10 @@ namespace HGInetUBLv2_1
 			}
 			catch (Exception excepcion)
 			{
+				string msg_custom = "Generacion de Deduccion en Reemplazo";
+
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 

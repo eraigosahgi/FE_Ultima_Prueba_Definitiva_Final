@@ -2,6 +2,7 @@
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,11 +27,12 @@ namespace HGInetUBLv2_1
 				//Obtiene el nombre del archivo XML
 				string nombre_archivo_xml = NombramientoArchivo.ObtenerXml(documento.Documento.ToString(), documento.DatosEmpleador.Identificacion, tipo, documento.Prefijo);
 
+				string msg_custom = string.Empty;
 
 				NominaIndividualType nomina = new NominaIndividualType();
 				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces(tipo);
 
-				//******validar esta variable
+				//******validar esta variable				
 				nomina.Novedad = new NominaIndividualTypeNovedad();
 				nomina.Novedad.Value = false;
 				nomina.Novedad.CUNENov = "";
@@ -39,43 +41,76 @@ namespace HGInetUBLv2_1
 				string numero_documento = "";
 				if (!string.IsNullOrEmpty(documento.Prefijo))
 					numero_documento = string.Format("{0}", documento.Prefijo);
+				try
+				{
 
-				numero_documento = string.Format("{0}{1}", numero_documento, documento.Documento.ToString());
-				nomina.NumeroSecuenciaXML = new NominaIndividualTypeNumeroSecuenciaXML();
-				nomina.NumeroSecuenciaXML.Numero = numero_documento;
-				nomina.NumeroSecuenciaXML.Prefijo = documento.Prefijo;
-				nomina.NumeroSecuenciaXML.Consecutivo = documento.Documento.ToString();
+					numero_documento = string.Format("{0}{1}", numero_documento, documento.Documento.ToString());
+					nomina.NumeroSecuenciaXML = new NominaIndividualTypeNumeroSecuenciaXML();
+					nomina.NumeroSecuenciaXML.Numero = numero_documento;
+					nomina.NumeroSecuenciaXML.Prefijo = documento.Prefijo;
+					nomina.NumeroSecuenciaXML.Consecutivo = documento.Documento.ToString();
 
-				nomina.NumeroSecuenciaXML.CodigoTrabajador = documento.DatosTrabajador.CodigoTrabajador;
+					nomina.NumeroSecuenciaXML.CodigoTrabajador = documento.DatosTrabajador.CodigoTrabajador;
+				}
+				catch (Exception excepcion)
+				{
+					msg_custom = "Generacion de Numeracion";
+
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
+					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				}
 
 				#endregion
 
-				nomina.Periodo = new NominaIndividualTypePeriodo();
-				nomina.Periodo.FechaGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_fecha_hginet));
-				nomina.Periodo.FechaIngreso = Convert.ToDateTime(documento.DatosPeriodo.FechaIngreso.ToString(Fecha.formato_fecha_hginet));
-				//***Llenar solo si hay retiro
-				nomina.Periodo.FechaRetiro = Convert.ToDateTime(documento.DatosPeriodo.FechaRetiro.ToString(Fecha.formato_fecha_hginet));
-				nomina.Periodo.FechaLiquidacionInicio = Convert.ToDateTime(documento.DatosPeriodo.FechaLiquidacionInicio.ToString(Fecha.formato_fecha_hginet));
-				nomina.Periodo.FechaLiquidacionFin = Convert.ToDateTime(documento.DatosPeriodo.FechaLiquidacionFin.ToString(Fecha.formato_fecha_hginet));
-				nomina.Periodo.FechaRetiroSpecified = false;
-				nomina.Periodo.TiempoLaborado = documento.DatosPeriodo.TiempoLaborado.ToString();
+				try
+				{
+					nomina.Periodo = new NominaIndividualTypePeriodo();
+					nomina.Periodo.FechaGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_fecha_hginet));
+					nomina.Periodo.FechaIngreso = Convert.ToDateTime(documento.DatosPeriodo.FechaIngreso.ToString(Fecha.formato_fecha_hginet));
+					//***Llenar solo si hay retiro
+					nomina.Periodo.FechaRetiro = Convert.ToDateTime(documento.DatosPeriodo.FechaRetiro.ToString(Fecha.formato_fecha_hginet));
+					nomina.Periodo.FechaLiquidacionInicio = Convert.ToDateTime(documento.DatosPeriodo.FechaLiquidacionInicio.ToString(Fecha.formato_fecha_hginet));
+					nomina.Periodo.FechaLiquidacionFin = Convert.ToDateTime(documento.DatosPeriodo.FechaLiquidacionFin.ToString(Fecha.formato_fecha_hginet));
+					nomina.Periodo.FechaRetiroSpecified = false;
+					nomina.Periodo.TiempoLaborado = documento.DatosPeriodo.TiempoLaborado.ToString();
+				}
+				catch (Exception excepcion)
+				{
+					msg_custom = "Generacion de Periodo";
 
-				nomina.LugarGeneracionXML = new NominaIndividualTypeLugarGeneracionXML();
-				nomina.LugarGeneracionXML.Idioma = "es";
-				nomina.LugarGeneracionXML.Pais = documento.DatosEmpleador.Pais;
-				nomina.LugarGeneracionXML.DepartamentoEstado = documento.DatosEmpleador.DepartamentoEstado;
-				nomina.LugarGeneracionXML.MunicipioCiudad = documento.DatosEmpleador.MunicipioCiudad;
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
 
-				nomina.InformacionGeneral = new NominaIndividualTypeInformacionGeneral();
-				nomina.InformacionGeneral.Ambiente = ambiente_dian;
-				nomina.InformacionGeneral.FechaGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_fecha_hginet));
-				nomina.InformacionGeneral.HoraGen = documento.FechaGen.ToString(Fecha.formato_hora_zona);
-				nomina.InformacionGeneral.PeriodoNomina = documento.PeriodoNomina.ToString();
-				nomina.InformacionGeneral.TipoMoneda = documento.Moneda;
-				nomina.InformacionGeneral.TipoXML = "102";
-				nomina.InformacionGeneral.Version = "V1.0: Documento Soporte de Pago de Nómina Electrónica";
-				if (!documento.Moneda.Equals("COP") && documento.Trm != null)
-					nomina.InformacionGeneral.TRM = documento.Trm.Valor;
+					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				}
+
+				try
+				{
+					nomina.LugarGeneracionXML = new NominaIndividualTypeLugarGeneracionXML();
+					nomina.LugarGeneracionXML.Idioma = "es";
+					nomina.LugarGeneracionXML.Pais = documento.DatosEmpleador.Pais;
+					nomina.LugarGeneracionXML.DepartamentoEstado = documento.DatosEmpleador.DepartamentoEstado;
+					nomina.LugarGeneracionXML.MunicipioCiudad = documento.DatosEmpleador.MunicipioCiudad;
+
+					nomina.InformacionGeneral = new NominaIndividualTypeInformacionGeneral();
+					nomina.InformacionGeneral.Ambiente = ambiente_dian;
+					nomina.InformacionGeneral.FechaGen = Convert.ToDateTime(documento.FechaGen.ToString(Fecha.formato_fecha_hginet));
+					nomina.InformacionGeneral.HoraGen = documento.FechaGen.ToString(Fecha.formato_hora_zona);
+					nomina.InformacionGeneral.PeriodoNomina = documento.PeriodoNomina.ToString();
+					nomina.InformacionGeneral.TipoMoneda = documento.Moneda;
+					nomina.InformacionGeneral.TipoXML = "102";
+					nomina.InformacionGeneral.Version = "V1.0: Documento Soporte de Pago de Nómina Electrónica";
+					if (!documento.Moneda.Equals("COP") && documento.Trm != null)
+						nomina.InformacionGeneral.TRM = documento.Trm.Valor;
+				}
+				catch (Exception excepcion)
+				{
+					msg_custom = "Generacion de Informacion General y Lugar";
+
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
+					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				}
 				
 				if (documento.Notas != null && documento.Notas.Count > 0)
 					nomina.Notas = documento.Notas.ToArray();
@@ -84,14 +119,26 @@ namespace HGInetUBLv2_1
 
 				nomina.Trabajador = ParticipantesNominaXML.ObtenerTrabajador(documento.DatosTrabajador);
 
-				nomina.Pago = new NominaIndividualTypePago();
-				nomina.Pago.Metodo = documento.DatosPago.Metodo.ToString();
-				nomina.Pago.Forma = documento.DatosPago.Forma.ToString();
-				nomina.Pago.NumeroCuenta = documento.DatosPago.NumeroCuenta;
-				nomina.Pago.TipoCuenta = documento.DatosPago.TipoCuenta;
-				nomina.Pago.Banco = documento.DatosPago.Banco;
+				try
+				{
+					nomina.Pago = new NominaIndividualTypePago();
+					nomina.Pago.Metodo = documento.DatosPago.Metodo.ToString();
+					nomina.Pago.Forma = documento.DatosPago.Forma.ToString();
+					nomina.Pago.NumeroCuenta = documento.DatosPago.NumeroCuenta;
+					nomina.Pago.TipoCuenta = documento.DatosPago.TipoCuenta;
+					nomina.Pago.Banco = documento.DatosPago.Banco;
+				}
+				catch (Exception excepcion)
+				{
+					msg_custom = "Generacion de Pago";
 
-				nomina.FechasPagos = documento.FechasPagos.ToArray();
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.escritura, msg_custom);
+
+					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				}
+
+				if (documento.FechasPagos != null)
+					nomina.FechasPagos = documento.FechasPagos.ToArray();
 
 				//Se valida si es practicante para llenar la novedad de apoyo sostenimiento
 				bool practicante = false;
