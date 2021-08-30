@@ -368,9 +368,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (string.IsNullOrEmpty(tercero.Direccion))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
 
-			if (!tercero.CodigoCiudad.Substring(0,2).Equals(tercero.CodigoDepartamento))
-				throw new ArgumentException(string.Format("El codigo del departamento {0} no coincide con el del municipio {1} según estandar DANE en el {2} ", tercero.CodigoDepartamento, tercero.CodigoCiudad, tipo));
-
 			//Se valida si envian una direccion fiscal diferente a la de entrega
 			if (tercero.DireccionFiscal != null)
 			{
@@ -502,8 +499,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					else
 						tercero.Departamento = departamento.Nombre;
 
+					if (!tercero.CodigoCiudad.Substring(0, 2).Equals(tercero.CodigoDepartamento))
+						throw new ArgumentException(string.Format("El codigo del departamento {0} no coincide con el del municipio {1} según estandar DANE en el {2} ", tercero.CodigoDepartamento, tercero.CodigoCiudad, tipo));
+
 					//if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
 					//	throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
+
 					ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
 					ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.CodigoPostal)).FirstOrDefault();
 					if (codpostal == null)

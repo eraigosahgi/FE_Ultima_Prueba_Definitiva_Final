@@ -35,7 +35,7 @@ namespace HGInetUBLv2_1
 					empleador.PrimerApellido = empresa.PrimerApellido;
 					empleador.SegundoApellido = empresa.SegundoApellido;
 					empleador.PrimerNombre = empresa.PrimerNombre;
-					empleador.OtrosNombres = empresa.OtrosNombres;
+					empleador.OtrosNombres = (string.IsNullOrWhiteSpace(empresa.OtrosNombres)) ? " " : empresa.OtrosNombres;
 				}
 				
 				empleador.Direccion = empresa.Direccion;
@@ -163,7 +163,7 @@ namespace HGInetUBLv2_1
 					empleador.PrimerApellido = empresa.PrimerApellido;
 					empleador.SegundoApellido = empresa.SegundoApellido;
 					empleador.PrimerNombre = empresa.PrimerNombre;
-					empleador.OtrosNombres = empresa.OtrosNombres;
+					empleador.OtrosNombres = (string.IsNullOrWhiteSpace(empresa.OtrosNombres)) ? " " : empresa.OtrosNombres;
 				}
 
 				empleador.Direccion = empresa.Direccion;
@@ -225,7 +225,7 @@ namespace HGInetUBLv2_1
 				empleado.PrimerApellido = trabajador.PrimerApellido;
 				empleado.SegundoApellido = trabajador.SegundoApellido;
 				empleado.PrimerNombre = trabajador.PrimerNombre;
-				empleado.OtrosNombres = trabajador.OtrosNombres;
+				empleado.OtrosNombres = (string.IsNullOrWhiteSpace(trabajador.OtrosNombres)) ? " " : trabajador.OtrosNombres;
 				empleado.LugarTrabajoPais = trabajador.LugarTrabajoPais;
 				empleado.LugarTrabajoDepartamentoEstado = trabajador.LugarTrabajoDepartamentoEstado;
 				empleado.LugarTrabajoMunicipioCiudad = trabajador.LugarTrabajoMunicipioCiudad;
@@ -292,7 +292,7 @@ namespace HGInetUBLv2_1
 					empleador.PrimerApellido = empresa.PrimerApellido;
 					empleador.SegundoApellido = empresa.SegundoApellido;
 					empleador.PrimerNombre = empresa.PrimerNombre;
-					empleador.OtrosNombres = empresa.OtrosNombres;
+					empleador.OtrosNombres = (string.IsNullOrWhiteSpace(empresa.OtrosNombres)) ? " " : empresa.OtrosNombres;
 				}
 
 				empleador.Direccion = empresa.Direccion;
