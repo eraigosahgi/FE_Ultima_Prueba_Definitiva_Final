@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="MQD6P/uqYN8Zqe1/3/nNe5lwoB0=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="VetyfgDUQ7TUESRxpYtxwgj87Cw=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="basicHttpBinding" name="soap10">
+    <bindingConfiguration bindingType="basicHttpBinding" name="soap19">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>soap10</serializedValue>
+          <serializedValue>soap19</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -110,10 +110,10 @@
         </property>
       </properties>
     </bindingConfiguration>
-    <bindingConfiguration bindingType="basicHttpBinding" name="soap18">
+    <bindingConfiguration bindingType="basicHttpBinding" name="soap110">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>soap18</serializedValue>
+          <serializedValue>soap110</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -221,7 +221,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="soap10" contract="ServicioResolucion.ServicioResolucion" bindingType="basicHttpBinding" address="http://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc" bindingConfiguration="soap10">
+    <endpoint name="soap19" contract="ServicioResolucion.ServicioResolucion" bindingType="basicHttpBinding" address="http://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc" bindingConfiguration="soap19">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>http://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc</serializedValue>
@@ -233,7 +233,7 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>soap10</serializedValue>
+          <serializedValue>soap19</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>ServicioResolucion.ServicioResolucion</serializedValue>
@@ -296,7 +296,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>soap10</serializedValue>
+          <serializedValue>soap19</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -306,7 +306,7 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="soap18" contract="ServicioResolucion.ServicioResolucion" bindingType="basicHttpBinding" address="https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc" bindingConfiguration="soap18">
+    <endpoint name="soap110" contract="ServicioResolucion.ServicioResolucion" bindingType="basicHttpBinding" address="https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc" bindingConfiguration="soap110">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>https://habilitacion.mifacturaenlinea.com.co/wcf/resolucion.svc</serializedValue>
@@ -318,7 +318,7 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>soap18</serializedValue>
+          <serializedValue>soap110</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>ServicioResolucion.ServicioResolucion</serializedValue>
@@ -381,7 +381,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>soap18</serializedValue>
+          <serializedValue>soap110</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

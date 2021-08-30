@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="HGInetFacturaElectronica.ServiciosWcf" elementFormDefault="qualified" targetNamespace="HGInetFacturaElectronica.ServiciosWcf" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" />
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" />
+  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
   <xs:element name="Test">
     <xs:complexType>
       <xs:sequence />
@@ -17,7 +17,7 @@
   <xs:element name="Recepcion">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" minOccurs="0" name="documentos" nillable="true" type="q1:ArrayOfNominaAjuste" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" minOccurs="0" name="documentos" nillable="true" type="q1:ArrayOfNomina" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

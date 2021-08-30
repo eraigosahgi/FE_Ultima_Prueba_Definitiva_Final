@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/Wcf/ajustenomina.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
-  <xs:complexType name="ArrayOfNominaAjuste">
+  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+  <xs:complexType name="ArrayOfNomina">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="NominaAjuste" nillable="true" type="tns:NominaAjuste" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Nomina" nillable="true" type="tns:Nomina" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfNominaAjuste" nillable="true" type="tns:ArrayOfNominaAjuste" />
-  <xs:complexType name="NominaAjuste">
+  <xs:element name="ArrayOfNomina" nillable="true" type="tns:ArrayOfNomina" />
+  <xs:complexType name="Nomina">
     <xs:sequence>
-      <xs:element minOccurs="0" name="CUNEPred" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CodigoRegistro" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ComprobanteTotal" type="xs:decimal" />
       <xs:element minOccurs="0" name="Cune" nillable="true" type="xs:string" />
@@ -27,22 +26,19 @@
       <xs:element minOccurs="0" name="Documento" type="xs:long" />
       <xs:element minOccurs="0" name="DocumentoFormato" nillable="true" type="tns:Formato" />
       <xs:element minOccurs="0" name="FechaGen" type="xs:dateTime" />
-      <xs:element minOccurs="0" name="FechaGenPred" type="xs:dateTime" />
       <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="FechasPagos" nillable="true" type="q1:ArrayOfdateTime" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />
       <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
       <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Notas" nillable="true" type="q2:ArrayOfstring" />
-      <xs:element minOccurs="0" name="NumeroPred" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="NumeroResolucion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="PeriodoNomina" type="xs:int" />
       <xs:element minOccurs="0" name="Prefijo" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="TipoDocPred" type="xs:int" />
-      <xs:element minOccurs="0" name="TipoNota" type="xs:int" />
       <xs:element minOccurs="0" name="Trm" nillable="true" type="tns:TasaCambio" />
+      <xs:element minOccurs="0" name="VariacionNomina" type="xs:boolean" />
       <xs:element minOccurs="0" name="VersionAplicativo" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="NominaAjuste" nillable="true" type="tns:NominaAjuste" />
+  <xs:element name="Nomina" nillable="true" type="tns:Nomina" />
   <xs:complexType name="Deducciones">
     <xs:sequence>
       <xs:element minOccurs="0" name="AFC" type="xs:decimal" />

@@ -2503,6 +2503,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private decimal ReteIcaValorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string TipoIngresoMandatoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UnidadCodigoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -2848,6 +2851,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.ReteIcaValorField.Equals(value) != true)) {
                     this.ReteIcaValorField = value;
                     this.RaisePropertyChanged("ReteIcaValor");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string TipoIngresoMandato {
+            get {
+                return this.TipoIngresoMandatoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TipoIngresoMandatoField, value) != true)) {
+                    this.TipoIngresoMandatoField = value;
+                    this.RaisePropertyChanged("TipoIngresoMandato");
                 }
             }
         }
