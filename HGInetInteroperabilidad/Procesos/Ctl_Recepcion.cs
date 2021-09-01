@@ -1347,6 +1347,25 @@ namespace HGInetInteroperabilidad.Procesos
 
 					respuesta = true;
 				}
+				else
+				{
+					RegistroLog.EscribirLog(new ApplicationException("El facturador no tiene habilitado el proceso de interoperabilidad"), MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, "El facturador no tiene habilitado el proceso de interoperabilidad");
+
+					//Si pasa algo envio notificacion a tic para validar por que no se proceso
+					List<string> mensajes = new List<string>();
+					mensajes.Add(string.Format("El facturador {0} no tiene habilitado el proceso de interoperabilidad", facturador_receptor.StrIdentificacion));
+					mensajes.Add("Por favor comunicarse con nuestra Area de Soporte para guiarlo en este proceso");
+
+					string correo_destino = string.Format("{0};soporte@hgi.com.co", facturador_receptor.StrMailAdmin);
+
+					try
+					{
+						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+						email.EnviaNotificacionAlertaDIAN(facturador_receptor.StrIdentificacion, attach_document.Documento.ToString(), mensajes, 1, false, correo_destino, 2);
+					}
+					catch (Exception)
+					{ }
+				}
 
 			}
 			catch (Exception excepcion)

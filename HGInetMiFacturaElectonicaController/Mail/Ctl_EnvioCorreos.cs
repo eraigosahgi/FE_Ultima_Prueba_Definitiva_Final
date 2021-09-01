@@ -3137,9 +3137,10 @@ namespace HGInetMiFacturaElectonicaController
 						{
 							destinatario.Nombre = "ADMINISTRACIÓN";
 							destinatario.Email = mail;
+							correos_destino.Add(destinatario);
 						}
 
-						correos_destino.Add(destinatario);
+						
 
 						// envía correo electrónico con copia de auditoría
 						List<DestinatarioEmail> correos_copia_oculta = null;
