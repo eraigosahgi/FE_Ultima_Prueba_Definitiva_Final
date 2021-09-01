@@ -312,6 +312,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				DatCertVence = Convert.ToDateTime(d.DatCertVence).ToString(Fecha.formato_fecha_hginet),
 				SerialCloudServices = d.StrSerialCloudServices,
 				Debug = d.IntDebug,
+				InterOp = d.IntInteroperabilidad,
 				d.IntPagosPermiteConsTodos,
 				d.ComercioConfigId,
 				d.ComercioConfigDescrip
@@ -394,6 +395,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(ObjEmpresa.StrEmpresaDescuento) ? ObjEmpresa.StrIdentificacion.Trim() : ObjEmpresa.StrEmpresaDescuento.Trim());
 				Empresa.StrSerialCloudServices = ObjEmpresa.StrSerialCloudServices;
 				Empresa.IntDebug = ObjEmpresa.IntDebug;
+				Empresa.IntInteroperabilidad = ObjEmpresa.IntInteroperabilidad;
 
 				#region Certificado
 				Empresa.IntCertFirma = ObjEmpresa.IntCertFirma;

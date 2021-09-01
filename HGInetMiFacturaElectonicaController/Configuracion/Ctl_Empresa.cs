@@ -487,6 +487,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntTimeout = empresa.IntTimeout;
 
 					EmpresaActualiza.IntDebug = empresa.IntDebug;
+					EmpresaActualiza.IntInteroperabilidad = empresa.IntInteroperabilidad;
 					EmpresaActualiza.StrSerialCloudServices = empresa.StrSerialCloudServices;
 
 					#region Certificado

@@ -35,6 +35,7 @@ Habilitacion = "",
 Datos_estado = "",
 Datos_postpago = 0,
 Datos_debug = 0,
+Datos_InterOp = 0,
 Datos_Email_Recepcion = "",
 Datos_Email_Acuse = "",
 Datos_Email_Envio = "",
@@ -651,6 +652,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				name: "debug",
 				onValueChanged: function (data) {
 					Datos_debug = (data.value == true) ? 1 : 0;
+				}
+			});
+
+			$("#Interoperabilidad").dxCheckBox({
+				name: "Interoperabilidad",
+				onValueChanged: function (data) {
+					Datos_InterOp = (data.value == true) ? 1 : 0;
 				}
 			});
 
@@ -1399,6 +1407,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			title: "Detalle:"
 		});
 
+		$("#tooltip_Interoper").dxPopover({
+			target: "#InterOp",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
 
 		$("#tooltip_EmpresaAsociada").dxPopover({
 			target: "#EmpresaAsociada",
@@ -1681,6 +1702,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 				Datos_Serial_Cloud = response.data[0].SerialCloudServices;
 				Datos_debug = response.data[0].Debug;
+				Datos_InterOp = response.data[0].InterOp;
 				//Comercio
 				Datos_ComercioConfigId = response.data[0].ComercioConfigId;
 				Datos_ComercioConfigDescrip = response.data[0].ComercioConfigDescrip;
@@ -1807,6 +1829,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 						}
 					} catch (e) { }
 
+
+					try {
+						if (Datos_InterOp == 1) {
+							$("#Interoperabilidad").dxCheckBox({ value: true });
+						}
+					} catch (e) { }
 
 					//Certificado
 					try {
@@ -1969,7 +1997,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				StrCertClave: Datos_ClaveCert,
 				DatCertVence: Datos_FechaCert,
 				StrSerialCloudServices: Datos_Serial_Cloud,
-				IntDebug: Datos_debug
+				IntDebug: Datos_debug,
+				IntInteroperabilidad : Datos_InterOp 
 			});
 			var tipo = Datos_Tipo;
 

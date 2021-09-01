@@ -4,12 +4,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Services/SrvResoluciones.js?vjs20201019"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs20201019"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20201019"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201019"></script>
-	<script src="../../Scripts/Pages/Empresas.js?vjs20201019"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20201019"></script>
+	<script src="../../Scripts/Services/SrvResoluciones.js?vjs20201020"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs20201020"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20201020"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201020"></script>
+	<script src="../../Scripts/Pages/Empresas.js?vjs20201020"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20201020"></script>
 
 	<div data-ng-app="EmpresasApp" data-ng-controller="GestionEmpresasController" class="col-md-12">
 		<div data-ng-include="'Partials/ModalResoluciones.html'"></div>
@@ -333,12 +333,23 @@
 									</div>
 								</div>
 
-								<div class="col-md-12  text-center" style="z-index: 9;">
-									<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Debug:</label>
-									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
-										<div id="debug"></div>
-										<div id="tooltip_debug">Indica si a la empresa se le puede hacer seguimiento de pruebas</div>
+								<div class="col-md-12">
+
+									<div class="col-md-6  text-center" style="z-index: 9;">
+										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Debug:</label>
+										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
+											<div id="debug"></div>
+											<div id="tooltip_debug">Indica si a la empresa se le puede hacer seguimiento de pruebas</div>
+										</div>
 									</div>
+									<div class="col-md-6  text-center" style="z-index: 9;">
+										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Interoperabilidad:</label>
+										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
+											<div id="Interoperabilidad"></div>
+											<div id="tooltip_Interoper">Indica si a la empresa procesa documentos Externos por Interoperabilidad</div>
+										</div>
+									</div>
+
 								</div>
 
 
