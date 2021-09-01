@@ -251,6 +251,10 @@
 																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{Habilitacion}}</td>
 																							</tr>
 																							<tr>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Habilitación Nómina:</td>
+																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{HabilitacionNom}}</td>
+																							</tr>
+																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">versión:</td>
 																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{Version}}</td>
 																							</tr>

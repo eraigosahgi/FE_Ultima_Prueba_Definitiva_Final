@@ -303,6 +303,7 @@ var EnumHabilitacion =
 [
 { ID: "0", Texto: 'Valida Objeto' },
 { ID: "1", Texto: 'Pruebas' },
+{ ID: "2", Texto: 'Recepción Dian y Set de pruebas aprobado' },
 { ID: "99", Texto: 'Producción' }
 ];
 
