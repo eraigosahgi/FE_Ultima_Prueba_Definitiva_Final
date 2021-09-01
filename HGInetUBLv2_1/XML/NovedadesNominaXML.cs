@@ -496,9 +496,17 @@ namespace HGInetUBLv2_1
 
 				devengado.Dotacion = devengados_doc.Dotacion;
 
-				if (practicante == true)
+				if (practicante == true && devengados_doc.ApoyoSostenimiento == 0)
 				{
+					devengado.ApoyoSostSpecified = true;
 					devengado.ApoyoSost = devengados_doc.SueldoTrabajado;
+					devengado.Basico.SueldoTrabajado = 0;
+				}
+				else if (devengados_doc.ApoyoSostenimiento > 0)
+				{
+					devengado.ApoyoSostSpecified = true;
+					devengado.ApoyoSost = devengados_doc.ApoyoSostenimiento;
+					devengado.Basico.SueldoTrabajado = 0;
 				}
 				devengado.Teletrabajo = devengados_doc.Teletrabajo;
 				devengado.BonifRetiro = devengados_doc.BonifRetiro;
@@ -528,25 +536,20 @@ namespace HGInetUBLv2_1
 
 				NominaIndividualTypeDeducciones deduccion = new NominaIndividualTypeDeducciones();
 
+				//Si o si debe enviarse este tag aunque sea en cero
+				deduccion.Salud = new NominaIndividualTypeDeduccionesSalud();
 				if (deduccion_doc.Salud != null)
 				{
-					deduccion.Salud = new NominaIndividualTypeDeduccionesSalud();
 					deduccion.Salud.Deduccion = deduccion_doc.Salud.Deduccion;
-					if (deduccion_doc.Salud.Porcentaje.Equals(4))
-					{
-						deduccion.Salud.Porcentaje = deduccion_doc.Salud.Porcentaje;//25.00M;//
-					}
+					deduccion.Salud.Porcentaje = deduccion_doc.Salud.Porcentaje;
 				}
-				
-				
+
+				//Si o si debe enviarse este tag aunque sea en cero
+				deduccion.FondoPension = new NominaIndividualTypeDeduccionesFondoPension();
 				if (deduccion_doc.Pension != null)
 				{
-					deduccion.FondoPension = new NominaIndividualTypeDeduccionesFondoPension();
 					deduccion.FondoPension.Deduccion = deduccion_doc.Pension.Deduccion;
-					if (deduccion_doc.Pension.Porcentaje.Equals(4))
-					{
-						deduccion.FondoPension.Porcentaje = deduccion_doc.Pension.Porcentaje;//25.00M;//
-					}
+					deduccion.FondoPension.Porcentaje = deduccion_doc.Pension.Porcentaje;
 				}
 				
 
@@ -1139,10 +1142,19 @@ namespace HGInetUBLv2_1
 
 				devengado.Dotacion = devengados_doc.Dotacion;
 
-				if (practicante == true)
+				if (practicante == true && devengados_doc.ApoyoSostenimiento == 0)
 				{
+					devengado.ApoyoSostSpecified = true;
 					devengado.ApoyoSost = devengados_doc.SueldoTrabajado;
+					devengado.Basico.SueldoTrabajado = 0;
 				}
+				else if (devengados_doc.ApoyoSostenimiento > 0)
+				{
+					devengado.ApoyoSostSpecified = true;
+					devengado.ApoyoSost = devengados_doc.ApoyoSostenimiento;
+					devengado.Basico.SueldoTrabajado = 0;
+				}
+
 				devengado.Teletrabajo = devengados_doc.Teletrabajo;
 				devengado.BonifRetiro = devengados_doc.BonifRetiro;
 				devengado.Indemnizacion = devengados_doc.Indemnizacion;
@@ -1171,19 +1183,20 @@ namespace HGInetUBLv2_1
 
 				NominaIndividualDeAjusteTypeReemplazarDeducciones deduccion = new NominaIndividualDeAjusteTypeReemplazarDeducciones();
 
+				//Si o si debe enviarse este tag aunque sea en cero
 				deduccion.Salud = new NominaIndividualDeAjusteTypeReemplazarDeduccionesSalud();
-				deduccion.Salud.Deduccion = deduccion_doc.Salud.Deduccion;
-				if (deduccion_doc.Salud.Porcentaje.Equals(4))
+				if (deduccion_doc.Salud != null)
 				{
-					deduccion.Salud.Porcentaje = deduccion_doc.Salud.Porcentaje;//25.00M;//
+					deduccion.Salud.Deduccion = deduccion_doc.Salud.Deduccion;
+					deduccion.Salud.Porcentaje = deduccion_doc.Salud.Porcentaje;
 				}
 
-
+				//Si o si debe enviarse este tag aunque sea en cero
 				deduccion.FondoPension = new NominaIndividualDeAjusteTypeReemplazarDeduccionesFondoPension();
-				deduccion.FondoPension.Deduccion = deduccion_doc.Pension.Deduccion;
-				if (deduccion_doc.Pension.Porcentaje.Equals(4))
+				if (deduccion_doc.Pension != null)
 				{
-					deduccion.FondoPension.Porcentaje = deduccion_doc.Pension.Porcentaje;//25.00M;//
+					deduccion.FondoPension.Deduccion = deduccion_doc.Pension.Deduccion;
+					deduccion.FondoPension.Porcentaje = deduccion_doc.Pension.Porcentaje;
 				}
 
 

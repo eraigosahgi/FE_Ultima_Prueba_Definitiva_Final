@@ -19,7 +19,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public int DiasTrabajados { get; set; }
 
 		/// <summary>
-		/// Cantidad de días laborados durante el Periodo de Pago.
+		/// Valor de días laborados durante el Periodo de Pago.
 		/// </summary>
 		public decimal SueldoTrabajado { get; set; }
 
@@ -132,6 +132,12 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Valor que le regresa la empresa al trabajador por una deducción mal realizada en otro pago de nomina. Ocurrencia 0-1
 		/// </summary>
 		public decimal Reintegro { get; set; }
+
+		/// <summary>
+		/// Corresponde al valor no salarial que el patrocinador paga de forma mensual como ayuda o apoyo economía al aprendiz o practicante universitario durante su etapa lectiva y fase practica.
+		/// Valor Pagado por Apoyo a Sostenimiento. Ocurrencia 0-1
+		/// </summary>
+		public decimal ApoyoSostenimiento { get; set; }
 
 	}
 }
