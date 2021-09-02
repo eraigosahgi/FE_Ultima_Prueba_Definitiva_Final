@@ -791,6 +791,9 @@ namespace HGInetFeAPI.ServicioNomina {
         private System.Collections.Generic.List<decimal> AnticiposField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ApoyoSostenimientoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioNomina.NovedadSalNoSal> AuxiliosField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -878,6 +881,19 @@ namespace HGInetFeAPI.ServicioNomina {
                 if ((object.ReferenceEquals(this.AnticiposField, value) != true)) {
                     this.AnticiposField = value;
                     this.RaisePropertyChanged("Anticipos");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ApoyoSostenimiento {
+            get {
+                return this.ApoyoSostenimientoField;
+            }
+            set {
+                if ((this.ApoyoSostenimientoField.Equals(value) != true)) {
+                    this.ApoyoSostenimientoField = value;
+                    this.RaisePropertyChanged("ApoyoSostenimiento");
                 }
             }
         }

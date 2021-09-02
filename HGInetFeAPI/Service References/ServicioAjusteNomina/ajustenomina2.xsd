@@ -119,6 +119,7 @@
   <xs:complexType name="Devengados">
     <xs:sequence>
       <xs:element xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Anticipos" nillable="true" type="q6:ArrayOfdecimal" />
+      <xs:element minOccurs="0" name="ApoyoSostenimiento" type="xs:decimal" />
       <xs:element minOccurs="0" name="Auxilios" nillable="true" type="tns:ArrayOfNovedadSalNoSal" />
       <xs:element minOccurs="0" name="BonifRetiro" type="xs:decimal" />
       <xs:element minOccurs="0" name="Bonificaciones" nillable="true" type="tns:ArrayOfNovedadSalNoSal" />
