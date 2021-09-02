@@ -657,6 +657,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 			$("#Interoperabilidad").dxCheckBox({
 				name: "Interoperabilidad",
+				text: "Recepción",
 				onValueChanged: function (data) {
 					Datos_InterOp = (data.value == true) ? 1 : 0;
 				}
@@ -1408,7 +1409,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		});
 
 		$("#tooltip_Interoper").dxPopover({
-			target: "#InterOp",
+			target: "#Interoperabilidad",
 			showEvent: {
 				name: "mouseenter",
 				delay: 500

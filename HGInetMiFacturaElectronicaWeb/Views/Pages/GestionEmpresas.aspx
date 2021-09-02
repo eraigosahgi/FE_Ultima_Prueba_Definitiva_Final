@@ -225,7 +225,20 @@
 									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
 									<div id="Integradora" style="margin-top: 1%"></div>
 									<div id="tooltip_Integradora">Indica si esta empresa es integradora</div>
+									<br />
+									<%--<div class="dx-field-label" style="font-size: 14px;">Recepción:</div>--%>
+									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
+										<div id="Interoperabilidad" style="margin-top: 1%"></div>
+										<div id="tooltip_Interoper">Indica si la empresa procesa documentos de un proveedor diferente a HGI</div>
 								</div>
+
+								<%--<div class="col-md-12  text-center" style="z-index: 9;">
+										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Recepción:</label>
+										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
+											<div id="Interoperabilidad"></div>
+											<div id="tooltip_Interoper">Indica si a la empresa procesa documentos Externos por Interoperabilidad</div>
+										</div>
+								</div>--%>
 
 								<div class="col-md-12" style="z-index: 9;">
 									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%; z-index: 9;">Estado:<strom style="color: red;">*</strom></label>
@@ -333,25 +346,13 @@
 									</div>
 								</div>
 
-								<div class="col-md-12">
-
-									<div class="col-md-6  text-center" style="z-index: 9;">
+								<div class="col-md-12  text-center" style="z-index: 9;">
 										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Debug:</label>
 										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
 											<div id="debug"></div>
 											<div id="tooltip_debug">Indica si a la empresa se le puede hacer seguimiento de pruebas</div>
 										</div>
-									</div>
-									<div class="col-md-6  text-center" style="z-index: 9;">
-										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Interoperabilidad:</label>
-										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
-											<div id="Interoperabilidad"></div>
-											<div id="tooltip_Interoper">Indica si a la empresa procesa documentos Externos por Interoperabilidad</div>
-										</div>
-									</div>
-
 								</div>
-
 
 							</div>
 						</div>
