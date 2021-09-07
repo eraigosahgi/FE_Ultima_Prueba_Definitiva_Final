@@ -455,8 +455,14 @@ namespace HGInetUBLv2_1
 				// Extension del sector Salud
 				if (documento.SectorSalud != null && documento.SectorSalud.CamposSector.Count > 0)
 				{
+					bool orden_diferente = false;
+					//Se agrega validacion si es por este cliente que indica que el orden los 21 campos de sector salud debe ir como indica el Anexo de la resolucion 506 y no como indica la Resolucion 084
+					if (documento.VersionAplicativo.Contains("Ver. 202"))
+					{
+						orden_diferente = true;
+					}
 					UBLExtensionType UBLExtensionSector = new UBLExtensionType();
-					UBLExtensionSector.ExtensionContent = ExtensionSector.Obtener(documento.SectorSalud, tipo);
+					UBLExtensionSector.ExtensionContent = ExtensionSector.Obtener(documento.SectorSalud, tipo, orden_diferente);
 					UBLExtensions.Add(UBLExtensionSector);
 				}
 

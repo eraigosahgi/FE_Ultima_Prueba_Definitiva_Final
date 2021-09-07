@@ -3068,6 +3068,10 @@ namespace HGInetMiFacturaElectonicaController
 						asunto = "ALERTA DE INCONSISTENCIAS EN VALIDACION DEL CORREO ENVIADO";
 						titulo = "CORREO ENVIADO CON INCONSISTENCIAS EN LA VALIDACION";
 						break;
+					case 4:
+						asunto = "RESUMEN MENSUAL DE DOCUMENTOS ELECTRÓNICOS";
+						titulo = "DOCUMENTOS ELECTRÓNICOS ENVIADOS A PLATAFORMA DE FACTURA ELECTRÓNICA ";
+						break;
 					default:
 						asunto = "ALERTA DE INCONSISTENCIAS DE DOCUMENTO ELECTRÓNICO EN LA DIAN";
 						titulo = "DOCUMENTO ELECTRÓNICO CON INCONSISTENCIAS EN LA DIAN";
@@ -3101,19 +3105,57 @@ namespace HGInetMiFacturaElectonicaController
 						}
 
 						string detalle = string.Empty;
+						int cont = 1;
 
 						foreach (var item in ListaNotificacion)
 						{
 							//	detalle = string.Format("{0}<tr><td>{1}</td><td>{2}</td><td>{3} Documentos</td><td>{4}</td><td>{5}</td></tr>", detalle, item.identificacion, item.facturador, item.tdisponibles, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(item.intIdtipo)), item.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet));
-							detalle += string.Format("<tr><td>{0}</td></tr>", item);
+							if (Proceso != 4)
+							{
+								detalle += string.Format("<tr><td>{0}</td></tr>", item);
+							}
+							else
+							{
+								if (cont > 2)
+								{
+									detalle += string.Format("<tr><td>{0}</td></tr>", item);
+								}
+								cont += 1;
+
+
+							}
+							
 						}
 
 						mensaje = mensaje.Replace("{Titulo}", titulo);
 						mensaje = mensaje.Replace("{TablaHtml}", detalle);
-						mensaje = mensaje.Replace("{Facturador}", facturador.StrRazonSocial);
-						mensaje = mensaje.Replace("{Documento}", Documento);
-						mensaje = mensaje.Replace("{Estado}", (Resultado) ? "Recibido" : "No Recibido");
-						mensaje = mensaje.Replace("{Proceso}", (Proceso == 0) ? "Desconocido" : (Proceso == 1) ? "Envío" : (Proceso == 2) ? "Consulta" : "Interoperabilidad");
+						
+						if (Proceso != 4)
+						{
+							mensaje = mensaje.Replace("{Estado}", (Resultado) ? "Recibido" : "No Recibido");
+							mensaje = mensaje.Replace("{Proceso}", (Proceso == 0) ? "Desconocido" : (Proceso == 1) ? "Envío" : (Proceso == 2) ? "Consulta" : (Proceso == 3) ? "Interoperabilidad" : "Envio Documentos");
+							mensaje = mensaje.Replace("{Facturador}", facturador.StrRazonSocial);
+							mensaje = mensaje.Replace("{Documento}", Documento);
+							
+						}
+						else
+						{
+							mensaje = mensaje.Replace("A continuación se muestra la lista de inconsistencias", string.Format("Hola {0},", facturador.StrRazonSocial));
+							mensaje = mensaje.Replace("del Documento: {Documento} correspondiente al Facturador: {Facturador}", string.Format("{0} {1}",ListaNotificacion[0], ListaNotificacion[1]));
+							mensaje = mensaje.Replace("<!--<tr><td", "<tr><td");
+							mensaje = mensaje.Replace("</tr>-->", "</tr>");
+							if (tipo_asunto == 4)
+							{
+								mensaje = mensaje.Replace("<p style='margin: 10px 0;'><span style='font-size:12px'>Estado : <strong>{Estado}</strong>  </span></p><p style='margin: 10px 0;'>", " ");
+								mensaje = mensaje.Replace("<p style='margin: 10px 0;'><span style='font-size:12px'>Proceso : <strong>{Proceso}</strong>  </span></p><p style='margin: 10px 0;'>", "");
+								mensaje = mensaje.Replace("Lista de Inconsistencias", "Resumen");
+							}
+							else
+							{
+								mensaje = mensaje.Replace("{Estado}", (Resultado) ? "Recibido" : "No Recibido");
+								mensaje = mensaje.Replace("{Proceso}", (Proceso == 0) ? "Desconocido" : (Proceso == 1) ? "Envío" : (Proceso == 2) ? "Consulta" : (Proceso == 3) ? "Interoperabilidad" : "Envio Documentos");
+							}
+						}
 
 
 						DestinatarioEmail remitente = new DestinatarioEmail();

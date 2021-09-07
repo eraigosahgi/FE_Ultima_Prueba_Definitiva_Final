@@ -2864,6 +2864,7 @@
     <Content Include="Views\Pages\SondaCrearPlanes.aspx" />
     <Content Include="Views\Pages\SondadeNotificaciones.aspx" />
     <Content Include="Views\Pages\SondaDescargarCorreos.aspx" />
+    <Content Include="Views\Pages\SondaDocumentosRechazados.aspx" />
     <Content Include="Views\Pages\SondaGenerarPDF.aspx" />
     <Content Include="Views\Pages\SondaObtenerCorreosDian.aspx" />
     <Content Include="Views\Pages\SondaProcesarCorreo.aspx" />
@@ -3384,6 +3385,13 @@
     <Compile Include="Views\Pages\SondaDescargarCorreos.aspx.designer.cs">
       <DependentUpon>SondaDescargarCorreos.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\SondaDocumentosRechazados.aspx.cs">
+      <DependentUpon>SondaDocumentosRechazados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondaDocumentosRechazados.aspx.designer.cs">
+      <DependentUpon>SondaDocumentosRechazados.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\SondaGenerarPDF.aspx.cs">
       <DependentUpon>SondaGenerarPDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3581,7 +3589,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61436/</IISUrl>
+          <IISUrl>http://localhost:61428/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

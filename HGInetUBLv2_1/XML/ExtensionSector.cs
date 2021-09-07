@@ -27,7 +27,7 @@ namespace HGInetUBLv2_1
 		/// Obtiene la extension de HGI SAS
 		/// </summary>
 		/// <returns> XmlElement que contiene la extension HGI SAS</returns>
-		public static XmlElement Obtener(Salud datos, TipoDocumento tipo_doc)
+		public static XmlElement Obtener(Salud datos, TipoDocumento tipo_doc, bool diferente_orden)
 		{
 
 			CustomTagGeneral TagGeneral = new CustomTagGeneral();
@@ -101,7 +101,20 @@ namespace HGInetUBLv2_1
 				coleccion_datos.Name = new Name();
 				try
 				{
-					coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud>(Convert.ToInt16(datos.CamposSector[i].Descripcion)));
+					if (diferente_orden == true && i > 14)
+					{
+						int y = i + 2;
+
+						if (i > 18)
+							y = i - 4;
+						
+						coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud>(Convert.ToInt16(datos.CamposSector[y].Descripcion)));
+					}
+					else 
+					{
+						coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud>(Convert.ToInt16(datos.CamposSector[i].Descripcion)));
+					}
+					
 				}
 				catch (Exception)
 				{
