@@ -248,7 +248,7 @@
 
 									<div class="col-md-12">
 										<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdminRe">Flujo Transaccional de Recepción de Documentos</h4>
-										<label class="text-muted" style="margin-bottom: 20px">Informa las empresas con mayor movimiento de recepcion de documentos elctrónicos.</label>
+										<label class="text-muted" style="margin-bottom: 20px">Informa las empresas con mayor movimiento de recepcion de documentos electrónicos.</label>
 									</div>
 
 									<div class="col-md-4" style="margin-bottom: 1%">
