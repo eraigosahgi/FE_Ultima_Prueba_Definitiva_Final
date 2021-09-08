@@ -445,7 +445,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				});
 
 
-				//REPORTE TOP TRANSACCIONAL ADMINISTRADOR
+				//REPORTE TOP TRANSACCIONAL ADMINISTRADOR ENVIO
 				$http.get('/Api/ReporteTopTransaccional?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_empresa=1&identificacion_empresa=" + identificacion_empresa_autenticada + "&tipo_frecuencia=" + $scope.TipoFrecuencia).then(function (response) {
 
 					if (response.data.length == 0)
@@ -476,6 +476,54 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							});
 
 							CargarTopTransaccional(cantidad_top, $scope.ReporteTopTransaccionalAdmin, "ReporteTopMovimiento");
+
+
+						} catch (err) {
+							DevExpress.ui.notify(err.message, 'error', 3000);
+						}
+					}
+				}, function errorCallback(response) {
+					$('#wait').hide();
+					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+				});
+
+				//REPORTE TOP TRANSACCIONAL ADMINISTRADOR RECEPCION
+				$http.get('/Api/ReporteTopTransaccional?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_empresa=1&identificacion_empresa=" + identificacion_empresa_autenticada + "&tipo_frecuencia=" + $scope.TipoFrecuencia + "&recepcion=true").then(function (response) {
+
+					if (response.data.length == 0)
+						$scope.Panel13520 = false;
+					else {
+						try {
+							$scope.Panel13520 = true;
+
+							$scope.ReporteTopTransaccionalAdminRE = response.data;
+
+							$("#CantTopTransaccionalAdminRe").dxNumberBox({
+								value: 10,
+								width: '30%',
+								showSpinButtons: true,
+								onValueChanged: function (e) {
+									CargarTopTransaccional(e.value, $scope.ReporteTopTransaccionalAdminRE, "ReporteTopMovimientoRe");
+								},
+							});
+
+							$("#ToolTipPanel13520").dxTooltip({
+								target: "#InfoPanel13520",
+								showEvent: "mouseenter",
+								hideEvent: "mouseleave",
+								position: "right",
+								contentTemplate: function (data) {
+									data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado.</label>");
+								}
+							});
+
+							CargarTopTransaccional(cantidad_top, $scope.ReporteTopTransaccionalAdminRE, "ReporteTopMovimientoRe");
+
+							//Se hace de nuevo para que le de tiempo de cargar la informacion en la vista
+							setTimeout(function () {
+								CargarTopTransaccional(cantidad_top, $scope.ReporteTopTransaccionalAdminRE, "ReporteTopMovimientoRe");
+							}, 6000);
+							
 
 
 						} catch (err) {
@@ -725,7 +773,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 				});
 
-				//REPORTE TOP TRANSACCIONAL FACTURADOR
+				//REPORTE TOP TRANSACCIONAL FACTURADOR 
 				$http.get('/Api/ReporteTopTransaccional?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_empresa=2&identificacion_empresa=" + identificacion_empresa_autenticada + "&tipo_frecuencia=" + $scope.TipoFrecuencia).then(function (response) {
 
 					if (response.data.length == 0)
@@ -846,7 +894,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				});
 
 
-				//REPORTE TOP TRANSACCIONAL ADQUIRIENTE
+				//REPORTE TOP TRANSACCIONAL ADQUIRIENTE INTERNO
 				$http.get('/Api/ReporteTopTransaccional?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_empresa=3&identificacion_empresa=" + identificacion_empresa_autenticada + "&tipo_frecuencia=" + $scope.TipoFrecuencia).then(function (response) {
 
 					if (response.data.length == 0)
@@ -877,6 +925,48 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 							});
 
 							CargarTopTransaccional(cantidad_top, $scope.ReporteTopTransaccionalAdquiriente, "ReporteTopMovimientoAdquiriente");
+
+
+						} catch (err) {
+							DevExpress.ui.notify(err.message, 'error', 3000);
+						}
+					}
+				}, function errorCallback(response) {
+					$('#wait').hide();
+					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+				});
+
+				//REPORTE TOP TRANSACCIONAL ADQUIRIENTE EXTERNO
+				$http.get('/Api/ReporteTopTransaccional?fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + "&tipo_empresa=3&identificacion_empresa=" + identificacion_empresa_autenticada + "&tipo_frecuencia=" + $scope.TipoFrecuencia + "&recepcion=true").then(function (response) {
+
+					if (response.data.length == 0)
+						$scope.Panel13535 = false;
+					else {
+						try {
+							$scope.ReporteTopTransaccionalAdquiriente = response.data;
+
+
+
+							$("#CantTopTransaccionalAdquirienteEx").dxNumberBox({
+								value: 10,
+								width: '60%',
+								showSpinButtons: true,
+								onValueChanged: function (e) {
+									CargarTopTransaccional(e.value, $scope.ReporteTopTransaccionalAdquiriente, "ReporteTopMovimientoAdquirienteEx");
+								},
+							});
+
+							$("#ToolTipPanel13535").dxTooltip({
+								target: "#InfoPanel13535",
+								showEvent: "mouseenter",
+								hideEvent: "mouseleave",
+								position: "right",
+								contentTemplate: function (data) {
+									data.html("<label>El top es aplicado sobre el filtro de fecha seleccionado.</label>");
+								}
+							});
+
+							CargarTopTransaccional(cantidad_top, $scope.ReporteTopTransaccionalAdquiriente, "ReporteTopMovimientoAdquirienteEx");
 
 
 						} catch (err) {
@@ -1394,9 +1484,14 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 				}, columnAutoWidth: true,
 
 				columns: [{
-					caption: "",
-					dataField: "RazonSocial",
+					caption: "Item",
+					dataField: "Consecutivo",
 					width: '6%',
+				}, {
+					caption: "Indicador",
+					dataField: "RazonSocial",
+					width: '7%',
+					alignment: "center",
 					cellTemplate: function (container, options) {
 
 						var indicador = "";
@@ -1419,7 +1514,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 			{
 				caption: "Identificación",
 				dataField: "Identificacion",
-				width: '14%',
+				width: '12%',
 			}, {
 				caption: "Razón Social",
 				dataField: "RazonSocial",

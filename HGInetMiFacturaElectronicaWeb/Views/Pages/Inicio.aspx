@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Pages/Indicadores.js?vjs20200921"></script>
+	<script src="../../Scripts/Pages/Indicadores.js?vjs20200922"></script>
 
 	<style>
 		.nav-tabs:before {
@@ -221,8 +221,8 @@
 								<div class="panel-body">
 
 									<div class="col-md-12">
-										<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdmin">Flujo Transaccional</h4>
-										<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento.</label>
+										<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdmin">Flujo Transaccional de Envio de Documentos</h4>
+										<label class="text-muted" style="margin-bottom: 20px">Informa las empresas con mayor movimiento de envio de documentos electrónicos.</label>
 									</div>
 
 									<div class="col-md-4" style="margin-bottom: 1%">
@@ -239,6 +239,32 @@
 							</div>
 						</div>
 						<!-- /REPORTE FLUJO TRANSACCIONAL -->
+
+						<!-- REPORTE FLUJO TRANSACCIONAL RECEPCION-->
+						<div class="col-md-12" id="Panel13520" data-ng-if="Panel13520" data-ng-init="Panel13520=false">
+							<div class="panel panel-default">
+
+								<div class="panel-body">
+
+									<div class="col-md-12">
+										<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdminRe">Flujo Transaccional de Recepción de Documentos</h4>
+										<label class="text-muted" style="margin-bottom: 20px">Informa las empresas con mayor movimiento de recepcion de documentos elctrónicos.</label>
+									</div>
+
+									<div class="col-md-4" style="margin-bottom: 1%">
+										Cantidad Top: <i class="icon-info22" id="InfoPanel13520"></i>
+										<div id="ToolTipPanel13520"></div>
+										<div id="CantTopTransaccionalAdminRe"></div>
+									</div>
+
+									<div class="col-md-12">
+										<div id="ReporteTopMovimientoRe"></div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<!-- /REPORTE FLUJO TRANSACCIONAL RECEPCION-->
 
 					</div>
 
@@ -396,8 +422,8 @@
 											</li>
 										</ul>
 									</div>
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransFacturador">Flujo Transaccional</h4>
-									<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento.</label>
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransFacturador">Flujo Transaccional de Envio</h4>
+									<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento en el envio de documentos.</label>
 
 									<div id="ReporteTopMovimientoFacturador"></div>
 								</div>
@@ -471,7 +497,7 @@
 						</div>
 						<!-- /REPORTE TIPO DOCUMENTO ANUAL -->
 
-						<!-- REPORTE FLUJO TRANSACCIONAL -->
+						<!-- REPORTE FLUJO TRANSACCIONAL INTERNO -->
 						<div class="col-md-12" id="Panel13534" data-ng-if="Panel13534" data-ng-init="Panel13534=false">
 							<div class="panel panel-default">
 
@@ -492,10 +518,40 @@
 										</ul>
 									</div>
 
-									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdquiriente">Flujo Transaccional</h4>
-									<label class="text-muted" style="margin-bottom: 20px">Informa el flujo de transacciones de las empresas con mayor movimiento.</label>
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdquiriente">Flujo Transaccional Interno</h4>
+									<label class="text-muted" style="margin-bottom: 20px">Informa las empresas con mayor movimiento de envio de documentos con el proveedor HGI SAS.</label>
 
 									<div id="ReporteTopMovimientoAdquiriente"></div>
+								</div>
+							</div>
+						</div>
+						<!-- /REPORTE FLUJO TRANSACCIONAL INTERNO-->
+
+						<!-- REPORTE FLUJO TRANSACCIONAL EXTERNO-->
+						<div class="col-md-12" id="Panel13535" data-ng-if="Panel13534" data-ng-init="Panel13535=false">
+							<div class="panel panel-default">
+
+								<div class="panel-body">
+									<div class="heading-elements panel-nav">
+										<ul class="nav nav-tabs nav-tabs-bottom">
+											<li class="dropdown active">
+												<div class="dx-field">
+													<div class="dx-field-label">
+														Cantidad Top: <i class="icon-info22" id="InfoPanel13535" style="margin-left: 2%"></i>
+														<div id="ToolTipPanel13535"></div>
+													</div>
+													<div class="dx-field-value">
+														<div id="CantTopTransaccionalAdquirienteEx"></div>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
+
+									<h4 class="text-bold" style="margin-top: -10px; margin-bottom: 2px" id="TotalFlujoTransAdquirienteEx">Flujo Transaccional Externo</h4>
+									<label class="text-muted" style="margin-bottom: 20px">Informa las empresas con mayor movimiento de envios de documentos de proveedores diferentes a HGI SAS.</label>
+
+									<div id="ReporteTopMovimientoAdquirienteEx"></div>
 								</div>
 							</div>
 						</div>

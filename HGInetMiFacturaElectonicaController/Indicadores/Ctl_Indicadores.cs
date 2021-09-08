@@ -1,4 +1,5 @@
 ﻿using HGInetMiFacturaElectonicaController.Indicadores.Objetos;
+using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Enumerables;
@@ -529,6 +530,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 												 RazonSocial = datos_movimiento.FirstOrDefault().empresa.StrRazonSocial,
 												 ValorTotalDocumentos = datos_movimiento.Sum(x => (x.movimiento.IntDocTipo == 3) ? -x.movimiento.IntVlrTotal : x.movimiento.IntVlrTotal),
 												 TotalDocumentos = datos_movimiento.Count(),
+												 ProveedorEmisor = datos_movimiento.FirstOrDefault().movimiento.StrProveedorEmisor
 											 }).OrderByDescending(d => d.TotalDocumentos).ToList();
 				}
 				else
@@ -543,7 +545,8 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 												 Identificacion = datos_movimiento.FirstOrDefault().movimiento.StrEmpresaFacturador,
 												 RazonSocial = datos_movimiento.FirstOrDefault().empresa.StrRazonSocial,
 												 ValorTotalDocumentos = datos_movimiento.Sum(x => (x.movimiento.IntDocTipo == 3) ? -x.movimiento.IntVlrTotal : x.movimiento.IntVlrTotal),
-												 TotalDocumentos = datos_movimiento.Count()
+												 TotalDocumentos = datos_movimiento.Count(),
+												 ProveedorEmisor = datos_movimiento.FirstOrDefault().movimiento.StrProveedorEmisor
 											 }).OrderByDescending(d => d.TotalDocumentos).ToList();
 				}
 
@@ -558,7 +561,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 			}
 		}
 
-		public List<TopTransaccional> TopTransaccional(DateTime fecha_inicio, DateTime fecha_fin, int tipo_empresa, string identificacion_empresa, TipoFrecuencia tipo_frecuencia)
+		public List<TopTransaccional> TopTransaccional(DateTime fecha_inicio, DateTime fecha_fin, int tipo_empresa, string identificacion_empresa, TipoFrecuencia tipo_frecuencia, bool recepcion)
 		{
 			try
 			{
@@ -567,6 +570,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 
 				DateTime fecha_inicio_anterior = fecha_inicio;
 				DateTime fecha_fin_anterior = fecha_fin;
+				int consecutivo = 1;
 
 
 				switch (tipo_frecuencia)
@@ -585,6 +589,8 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
 
 							item.CantidadActual = item.TotalDocumentos;
+							item.Consecutivo = consecutivo;
+							consecutivo += 1;
 
 							if (top_anterior != null)
 								item.CantidadAnterior = top_anterior.TotalDocumentos;
@@ -601,11 +607,25 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						//obtiene el anterior
 						datos_anterior = OtenerTopTransaccional(fecha_inicio_anterior, fecha_fin_anterior, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
+						if (recepcion == true)
+						{
+							List<TopTransaccional> top_datos = datos_actual.Where(y => !y.ProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo)).ToList();
+							datos_actual = top_datos;
+						}
+						else
+						{
+							List<TopTransaccional> top_datos = datos_actual.Where(y => y.ProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo)).ToList();
+							datos_actual = top_datos;
+						}
+
+
 						foreach (var item in datos_actual)
 						{
 							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
 
 							item.CantidadActual = item.TotalDocumentos;
+							item.Consecutivo = consecutivo;
+							consecutivo += 1;
 
 							if (top_anterior != null)
 								item.CantidadAnterior = top_anterior.TotalDocumentos;
@@ -625,11 +645,24 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						//obtiene el anterior
 						datos_anterior = OtenerTopTransaccional(fecha_inicio_anterior, fecha_fin_anterior, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
+						if (recepcion == true)
+						{
+							List<TopTransaccional> top_datos = datos_actual.Where(y => !y.ProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo)).ToList();
+							datos_actual = top_datos;
+						}
+						else
+						{
+							List<TopTransaccional> top_datos = datos_actual.Where(y => y.ProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo)).ToList();
+							datos_actual = top_datos;
+						}
+
 						foreach (var item in datos_actual)
 						{
 							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
 
 							item.CantidadActual = item.TotalDocumentos;
+							item.Consecutivo = consecutivo;
+							consecutivo += 1;
 
 							if (top_anterior != null)
 								item.CantidadAnterior = top_anterior.TotalDocumentos;
@@ -646,11 +679,25 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						//obtiene el anterior
 						datos_anterior = OtenerTopTransaccional(fecha_inicio_anterior, fecha_fin_anterior, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
+						if (recepcion == true)
+						{
+							List<TopTransaccional> top_datos = datos_actual.Where(y => !y.ProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo)).ToList();
+							datos_actual = top_datos;
+						}
+						else
+						{
+							List<TopTransaccional> top_datos = datos_actual.Where(y => y.ProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo)).ToList();
+							datos_actual = top_datos;
+						}
+
+
 						foreach (var item in datos_actual)
 						{
 							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
 
 							item.CantidadActual = item.TotalDocumentos;
+							item.Consecutivo = consecutivo;
+							consecutivo += 1;
 
 							if (top_anterior != null)
 								item.CantidadAnterior = top_anterior.TotalDocumentos;
@@ -668,12 +715,25 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						//obtiene el anterior
 						datos_anterior = OtenerTopTransaccional(fecha_inicio_anterior, fecha_fin_anterior, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
+						if (recepcion == true)
+						{
+							List<TopTransaccional> top_datos = datos_actual.Where(y => !y.ProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo)).ToList();
+							datos_actual = top_datos;
+						}
+						else
+						{
+							List<TopTransaccional> top_datos = datos_actual.Where(y => y.ProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo)).ToList();
+							datos_actual = top_datos;
+						}
+
 
 						foreach (var item in datos_actual)
 						{
 							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
 
 							item.CantidadActual = item.TotalDocumentos;
+							item.Consecutivo = consecutivo;
+							consecutivo += 1;
 
 							if (top_anterior != null)
 								item.CantidadAnterior = top_anterior.TotalDocumentos;

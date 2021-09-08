@@ -266,7 +266,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpGet]
 		[Route("Api/ReporteTopTransaccional")]
-		public IHttpActionResult ReporteTopTransaccional(DateTime fecha_inicio, DateTime fecha_fin, int tipo_empresa, string identificacion_empresa, int tipo_frecuencia)
+		public IHttpActionResult ReporteTopTransaccional(DateTime fecha_inicio, DateTime fecha_fin, int tipo_empresa, string identificacion_empresa, int tipo_frecuencia, bool recepcion = false)
 		{
 			try
 			{
@@ -275,7 +275,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_Indicadores clase_indicadores = new Ctl_Indicadores();
 
 				TipoFrecuencia tipo_frecuencia_enum = Enumeracion.GetEnumObjectByValue<TipoFrecuencia>(tipo_frecuencia);
-				List<TopTransaccional> top_transaccional = clase_indicadores.TopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia_enum);
+				List<TopTransaccional> top_transaccional = clase_indicadores.TopTransaccional(fecha_inicio, fecha_fin, tipo_empresa, identificacion_empresa, tipo_frecuencia_enum, recepcion);
 
 				if (top_transaccional == null)
 				{
