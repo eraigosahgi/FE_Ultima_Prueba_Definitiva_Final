@@ -584,6 +584,17 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						//obtiene el anterior
 						datos_anterior = OtenerTopTransaccional(fecha_inicio_anterior, fecha_fin_anterior, tipo_empresa, identificacion_empresa, tipo_frecuencia);
 
+						if (recepcion == true)
+						{
+							List<TopTransaccional> top_datos = datos_actual.Where(y => !y.ProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo)).ToList();
+							datos_actual = top_datos;
+						}
+						else
+						{
+							List<TopTransaccional> top_datos = datos_actual.Where(y => y.ProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo)).ToList();
+							datos_actual = top_datos;
+						}
+
 						foreach (var item in datos_actual)
 						{
 							TopTransaccional top_anterior = datos_anterior.Where(x => x.Identificacion.Equals(item.Identificacion)).FirstOrDefault();
