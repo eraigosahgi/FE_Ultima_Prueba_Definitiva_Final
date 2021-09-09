@@ -968,6 +968,11 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 
 							CargarTopTransaccional(cantidad_top, $scope.ReporteTopTransaccionalAdquiriente, "ReporteTopMovimientoAdquirienteEx");
 
+							//Se hace de nuevo para que le de tiempo de cargar la informacion en la vista
+							setTimeout(function () {
+								CargarTopTransaccional(cantidad_top, $scope.ReporteTopTransaccionalAdquiriente, "ReporteTopMovimientoAdquirienteEx");
+							}, 6000);
+
 
 						} catch (err) {
 							DevExpress.ui.notify(err.message, 'error', 3000);

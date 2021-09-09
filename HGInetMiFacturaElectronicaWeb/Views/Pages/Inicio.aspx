@@ -528,7 +528,7 @@
 						<!-- /REPORTE FLUJO TRANSACCIONAL INTERNO-->
 
 						<!-- REPORTE FLUJO TRANSACCIONAL EXTERNO-->
-						<div class="col-md-12" id="Panel13535" data-ng-if="Panel13534" data-ng-init="Panel13535=false">
+						<div class="col-md-12" id="Panel13535" data-ng-if="Panel13535" data-ng-init="Panel13535=false">
 							<div class="panel panel-default">
 
 								<div class="panel-body">
