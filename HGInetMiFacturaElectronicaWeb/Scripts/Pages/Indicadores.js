@@ -1469,7 +1469,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 					var fieldData = options.value,
 						fieldHtml = "";
 					try {
-						if (options.columnIndex == 3 || options.columnIndex == 4 || options.columnIndex == 5) {
+						if (options.columnIndex == 4 || options.columnIndex == 5 || options.columnIndex == 6) {
 							if (fieldData) {
 								var inicial = FormatoNumSinDecimales.go(fieldData);
 								options.cellElement.html(inicial);
