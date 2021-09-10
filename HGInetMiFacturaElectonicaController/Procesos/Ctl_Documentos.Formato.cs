@@ -324,6 +324,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						orden_novedades += 1;
 					}
 
+					if (devengado.ApoyoSostenimiento > 0)
+					{
+						novedad = new Novedad();
+						novedad.Concepto = "ApoyoSostenimiento";
+						novedad.ConceptoDes = "Apoyo de Sostenimiento";
+						novedad.Cantidad = devengado.DiasTrabajados;
+						novedad.Dev = devengado.ApoyoSostenimiento;
+						novedad.orden = orden_novedades;
+						objeto_result.Novedades.Add(novedad);
+						orden_novedades += 1;
+					}
+
 					if (devengado.DatosTransporte != null && devengado.DatosTransporte.Count() > 0)
 					{
 						Transporte transporte = new Transporte();
