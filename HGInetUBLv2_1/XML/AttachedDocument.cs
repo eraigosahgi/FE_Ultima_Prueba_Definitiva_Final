@@ -99,6 +99,12 @@ namespace HGInetUBLv2_1
 				// lee el archivo XML en UBL desde la ruta pública
 				string contenido_xml = Archivo.ObtenerContenido(documentoBd.StrUrlArchivoUbl);
 
+				if (contenido_xml.Contains("&lt;") || contenido_xml.Contains("&gt;"))
+				{
+					contenido_xml = contenido_xml.Replace("&lt;", "<");
+					contenido_xml = contenido_xml.Replace("&gt;", ">");
+				}
+
 				DescriptionType Description = new DescriptionType();
 				Description.Value = string.Format("<![CDATA[{0}]]>", contenido_xml);
 
@@ -218,7 +224,7 @@ namespace HGInetUBLv2_1
 					texto_xml = texto_xml.Replace("xmlns:schemaLocation", "xsi:schemaLocation");
 				}
 
-				if (texto_xml.Contains("&lt;") && texto_xml.Contains("&gt;"))
+				if (texto_xml.Contains("&lt;") || texto_xml.Contains("&gt;"))
 				{
 					texto_xml = texto_xml.Replace("&lt;", "<");
 					texto_xml = texto_xml.Replace("&gt;", ">");
