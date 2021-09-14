@@ -332,9 +332,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				lista_resolucion = _resolucion.ObtenerResolucionesPorTipo(item.DatosEmpleador.Identificacion, TipoDocumento.NominaAjuste.GetHashCode());
 
-				// filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
-				TblEmpresasResoluciones resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosEmpleador.Identificacion) &&
-																								   _resolucion_doc.StrPrefijo.Equals(item.Prefijo)).FirstOrDefault();
+				TblEmpresasResoluciones resolucion_doc = null;
+
+				if (lista_resolucion.Count > 0)
+				{
+					// filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
+					resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosEmpleador.Identificacion) &&
+																									   _resolucion_doc.StrPrefijo.Equals(item.Prefijo) && _resolucion_doc.IntTipoDoc == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault();
+				}
 
 				//si no existe la resolucion la crea
 				if (resolucion_doc == null)

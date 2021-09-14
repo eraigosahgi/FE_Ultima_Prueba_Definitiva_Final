@@ -273,9 +273,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				lista_resolucion = _resolucion.ObtenerResolucionesPorTipo(item.DatosEmpleador.Identificacion,TipoDocumento.Nomina.GetHashCode());
 
-				// filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
-				TblEmpresasResoluciones resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosEmpleador.Identificacion) &&
-				                                                                                   _resolucion_doc.StrPrefijo.Equals(item.Prefijo)).FirstOrDefault();
+				TblEmpresasResoluciones resolucion_doc = null;
+
+				if (lista_resolucion.Count > 0)
+				{
+					// filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
+					resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosEmpleador.Identificacion) &&
+																									   _resolucion_doc.StrPrefijo.Equals(item.Prefijo) && _resolucion_doc.IntTipoDoc == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault();
+				}
 
 				//si no existe la resolucion la crea
 				if (resolucion_doc == null)
@@ -302,7 +307,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else
 				{
 					//Valida que la resolucion creada si tenga idset y si es habilitacion se le asigna el que trae el objeto y se actualiza en bd
-					if ((facturador_electronico.IntHabilitacion < 99) && string.IsNullOrEmpty(resolucion_doc.StrIdSetDian))
+					if ((!facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo)) &&(facturador_electronico.IntHabilitacion < 99) && (string.IsNullOrEmpty(resolucion_doc.StrIdSetDian) || !resolucion_doc.StrIdSetDian.Equals(item.NumeroResolucion)))
 					{
 						resolucion_doc.StrIdSetDian = item.NumeroResolucion;
 						//resolucion_doc.IntVersionDian = resol_factura.IntVersionDian;
