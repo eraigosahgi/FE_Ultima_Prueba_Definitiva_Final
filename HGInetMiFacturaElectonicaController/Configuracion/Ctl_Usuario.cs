@@ -525,6 +525,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			if (datos_empresa.IntAdquiriente)
 				opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Adquiriente));
 
+			//Obtiene permisos del Perfil de Nomina
+			if (datos_empresa.IntHabilitacionNomina > 0)
+				opciones_perfil.AddRange(clase_permisos.ObtenerOpcionesPorPerfil((short)Perfiles.Nomina));
+
 			opciones_perfil = opciones_perfil.GroupBy(x => x.IntIdOpcion).Select(d => d.First()).ToList();
 
 			//Recorre las opciones de base de datos y valida si estan contenidas en las opciones por perfil
@@ -612,7 +616,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (string.IsNullOrEmpty(codigo_usuario))
 				{
 					codigo_usuario = "*";
-				}				
+				}
 
 				if (string.IsNullOrEmpty(nombre_usuario))
 				{
@@ -659,7 +663,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="codigo_usuario"></param>
 		/// <returns></returns>
-		public List<ObjUsuario> ObtenerListaUsuarios(string codigo_usuario, string codigo_empresa,string nombre_usuario, int Desde, int Hasta)
+		public List<ObjUsuario> ObtenerListaUsuarios(string codigo_usuario, string codigo_empresa, string nombre_usuario, int Desde, int Hasta)
 		{
 			try
 			{
@@ -865,7 +869,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				var respuesta = (from opciones in context.TblOpciones.AsNoTracking()
 								 join opcionesUsuario in context.TblOpcionesUsuario on opciones.IntId equals opcionesUsuario.IntIdOpcion
 								 where (opcionesUsuario.StrUsuario.Equals(codigo_usuario) && opcionesUsuario.StrEmpresa.Equals(codigo_empresa))
-								 && opciones.IntHabilitado ==true
+								 && opciones.IntHabilitado == true
 								 && opciones.IntTipo == 0
 								 && opcionesUsuario.IntConsultar == true
 

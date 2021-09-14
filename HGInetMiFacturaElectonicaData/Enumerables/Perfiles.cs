@@ -7,19 +7,22 @@ using System.Threading.Tasks;
 
 namespace HGInetMiFacturaElectonicaData
 {
-    public enum Perfiles
-    {
+	public enum Perfiles
+	{
 
-        [Description("Administrador")]
-        Administrador = 1,
+		[Description("Administrador")]
+		Administrador = 1,
 
-        [Description("Facturador")]
-        Facturador = 2,
+		[Description("Facturador")]
+		Facturador = 2,
 
-        [Description("Adquiriente")]
-        Adquiriente = 3,
+		[Description("Adquiriente")]
+		Adquiriente = 3,
 
-        [Description("Integrador")]
-        Integrador = 4
-    }
+		[Description("Integrador")]
+		Integrador = 4,
+
+		[Description("Nomina")]
+		Nomina = 5
+	}
 }
