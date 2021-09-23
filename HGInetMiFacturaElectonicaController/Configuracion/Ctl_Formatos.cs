@@ -843,7 +843,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (tipo_documento == TipoDocumento.Nomina || tipo_documento == TipoDocumento.NominaAjuste)
 				{
 					Planilla objeto_planilla_nomina = new Planilla();
-					objeto_planilla_nomina = Ctl_Documentos.convertirObjetoPlanilla(documento_obj, TipoDocumento.Nomina);
+					objeto_planilla_nomina = Ctl_Documentos.convertirObjetoPlanilla(documento_obj, tipo_documento);
 					report.DataSource = objeto_planilla_nomina;
 				}
 				else
