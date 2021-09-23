@@ -450,7 +450,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PrevalidacionErrorDian);
 						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorDian.GetHashCode();
-						respuesta.Error.Mensaje = string.Format("Documento rechazado DIAN: {0} - Validar inconsistencias de la DIAN en la ruta {1} ", resultado_doc.EstadoDianDescripcion, respuesta.EstadoDian.UrlXmlRespuesta);
+						respuesta.Error.Mensaje = string.Format("Documento rechazado DIAN: {0} - Validar las siguientes inconsistencias de la DIAN: {1} ", resultado_doc.EstadoDianDescripcion, resultado_doc.Mensaje);
 					}
 
 					if (tipo_doc != TipoDocumento.AcuseRecibo)
