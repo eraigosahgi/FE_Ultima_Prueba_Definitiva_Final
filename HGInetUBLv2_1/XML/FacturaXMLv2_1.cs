@@ -749,7 +749,7 @@ namespace HGInetUBLv2_1
 				{
 					bool orden_diferente = false;
 					//Se agrega validacion si es por este cliente que indica que el orden los 21 campos de sector salud debe ir como indica el Anexo de la resolucion 506 y no como indica la Resolucion 084
-					if (documento.VersionAplicativo.Contains("Ver. 202"))
+					if (!string.IsNullOrEmpty(documento.VersionAplicativo) && documento.VersionAplicativo.Contains("Ver. 202"))
 					{
 						orden_diferente = true;
 					}

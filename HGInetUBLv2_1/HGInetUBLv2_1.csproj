@@ -1508,6 +1508,9 @@
     <Compile Include="XML\AttachedDocument.cs" />
     <Compile Include="XML\ConvertirXML.cs" />
     <Compile Include="XML\DocumentoImpuestos.cs" />
+    <Compile Include="XML\NominaAjusteXML.Convertir.cs" />
+    <Compile Include="XML\NovedadesNominaXML.Convertir.cs" />
+    <Compile Include="XML\ParticipantesNominaXML.Convertir.cs" />
     <Compile Include="XML\ExtensionDian.cs" />
     <Compile Include="XML\ExtensionHgiSas.cs" />
     <Compile Include="XML\ExtensionRadian.cs" />
@@ -1518,6 +1521,7 @@
     <Compile Include="XML\ImpuestosXML.cs" />
     <Compile Include="XML\NombramientoArchivo.cs" />
     <Compile Include="XML\NominaAjusteXML.cs" />
+    <Compile Include="XML\NominaXML.Convertir.cs" />
     <Compile Include="XML\NominaXML.cs" />
     <Compile Include="XML\NotaCreditoXMLv2_1.Convertir.cs" />
     <Compile Include="XML\NotaCreditoXMLv2_1.cs" />

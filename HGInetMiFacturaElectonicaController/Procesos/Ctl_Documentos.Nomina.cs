@@ -13,6 +13,7 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Properties;
 using LibreriaGlobalHGInet.RegistroLog;
+using LibreriaGlobalHGInet.Error;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -243,20 +244,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					else if (numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.EnvioZip.GetHashCode())
 					{
-						/************Falta hacer el convertir para que lo pueda procesar
-						//****procesa el documento en un estado pendiente validar proceso
+						
+						//procesa el documento en un estado pendiente validar proceso
 						item_respuesta = ProcesarV2(numero_documento, true);
 						if (item_respuesta.Error == null)
-							//item_respuesta.Error = new Error();
+							item_respuesta.Error = new Error();
+
 						return item_respuesta;
-						*/
 
-						//guardo algunas de las propiedades que estan en Bd para hacer la actualizacion con lo que llega
-						documento_bd = numero_documento;
-
-						//Se actualiza el estado para evitar que lo envien de nuevo mientras se termina este proceso
-						numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
-						numero_documento = num_doc.Actualizar(numero_documento);
 					}
 					else
 					{

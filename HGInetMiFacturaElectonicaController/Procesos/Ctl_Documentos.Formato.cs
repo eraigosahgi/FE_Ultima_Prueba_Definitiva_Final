@@ -280,6 +280,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					   
 					}
 				}
+				else
+				{
+					objeto_result.DocumentoFormato = new Formato();
+				}
+				objeto_result.DocumentoFormato.Titulo = Enumeracion.GetDescription(tipo_doc);
 
 				//Informacion de Empleado
 				objeto_result.Empleado = documento.DatosTrabajador.Identificacion;

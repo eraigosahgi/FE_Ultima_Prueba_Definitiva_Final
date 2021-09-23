@@ -52,7 +52,9 @@
 								<label class="no-margin text-size-large">{{datos.NitEmpresa}}</label><br />
 								<label class="no-margin text-size-small">{{datos.RazonSocial}}</label><br />
 								<label class="no-margin text-size-large text-semibold">Fecha Creación: </label>
-								<label class="no-margin text-size-large">{{datos.FechaRegistro}}</label>
+								<label class="no-margin text-size-large">{{datos.FechaRegistro}}</label><br />
+								<label class="no-margin text-size-large text-semibold">Tipo Doc: </label>
+								<label class="no-margin text-size-large">{{datos.TipoDescDoc}}</label>
 							</div>
 						</div>
 

@@ -68,6 +68,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Titulo = (d.IntGenerico) ? "Prediseñado" : "Personalizado",
 					Estado = d.IntEstado,
 					TipoDoc = d.IntDocTipo,
+					TipoDescDoc = (d.IntDocTipo < 4) ? "Documento" : (d.IntDocTipo > 9 && d.IntDocTipo < 12) ? "Nomina" : "Documento",
 					NitEmpresa = d.StrEmpresa,
 					RazonSocial = d.TblEmpresas.StrRazonSocial,
 					Administrador = (Sesion.DatosEmpresa.IntAdministrador) ? true : false,

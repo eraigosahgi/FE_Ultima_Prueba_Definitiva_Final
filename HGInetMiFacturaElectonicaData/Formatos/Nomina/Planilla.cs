@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HGInetMiFacturaElectonicaData.ModeloServicio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,5 +44,6 @@ namespace HGInetMiFacturaElectonicaData.Formatos
 		public decimal DevengadosTotal { get; set; }
 		public decimal DeduccionesTotal { get; set; }
 		public decimal ComprobanteTotal { get; set; }
+		public Formato DocumentoFormato { get; set; }
 	}
 }

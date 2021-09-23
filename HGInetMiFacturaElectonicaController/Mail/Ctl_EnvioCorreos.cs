@@ -655,7 +655,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				var objeto = (dynamic)null;
 				var documento_obj = (dynamic)null;
-				if (string.IsNullOrEmpty(nombre_comercial))
+				if (string.IsNullOrEmpty(nombre_comercial) && tipo_documento.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode())
 				{
 					objeto = Ctl_Documento.ConvertirServicio(documento, true);
 				}

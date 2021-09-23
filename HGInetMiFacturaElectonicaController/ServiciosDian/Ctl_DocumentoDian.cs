@@ -180,8 +180,19 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 							empresa.IntHabilitacionNomina = 2;
 						}
 
+						bool habilitar_set = false;
+
+						//Si es documento electronico y esta habilitando el set de pruebas
+						if (documento.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode() && empresa.IntHabilitacion < Habilitacion.PruebasDian.GetHashCode())
+							habilitar_set = true;
+
+						//Si es un documento de nomina y esta habilitando el set de pruebas
+						if (documento.DocumentoTipo.GetHashCode() > TipoDocumento.Attached.GetHashCode() && empresa.IntHabilitacionNomina < Habilitacion.PruebasDian.GetHashCode())
+							habilitar_set = true;
+
+
 						//Si quiere que el documento sea validado por la DIAN aun si ya tiene el set de pruebas aceptado se pone en ambiente 2 las so propiedades de empresa 
-						if (ambiente_dian.Equals("2") && (empresa.IntHabilitacion < Habilitacion.PruebasDian.GetHashCode() || empresa.IntHabilitacionNomina < Habilitacion.PruebasDian.GetHashCode()))
+						if (ambiente_dian.Equals("2") && habilitar_set == true)
 						{
 							acuse = Ctl_Factura.Enviar_v2(ruta_zip, documento.NombreZip, ruta_certificado,
 								certificado.Clave, clave, UrlServicioWeb, ambiente_dian, proceso_acuse);

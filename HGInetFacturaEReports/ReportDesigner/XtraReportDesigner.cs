@@ -124,6 +124,21 @@ namespace HGInetFacturaEReports.ReportDesigner
 						}
 					}
 				}
+				else if(datos_documento.DocumentoFormato != null && !string.IsNullOrEmpty(datos_documento.DocumentoFormato.Titulo))
+				{
+					foreach (Band reportBand in rep.Bands)
+					{
+						XRLabel control_titulo = (XRLabel)FindBandControl(reportBand, "LblTituloReporte");
+						if (control_titulo != null && !lleno_titulo)
+						{
+							lleno_titulo = true;
+							string titulo_formato = string.Empty;
+							titulo_formato = datos_documento.DocumentoFormato.Titulo;
+
+							control_titulo.Text = titulo_formato;
+						}
+					}
+				}
 			}
 		}
 

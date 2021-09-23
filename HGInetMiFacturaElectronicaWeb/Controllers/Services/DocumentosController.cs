@@ -1352,26 +1352,37 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			try
 			{
+				string correo = string.Empty;
 				Ctl_Documento Controlador = new Ctl_Documento();
 				TblDocumentos datos = Controlador.ObtenerPorIdSeguridad(IdSeguridad).FirstOrDefault();
-				var objeto = (dynamic)null;
-				objeto = Ctl_Documento.ConvertirServicio(datos, true);
-				string correo = string.Empty;
 
-				if (datos.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+				if (datos.IntDocTipo < TipoDocumento.AcuseRecibo.GetHashCode())
 				{
-					correo = objeto.DatosFactura.DatosAdquiriente.Email;
+					var objeto = (dynamic)null;
+					objeto = Ctl_Documento.ConvertirServicio(datos, true);
+
+					if (datos.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+					{
+						correo = objeto.DatosFactura.DatosAdquiriente.Email;
+					}
+
+					if (datos.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+					{
+						correo = objeto.DatosNotaCredito.DatosAdquiriente.Email;
+					}
+
+					if (datos.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+					{
+						correo = objeto.DatosNotaDebito.DatosAdquiriente.Email;
+					}
+				}
+				else
+				{
+					correo = datos.TblEmpresasFacturador.StrMailAdmin;
 				}
 
-				if (datos.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
-				{
-					correo = objeto.DatosNotaCredito.DatosAdquiriente.Email;
-				}
+				
 
-				if (datos.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
-				{
-					correo = objeto.DatosNotaDebito.DatosAdquiriente.Email;
-				}
 
 
 				return Request.CreateResponse(HttpStatusCode.OK, correo);

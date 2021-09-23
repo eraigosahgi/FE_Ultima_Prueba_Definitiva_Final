@@ -2395,6 +2395,23 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				documento_obj.DatosNotaDebito.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
 
 			}
+			//else if (objetoBd.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
+			//{
+
+			//	Nomina nomina = new Nomina();
+
+			//	documento_obj = nomina;
+
+			//	serializacion = new XmlSerializer(typeof(NominaIndividualType));
+
+			//	NominaIndividualType conversion = (NominaIndividualType)serializacion.Deserialize(xml_reader);
+
+			//	documento_obj = HGInetUBLv2_1.NominaXML.Convertir(conversion, objetoBd);
+
+			//	if (reenvio == true)
+			//		return documento_obj;
+
+			//}
 			// cerrar la lectura del archivo xml
 			xml_reader.Close();
 
@@ -3170,6 +3187,25 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									documento_obj = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, documento);
 
 								}
+								else if (documento.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
+								{
+									serializacion = new XmlSerializer(typeof(NominaIndividualType));
+
+									NominaIndividualType conversion = (NominaIndividualType)serializacion.Deserialize(xml_reader);
+
+									documento_obj = HGInetUBLv2_1.NominaXML.Convertir(conversion, documento);
+
+								}
+								else if (documento.IntDocTipo == TipoDocumento.NominaAjuste.GetHashCode())
+								{
+									serializacion = new XmlSerializer(typeof(NominaIndividualDeAjusteType));
+
+									NominaIndividualDeAjusteType conversion = (NominaIndividualDeAjusteType)serializacion.Deserialize(xml_reader);
+
+									documento_obj = HGInetUBLv2_1.NominaAjusteXML.Convertir(conversion, documento);
+
+								}
+
 								if (!string.IsNullOrEmpty(documento.StrFormato))
 								{
 									documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(documento.StrFormato);
@@ -3734,25 +3770,40 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			try
 			{
-				var objeto = (dynamic)null;
-				objeto = Ctl_Documento.ConvertirServicio(doc, true);
 
-				if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+				if (doc.IntDocTipo < TipoDocumento.AcuseRecibo.GetHashCode())
 				{
-					email_objeto = objeto.DatosFactura.DatosAdquiriente.Email;
-					telefono_objeto = objeto.DatosFactura.DatosAdquiriente.Telefono;
+					var objeto = (dynamic)null;
+					objeto = Ctl_Documento.ConvertirServicio(doc, true);
+
+					if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+					{
+						email_objeto = objeto.DatosFactura.DatosAdquiriente.Email;
+						telefono_objeto = objeto.DatosFactura.DatosAdquiriente.Telefono;
+					}
+
+					if (doc.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+					{
+						email_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Email;
+						telefono_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Telefono;
+					}
+
+					if (doc.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+					{
+						email_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Email;
+						telefono_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Telefono;
+					}
 				}
-
-				if (doc.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+				else
 				{
-					email_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Email;
-					telefono_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Telefono;
-				}
-
-				if (doc.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
-				{
-					email_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Email;
-					telefono_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Telefono;
+					TblEmpresas facturador = doc.TblEmpresasFacturador;
+					if (facturador == null)
+					{
+						Ctl_Empresa emprersa = new Ctl_Empresa();
+						facturador = emprersa.Obtener(doc.StrEmpresaFacturador, false);
+					}
+					email_objeto = facturador.StrMailAdmin;
+					telefono_objeto = facturador.StrTelefono;
 				}
 
 				Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();

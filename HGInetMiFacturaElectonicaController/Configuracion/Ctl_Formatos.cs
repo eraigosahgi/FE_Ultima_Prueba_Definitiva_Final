@@ -25,6 +25,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using HGInetMiFacturaElectonicaData.Formatos;
+using HGInetMiFacturaElectonicaController.Procesos;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -752,6 +754,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				Ctl_Documento clase_documento = new Ctl_Documento();
 				TblDocumentos datos_doc_bd = clase_documento.ObtenerParaPrueba(empresa_documento, numero_documento, prefijo);
 
+				TipoDocumento tipo_documento = Enumeracion.GetEnumObjectByValue<TipoDocumento>(datos_doc_bd.IntDocTipo);
+
 				var documento_obj = (dynamic)null;
 
 				if (datos_doc_bd != null)
@@ -776,7 +780,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 					else
 					{
-						TipoDocumento tipo_documento = Enumeracion.GetEnumObjectByValue<TipoDocumento>(datos_doc_bd.IntDocTipo);
 
 						if (tipo_documento == TipoDocumento.Factura)
 						{
@@ -810,6 +813,24 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
 								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
 						}
+						else if (tipo_documento == TipoDocumento.Nomina)
+						{
+							serializacion = new XmlSerializer(typeof(NominaIndividualType));
+							NominaIndividualType conversion = (NominaIndividualType)serializacion.Deserialize(xml_reader);
+
+							documento_obj = HGInetUBLv2_1.NominaXML.Convertir(conversion, datos_doc_bd);
+							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+						}
+						else if (tipo_documento == TipoDocumento.NominaAjuste)
+						{
+							serializacion = new XmlSerializer(typeof(NominaIndividualDeAjusteType));
+							NominaIndividualDeAjusteType conversion = (NominaIndividualDeAjusteType)serializacion.Deserialize(xml_reader);
+
+							documento_obj = HGInetUBLv2_1.NominaAjusteXML.Convertir(conversion, datos_doc_bd);
+							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+						}
 					}
 				}
 				else
@@ -819,7 +840,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					documento_obj.Prefijo = prefijo;
 				}
 
-				report.DataSource = documento_obj;
+				if (tipo_documento == TipoDocumento.Nomina || tipo_documento == TipoDocumento.NominaAjuste)
+				{
+					Planilla objeto_planilla_nomina = new Planilla();
+					objeto_planilla_nomina = Ctl_Documentos.convertirObjetoPlanilla(documento_obj, TipoDocumento.Nomina);
+					report.DataSource = objeto_planilla_nomina;
+				}
+				else
+				{
+					report.DataSource = documento_obj;
+				}
 
 				string nombre_archivo = NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), datos_formato.StrEmpresa, TipoDocumento.Factura, documento_obj.Prefijo);
 

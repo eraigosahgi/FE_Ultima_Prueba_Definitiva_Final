@@ -133,6 +133,24 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					documento_obj = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, documento);
 					documento.StrCufe = documento_obj.Cufe;
 				}
+				else if (tipo_documento == TipoDocumento.Nomina)
+				{
+					serializacion = new XmlSerializer(typeof(NominaIndividualType));
+
+					NominaIndividualType conversion = (NominaIndividualType)serializacion.Deserialize(xml_reader);
+
+					documento_obj = HGInetUBLv2_1.NominaXML.Convertir(conversion, documento);
+					documento.StrCufe = documento_obj.Cune;
+				}
+				else if (tipo_documento == TipoDocumento.NominaAjuste)
+				{
+					serializacion = new XmlSerializer(typeof(NominaIndividualDeAjusteType));
+
+					NominaIndividualDeAjusteType conversion = (NominaIndividualDeAjusteType)serializacion.Deserialize(xml_reader);
+					
+					documento_obj = HGInetUBLv2_1.NominaAjusteXML.Convertir(conversion, documento);
+					documento.StrCufe = documento_obj.Cune;
+				}
 
 				// convierte los datos del objeto en texto XML 
 				StringBuilder txt_xml = new StringBuilder();
@@ -177,11 +195,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				};
 
 				// genera el nombre del archivo XML y PDF
-				documento_result.NombreXml = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, tipo_documento, documento_obj.Prefijo);
+				documento_result.NombreXml = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), empresa.StrIdentificacion, tipo_documento, documento_obj.Prefijo);
 				documento_result.NombrePdf = documento_result.NombreXml;
 
 				// genera el nombre del archivo ZIP
-				documento_result.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, tipo_documento, documento_obj.Prefijo);
+				documento_result.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento_obj.Documento.ToString(), empresa.StrIdentificacion, tipo_documento, documento_obj.Prefijo);
 
 				// firma el xml (valida si no ha realizado el envío a la DIAN vuelve a firmar)
 				if (respuesta.IdProceso < ProcesoEstado.FirmaXml.GetHashCode())

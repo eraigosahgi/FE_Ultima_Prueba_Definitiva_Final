@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HGInetUBLv2_1
 {
-	public class ParticipantesNominaXML
+	public partial class ParticipantesNominaXML
 	{
 
 		/// <summary>

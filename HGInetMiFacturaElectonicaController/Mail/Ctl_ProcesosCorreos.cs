@@ -177,27 +177,38 @@ namespace HGInetMiFacturaElectonicaController
 
 			try
 			{
-				var objeto = (dynamic)null;
-				objeto = Ctl_Documento.ConvertirServicio(doc, true);
 				string email_objeto = string.Empty;
 				string telefono_objeto = string.Empty;
-				if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+				if (doc.IntDocTipo < TipoDocumento.AcuseRecibo.GetHashCode())
 				{
-					email_objeto = objeto.DatosFactura.DatosAdquiriente.Email;
-					telefono_objeto = objeto.DatosFactura.DatosAdquiriente.Telefono;
-				}
+					var objeto = (dynamic)null;
+					objeto = Ctl_Documento.ConvertirServicio(doc, true);
 
-				if (doc.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
-				{
-					email_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Email;
-					telefono_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Telefono;
-				}
+					if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+					{
+						email_objeto = objeto.DatosFactura.DatosAdquiriente.Email;
+						telefono_objeto = objeto.DatosFactura.DatosAdquiriente.Telefono;
+					}
 
-				if (doc.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
-				{
-					email_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Email;
-					telefono_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Telefono;
+					if (doc.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+					{
+						email_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Email;
+						telefono_objeto = objeto.DatosNotaCredito.DatosAdquiriente.Telefono;
+					}
+
+					if (doc.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+					{
+						email_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Email;
+						telefono_objeto = objeto.DatosNotaDebito.DatosAdquiriente.Telefono;
+					}
 				}
+				else
+				{
+					email_objeto = doc.TblEmpresasFacturador.StrMailAdmin;
+					telefono_objeto = doc.TblEmpresasFacturador.StrTelefono;
+				}	
+
+				
 
 				Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 				List<MensajeEnvio> notificacion = new List<MensajeEnvio>();

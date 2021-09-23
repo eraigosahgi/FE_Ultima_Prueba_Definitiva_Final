@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HGInetUBLv2_1
 {
-	public class NovedadesNominaXML
+	public partial class NovedadesNominaXML
 	{
 
 		public static NominaIndividualTypeDevengados ObtenerDevengados(Devengados devengados_doc, bool practicante)
