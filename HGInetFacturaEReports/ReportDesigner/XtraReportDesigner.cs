@@ -137,6 +137,38 @@ namespace HGInetFacturaEReports.ReportDesigner
 
 							control_titulo.Text = titulo_formato;
 						}
+
+						try
+						{
+							//Obtiene los controles de tipo picture y carga las imagenes 
+							XRPictureBox control_imagen = (XRPictureBox)FindBandControl(reportBand, "pictureBox1");
+							if (control_imagen != null)
+							{
+								MemoryStream ms = null;
+								try
+								{
+									if (datos_documento.EmpresaLogo != null)
+									{
+										//byte[] bytes = Convert.FromBase64String(datos_documento.EmpresaLogo);
+										using (ms = new MemoryStream(datos_documento.EmpresaLogo))
+										{
+											Image logo = Image.FromStream(ms);
+											control_imagen.Image = logo;
+											control_imagen.Visible = true;
+										}
+									}
+									break;
+								}
+								catch (Exception excepcion)
+								{
+									if (ms != null)
+										ms.Close();
+								}
+							}
+						}
+						catch (Exception)
+						{
+						}
 					}
 				}
 			}

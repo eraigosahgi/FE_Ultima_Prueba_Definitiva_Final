@@ -147,7 +147,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste)
 						{
 							Planilla objeto_planilla_nomina = new Planilla();
-							objeto_planilla_nomina = convertirObjetoPlanilla(documento_obj, TipoDocumento.Nomina);
+							objeto_planilla_nomina = convertirObjetoPlanilla(documento_obj, tipo_doc);
 							rep.DataSource = objeto_planilla_nomina;
 						}
 						else
@@ -267,6 +267,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				objeto_result.EmpresaTelefono = documento.DatosEmpleador.Telefono;
 				objeto_result.EmpresaDireccion = documento.DatosEmpleador.Direccion;
 
+				objeto_result.DocumentoFormato = new Formato();
+				objeto_result.DocumentoFormato.Titulo = Enumeracion.GetDescription(tipo_doc);
+
 				if (documento.DocumentoFormato != null && documento.DocumentoFormato.CamposPredeterminados != null)
 				{
 					try
@@ -280,11 +283,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					   
 					}
 				}
-				else
-				{
-					objeto_result.DocumentoFormato = new Formato();
-				}
-				objeto_result.DocumentoFormato.Titulo = Enumeracion.GetDescription(tipo_doc);
 
 				//Informacion de Empleado
 				objeto_result.Empleado = documento.DatosTrabajador.Identificacion;

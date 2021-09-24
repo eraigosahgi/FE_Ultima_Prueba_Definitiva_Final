@@ -272,6 +272,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 
 						}
+						else if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && documento_obj.DocumentoFormato != null)
+						{
+							try
+							{
+								Ctl_Formatos clase_formatos = new Ctl_Formatos();
+								documento_obj.DocumentoFormato.Codigo = clase_formatos.ObtenerFormatosEmpresa(Constantes.NitResolucionconPrefijo, TipoFormato.FormatoPDF.GetHashCode()).Where(x => x.IntDocTipo == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault().IntCodigoFormato;
+								documento_obj.DocumentoFormato.Titulo = Enumeracion.GetDescription(tipo_doc);
+							}
+							catch (Exception)
+							{
+
+							}
+						}
 
 						// almacena Formato ****** Falta el Formato de Nomina
 						if (documento_obj.DocumentoFormato != null)
