@@ -1411,7 +1411,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-			string lista_documentos = string.Concat("[{Documento:", "'", strIdSeguridad, "',Valor:", valor_pago, "}]");
+			string monto = valor_pago.ToString().Replace(",",".");
+
+			string lista_documentos = string.Concat("[{Documento:", "'", strIdSeguridad, "',Valor:", monto, "}]");
 
 			//var datos = Pago.ReportePagoElectronicoPI(strIdSeguridad, tipo_pago, registrar_pago, valor_pago, usuario, IntPagoFormaPago);
 			var datos = Pago.ReportePagoElectronicoPIMultiple(lista_documentos, valor_pago);

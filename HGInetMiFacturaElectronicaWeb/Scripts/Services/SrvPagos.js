@@ -132,8 +132,8 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 					paging: {
 						enabled: false,
 					},
-					keyExpr: "StrIdSeguridad",					
-					onContentReady: function (options) {						
+					keyExpr: "StrIdSeguridad",
+					onContentReady: function (options) {
 						try {
 							if (options.component._options.dataSource.length == 1) {
 								$("#gridDocumentos").dxDataGrid("columnOption", "Seleccionar", "visible", false);
@@ -309,7 +309,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 							url: ruta + '/api/PagoMultiple?lista_documentos=' + $scope.documentos + '&valor_pago=' + $scope.total,
 							success: function (respuesta) {
 
-							
+
 
 								//Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
 								$scope.NumVerificacion = 1;
@@ -317,7 +317,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 								var RutaServicio = ruta_servicios + "?IdSeguridad=";
 								$scope.Idregistro = respuesta.IdRegistro;
 								var Vpago2 = window.open(RutaServicio + respuesta.Ruta, "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
-								
+
 
 
 							},
@@ -385,7 +385,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 				if (seleccion) {
 					lista += (lista) ? ',' : '';
 					valor_seleccionado = $("#txtSaldo_" + data[i].StrIdSeguridad).dxNumberBox("instance").option().value;
-					lista += "{Documento: '" + data[i].StrIdSeguridad + "',Valor: '" + valor_seleccionado + "'}";
+					lista += "{Documento: '" + data[i].StrIdSeguridad + "',Valor: '" + valor_seleccionado.toString().replace(",", ".") + "'}";
 					total_a_pagar += valor_seleccionado;
 				}
 			}

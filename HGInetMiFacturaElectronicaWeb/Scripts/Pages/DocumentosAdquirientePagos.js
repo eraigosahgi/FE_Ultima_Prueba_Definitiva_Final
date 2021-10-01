@@ -37,7 +37,7 @@ App.controller('DocAdquirientePagosController', function ($scope, $rootScope, $h
 				} else {
 
 					if ($scope.total > 0) {
-						///Pago Multiple
+						///Pago Multiple						
 						$http.get('/api/PagoMultiple?lista_documentos=' + $scope.documentos + '&valor_pago=' + $scope.total).then(function (response) {
 
 
@@ -681,13 +681,12 @@ App.controller('DocAdquirientePagosController', function ($scope, $rootScope, $h
 				} catch (e) {
 
 				}
-				if (seleccion) {
-
+				if (seleccion) {					
 					try {
 
 						valor_seleccionado = $("#txtSaldo_" + data[i].StrIdSeguridad).dxNumberBox("instance").option().value;
 						lista += (lista) ? ',' : '';
-						lista += "{Documento: '" + data[i].StrIdSeguridad + "',Valor: '" + valor_seleccionado + "'}";
+						lista += "{Documento: '" + data[i].StrIdSeguridad + "',Valor: '" + valor_seleccionado.toString().replace(",", ".") + "'}";
 						total_a_pagar += valor_seleccionado;
 					} catch (e) {
 

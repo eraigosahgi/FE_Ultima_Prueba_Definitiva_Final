@@ -43,7 +43,7 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 				} else {
 
 					if ($scope.total > 0) {
-						///Pago Multiple
+						///Pago Multiple						
 						$http.get('/api/PagoMultiple?lista_documentos=' + $scope.documentos + '&valor_pago=' + $scope.total).then(function (response) {
 
 
@@ -698,12 +698,11 @@ App.controller('HGIpayConsultaDocumentosController', function ($scope, $rootScop
 					var seleccion = $("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
 				} catch (e) {
 
-				}
-
+				}				
 				if (seleccion) {
 					lista += (lista) ? ',' : '';
 					valor_seleccionado = $("#txtSaldo_" + data[i].StrIdSeguridad).dxNumberBox("instance").option().value;
-					lista += "{Documento: '" + data[i].StrIdSeguridad + "',Valor: '" + valor_seleccionado + "'}";
+					lista += "{Documento: '" + data[i].StrIdSeguridad + "',Valor: '" + valor_seleccionado.toString().replace(",", ".") + "'}";
 					total_a_pagar += valor_seleccionado;
 				}
 			}
