@@ -159,43 +159,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						this.Edit(item);
 
 
-						var objeto = (dynamic)null;
-
-						try
-						{
-							if (item != null)
-							{
-								//Envia el objeto de Bd a convertir a objeto de servicio
-								objeto = Ctl_Documento.ConvertirServicio(item);
-
-							}
-						}
-						catch (Exception excepcion)
-						{
-
-							ProcesoEstado proceso_estado = Enumeracion.ParseToEnum<ProcesoEstado>((int)item.IntIdEstado);
-							Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta);
-							objeto = new FacturaConsulta
-							{
-								Aceptacion = item.IntAdquirienteRecibo,
-								CodigoRegistro = item.StrObligadoIdRegistro.ToString(),
-								DatosFactura = null,
-								DescripcionProceso = Enumeracion.GetDescription(proceso_estado),
-								Documento = item.IntNumero,
-								Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al procesar el documento. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_NO_CONTROLADO, excepcion.InnerException),
-								FechaUltimoProceso = item.DatFechaActualizaEstado,
-								IdDocumento = item.StrIdSeguridad.ToString(),
-								IdentificacionFacturador = item.StrEmpresaFacturador,
-								IdProceso = item.IntIdEstado,
-								MotivoRechazo = item.StrAdquirienteMvoRechazo,
-								ProcesoFinalizado = (proceso_estado == ProcesoEstado.Finalizacion || proceso_estado == ProcesoEstado.FinalizacionErrorDian) ? (1) : 0,
-								UrlPdf = item.StrUrlArchivoPdf,
-								UrlXmlUbl = item.StrUrlArchivoUbl,
-								UrlAcuse = null,
-								EstadoDian = null,
-
-							};
-						}
+						FacturaConsulta objeto = new FacturaConsulta();
 
 						lista_respuesta.Add(objeto);
 

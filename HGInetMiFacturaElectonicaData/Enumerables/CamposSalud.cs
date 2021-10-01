@@ -54,23 +54,23 @@ namespace HGInetMiFacturaElectonicaData
 		[Description("NUMERO_POLIZA")]
 		numeropoliza = 15,
 
-		[Description("FECHA_INICIO")]
-		fechainicio = 16,
-
-		[Description("FECHA_FIN")]
-		fechafin = 17,
-
 		[Description("COPAGO")]
-		copago = 18,
+		copago = 16,
 
 		[Description("CUOTA_MODERADORA")]
-		cuotamoderadora = 19,
+		cuotamoderadora = 17,
 
 		[Description("CUOTA_RECUPERACION")]
-		cuotarecuperacion = 20,
+		cuotarecuperacion = 18,
 
 		[Description("PAGOS_COMPARTIDOS")]
-		pagoscompartidos = 21
+		pagoscompartidos = 19,
+
+		[Description("FECHA_INICIO")]
+		fechainicio = 20,
+
+		[Description("FECHA_FIN")]
+		fechafin = 21
 	}
 
 	public enum TipoIdentificacionSalud
