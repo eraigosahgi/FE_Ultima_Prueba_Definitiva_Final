@@ -738,7 +738,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 			{
 				documentos = (from Pagos in context.TblPagosDetalles
 							  join enc_pago in context.TblPagosElectronicos on Pagos.StrIdPagoPrincipal equals enc_pago.StrIdRegistro
-							  where (enc_pago.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))							  
+							  where (enc_pago.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
 							  && ((enc_pago.DatFechaRegistro >= fecha_inicio && enc_pago.DatFechaRegistro <= fecha_fin))
 							  && (enc_pago.IntEstadoPago.Equals(cod_estado_recibo) || estado_recibo.Equals("*"))
 							  && (enc_pago.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
@@ -1168,7 +1168,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 						}
 
 						//Validamos Saldo Pendiente del documento
-						Monto_Pendiente = ConsultaSaldoDocumentoPM(datos_documento.StrIdSeguridad,  datos_documento.IntValorPagar);
+						Monto_Pendiente = ConsultaSaldoDocumentoPM(datos_documento.StrIdSeguridad, datos_documento.IntValorPagar);
 
 						//Si la variable de pago viene sin valor
 						if (item.Valor <= 0)
@@ -1271,12 +1271,22 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				ObjPago.StrClienteTelefono = datos_empresa.StrTelefono;
 				ObjPago.StrClienteEmail = datos_empresa.StrMailAdmin;
 				ObjPago.IntValor = decimal.Parse(valor_pago.ToString());
+
+				try
+				{
+					ObjPago.IntValor = Convert.ToInt32(Math.Floor(valor_pago));
+				}
+				catch (Exception)
+				{
+					
+				}
+
 				//Encriptar datos de seguridad secundaria                    
 				ObjPago.StrAuthIdEmpresa = Encriptar.Encriptar_SHA256(ObjPago.StrIdSeguridadRegistro.ToString() + "-" + ObjPago.StrClienteIdentificacion + "-" + ObjPago.DatFechaRegistro.ToString("dd/MM/yyyy h:m:s.F t", CultureInfo.InvariantCulture) + ObjPago.StrIdSeguridadComercio.ToString() + "-" + ObjPago.IntValor.ToString("0.##"));
 
 
 				//Registro el Pago Local                    
-				TblPagosElectronicos pago = CrearPago(ObjPago.StrIdSeguridadRegistro, ObjPago.StrIdSeguridadDoc, 0, Convert.ToDecimal(valor_pago), 0, datos_documento.StrEmpresaFacturador, datos_documento.StrEmpresaAdquiriente);
+				TblPagosElectronicos pago = CrearPago(ObjPago.StrIdSeguridadRegistro, ObjPago.StrIdSeguridadDoc, 0, ObjPago.IntValor, 0, datos_documento.StrEmpresaFacturador, datos_documento.StrEmpresaAdquiriente);
 
 				Ctl_PagosDetalles _PagosDetalles = new Ctl_PagosDetalles();
 
