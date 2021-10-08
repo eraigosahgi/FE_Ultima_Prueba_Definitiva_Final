@@ -10,13 +10,13 @@ public partial class NominaIndividualTypeDevengadosTransporte {
     
 	private bool auxilioTransporteFieldSpecified;
     
-	private decimal viaticoManutAlojSField;
+	private decimal viaticoManuAlojSField;
     
-	private bool viaticoManutAlojSFieldSpecified;
+	private bool viaticoManuAlojSFieldSpecified;
     
-	private decimal viaticoManutAlojNSField;
+	private decimal viaticoManuAlojNSField;
     
-	private bool viaticoManutAlojNSFieldSpecified;
+	private bool viaticoManuAlojNSFieldSpecified;
     
 	/// <comentarios/>
 	[System.Xml.Serialization.XmlAttributeAttribute()]
@@ -42,45 +42,45 @@ public partial class NominaIndividualTypeDevengadosTransporte {
     
 	/// <comentarios/>
 	[System.Xml.Serialization.XmlAttributeAttribute()]
-	public decimal ViaticoManutAlojS {
+	public decimal ViaticoManuAlojS {
 		get {
-			return this.viaticoManutAlojSField;
+			return this.viaticoManuAlojSField;
 		}
 		set {
-			this.viaticoManutAlojSField = value;
+			this.viaticoManuAlojSField = value;
 		}
 	}
     
 	/// <comentarios/>
 	[System.Xml.Serialization.XmlIgnoreAttribute()]
-	public bool ViaticoManutAlojSSpecified {
+	public bool ViaticoManuAlojSSpecified {
 		get {
-			return this.viaticoManutAlojSFieldSpecified;
+			return this.viaticoManuAlojSFieldSpecified;
 		}
 		set {
-			this.viaticoManutAlojSFieldSpecified = value;
+			this.viaticoManuAlojSFieldSpecified = value;
 		}
 	}
     
 	/// <comentarios/>
 	[System.Xml.Serialization.XmlAttributeAttribute()]
-	public decimal ViaticoManutAlojNS {
+	public decimal ViaticoManuAlojNS {
 		get {
-			return this.viaticoManutAlojNSField;
+			return this.viaticoManuAlojNSField;
 		}
 		set {
-			this.viaticoManutAlojNSField = value;
+			this.viaticoManuAlojNSField = value;
 		}
 	}
     
 	/// <comentarios/>
 	[System.Xml.Serialization.XmlIgnoreAttribute()]
-	public bool ViaticoManutAlojNSSpecified {
+	public bool ViaticoManuAlojNSSpecified {
 		get {
-			return this.viaticoManutAlojNSFieldSpecified;
+			return this.viaticoManuAlojNSFieldSpecified;
 		}
 		set {
-			this.viaticoManutAlojNSFieldSpecified = value;
+			this.viaticoManuAlojNSFieldSpecified = value;
 		}
 	}
 }
