@@ -608,7 +608,7 @@ namespace HGInetMiFacturaElectonicaController
 					if (!Archivo.ValidarExistencia(ruta_xml))
 						throw new ApplicationException("No se encontró ruta de archivo de respuesta de la DIAN");
 
-					if (empresa_obligado.IntPdfCampoDian == true && interoperabilidad == false && tipo_documento == TipoDocumento.Nomina && tipo_documento == TipoDocumento.NominaAjuste)
+					if (empresa_obligado.IntPdfCampoDian == true && interoperabilidad == false && tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste)
 					{
 
 						//Proceso para obtener la fecha y hora de la respuesta de la DIAN
@@ -3205,9 +3205,10 @@ namespace HGInetMiFacturaElectonicaController
 
 				return RespuestaMail;
 			}
-			catch (Exception ex)
+			catch (Exception excepcion)
 			{
-				throw new ApplicationException(ex.Message);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, "Error Enviando Correos de Notificacion alerta");
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
 		}
