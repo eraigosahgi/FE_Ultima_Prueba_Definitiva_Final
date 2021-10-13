@@ -76,7 +76,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 
 				var retorno = datos.Select(d => new
-				{					
+				{
 					d.IdFacturador,
 					d.DatFechaDocumento,
 					d.DatFechaVencDocumento,
@@ -263,7 +263,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 
 				var retorno = datos.Select(d => new
-				{					
+				{
 					d.IdFacturador,
 					d.Facturador,
 					d.NumeroDocumento,
@@ -337,7 +337,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 
 				var retorno = datos.Select(d => new
-				{					
+				{
 					d.IdFacturador,
 					d.Facturador,
 					d.NumeroDocumento,
@@ -1381,7 +1381,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					correo = datos.TblEmpresasFacturador.StrMailAdmin;
 				}
 
-				
+
 
 
 
@@ -1411,7 +1411,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-			string monto = valor_pago.ToString().Replace(",",".");
+			string monto = valor_pago.ToString().Replace(",", ".");
 
 			string lista_documentos = string.Concat("[{Documento:", "'", strIdSeguridad, "',Valor:", monto, "}]");
 
@@ -1627,54 +1627,55 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				try
 				{
-					
+
 					if (tipo_consulta == 1)
 					{
 						var datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
 						var resultado = ConvertirPagos(datos);
 						return Ok(resultado);
 					}
-					else {
+					else
+					{
 						var datos_detalle = Pago.ObtenerPagosDetalle(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
 						var resultado = ConvertirDetalles(datos_detalle);
 						return Ok(resultado);
 					}
 
-						//if (datos == null)
-						//{
-						//	return NotFound();
-						//}
+					//if (datos == null)
+					//{
+					//	return NotFound();
+					//}
 
-						//var retorno = datos.Select(d => new
-						//{
-						//	//NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
-						//	StrEmpresaFacturador = d.StrEmpresaFacturador,
-						//	NombreFacturador = d.TblEmpresas.StrRazonSocial,
-						//	StrEmpresaAdquiriente = d.StrEmpresaAdquiriente,
-						//	NombreAdquiriente = d.TblEmpresas1.StrRazonSocial,
-						//	DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
-						//	DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
-						//	PagoFactura = d.IntValorPago,
-						//	EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
-						//	CodEstado = d.IntEstadoPago,
-						//	idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
-						//	StrIdRegistro = d.StrIdRegistro,
-						//	StrIdSeguridadDoc = d.StrIdRegistro2,
-						//	Ciclo = d.IntClicloTransaccion,
-						//	Ticket = d.StrTicketID,
-						//	Cus = (d.IntFormaPago == 31) ? d.StrCampo1 : d.StrTransaccionCUS,//Si es tarjeta de credito, entonces el valor del campo Strcampo1, corresponde al cogido de aprobacion
-						//	Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper(),
-						//	Pagos = d.TblPagosDetalles.Select(p => new
-						//	{
-						//		Prefijo = p.TblDocumentos.StrPrefijo,
-						//		Documento = p.TblDocumentos.IntNumero,
-						//		Monto = p.IntValorPago,
-						//	})
+					//var retorno = datos.Select(d => new
+					//{
+					//	//NumeroDocumento = string.Format("{0}{1}", (!d.TblDocumentos.StrPrefijo.Equals("0")) ? d.TblDocumentos.StrPrefijo : "", d.TblDocumentos.IntNumero),
+					//	StrEmpresaFacturador = d.StrEmpresaFacturador,
+					//	NombreFacturador = d.TblEmpresas.StrRazonSocial,
+					//	StrEmpresaAdquiriente = d.StrEmpresaAdquiriente,
+					//	NombreAdquiriente = d.TblEmpresas1.StrRazonSocial,
+					//	DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+					//	DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
+					//	PagoFactura = d.IntValorPago,
+					//	EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
+					//	CodEstado = d.IntEstadoPago,
+					//	idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+					//	StrIdRegistro = d.StrIdRegistro,
+					//	StrIdSeguridadDoc = d.StrIdRegistro2,
+					//	Ciclo = d.IntClicloTransaccion,
+					//	Ticket = d.StrTicketID,
+					//	Cus = (d.IntFormaPago == 31) ? d.StrCampo1 : d.StrTransaccionCUS,//Si es tarjeta de credito, entonces el valor del campo Strcampo1, corresponde al cogido de aprobacion
+					//	Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper(),
+					//	Pagos = d.TblPagosDetalles.Select(p => new
+					//	{
+					//		Prefijo = p.TblDocumentos.StrPrefijo,
+					//		Documento = p.TblDocumentos.IntNumero,
+					//		Monto = p.IntValorPago,
+					//	})
 
 
-						//});
+					//});
 
-						return Ok();
+					return Ok();
 
 				}
 				catch (Exception excepcion)
@@ -2249,8 +2250,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					IntNumero = d.NumeroDocumento,
 					d.IntVlrTotal,
 					d.FacturaCancelada,
-					Saldo = Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntValorPagar)
-				}).Where(x => x.Saldo > 0).Where(x => x.FacturaCancelada != 1000);
+					Saldo = Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntValorPagar),
+					IdsPago = Pago.ConsultaIDSeguridadPagos(d.StrIdSeguridad)
+				}).Where(x => x.FacturaCancelada != 1000);
+				//}).Where(x => x.Saldo > 0).Where(x => x.FacturaCancelada != 1000);
 
 				return Request.CreateResponse(HttpStatusCode.OK, retorno);
 

@@ -1278,7 +1278,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				}
 				catch (Exception)
 				{
-					
+
 				}
 
 				//Encriptar datos de seguridad secundaria                    
@@ -1620,6 +1620,33 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 			{
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
+		}
+
+
+		/// <summary>
+		/// Retorna, los id de seguridad con los que se debe consultar 
+		/// el estado del pago en plataforma intermedia
+		/// </summary>
+		/// <param name="StrIdSeguridadDoc">Id de seguridad del Documento</param>
+		/// <returns>guid de seguridad de los documentos de pago</returns>
+		public string ConsultaIDSeguridadPagos(System.Guid StrIdSeguridadDoc)
+		{
+
+			try
+			{
+				var datos = (from pagos in context.TblPagosDetalles
+							 where pagos.StrIdSeguridadDoc == StrIdSeguridadDoc
+							 select pagos).FirstOrDefault();
+
+				return string.Format("'{0}','{1}'", datos.TblPagosElectronicos.StrIdRegistro, datos.TblPagosElectronicos.StrIdRegistro2);
+			}
+			catch (Exception)
+			{
+				return "";
+			}
+
+
+
 		}
 
 		public class PagosMultiples

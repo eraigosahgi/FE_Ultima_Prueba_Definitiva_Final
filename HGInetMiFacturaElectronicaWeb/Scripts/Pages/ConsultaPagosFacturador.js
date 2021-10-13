@@ -1180,7 +1180,6 @@ ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
 
 	var ruta_redireccion = $('#Hdf_RutaPlataformaServicios').val() + "Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;
 
-	console.log(ruta_redireccion);
 
 	$("#modal_detalles_pago").modal('show');
 	$("#ContenidoDetallesPago").html('<object data="' + ruta_redireccion + '" style="width: 100%; height: 600px" />');

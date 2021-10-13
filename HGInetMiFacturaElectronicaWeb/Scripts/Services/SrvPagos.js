@@ -1,5 +1,5 @@
-﻿var ruta = 'http://localhost:61428/';
-var ruta_servicios = 'https://pruebascloudservices.hginet.co/Views/Pago.aspx';
+﻿var ruta = 'http://localhost:61436/';
+var ruta_servicios = 'https://pruebascloudservices.hginet.co';
 
 var apphgi = angular.module('myApp', []);
 apphgi.controller('myCtrl', function ($scope, SrvPagos) {
@@ -67,33 +67,40 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 
 		var forma_pago = 0;
 		var UsuarioSession = '';
-		if (idseg != null && idseg != undefined) {
-			$scope.EnProceso = true;
+		var alto_pantalla = $(window).height() - 10;
+		var ancho_pantalla = $(window).width() - 10;
 
-			$.ajax({
-				url: ruta + '/api/Documentos?strIdSeguridad=' + idseg + '&tipo_pago=0&registrar_pago=true&valor_pago=' + $scope.Monto + '&usuario=' + UsuarioSession + '&IntPagoFormaPago=' + forma_pago,
-				success: function (response) {
+		var Vpago = window.open("", "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
+		if (Vpago == null || Vpago == undefined) {
+			DevExpress.ui.notify({ message: "Las ventanas emergentes estan bloqueadas, para realizar pagos, debe habilitarlas", position: { my: "center top", at: "center top" } }, "error", 6000);
+		} else {
+			//DevExpress.ui.notify({ message: "Se Inicia el pago", position: { my: "center top", at: "center top" } }, "success", 6000);
+			if (idseg != null && idseg != undefined) {
+				$scope.EnProceso = true;
+				$('#btnpagar').hide();
+				$.ajax({
+					url: ruta + '/api/Documentos?strIdSeguridad=' + idseg + '&tipo_pago=0&registrar_pago=true&valor_pago=' + $scope.Monto + '&usuario=' + UsuarioSession + '&IntPagoFormaPago=' + forma_pago,
+					success: function (response) {
 
+						var alto_pantalla = $(window).height() - 10;
+						var ancho_pantalla = $(window).width() - 10;
 
+						//Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
+						$scope.NumVerificacion = 1;
+						//Ruta servicio
+						var RutaServicio = ruta_servicios + "/Views/Pago.aspx?IdSeguridad=";
+						$scope.Idregistro = response.IdRegistro;
+						//$("#modal_PagoEmbebido").modal("show");
 
-					var alto_pantalla = $(window).height() - 10;
-					var ancho_pantalla = $(window).width() - 10;
+						//$("#Pago_Embed").attr("src", RutaServicio + response.data.Ruta);
+						var Vpago2 = window.open(RutaServicio + response.Ruta, "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
 
-					//Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
-					$scope.NumVerificacion = 1;
-					//Ruta servicio
-					var RutaServicio = ruta_servicios + "?IdSeguridad=";
-					$scope.Idregistro = response.IdRegistro;
-					//$("#modal_PagoEmbebido").modal("show");
-
-					//$("#Pago_Embed").attr("src", RutaServicio + response.data.Ruta);
-					var Vpago2 = window.open(RutaServicio + response.Ruta, "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
-
-
-				}, error: function () {
-					console.log("No se ha podido obtener la información");
-				}
-			});
+					}, error: function () {
+						console.log("No se ha podido obtener la información");
+						$('#btnpagar').show();
+					}
+				});
+			}
 		}
 
 	}
@@ -246,31 +253,22 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 
 					   		if (options.data.Saldo > 0) {
 					   			if (options.data.Estado != 400) {
-
-
-					   				//var RazonSocial = options.data.Facturador.replace(" ", "_%%_");
-					   				//var click = " onClick=ConsultarPago1('" + options.data.StrIdSeguridad + "','" + options.data.IntVlrTotal + "','" + options.data.PagosParciales + "'," + options.data.poseeIdComercioPSE + "," + options.data.poseeIdComercioTC + ")";
 					   				var click = " onClick=PagarDocumento('" + options.data.StrIdSeguridad + "','" + options.data.Saldo + "')";
-
-					   				var boton_pagar = '<div  ' + click + ' target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" class="dx-button dx-button-success dx-button-mode-contained dx-widget dx-button-has-icon dx-button-has-text" role="button" aria-label="Pagar" tabindex="10012"><div class="dx-button-content"><i class="dx-icon dx-icon-money"></i><span class="dx-button-text">Pagar</span></div></div>'
-
-
+					   				var boton_pagar = '<div  id="btnpagar" ' + click + ' target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" class="dx-button dx-button-success dx-button-mode-contained dx-widget dx-button-has-icon dx-button-has-text" role="button" aria-label="Pagar" tabindex="10012"><div class="dx-button-content"><i class="dx-icon dx-icon-money"></i><span class="dx-button-text">Pagar</span></div></div>'
 					   				var imagen = "";
-					   				//if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1) {
-					   				imagen = boton_pagar;//  "<a " + click + " style='font-size: 20px !important; color: #4caf50;' class='icon dx-icon-money' title='Pagar' target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' ></a><a " + click + " style='font-size: 16px !important; color: black;' title='Pagar' target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Pagar</a>";
-					   				//} else {
-					   				//	imagen = "";
-
-					   				//}
-
-					   				//if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.FacturaCancelada == 100) {//aqui se debe colocar el status que indica el pago de la factura                            
-					   				//	imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Ver</a>"
-					   				//}
-
+					   				imagen = boton_pagar;
 					   				$("<div>")
 									.append($(imagen))
 									 .appendTo(container);
 					   			}
+					   		} else {
+					   			var click = " onClick=ConsultarDetallesPago(" + options.data.IdsPago + ")";
+					   			var boton_pagar = '<div  ' + click + ' target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" class="dx-button dx-button-default dx-button-mode-contained dx-widget dx-button-has-icon dx-button-has-text" role="button" aria-label="Ver" tabindex="10012"><div class="dx-button-content"><i class="dx-icon dx-icon-money"></i><span class="dx-button-text">Ver</span></div></div>'
+					   			var imagen = "";
+					   			imagen = boton_pagar;
+					   			$("<div>")
+								.append($(imagen))
+								 .appendTo(container);
 					   		}
 					   	}
 					   },
@@ -284,6 +282,13 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 		});
 
 
+		ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
+
+			var ruta_redireccion = ruta_servicios + "/Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;
+
+			$("#modal_detalles_pago").modal('show');
+			$("#ContenidoDetallesPago").html('<object data="' + ruta_redireccion + '" style="width: 100%; height: 600px" />');
+		};
 
 
 
@@ -314,7 +319,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 								//Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
 								$scope.NumVerificacion = 1;
 								//Ruta servicio
-								var RutaServicio = ruta_servicios + "?IdSeguridad=";
+								var RutaServicio = ruta_servicios + "/Views/Pago.aspx?IdSeguridad=";
 								$scope.Idregistro = respuesta.IdRegistro;
 								var Vpago2 = window.open(RutaServicio + respuesta.Ruta, "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
 
@@ -432,6 +437,8 @@ apphgi.service('SrvPagos', function ($location, $q) {
 		var panel_pago = '<link href="' + ruta + '/Content/dx.hgi.css" rel="stylesheet" />\
 			<script src="'+ ruta + '/Scripts/config.js"></script>\
 			<script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>\
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">\
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>\
 			<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />\
 			<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.light.css" />\
 			<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>\
@@ -492,9 +499,25 @@ apphgi.service('SrvPagos', function ($location, $q) {
 					<div id="gridDocumentos"></div>\
 				</div>';
 
+
+		var ventana_modal = '<div id="modal_detalles_pago" class="modal fade" style="display: none;">\
+								<div class="modal-dialog modal-lg">\
+									<div class="modal-content">\
+										<div id="EncabezadoModal" class="modal-header">\
+										<h5 style="margin-bottom: 10px;" class="modal-title">Detalles Pago Electrónico</h5>\
+											<button type="button" class="close" data-dismiss="modal">×</button>\
+										</div>\
+										<div class="modal-body">\
+											<div id="ContenidoDetallesPago">\
+											</div>\
+										</div>\
+									</div>\
+								</div>\
+							</div>';
+
 		//Impresión de campos
 		return $.when().then(function () {
-			return panel_pago;
+			return panel_pago + ventana_modal;
 		});
 	}
 });

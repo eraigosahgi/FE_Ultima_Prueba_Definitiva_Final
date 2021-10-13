@@ -722,9 +722,14 @@ App.controller('EnvioEmailController', function EnvioEmailController($scope, $ht
 var items_Tipo =
     [
         { ID: "0", Texto: 'Todos' },
-        { ID: "1", Texto: 'Factura' },
+        { ID: "1", Texto: 'Factura Electrónica de Venta' },
         { ID: "2", Texto: 'Nota Debito' },
-        { ID: "3", Texto: 'Nota Crédito' }
+        { ID: "3", Texto: 'Nota Crédito' },
+		{ ID: "4", Texto: 'Acuse de Recibo' },
+		{ ID: "5", Texto: 'Attached de Recibo' },
+		{ ID: "10", Texto: 'Documento Soporte de Pago de Nómina Electrónica' },
+		{ ID: "11", Texto: 'Nota de Ajuste de Documento Soporte de Pago de Nómina Electrónica' },
+
     ];
 
 var TiposFiltroFecha =
