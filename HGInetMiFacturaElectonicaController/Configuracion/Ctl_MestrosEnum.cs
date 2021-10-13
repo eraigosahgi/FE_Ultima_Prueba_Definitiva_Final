@@ -76,11 +76,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						//Metodo para obtener los datos del enumerable de Estatus del pago
 						foreach (var value in Enum.GetValues(typeof(HGInetMiFacturaElectonicaData.CategoriaEstado)))
 						{
-							if (!value.Equals(HGInetMiFacturaElectonicaData.CategoriaEstado.NoRecibido))
-							{
+							//if (!value.Equals(HGInetMiFacturaElectonicaData.CategoriaEstado.NoRecibido))
+							//{
 								string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CategoriaEstado>((int)value)))).Split(',');
 								datos.Add(datos_enum);
-							}
+							//}
 						}
 						break;
 					case 6:

@@ -1,5 +1,9 @@
-﻿var ruta = 'http://localhost:61436/';
-var ruta_servicios = 'https://pruebascloudservices.hginet.co';
+﻿//var ruta = 'http://localhost:61436/';
+//var ruta_servicios = 'https://pruebascloudservices.hginet.co';
+
+var ruta = 'https://portal.mifacturaenlinea.com.co/';
+var ruta_servicios = 'https://cloudservices.hginet.co/';
+
 
 var apphgi = angular.module('myApp', []);
 apphgi.controller('myCtrl', function ($scope, SrvPagos) {
@@ -285,9 +289,13 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 		ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
 
 			var ruta_redireccion = ruta_servicios + "/Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;
+			var alto_pantalla = $(window).height();
+			var ancho_pantalla = $(window).width();
 
-			$("#modal_detalles_pago").modal('show');
-			$("#ContenidoDetallesPago").html('<object data="' + ruta_redireccion + '" style="width: 100%; height: 600px" />');
+			var x = (screen.width / 2) - (ancho_pantalla / 2);
+			//Ajustar verticalmente
+			var y = (screen.height / 2) - (alto_pantalla / 2);
+			window.open(ruta_redireccion, 'Pagos', 'left=' + x + ', top=' + y + '');
 		};
 
 

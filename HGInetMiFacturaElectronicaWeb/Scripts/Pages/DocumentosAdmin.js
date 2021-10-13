@@ -72,7 +72,16 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				loadMode: "raw",
 				key: "ID",
 				load: function () {
-					return JSON.parse(JSON.stringify(Estado));
+					//try {
+					//	return JSON.parse(JSON.stringify(Estado));
+					//} catch (e) {
+					var datos = [{ ID: '0', Descripcion: 'No Recibido' },
+					{ ID: '100', Descripcion: 'Recibido Plataforma' },
+					{ ID: '200', Descripcion: 'Envío DIAN' },
+					{ ID: '300', Descripcion: 'Validado DIAN' },
+					{ ID: '400', Descripcion: 'Fallido DIAN' }];
+					return JSON.parse(JSON.stringify(datos));
+					//}
 				}
 			});
 		};
