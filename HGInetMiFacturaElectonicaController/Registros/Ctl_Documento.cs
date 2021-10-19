@@ -3732,7 +3732,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							{
 								try
 								{
-									ReenviarCorreoSonda(item);
+									Ctl_ProcesosCorreos procesos_correo = new Ctl_ProcesosCorreos();
+									TblProcesoCorreo correo = procesos_correo.Obtener(item.StrIdSeguridad);
+									if (correo != null && correo.IntEnvioMail == false)
+									{
+										ReenviarCorreoSonda(item);
+									}
 									item.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
 									item.DatFechaActualizaEstado = Fecha.GetFecha();
 									item.IntEnvioMail = true;
@@ -4088,10 +4093,19 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							TblDocumentos doc_bd = ObtenerPorIdSeguridad(item.StrIdSeguridadDoc, true).FirstOrDefault();
 							try
 							{
-								ReenviarCorreoSonda(doc_bd);
+								if (item.IntEnvioMail == false && string.IsNullOrEmpty(item.StrIdMensaje))
+								{
+									ReenviarCorreoSonda(doc_bd);
+								}
+								else
+								{
+									item.IntEnvioMail = true;
+									correo_procesos.Actualizar(item);
+								}
 								doc_bd.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
 								doc_bd.DatFechaActualizaEstado = Fecha.GetFecha();
 								doc_bd.IntEnvioMail = true;
+
 
 							}
 							catch (Exception excepcion)
@@ -4248,61 +4262,96 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						FechaInicial = FechaActual.AddDays(-7);
 						FechaFinal = FechaActual.AddDays(-1);
 
-						List<EstadisticaDocumentos> respuesta = ObtenerPorEstado(FechaInicial, FechaFinal, resumen_mes);
-
-						if (respuesta != null)
+						try
 						{
-							foreach (EstadisticaDocumentos item in respuesta)
+							List<EstadisticaDocumentos> respuesta = ObtenerPorEstado(FechaInicial, FechaFinal, resumen_mes);
+
+							if (respuesta != null)
 							{
-								Ctl_Empresa emp = new Ctl_Empresa();
-								TblEmpresas facturador = emp.Obtener(item.Id_Facturador);
-								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-								List<string> ListaNotificacion = new List<string>();
-								ListaNotificacion.Add(string.Format("validamos en nuestra plataforma y encontramos que en la semana del {0} hasta el {1}", FechaInicial.ToString("D"), FechaFinal.ToString("D")));
-								ListaNotificacion.Add("nos registra documentos en estado No Recibido(Rechazados), a continuacion detallamos la informacion");
-								ListaNotificacion.Add(string.Format("Cantidad Rechazados: {0}", item.CantRechazo));
-								ListaNotificacion.Add("Por favor validar esta información en nuestra plataforma o puede comunicarse con nuestra area de soporte");
-								email.EnviaNotificacionAlertaDIAN(item.Id_Facturador, item.CantRechazo.ToString(), ListaNotificacion, 4, false, facturador.StrMailAdmin, 1);
+								foreach (EstadisticaDocumentos item in respuesta)
+								{
+									Ctl_Empresa emp = new Ctl_Empresa();
+									TblEmpresas facturador = emp.Obtener(item.Id_Facturador);
+									Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+									List<string> ListaNotificacion = new List<string>();
+									ListaNotificacion.Add(string.Format("validamos en nuestra plataforma y encontramos que en la semana del {0} hasta el {1}", FechaInicial.ToString("D"), FechaFinal.ToString("D")));
+									ListaNotificacion.Add("nos registra documentos en estado No Recibido(Rechazados), a continuacion detallamos la informacion");
+									ListaNotificacion.Add(string.Format("Cantidad Rechazados: {0}", item.CantRechazo));
+									ListaNotificacion.Add("Por favor validar esta información en nuestra plataforma o puede comunicarse con nuestra area de soporte");
+									email.EnviaNotificacionAlertaDIAN(item.Id_Facturador, item.CantRechazo.ToString(), ListaNotificacion, 4, false, facturador.StrMailAdmin, 1);
+								}
+
 							}
-							
+						}
+						catch (Exception excepcion)
+						{
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, "Error Enviando resumen de documentos por semana");
+							throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 						}
 
 
 					}
 					else
 					{
-						int dias_mes = DateTime.DaysInMonth(FechaActual.Year, FechaActual.AddMonths(-1).Month);
-						FechaInicial = FechaActual.AddMonths(-1);
-						FechaFinal = FechaActual.AddDays(-1);
-
-						List<EstadisticaDocumentos> respuesta = ObtenerPorEstado(FechaInicial, FechaFinal, resumen_mes);
-
-						if (respuesta != null)
+						try
 						{
-							foreach (EstadisticaDocumentos item in respuesta)
-							{
-								Ctl_Empresa emp = new Ctl_Empresa();
-								TblEmpresas facturador = emp.Obtener(item.Id_Facturador);
-								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-								List<string> ListaNotificacion = new List<string>();
-								ListaNotificacion.Add(string.Format("aqui encuentras un resumen de tu actividad en el envío de documentos electrónicos a nuestra plataforma correspondiente al mes de {0} que comprende del {1} hasta el {2}.", FechaInicial.ToString("MMMM"), FechaInicial.ToString("D"), FechaFinal.ToString("D")));
-								ListaNotificacion.Add("A continuación detallamos la información:");
-								ListaNotificacion.Add(string.Format("Saldo disponible de documentos: {0}", item.SaldoPlan));
-								ListaNotificacion.Add(string.Format("Total: {0}", item.Cantidad));
-								ListaNotificacion.Add(string.Format("Validos: {0}", item.CantValidado));
-								ListaNotificacion.Add(string.Format("Rechazados: {0}", item.CantRechazo));
-								ListaNotificacion.Add(string.Format("Pendiente Respuesta: {0}", item.CantEnviado));
-								ListaNotificacion.Add("Esta información la puede consultar en nuestra plataforma o si tienes alguna duda puede comunicarse con nuestra area de soporte");
-								email.EnviaNotificacionAlertaDIAN(item.Id_Facturador, item.Cantidad.ToString(), ListaNotificacion, 4, true, facturador.StrMailAdmin, 4);
-							}
 
+							//FechaActual = new DateTime(2021, 11, 05);
+
+							int dias_mes = DateTime.DaysInMonth(FechaActual.Year, FechaActual.AddMonths(-1).Month);
+							FechaInicial = FechaActual.AddMonths(-1).AddDays( 1 - FechaActual.Day);
+							FechaFinal = FechaActual.AddMonths(-1).AddDays(dias_mes - FechaActual.Day);
+
+							List<EstadisticaDocumentos> respuesta = ObtenerPorEstado(FechaInicial, FechaFinal, resumen_mes);
+
+							if (respuesta != null)
+							{
+								foreach (EstadisticaDocumentos item in respuesta)
+								{
+									Ctl_Empresa emp = new Ctl_Empresa();
+									TblEmpresas facturador = emp.Obtener(item.Id_Facturador);
+									Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+									List<string> ListaNotificacion = new List<string>();
+									try
+									{
+										ListaNotificacion.Add(string.Format("aqui encuentras un resumen de tu actividad en el envío de documentos electrónicos a nuestra plataforma correspondiente al mes de {0} que comprende del {1} hasta el {2}.", FechaInicial.ToString("MMMM"), FechaInicial.ToString("D"), FechaFinal.ToString("D")));
+									}
+									catch (Exception excepcion)
+									{
+										Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error encabezado lista de documentos - {0} - {1} - {2}", FechaInicial.ToString("MMMM"), FechaInicial.ToString("D"), FechaFinal.ToString("D")));
+										throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+									}
+									ListaNotificacion.Add("A continuación detallamos la información:");
+									ListaNotificacion.Add(string.Format("Saldo disponible de documentos: {0}", item.SaldoPlan));
+									ListaNotificacion.Add(string.Format("Total: {0}", item.Cantidad));
+									ListaNotificacion.Add(string.Format("Validos: {0}", item.CantValidado));
+									ListaNotificacion.Add(string.Format("Rechazados: {0}", item.CantRechazo));
+									ListaNotificacion.Add(string.Format("Pendiente Respuesta: {0}", item.CantEnviado));
+									ListaNotificacion.Add("Esta información la puede consultar en nuestra plataforma o si tienes alguna duda puede comunicarse con nuestra area de soporte");
+									try
+									{
+										email.EnviaNotificacionAlertaDIAN(item.Id_Facturador, item.Cantidad.ToString(), ListaNotificacion, 4, true, facturador.StrMailAdmin, 4);
+									}
+									catch (Exception excepcion)
+									{
+										Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, "Error Enviando Mail con resumen de documentos por mes");
+										throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+									}
+								}
+
+							}
+						}
+						catch (Exception excepcion)
+						{
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error Enviando resumen de documentos por mes - {0}", excepcion.InnerException.Message));
+							throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 						}
 					}
 
 				}
 				catch (Exception excepcion)
 				{
-					Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, "Error Enviando documento Por la sonda");
+					Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error Enviando documento Por la sonda - {0}",excepcion.InnerException.Message));
 					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 				}
 
@@ -4325,55 +4374,136 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			   
 				if (resumen_mes == false)
 				{
-					List<EstadisticaDocumentos> respuesta = (from datos in context.TblDocumentos
-									 where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal 
-									 && datos.IdCategoriaEstado == estado_rechazado
-									 && datos.StrProveedorEmisor == Constantes.NitResolucionconPrefijo
-									 orderby datos.StrEmpresaFacturador
-									 group datos by datos.StrEmpresaFacturador into grp
-									 select new EstadisticaDocumentos { Id_Facturador = grp.FirstOrDefault().StrEmpresaFacturador, CantRechazo = grp.Count() }).ToList();
-					return respuesta;
+					try
+					{
+						List<EstadisticaDocumentos> respuesta = (from datos in context.TblDocumentos
+																 where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal
+																 && datos.IdCategoriaEstado == estado_rechazado
+																 && datos.StrProveedorEmisor == Constantes.NitResolucionconPrefijo
+																 orderby datos.StrEmpresaFacturador
+																 group datos by datos.StrEmpresaFacturador into grp
+																 select new EstadisticaDocumentos { Id_Facturador = grp.FirstOrDefault().StrEmpresaFacturador, CantRechazo = grp.Count() }).ToList();
+						return respuesta;
+					}
+					catch (Exception excepcion)
+					{
+						Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error Agrupando por Facturador y estado Rechazado - {0}",excepcion.InnerException.Message));
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+					}
 				}
 				else
 				{
 
-					List<EstadisticaDocumentos> agrupacion = (from datos in context.TblDocumentos
-									 where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal
-									 && datos.StrProveedorEmisor == Constantes.NitResolucionconPrefijo
-									 orderby datos.IdCategoriaEstado
-									 group datos by new { datos.StrEmpresaFacturador, datos.IdCategoriaEstado } into grp
-									select new EstadisticaDocumentos
-									{
-										Id_Facturador = grp.FirstOrDefault().StrEmpresaFacturador,
-										Cantidad = grp.Count(),
-										Estado = grp.FirstOrDefault().IdCategoriaEstado,
-									}).ToList().ToList();
+					List<EstadisticaDocumentos> agrupacion = new List<EstadisticaDocumentos>();
+
+					try
+					{
+						agrupacion = (from datos in context.TblDocumentos
+									  where datos.DatFechaIngreso >= FechaInicial && datos.DatFechaIngreso <= FechaFinal
+									  && datos.StrProveedorEmisor == Constantes.NitResolucionconPrefijo
+									  orderby datos.IdCategoriaEstado
+									  group datos by new { datos.StrEmpresaFacturador, datos.IdCategoriaEstado } into grp
+									  select new EstadisticaDocumentos
+									  {
+										  Id_Facturador = grp.FirstOrDefault().StrEmpresaFacturador,
+										  Cantidad = grp.Count(),
+										  Estado = grp.FirstOrDefault().IdCategoriaEstado,
+									  }).ToList().ToList();
+
+					}
+					catch (Exception excepcion)
+					{
+						Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error Agrupando por estado de documentos y Facturador - {0}", FechaInicial, FechaFinal));
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+					}
 
 					List<EstadisticaDocumentos> respuesta = new List<EstadisticaDocumentos>();
 
-					List<string> facturadores = agrupacion.Select(fac => fac.Id_Facturador).Distinct().ToList();
-					foreach (string item in facturadores)
+					try
 					{
-						List<EstadisticaDocumentos> fact_estados = agrupacion.Where(x => x.Id_Facturador == item).ToList();
-						EstadisticaDocumentos estado = new EstadisticaDocumentos();
-						estado.Id_Facturador = item;
-						estado.CantRechazo = fact_estados.Where(x => x.Estado.Equals(estado_rechazado)).FirstOrDefault().Cantidad;
-						estado.CantValidado = fact_estados.Where(x => x.Estado.Equals(estado_validado)).FirstOrDefault().Cantidad;
-						estado.CantEnviado = fact_estados.Where(x => x.Estado.Equals(estado_enviado)).FirstOrDefault().Cantidad + fact_estados.Where(x => x.Estado.Equals(estado_recibido)).FirstOrDefault().Cantidad;
-						estado.Cantidad = estado.CantEnviado + estado.CantRechazo + estado.CantValidado;
-
-						//Busco documentos disponibles
-						Ctl_PlanesTransacciones CtrPlanes = new Ctl_PlanesTransacciones();
-						var Planes = CtrPlanes.obtenerSaldoDisponibles(item);
-
-						if (Planes != null)
+						List<string> facturadores = agrupacion.Select(fac => fac.Id_Facturador).Distinct().ToList();
+						foreach (string item in facturadores)
 						{
-							estado.SaldoPlan = Planes.TDisponible;
-						}
+							EstadisticaDocumentos estado = new EstadisticaDocumentos();
+							List<EstadisticaDocumentos> fact_estados = null;
+							try
+							{
+								fact_estados = agrupacion.Where(x => x.Id_Facturador == item).ToList();
+								
+								estado.Id_Facturador = item;
+								try
+								{
+									estado.CantRechazo = fact_estados.Where(x => x.Estado.Equals(estado_rechazado)).FirstOrDefault().Cantidad;
+								}
+								catch (Exception)
+								{
+									estado.CantRechazo = 0;
+								}
 
-						respuesta.Add(estado);
+								try
+								{
+									estado.CantValidado = fact_estados.Where(x => x.Estado.Equals(estado_validado)).FirstOrDefault().Cantidad;
+								}
+								catch (Exception)
+								{
+
+									estado.CantValidado = 0;
+								}
+
+								int cant_enviado = 0;
+								int cant_recibido = 0;
+
+								try
+								{
+									cant_enviado = fact_estados.Where(x => x.Estado.Equals(estado_enviado)).FirstOrDefault().Cantidad;
+								}
+								catch (Exception)
+								{
+								}
+
+								try
+								{
+									cant_recibido = fact_estados.Where(x => x.Estado.Equals(estado_recibido)).FirstOrDefault().Cantidad;
+								}
+								catch (Exception)
+								{
+								}
+
+								estado.CantEnviado = cant_enviado + cant_recibido;
+								estado.Cantidad = estado.CantEnviado + estado.CantRechazo + estado.CantValidado;
+							}
+							catch (Exception excepcion)
+							{
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error Totalizando por Estado - {0} - {1} - {2} - {3} - {4}", estado.Id_Facturador, fact_estados.Where(x => x.Estado.Equals(estado_rechazado)).FirstOrDefault().Cantidad, fact_estados.Where(x => x.Estado.Equals(estado_validado)).FirstOrDefault().Cantidad, fact_estados.Where(x => x.Estado.Equals(estado_enviado)).FirstOrDefault().Cantidad + fact_estados.Where(x => x.Estado.Equals(estado_recibido)).FirstOrDefault().Cantidad, estado.Cantidad));
+								throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+							}
+
+							//Busco documentos disponibles
+							try
+							{
+								Ctl_PlanesTransacciones CtrPlanes = new Ctl_PlanesTransacciones();
+								var Planes = CtrPlanes.obtenerSaldoDisponibles(item);
+
+								if (Planes != null)
+								{
+									estado.SaldoPlan = Planes.TDisponible;
+								}
+							}
+							catch (Exception excepcion)
+							{
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Error Obtieniendo Plan del Facturador");
+								throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+							}
+
+							respuesta.Add(estado);
+						}
 					}
-					
+					catch (Exception excepcion)
+					{
+						Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Error Agrupando por Facturador y totalizando por estado");
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+					}
+
 					return respuesta;
 				}
 
@@ -4383,6 +4513,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			catch (Exception excepcion)
 			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta,"Error Consultando documentos Por la sonda - {0}");
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}

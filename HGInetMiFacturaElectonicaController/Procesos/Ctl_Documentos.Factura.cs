@@ -369,6 +369,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						item_respuesta.IdPeticion = id_peticion;
 						id_radicado = Guid.Parse(item_respuesta.IdDocumento);
 						doc_existe = true;
+
+						//Se valida que no sea un documento para probar la respuesta de los servicios
+						if ((numero_documento.IntTipoOperacion == 50 || item.TipoOperacion == 50) && (numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode() || numero_documento.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode()))
+						{
+							//Se actualiza el estado para evitar que lo envien de nuevo mientras se termina este proceso
+							numero_documento.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							//numero_documento = num_doc.Actualizar(numero_documento);
+						}
+
 						if (numero_documento.IntIdEstado == ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.PrevalidacionErrorDian.GetHashCode())
 						{
 							//guardo algunas de las propiedades que estan en Bd para hacer la actualizacion con lo que llega

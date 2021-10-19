@@ -20,13 +20,16 @@ using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.Peticiones;
 using LibreriaGlobalHGInet.RegistroLog;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -181,7 +184,8 @@ namespace HGInetMiFacturaElectonicaController
 					List<MensajeContenido> mensajes = new List<MensajeContenido>();
 					mensajes.Add(contenido);
 
-					respuesta_email = Ctl_CloudMensajeria.Enviar(ruta_envio, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes, plataforma.IdAplicacionHGInetMail);
+					respuesta_email = Enviar(ruta_envio, plataforma.LicenciaHGInetMail, plataforma.IdentificacionHGInetMail, mensajes, plataforma.IdAplicacionHGInetMail);
+
 
 				}
 
@@ -2702,16 +2706,73 @@ namespace HGInetMiFacturaElectonicaController
 			obj_peticion.serial = plataforma_datos.LicenciaHGInetMail;
 			obj_peticion.id_mensaje = MessageID;
 
-			ClienteRest<MensajeResumen> cliente = new ClienteRest<MensajeResumen>(string.Format("{0}/Api/ObtenerResumenMensaje", ruta_envio), TipoContenido.Applicationjson.GetHashCode(), "");
+			//ClienteRest<MensajeResumen> cliente = new ClienteRest<MensajeResumen>(string.Format("{0}/Api/ObtenerResumenMensaje", ruta_envio), TipoContenido.Applicationjson.GetHashCode(), "");
+			//try
+			//{
+			//	datos_retorno = cliente.POST(obj_peticion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			//}
+			//return (datos_retorno);
+
+			return ConsultarCorreo2(string.Format("{0}/Api/ObtenerResumenMensaje", ruta_envio), obj_peticion);
+
+		}
+
+		public static MensajeResumen ConsultarCorreo2(string url, MensajeResumenGlobal Datos)
+		{
+
 			try
 			{
-				datos_retorno = cliente.POST(obj_peticion);
+				ServicePointManager.Expect100Continue = true;
+				ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+
+				request.Method = "POST";
+				request.ContentType = "application/json";
+
+				string ObjeDatos = JsonConvert.SerializeObject(Datos);
+
+				System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
+				byte[] bytes = encoding.GetBytes(ObjeDatos);
+
+				request.ContentLength = bytes.Length;
+
+				using (Stream requestStream = request.GetRequestStream())
+				{
+					requestStream.Write(bytes, 0, bytes.Length);
+				}
+				string resp = string.Empty;
+
+				HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+
+				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+				{
+					resp = reader.ReadToEnd();
+				}
+
+				MensajeResumen Result = new MensajeResumen();
+
+				try
+				{
+					Result = JsonConvert.DeserializeObject<MensajeResumen>(resp);
+				}
+				catch (Exception ex)
+				{
+					string error = ex.Message;
+					throw;
+				}
+
+				return Result;
 			}
 			catch (Exception excepcion)
 			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+
+				throw new ApplicationException(string.Format("Error Registro HGI Pasarela Pagos : {0}", excepcion.Message));
 			}
-			return (datos_retorno);
 
 		}
 
@@ -3319,6 +3380,145 @@ namespace HGInetMiFacturaElectonicaController
 		}
 
 		#endregion
+
+
+		public static List<MensajeEnvio> Enviar(string UrlApi, string Serial, string Identificacion, List<MensajeContenido> mensajes, string Aplicacion = "")
+		{
+			// valida la URL del servicio web
+			//  UrlApi = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlApi), UrlWcf);
+
+			// valida el parámetro Serial
+			if (string.IsNullOrEmpty(Serial))
+				throw new ApplicationException("Parámetro Serial de tipo string inválido.");
+
+			// valida el parámetro Identificacion
+			if (string.IsNullOrEmpty(Identificacion))
+				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+
+			List<MensajeEnvio> datos = new List<MensajeEnvio>();
+
+			List<MensajeEnvio> enviar = null;
+			MensajeContenidoGlobal MensajeContenidoGlobal = new MensajeContenidoGlobal();
+			try
+			{
+				// configura la cadena de autenticación para la ejecución del servicio web en SHA1                
+				string dataKey = Encriptar.Encriptar_SHA1(string.Format("{0}{1}", Serial, Identificacion));
+
+				MensajeContenidoGlobal.identificacion = Identificacion;
+				MensajeContenidoGlobal.serial = Serial;
+				MensajeContenidoGlobal.MensajeContenido = mensajes;
+				MensajeContenidoGlobal.Aplicacion = Aplicacion;
+
+				//ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+				////System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+				//ClienteRest<List<MensajeEnvio>> cliente = new ClienteRest<List<MensajeEnvio>>(string.Format("{0}/api/Enviar", UrlApi), LibreriaGlobalHGInet.Peticiones.TipoContenido.Applicationjson.GetHashCode(), "");
+				//try
+				//{
+				//	enviar = cliente.POST(MensajeContenidoGlobal);
+				//	if (enviar != null)
+				//		if (enviar[0].Data[0].MessageID != 500)
+				//		{
+				//			return enviar;
+				//		}
+				//		else
+				//		{
+				//			throw new Exception(enviar[0].Data[0].Email);
+				//		}
+
+				//	else
+				//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+				//}
+				//catch (Exception ex)
+				//{
+				//	try
+				//	{
+				//		string datos_parametros = JsonConvert.SerializeObject(MensajeContenidoGlobal);
+
+				//		RegistroLog.Guardar(Identificacion, "mails", datos_parametros, ex.Message);
+
+				//		var cod = cliente.CodHttp;
+				//		throw new Exception(string.Format(" Error: {0}", ex));
+				//	}
+				//	catch (Exception)
+				//	{
+				//		throw new Exception(ex.Message.ToString());
+				//	}
+				//}
+
+				return EnviarCorreo(string.Format("{0}/api/Enviar", UrlApi), MensajeContenidoGlobal);
+			}
+			catch (FaultException excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion);
+			}
+			catch (CommunicationException excepcion)
+			{
+				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			}
+			catch (Exception excepcion)
+			{
+				throw excepcion;
+			}
+		}
+
+		public static List<MensajeEnvio> EnviarCorreo(string url, MensajeContenidoGlobal Datos)
+		{
+
+			try
+			{
+				ServicePointManager.Expect100Continue = true;
+				ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+
+				request.Method = "POST";
+				request.ContentType = "application/json";
+
+				string ObjeDatos = JsonConvert.SerializeObject(Datos);
+
+				System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
+				byte[] bytes = encoding.GetBytes(ObjeDatos);
+
+				request.ContentLength = bytes.Length;
+
+				using (Stream requestStream = request.GetRequestStream())
+				{
+					requestStream.Write(bytes, 0, bytes.Length);
+				}
+				string resp = string.Empty;
+
+				HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+
+				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+				{
+					resp = reader.ReadToEnd();
+				}
+
+				List<MensajeEnvio> Result = new List<MensajeEnvio>();
+
+				try
+				{
+
+					Result = JsonConvert.DeserializeObject<List<MensajeEnvio>>(resp);
+
+				}
+				catch (Exception ex)
+				{
+					string error = ex.Message;
+					throw;
+				}
+
+				return Result;
+			}
+			catch (Exception excepcion)
+			{
+
+				throw new ApplicationException(string.Format("Error Registro HGI Pasarela Pagos : {0}", excepcion.Message));
+			}
+
+		}
 
 
 

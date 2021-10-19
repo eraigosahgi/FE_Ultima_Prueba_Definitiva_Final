@@ -215,86 +215,30 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 				}
 
-				// envía el archivo zip con el xml firmado a la DIAN
-				if (respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode())
+				//Se valida que no sea un documento para probar la respuesta de los servicios
+				if (documento.IntTipoOperacion != 50 || documento_obj.TipoOperacion != 50)
 				{
-					//valida si debe consultar el estado del documento en la DIAN
-					if (consulta_documento)
+
+					// envía el archivo zip con el xml firmado a la DIAN
+					if (respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode())
 					{
-						respuesta = Consultar(documento, empresa, ref respuesta);
-
-						//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
-						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
+						//valida si debe consultar el estado del documento en la DIAN
+						if (consulta_documento)
 						{
-							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian,true);
-							ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
-						}
-						else
-						{
-							respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
-							//Actualiza la respuesta
-							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
-							respuesta.FechaUltimoProceso = Fecha.GetFecha();
+							respuesta = Consultar(documento, empresa, ref respuesta);
 
-							//Actualiza Documento en Base de Datos
-							documento.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
-							documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
-
-							Ctl_Documento documento_tmp = new Ctl_Documento();
-							documento_tmp.Actualizar(documento);
-
-							//Actualiza la categoria con el nuevo estado
-							respuesta.IdEstado = documento.IdCategoriaEstado;
-							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
-						}
-
-					}
-					else
-					{
-						HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian, true);
-						ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
-					}
-				}
-
-
-				//Valida estado del documento en la Plataforma de la DIAN
-				if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode() || respuesta.IdProceso == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode())
-				{
-					if ((respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode()))
-					{
-						respuesta = Consultar(documento, empresa, ref respuesta);
-
-						//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
-						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
-						{
-							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian, true);
-							ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
-
-							//Consulta si el envio es por habilitacion, produccion hace todo el proceso completo
-							if (acuse.Response == 200)
-								respuesta = Consultar(documento, empresa, ref respuesta, acuse.KeyV2);
-						}
-
-					}
-
-					// envía el mail de documentos al adquiriente
-					if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
-					{
-						if ((documento.StrProveedorReceptor == null) || documento.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
-						{
-							if (documento.IntEnvioMail == null || documento.IntEnvioMail == false)
+							//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
+							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
 							{
-								respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
-								Ctl_Documento documento_tmp = new Ctl_Documento();
-								documento_tmp.Actualizar(documento);
-								//ValidarRespuesta(respuesta);
+								HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian, true);
+								ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
 							}
 							else
 							{
+								respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
 								//Actualiza la respuesta
-								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
+								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
 								respuesta.FechaUltimoProceso = Fecha.GetFecha();
-								respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
 
 								//Actualiza Documento en Base de Datos
 								documento.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
@@ -306,16 +250,103 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//Actualiza la categoria con el nuevo estado
 								respuesta.IdEstado = documento.IdCategoriaEstado;
 								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
-								ValidarRespuesta(respuesta, respuesta.DescripcionEstado, null, false);
 							}
 
 						}
 						else
 						{
-							//Se actualiza respuesta	
-							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PendienteEnvioProveedorDoc);
+							HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian, true);
+							ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
+						}
+					}
+
+
+					//Valida estado del documento en la Plataforma de la DIAN
+					if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode() || respuesta.IdProceso == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode())
+					{
+						if ((respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode()))
+						{
+							respuesta = Consultar(documento, empresa, ref respuesta);
+
+							//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
+							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
+							{
+								HGInetDIANServicios.DianFactura.AcuseRecibo acuse = EnviarDian(documento, empresa, ref respuesta, ref documento_result, resolucion.StrIdSetDian, true);
+								ValidarRespuesta(respuesta, (acuse != null) ? string.Format("{0} - {1}", acuse.Response, acuse.Comments) : "");
+
+								//Consulta si el envio es por habilitacion, produccion hace todo el proceso completo
+								if (acuse.Response == 200)
+									respuesta = Consultar(documento, empresa, ref respuesta, acuse.KeyV2);
+							}
+
+						}
+
+						// envía el mail de documentos al adquiriente
+						if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
+						{
+							if ((documento.StrProveedorReceptor == null) || documento.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
+							{
+								if (documento.IntEnvioMail == null || documento.IntEnvioMail == false)
+								{
+									respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
+									Ctl_Documento documento_tmp = new Ctl_Documento();
+									documento_tmp.Actualizar(documento);
+									//ValidarRespuesta(respuesta);
+								}
+								else
+								{
+									//Actualiza la respuesta
+									respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
+									respuesta.FechaUltimoProceso = Fecha.GetFecha();
+									respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
+
+									//Actualiza Documento en Base de Datos
+									documento.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
+									documento.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+
+									Ctl_Documento documento_tmp = new Ctl_Documento();
+									documento_tmp.Actualizar(documento);
+
+									//Actualiza la categoria con el nuevo estado
+									respuesta.IdEstado = documento.IdCategoriaEstado;
+									respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
+									ValidarRespuesta(respuesta, respuesta.DescripcionEstado, null, false);
+								}
+
+							}
+							else
+							{
+								//Se actualiza respuesta	
+								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PendienteEnvioProveedorDoc);
+								respuesta.FechaUltimoProceso = Fecha.GetFecha();
+								respuesta.IdProceso = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+
+								//Actualiza Documento en Base de Datos
+								documento.DatFechaActualizaEstado = Fecha.GetFecha();
+								documento.IntIdEstado = (short)respuesta.IdProceso;
+
+								//Actualizo el estado del documento para enviar al proveedor receptor
+								Ctl_Documento documento_tmp = new Ctl_Documento();
+								documento_tmp.Actualizar(documento);
+
+								//Actualiza la categoria con el nuevo estado
+								respuesta.IdEstado = documento.IdCategoriaEstado;
+								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
+								ValidarRespuesta(respuesta, respuesta.DescripcionEstado);
+							}
+						}
+						else if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
+						{
+							/*respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
+							Ctl_Documento documento_tmp = new Ctl_Documento();
+							documento_tmp.Actualizar(documento);*/
+							//ValidarRespuesta(respuesta);
+
+							//Se actualiza respuesta
+							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(respuesta.EstadoDian.Descripcion, LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.ProcesoPausadoPlataformaDian);
 							respuesta.FechaUltimoProceso = Fecha.GetFecha();
-							respuesta.IdProceso = ProcesoEstado.PendienteEnvioProveedorDoc.GetHashCode();
+							respuesta.IdProceso = ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
 
 							//Actualiza Documento en Base de Datos
 							documento.DatFechaActualizaEstado = Fecha.GetFecha();
@@ -328,66 +359,64 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//Actualiza la categoria con el nuevo estado
 							respuesta.IdEstado = documento.IdCategoriaEstado;
 							respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
-							ValidarRespuesta(respuesta, respuesta.DescripcionEstado);
+
 						}
 					}
-					else if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
+
+					// envía el mail de acuse de recibo al facturador electrónico
+					if ((documento.IntAdquirienteRecibo > AdquirienteRecibo.Pendiente.GetHashCode() && documento.IntAdquirienteRecibo < AdquirienteRecibo.AprobadoTacito.GetHashCode()) && (documento.IntIdEstado != ProcesoEstado.Finalizacion.GetHashCode()))
 					{
-						/*respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result, true);
-						Ctl_Documento documento_tmp = new Ctl_Documento();
-						documento_tmp.Actualizar(documento);*/
-						//ValidarRespuesta(respuesta);
 
-						//Se actualiza respuesta
-						respuesta.Error = new LibreriaGlobalHGInet.Error.Error(respuesta.EstadoDian.Descripcion, LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
-						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.ProcesoPausadoPlataformaDian);
-						respuesta.FechaUltimoProceso = Fecha.GetFecha();
-						respuesta.IdProceso = ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
+						Ctl_Documento ctl_documento = new Ctl_Documento();
+						bool email = false;
 
-						//Actualiza Documento en Base de Datos
-						documento.DatFechaActualizaEstado = Fecha.GetFecha();
-						documento.IntIdEstado = (short)respuesta.IdProceso;
+						if (string.IsNullOrEmpty(documento.StrUrlAcuseUbl))
+						{
+							email = ctl_documento.ReenviarRespuestaAcuse(documento.StrIdSeguridad, documento.TblEmpresasFacturador.StrMailAdmin, "");
+						}
+						else if (documento.IntIdEstado > ProcesoEstado.EnvioZip.GetHashCode())
+						{
+							email = true;
+						}
 
-						//Actualizo el estado del documento para enviar al proveedor receptor
-						Ctl_Documento documento_tmp = new Ctl_Documento();
-						documento_tmp.Actualizar(documento);
-
-						//Actualiza la categoria con el nuevo estado
-						respuesta.IdEstado = documento.IdCategoriaEstado;
-						respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
+						if (email)
+						{
+							documento.IntIdEstado = Convert.ToInt16(ProcesoEstado.Finalizacion.GetHashCode());
+							documento.DatFechaActualizaEstado = fecha_actual;
+							ctl_documento.Actualizar(documento);
+							respuesta.IdProceso = documento.IntIdEstado;
+							respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.Finalizacion);
+							respuesta.MotivoRechazo = documento.StrAdquirienteMvoRechazo;
+							respuesta.FechaUltimoProceso = fecha_actual;
+							respuesta.ProcesoFinalizado = 1;
+						}
 
 					}
-				}
 
-				// envía el mail de acuse de recibo al facturador electrónico
-				if ((documento.IntAdquirienteRecibo > AdquirienteRecibo.Pendiente.GetHashCode() && documento.IntAdquirienteRecibo < AdquirienteRecibo.AprobadoTacito.GetHashCode()) && (documento.IntIdEstado != ProcesoEstado.Finalizacion.GetHashCode()))
+				}
+				else
 				{
+					//Se actualiza respuesta indicando que se completa el proceso
+					respuesta.Error = new LibreriaGlobalHGInet.Error.Error("Respuesta efectiva de los servicios, proceso completo", LibreriaGlobalHGInet.Error.CodigoError.OK);
+					respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PrevalidacionErrorPlataforma);
+					respuesta.FechaUltimoProceso = Fecha.GetFecha();
+					respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 
-					Ctl_Documento ctl_documento = new Ctl_Documento();
-					bool email = false;
+					//Actualiza Documento en Base de Datos
+					documento.DatFechaActualizaEstado = Fecha.GetFecha();
+					documento.IntIdEstado = (short)respuesta.IdProceso;
 
-					if (string.IsNullOrEmpty(documento.StrUrlAcuseUbl))
-					{
-						email = ctl_documento.ReenviarRespuestaAcuse(documento.StrIdSeguridad, documento.TblEmpresasFacturador.StrMailAdmin, "");
-					}
-					else if (documento.IntIdEstado > ProcesoEstado.EnvioZip.GetHashCode())
-					{
-						email = true;
-					}
+					//Actualizo el estado del documento para enviar al proveedor receptor
+					Ctl_Documento documento_tmp = new Ctl_Documento();
+					documento_tmp.Actualizar(documento);
 
-					if (email)
-					{
-						documento.IntIdEstado = Convert.ToInt16(ProcesoEstado.Finalizacion.GetHashCode());
-						documento.DatFechaActualizaEstado = fecha_actual;
-						ctl_documento.Actualizar(documento);
-						respuesta.IdProceso = documento.IntIdEstado;
-						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.Finalizacion);
-						respuesta.MotivoRechazo = documento.StrAdquirienteMvoRechazo;
-						respuesta.FechaUltimoProceso = fecha_actual;
-						respuesta.ProcesoFinalizado = 1;
-					}
-
+					//Actualiza la categoria con el nuevo estado
+					respuesta.IdEstado = documento.IdCategoriaEstado;
+					respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
 				}
+
+
+
 			}
 			catch (Exception excepcion)
 			{
