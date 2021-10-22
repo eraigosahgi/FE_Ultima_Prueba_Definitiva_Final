@@ -542,7 +542,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							novedad.Concepto = "PrimaNS";
 							novedad.ConceptoDes = "Prima No Salarial";
 							novedad.Cantidad = devengado.PagoPrima.Cantidad;
-							novedad.Dev = devengado.PagoPrima.Pago.Pago;
+							novedad.Dev = devengado.PagoPrima.Pago.PagoNS;
 							novedad.orden = orden_novedades;
 							objeto_result.Novedades.Add(novedad);
 							orden_novedades += 1;

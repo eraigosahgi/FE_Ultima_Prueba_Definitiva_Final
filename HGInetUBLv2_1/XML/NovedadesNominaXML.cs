@@ -249,7 +249,11 @@ namespace HGInetUBLv2_1
 
 					devengado.Primas.Cantidad = devengados_doc.PagoPrima.Cantidad.ToString();
 					devengado.Primas.Pago = devengados_doc.PagoPrima.Pago.Pago;
-					devengado.Primas.PagoNS = devengados_doc.PagoPrima.Pago.PagoNS; 
+					if (devengados_doc.PagoPrima.Pago.PagoNS > 0)
+					{
+						devengado.Primas.PagoNSSpecified = true;
+						devengado.Primas.PagoNS = devengados_doc.PagoPrima.Pago.PagoNS;
+					} 
 
 				}
 
@@ -257,7 +261,7 @@ namespace HGInetUBLv2_1
 				{
 					devengado.Cesantias = new NominaIndividualTypeDevengadosCesantias();
 
-					devengado.Cesantias.Pago = devengados_doc.PagoCesantias.Pago.ToString();
+					devengado.Cesantias.Pago = devengados_doc.PagoCesantias.Pago;
 					devengado.Cesantias.PagoIntereses = devengados_doc.PagoCesantias.PagoIntereses;
 					devengado.Cesantias.Porcentaje = devengados_doc.PagoCesantias.Porcentaje;
 
@@ -359,8 +363,17 @@ namespace HGInetUBLv2_1
 					foreach (NovedadSalNoSal item in devengados_doc.Bonificaciones)
 					{
 						NominaIndividualTypeDevengadosBonificacion bonificacion = new NominaIndividualTypeDevengadosBonificacion();
-						bonificacion.BonificacionS = item.Pago;
-						bonificacion.BonificacionNS = item.PagoNS;
+						if (item.Pago > 0)
+						{
+							bonificacion.BonificacionSSpecified = true;
+							bonificacion.BonificacionS = item.Pago;
+						}
+						
+						if (item.PagoNS > 0)
+						{
+							bonificacion.BonificacionNSSpecified = true;
+							bonificacion.BonificacionNS = item.PagoNS;
+						}
 
 						list_bonificacion.Add(bonificacion);
 
@@ -378,8 +391,19 @@ namespace HGInetUBLv2_1
 					foreach (NovedadSalNoSal item in devengados_doc.Auxilios)
 					{
 						NominaIndividualTypeDevengadosAuxilio novedad = new NominaIndividualTypeDevengadosAuxilio();
-						novedad.AuxilioS = item.Pago;
-						novedad.AuxilioNS = item.PagoNS;
+						if (item.Pago > 0)
+						{
+							novedad.AuxilioSSpecified = true;
+							novedad.AuxilioS = item.Pago;
+						}
+						
+
+						if (item.PagoNS > 0)
+						{
+							novedad.AuxilioNSSpecified = true;
+							novedad.AuxilioNS = item.PagoNS;
+						}
+						
 
 						lista.Add(novedad);
 
@@ -415,8 +439,18 @@ namespace HGInetUBLv2_1
 					{
 
 						NominaIndividualTypeDevengadosOtroConcepto novedad = new NominaIndividualTypeDevengadosOtroConcepto();
-						novedad.ConceptoS = item.PagoConcepto.Pago;
-						novedad.ConceptoNS = item.PagoConcepto.PagoNS;
+						if (item.PagoConcepto.Pago > 0)
+						{
+							novedad.ConceptoSSpecified = true;
+							novedad.ConceptoS = item.PagoConcepto.Pago;
+						}
+						
+						if (item.PagoConcepto.PagoNS > 0)
+						{
+							novedad.ConceptoNSSpecified = true;
+							novedad.ConceptoNS = item.PagoConcepto.PagoNS;
+						}
+						
 						novedad.DescripcionConcepto = item.DescripcionConcepto;
 						lista.Add(novedad);
 
@@ -450,8 +484,17 @@ namespace HGInetUBLv2_1
 					{
 
 						NominaIndividualTypeDevengadosBonoEPCTV novedad = new NominaIndividualTypeDevengadosBonoEPCTV();
-						novedad.PagoS = item.Pago;
-						novedad.PagoNS = item.PagoNS;
+						if (item.Pago > 0)
+						{
+							novedad.PagoSSpecified = true;
+							novedad.PagoS = item.Pago;
+						}
+						if (item.PagoNS > 0)
+						{
+							novedad.PagoNSSpecified = true;
+							novedad.PagoNS = item.PagoNS;
+						}
+						
 						lista_BonAlim.Add(novedad);
 
 					}
@@ -465,8 +508,18 @@ namespace HGInetUBLv2_1
 					{
 
 						NominaIndividualTypeDevengadosBonoEPCTV novedad = new NominaIndividualTypeDevengadosBonoEPCTV();
-						novedad.PagoAlimentacionS = item.Pago;
-						novedad.PagoNS = item.PagoNS;
+						if (item.Pago > 0)
+						{
+							novedad.PagoAlimentacionSSpecified = true;
+							novedad.PagoAlimentacionS = item.Pago;
+						}
+						
+						if (item.PagoNS > 0)
+						{
+							novedad.PagoAlimentacionNSSpecified = true;
+							novedad.PagoAlimentacionNS = item.PagoNS;
+						}
+						
 						lista.Add(novedad);
 
 					}
@@ -903,7 +956,7 @@ namespace HGInetUBLv2_1
 				{
 					devengado.Cesantias = new NominaIndividualDeAjusteTypeReemplazarDevengadosCesantias();
 
-					devengado.Cesantias.Pago = devengados_doc.PagoCesantias.Pago.ToString();
+					devengado.Cesantias.Pago = devengados_doc.PagoCesantias.Pago;
 					devengado.Cesantias.PagoIntereses = devengados_doc.PagoCesantias.PagoIntereses;
 					devengado.Cesantias.Porcentaje = devengados_doc.PagoCesantias.Porcentaje;
 

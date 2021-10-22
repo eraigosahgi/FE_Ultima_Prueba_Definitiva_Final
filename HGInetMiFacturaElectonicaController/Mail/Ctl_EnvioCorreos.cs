@@ -32,6 +32,7 @@ using System.Net.Mail;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml.Serialization;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_Alertas;
 
@@ -2771,7 +2772,7 @@ namespace HGInetMiFacturaElectonicaController
 			catch (Exception excepcion)
 			{
 
-				throw new ApplicationException(string.Format("Error Registro HGI Pasarela Pagos : {0}", excepcion.Message));
+				throw new ApplicationException(string.Format("Error enviando correo: {0} - Ruta servicio: {1}", excepcion.Message, url));
 			}
 
 		}
@@ -3515,7 +3516,7 @@ namespace HGInetMiFacturaElectonicaController
 			catch (Exception excepcion)
 			{
 
-				throw new ApplicationException(string.Format("Error Registro HGI Pasarela Pagos : {0}", excepcion.Message));
+				throw new ApplicationException(string.Format("Error enviando correo: {0} - Ruta servicio: {1}", excepcion.Message, url));
 			}
 
 		}

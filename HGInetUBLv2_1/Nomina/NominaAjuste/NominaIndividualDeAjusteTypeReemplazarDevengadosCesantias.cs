@@ -6,15 +6,15 @@
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="dian:gov:co:facturaelectronica:NominaIndividualDeAjuste")]
 public partial class NominaIndividualDeAjusteTypeReemplazarDevengadosCesantias {
     
-	private string pagoField;
+	private decimal pagoField;
     
 	private decimal porcentajeField;
     
 	private decimal pagoInteresesField;
     
 	/// <comentarios/>
-	[System.Xml.Serialization.XmlAttributeAttribute(DataType="integer")]
-	public string Pago {
+	[System.Xml.Serialization.XmlAttributeAttribute()]
+	public decimal Pago {
 		get {
 			return this.pagoField;
 		}
