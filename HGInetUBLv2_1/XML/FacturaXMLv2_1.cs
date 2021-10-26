@@ -89,6 +89,28 @@ namespace HGInetUBLv2_1
 				{
 				}
 
+
+				#region Contingencia-Dia Sin Iva
+				//Fechas Dia Sin IVA
+				DateTime fecha1 = new DateTime(2021, 10, 28);
+				DateTime fecha2 = new DateTime(2021, 11, 19);
+				DateTime fecha3 = new DateTime(2021, 12, 03);
+
+				bool dia_sin_iva = false;
+
+				if (documento.Fecha == fecha1 || documento.Fecha == fecha2 || documento.Fecha == fecha3)
+				{
+					dia_sin_iva = true;
+				}
+
+				//Si es contingencia y es en el dia sin iva se debe poner esta informacion resolucion 000117 emitida por la DIAN 2021-10-21
+				if (documento.TipoOperacion == 1 && dia_sin_iva == true)
+				{
+					facturaXML.CustomizationID.Value = "20-POS";
+
+				} 
+				#endregion
+
 				facturaXML.ProfileID = new ProfileIDType();
 				if (documento.TipoOperacion < 3)
 					facturaXML.ProfileID.Value = "DIAN 2.1: Factura Electrónica de Venta";
