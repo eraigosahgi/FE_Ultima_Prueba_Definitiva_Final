@@ -404,8 +404,9 @@ namespace HGInetUBLv2_1
 					{
 						Transporte novedad = new Transporte();
 						novedad.AuxilioTransporte = item.AuxilioTransporte;
-						novedad.ViaticoManuAlojS = item.ViaticoManutAlojS;
-						novedad.ViaticoManuAlojNS = item.ViaticoManutAlojNS;
+						if (item.ViaticoManutAlojS != null)
+						novedad.ViaticoManuAlojS = item.ViaticoManuAlojS;
+						novedad.ViaticoManuAlojNS = item.ViaticoManuAlojNS;
 
 						devengado_doc.DatosTransporte.Add(novedad);
 					}

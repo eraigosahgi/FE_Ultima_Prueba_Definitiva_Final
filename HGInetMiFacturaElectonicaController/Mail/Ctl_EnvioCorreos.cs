@@ -3244,7 +3244,12 @@ namespace HGInetMiFacturaElectonicaController
 							correos_destino.Add(destinatario);
 						}
 
-						
+						//Se agrega el correo del gerente para monitorear por 2 semanas la informacion
+						destinatario = new DestinatarioEmail();
+						destinatario.Nombre = "ADMINISTRACIÓN";
+						destinatario.Email = "jbedoya@hgi.com.co";
+						correos_destino.Add(destinatario);
+
 
 						// envía correo electrónico con copia de auditoría
 						List<DestinatarioEmail> correos_copia_oculta = null;
