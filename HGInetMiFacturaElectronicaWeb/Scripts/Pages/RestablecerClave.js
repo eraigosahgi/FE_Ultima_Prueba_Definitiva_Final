@@ -64,7 +64,12 @@ DemoApp.controller('RestablecerClaveController', function DemoController($scope,
 				editorOptions: {
 					mode: "password"
                     , onKeyUp: function (data) {
-                    	console.log("Data", clave = $('input:password[name=Password]').val());
+                    	//console.log("Data", clave = $('input:password[name=Password]').val());
+                    	var datos = $('input:password[name=Password]').val();
+                    	if (datos.includes('+')) {
+                    		$('input:password[name=Password]').val("");
+                    		Mensaje("El caracter '+' no esta permitido", "error");
+                    	}
                     }
 				},
 				validationRules: [{
