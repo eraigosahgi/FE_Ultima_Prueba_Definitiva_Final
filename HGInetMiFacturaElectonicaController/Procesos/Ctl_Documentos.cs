@@ -1422,6 +1422,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							Docdet.Aiu = 4;
 						}
 
+						//Valida que si envien el impuesto de la bolsa.
+						if (Docdet.Aiu == 4 && Docdet.ValorImpuestoConsumo == 0)
+							throw new ApplicationException(string.Format("El campo {0} de la bolsa con valor {1} del detalle no está bien formado", "ValorImpuestoConsumo", Docdet.ValorImpuestoConsumo));
+
 						if (Docdet.DatosMandatario != null)
 						{
 							ValidarTercero(Docdet.DatosMandatario, "Mandatario", facturador);
