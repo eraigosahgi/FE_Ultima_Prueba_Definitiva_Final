@@ -59,7 +59,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public short IntMensajeEnvio { get; set; }
         public short IntVersionDian { get; set; }
         public Nullable<System.Guid> StrIdRadicadoDian { get; set; }
-        public string StrFormato { get; set; }
         public int IntTipoOperacion { get; set; }
         public string StrLineaNegocio { get; set; }
         public bool IntProcesadoERP { get; set; }

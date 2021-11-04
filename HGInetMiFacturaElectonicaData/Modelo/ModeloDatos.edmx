@@ -97,7 +97,6 @@
           <Property Name="IntMensajeEnvio" Type="smallint" Nullable="false" />
           <Property Name="IntVersionDian" Type="smallint" Nullable="false" />
           <Property Name="StrIdRadicadoDian" Type="uniqueidentifier" />
-          <Property Name="StrFormato" Type="varchar(max)" />
           <Property Name="IntTipoOperacion" Type="int" Nullable="false" />
           <Property Name="StrLineaNegocio" Type="varchar" MaxLength="50" />
           <Property Name="IntProcesadoERP" Type="bit" Nullable="false" />
@@ -1316,7 +1315,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="IntMensajeEnvio" Type="Int16" Nullable="false" />
           <Property Name="IntVersionDian" Type="Int16" Nullable="false" />
           <Property Name="StrIdRadicadoDian" Type="Guid" />
-          <Property Name="StrFormato" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="IntTipoOperacion" Type="Int32" Nullable="false" />
           <Property Name="StrLineaNegocio" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="TblConfiguracionInteroperabilidadEmisor" Relationship="Modelo.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" FromRole="TblDocumentos" ToRole="TblConfiguracionInteroperabilidad" />
@@ -1978,7 +1976,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
                 <ScalarProperty Name="IntProcesadoERP" ColumnName="IntProcesadoERP" />
                 <ScalarProperty Name="StrLineaNegocio" ColumnName="StrLineaNegocio" />
                 <ScalarProperty Name="IntTipoOperacion" ColumnName="IntTipoOperacion" />
-                <ScalarProperty Name="StrFormato" ColumnName="StrFormato" />
                 <ScalarProperty Name="StrIdRadicadoDian" ColumnName="StrIdRadicadoDian" />
                 <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />
                 <ScalarProperty Name="IntMensajeEnvio" ColumnName="IntMensajeEnvio" />
