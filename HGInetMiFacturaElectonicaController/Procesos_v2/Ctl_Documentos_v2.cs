@@ -286,7 +286,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 						}
 
-						// almacena Formato ****** Falta el Formato de Nomina
+						//Guarda o genera el Formato
 						if (documento_obj.DocumentoFormato != null)
 						{
 							respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result, empresa);

@@ -786,8 +786,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							serializacion = new XmlSerializer(typeof(InvoiceType));
 							InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
 							documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, datos_doc_bd);
-							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
-								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+							//if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+							//	documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
 
 							//Convierte en archivo json a objeto factura y sobre escribe el que se obtuvo
 							//Esto es para pruebas si se requiere generar un formato con informacion especifica
@@ -801,8 +801,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							serializacion = new XmlSerializer(typeof(CreditNoteType));
 							CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
 							documento_obj = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, datos_doc_bd);
-							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
-								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+							//if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+							//	documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
 						}
 						else if (tipo_documento == TipoDocumento.NotaDebito)
 						{
@@ -810,8 +810,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
 
 							documento_obj = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, datos_doc_bd);
-							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
-								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+							//if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+							//	documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
 						}
 						else if (tipo_documento == TipoDocumento.Nomina)
 						{
@@ -819,8 +819,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							NominaIndividualType conversion = (NominaIndividualType)serializacion.Deserialize(xml_reader);
 
 							documento_obj = HGInetUBLv2_1.NominaXML.Convertir(conversion, datos_doc_bd);
-							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
-								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+							//if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+							//	documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
 						}
 						else if (tipo_documento == TipoDocumento.NominaAjuste)
 						{
@@ -828,9 +828,18 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							NominaIndividualDeAjusteType conversion = (NominaIndividualDeAjusteType)serializacion.Deserialize(xml_reader);
 
 							documento_obj = HGInetUBLv2_1.NominaAjusteXML.Convertir(conversion, datos_doc_bd);
-							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
-								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
+							//if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(datos_doc_bd.StrFormato))
+							//	documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(datos_doc_bd.StrFormato);
 						}
+
+
+						string contenido_formato = Archivo.ObtenerContenido(datos_doc_bd.StrUrlArchivoUbl.Replace("FacturaEDian", "XmlFacturaE").Replace("xml","json"));
+
+						if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(contenido_formato))
+						{
+							documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(contenido_formato);
+						}
+							
 					}
 				}
 				else

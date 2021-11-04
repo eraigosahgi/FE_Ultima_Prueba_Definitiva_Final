@@ -2273,13 +2273,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				tbl_documento.IntVersionDian = empresa.IntVersionDian;
 
 				//validacion si es un formato de integrador para guardar los campos predeterminados
-				if (documento_obj.DocumentoFormato != null && documento_obj.DocumentoFormato.Codigo > 0 && empresa.IntVersionDian == 2)
-				{
-					if (documento_obj.DocumentoFormato != null)
-					{
-						tbl_documento.StrFormato = JsonConvert.SerializeObject(documento_obj.DocumentoFormato);
-					}
-				}
+				//if (documento_obj.DocumentoFormato != null && documento_obj.DocumentoFormato.Codigo > 0 && empresa.IntVersionDian == 2)
+				//{
+				//	if (documento_obj.DocumentoFormato != null)
+				//	{
+				//		tbl_documento.StrFormato = JsonConvert.SerializeObject(documento_obj.DocumentoFormato);
+				//	}
+				//}
 
 				return tbl_documento;
 			}
@@ -3206,9 +3206,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								}
 
-								if (!string.IsNullOrEmpty(documento.StrFormato))
+								//if (!string.IsNullOrEmpty(documento.StrFormato))
+								//{
+								//	documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(documento.StrFormato);
+								//}
+
+								string contenido_formato = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
+
+								if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(contenido_formato))
 								{
-									documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(documento.StrFormato);
+									documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(contenido_formato);
 								}
 
 								// cerrar la lectura del archivo xml

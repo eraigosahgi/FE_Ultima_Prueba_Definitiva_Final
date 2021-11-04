@@ -21,6 +21,7 @@ using HGInetMiFacturaElectonicaData.Enumerables;
 using Telerik.Reporting;
 using HGInetUBLv2_1.DianListas;
 using HGInetMiFacturaElectonicaData.Formatos;
+using Newtonsoft.Json;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -51,6 +52,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
+				string carpeta_formato = string.Empty;
+				string ruta_archivo_formato = string.Empty;
 
 				// valida formato en base 64 del objeto
 				Formato formato_documento = (Formato)(dynamic)documento_obj.DocumentoFormato;
@@ -90,6 +93,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
                      Para la contrucción de formatos se debe tener en cuenta el envío del parametro TipoDocumento de caracter obligatorio
                      para el reporte pdf, ya que este valor es implementado para la carga de información desde cada formato.
                      */
+
+					try
+					{
+						string ruta_formato = string.Format(@"{0}\{1}\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
+						carpeta_formato = string.Format(@"{0}\{1}\", ruta_formato, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
+
+						ruta_archivo_formato = string.Format(@"{0}\{1}.json", carpeta_formato, documento_result.NombreXml);
+					}
+					catch (Exception)
+					{
+					}
 
 					//Obtiene el diseño del formato en la base de datos y realiza el proceso de creación del pdf.
 					//sino hay un formato en base de datos con el formato especificado, toma los formatos existentes en el proyecto
@@ -157,6 +171,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						
 						HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
 						x.GenerarPdfDev(rep, documentoBd.StrEmpresaFacturador);
+
+						// almacena el objeto en archivo json
+						try
+						{
+							File.WriteAllText(ruta_archivo_formato, JsonConvert.SerializeObject(formato_documento));
+						}
+						catch (Exception)
+						{}
+
 					}
 					else if(facturador.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
 					{
@@ -220,6 +243,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						reporte_pdf.DataSource = documento_obj;
 						HGInetFacturaEReports.Reporte x = new HGInetFacturaEReports.Reporte(documento_result.NombreXml, documento_result.RutaArchivosEnvio);
 						x.GenerarPdf(reporte_pdf);
+
+						// almacena el objeto en archivo json
+						try
+						{
+							File.WriteAllText(ruta_archivo_formato, JsonConvert.SerializeObject(formato_documento));
+						}
+						catch (Exception)
+						{ }
 
 					}
 
