@@ -43,7 +43,12 @@ namespace HGInetUBLv2_1
 
 				if (obj.Anticipos != null && obj.Anticipos.Length > 0)
 				{
-					devengado_doc.Anticipos = obj.Anticipos.ToList();
+					devengado_doc.Anticipos = new List<decimal>();
+					foreach (var item in obj.Anticipos)
+					{
+						devengado_doc.Anticipos.Add(item);
+					}
+					//devengado_doc.Anticipos = obj.Anticipos.ToList();
 				}
 
 				if (obj.Auxilios != null && obj.Auxilios.Length > 0)
@@ -54,6 +59,7 @@ namespace HGInetUBLv2_1
 						NovedadSalNoSal novedad = new NovedadSalNoSal();
 						novedad.Pago = item.AuxilioS;
 						novedad.PagoNS = item.AuxilioNS;
+						devengado_doc.Auxilios = new List<NovedadSalNoSal>();
 						devengado_doc.Auxilios.Add(novedad);
 
 					}
@@ -67,6 +73,7 @@ namespace HGInetUBLv2_1
 						NovedadSalNoSal novedad = new NovedadSalNoSal();
 						novedad.Pago = item.BonificacionS;
 						novedad.PagoNS = item.BonificacionNS;
+						devengado_doc.Bonificaciones = new List<NovedadSalNoSal>();
 						devengado_doc.Bonificaciones.Add(novedad);
 
 					}
@@ -117,7 +124,11 @@ namespace HGInetUBLv2_1
 				if (obj.Comisiones != null && obj.Comisiones.Length > 0)
 				{
 					devengado_doc.Comisiones = new List<decimal>();
-					devengado_doc.Comisiones = obj.Comisiones.ToList();
+					foreach (var item in obj.Comisiones)
+					{
+						devengado_doc.Comisiones.Add(item);
+					}
+					//devengado_doc.Comisiones = obj.Comisiones.ToList();
 				}
 
 				if (obj.Compensaciones != null && obj.Compensaciones.Length > 0)
@@ -129,7 +140,7 @@ namespace HGInetUBLv2_1
 						NovedadSalNoSal novedad = new NovedadSalNoSal();
 						novedad.Pago = item.CompensacionO;
 						novedad.PagoNS = item.CompensacionE;
-						devengado_doc.Bonificaciones.Add(novedad);
+						devengado_doc.Compensaciones.Add(novedad);
 					}
 
 				}
@@ -380,7 +391,11 @@ namespace HGInetUBLv2_1
 				if (obj.PagosTerceros != null && obj.PagosTerceros.Length > 0)
 				{
 					devengado_doc.PagosTerceros = new List<decimal>();
-					devengado_doc.PagosTerceros = obj.PagosTerceros.ToList();
+					foreach (var item in obj.PagosTerceros)
+					{
+						devengado_doc.PagosTerceros.Add(item);
+					}
+					//devengado_doc.PagosTerceros = obj.PagosTerceros.ToList();
 				}
 
 				if (obj.Primas != null)
@@ -483,7 +498,12 @@ namespace HGInetUBLv2_1
 				
 				if (obj.Anticipos != null && obj.Anticipos.Length > 0)
 				{
-					deduccion_doc.Anticipos = obj.Anticipos.ToList();
+					deduccion_doc.Anticipos = new List<decimal>();
+					foreach (var item in obj.Anticipos)
+					{
+						deduccion_doc.Anticipos.Add(item);
+					}
+					//deduccion_doc.Anticipos = obj.Anticipos.ToList();
 				}
 
 				deduccion_doc.Cooperativa = obj.Cooperativa;
@@ -525,13 +545,19 @@ namespace HGInetUBLv2_1
 				if (obj.OtrasDeducciones != null && obj.OtrasDeducciones.Length > 0)
 				{
 					deduccion_doc.OtrasDeducciones = new List<decimal>();
-					deduccion_doc.OtrasDeducciones = obj.OtrasDeducciones.ToList();
+					foreach (var item in obj.OtrasDeducciones)
+					{
+						deduccion_doc.OtrasDeducciones.Add(item);
+					}
 				}
 
 				if (obj.PagosTerceros != null && obj.PagosTerceros.Length > 0)
 				{
 					deduccion_doc.PagosTerceros = new List<decimal>();
-					deduccion_doc.PagosTerceros = obj.PagosTerceros.ToList();
+					foreach (var item in obj.PagosTerceros)
+					{
+						deduccion_doc.PagosTerceros.Add(item);
+					}
 				}
 
 				deduccion_doc.PensionVoluntaria = obj.PensionVoluntaria;

@@ -733,12 +733,12 @@ namespace HGInetUBLv2_1
 					transporte.AuxilioTransporte = devengados_doc.DatosTransporte.Sum(x => x.AuxilioTransporte);
 					if (transporte.AuxilioTransporte > 0)
 						transporte.AuxilioTransporteSpecified = true;
-					transporte.ViaticoManutAlojNS = devengados_doc.DatosTransporte.Sum(x => x.ViaticoManuAlojNS);
-					if (transporte.ViaticoManutAlojNS > 0)
-						transporte.ViaticoManutAlojNSSpecified = true;
-					transporte.ViaticoManutAlojS = devengados_doc.DatosTransporte.Sum(x => x.ViaticoManuAlojS);
-					if (transporte.ViaticoManutAlojS > 0)
-						transporte.ViaticoManutAlojSSpecified = true;
+					transporte.ViaticoManuAlojNS = devengados_doc.DatosTransporte.Sum(x => x.ViaticoManuAlojNS);
+					if (transporte.ViaticoManuAlojNS > 0)
+						transporte.ViaticoManuAlojNSSpecified = true;
+					transporte.ViaticoManuAlojS = devengados_doc.DatosTransporte.Sum(x => x.ViaticoManuAlojS);
+					if (transporte.ViaticoManuAlojS > 0)
+						transporte.ViaticoManuAlojSSpecified = true;
 					transporte_doc[0] = transporte;
 
 					devengado.Transporte = transporte_doc;
