@@ -61,7 +61,7 @@ namespace HGInetUBLv2_1.Recursos {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a face_a.
+        ///   Busca una cadena traducida similar a ar.
         /// </summary>
         internal static string nombre_xml_acuse_recibo {
             get {
@@ -70,7 +70,7 @@ namespace HGInetUBLv2_1.Recursos {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a face_f.
+        ///   Busca una cadena traducida similar a fv.
         /// </summary>
         internal static string nombre_xml_factura {
             get {
@@ -79,7 +79,7 @@ namespace HGInetUBLv2_1.Recursos {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a face_c.
+        ///   Busca una cadena traducida similar a nc.
         /// </summary>
         internal static string nombre_xml_nota_credito {
             get {
@@ -88,7 +88,7 @@ namespace HGInetUBLv2_1.Recursos {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a face_d.
+        ///   Busca una cadena traducida similar a nd.
         /// </summary>
         internal static string nombre_xml_nota_debito {
             get {
@@ -97,7 +97,7 @@ namespace HGInetUBLv2_1.Recursos {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ws_f.
+        ///   Busca una cadena traducida similar a z.
         /// </summary>
         internal static string nombre_zip_factura {
             get {
@@ -106,7 +106,7 @@ namespace HGInetUBLv2_1.Recursos {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ws_c.
+        ///   Busca una cadena traducida similar a z.
         /// </summary>
         internal static string nombre_zip_nota_credito {
             get {
@@ -115,7 +115,7 @@ namespace HGInetUBLv2_1.Recursos {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a ws_d.
+        ///   Busca una cadena traducida similar a z.
         /// </summary>
         internal static string nombre_zip_nota_debito {
             get {

@@ -135,7 +135,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
 			// genera el nombre del archivo ZIP
-			resultado.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
+			resultado.NombreZip = HGInetUBLv2_1.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
 
 			return resultado;
 		}
@@ -253,7 +253,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
 			// genera el nombre del archivo ZIP
-			resultado.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
+			resultado.NombreZip = HGInetUBLv2_1.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
 
 			return resultado;
 		}
@@ -372,7 +372,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
 			// genera el nombre del archivo ZIP
-			resultado.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
+			resultado.NombreZip = HGInetUBLv2_1.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosObligado.Identificacion, tipo_doc, documento.Prefijo);
 
 			return resultado;
 		}
@@ -546,7 +546,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			resultado.IdSeguridadTercero = empresa.StrIdSeguridad;
 
 			// genera el nombre del archivo ZIP
-			resultado.NombreZip = HGInetUBL.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosEmpleador.Identificacion, tipo_doc, documento.Prefijo);
+			resultado.NombreZip = HGInetUBLv2_1.NombramientoArchivo.ObtenerZip(documento.Documento.ToString(), documento.DatosEmpleador.Identificacion, tipo_doc, documento.Prefijo);
 
 			return resultado;
 		}

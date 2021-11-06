@@ -118,31 +118,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="nombre_xml_acuse_recibo" xml:space="preserve">
-    <value>face_a</value>
+    <value>ar</value>
     <comment>Nombre del archivo XML que contiene datos correspondientes a un acuse de recibo.</comment>
   </data>
   <data name="nombre_xml_factura" xml:space="preserve">
-    <value>face_f</value>
-    <comment>Nombre del archivo XML que contiene datos correspondientes a una factura. Tomado del documento "Anexo Técnico 001 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
+    <value>fv</value>
+    <comment>Nombre del archivo XML que contiene datos correspondientes a una factura. Tomado del documento "Anexo Técnico V1.8 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
   </data>
   <data name="nombre_xml_nota_credito" xml:space="preserve">
-    <value>face_c</value>
-    <comment>Nombre del archivo XML que contiene datos correspondientes a una nota credito. Tomado del documento "Anexo Técnico 001 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
+    <value>nc</value>
+    <comment>Nombre del archivo XML que contiene datos correspondientes a una nota credito. Tomado del documento "Anexo Técnico V1.8 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
   </data>
   <data name="nombre_xml_nota_debito" xml:space="preserve">
-    <value>face_d</value>
-    <comment>Nombre del archivo XML que contiene datos correspondientes a una nota debito. Tomado del documento "Anexo Técnico 001 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
+    <value>nd</value>
+    <comment>Nombre del archivo XML que contiene datos correspondientes a una nota debito. Tomado del documento "Anexo Técnico V1.8 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
   </data>
   <data name="nombre_zip_factura" xml:space="preserve">
-    <value>ws_f</value>
-    <comment>Nombre del archivo ZIP que contiene datos correspondientes a una factura. Tomado del documento "Anexo Técnico 001 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
+    <value>z</value>
+    <comment>Nombre del archivo ZIP que contiene datos correspondientes a una factura. Tomado del documento "Anexo Técnico V1.8 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
   </data>
   <data name="nombre_zip_nota_credito" xml:space="preserve">
-    <value>ws_c</value>
-    <comment>Nombre del archivo ZIP que contiene datos correspondientes a una nota credito. Tomado del documento "Anexo Técnico 001 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
+    <value>z</value>
+    <comment>Nombre del archivo ZIP que contiene datos correspondientes a una nota credito. Tomado del documento "Anexo Técnico V1.8 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
   </data>
   <data name="nombre_zip_nota_debito" xml:space="preserve">
-    <value>ws_d</value>
-    <comment>Nombre del archivo ZIP que contiene datos correspondientes a una nota debito. Tomado del documento "Anexo Técnico 001 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
+    <value>z</value>
+    <comment>Nombre del archivo ZIP que contiene datos correspondientes a una nota debito. Tomado del documento "Anexo Técnico V1.8 Formatos de los Documentos XML de Facturación Electrónica" publicado por la DIAN</comment>
   </data>
 </root>

@@ -605,7 +605,7 @@ namespace HGInetMiFacturaElectonicaController
 					carpeta_archivos = string.Format(@"{0}\{1}", carpeta_archivos, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
 
 					// Nombre del archivo Xml 
-					string nombre_archivo = NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
+					string nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
 
 					// ruta del xml
 					string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_archivos, nombre_archivo);
@@ -981,7 +981,7 @@ namespace HGInetMiFacturaElectonicaController
 						if  (tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste)
 						{
 
-							string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
+							string nombre_xml = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, tipo_documento, documento.StrPrefijo);//Path.GetFileName(documento.StrUrlArchivoUbl);
 
 							//Se anexa el XML-UBL solo para esta version,si no cumple segun Anexo solo se debe enviar el AttachedDocument y el PDF
 							if (documento.IntVersionDian == 1)
@@ -1007,9 +1007,9 @@ namespace HGInetMiFacturaElectonicaController
 							string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
 							carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
-							string nombre_archivo = nombre_xml.Replace("face", "attach");
+							string nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, TipoDocumento.Attached, documento.StrPrefijo);//nombre_xml.Replace("face", "attach");
 
-							bool archivo_attach = Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo));
+							bool archivo_attach = Archivo.ValidarExistencia(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo));
 
 							//if (archivo_attach == false)
 							//{
@@ -1041,7 +1041,7 @@ namespace HGInetMiFacturaElectonicaController
 							}
 
 							// ruta del zip
-							string ruta_zip = string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo.Replace("xml", "zip"));
+							string ruta_zip = string.Format(@"{0}\{1}.zip", carpeta_xml, nombre_archivo);
 
 							if (attached == true && documento.IntVersionDian == 2)
 							{
@@ -1055,7 +1055,7 @@ namespace HGInetMiFacturaElectonicaController
 									// genera la compresión del archivo en zip
 									using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
 									{
-										archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo), Path.GetFileName(nombre_archivo));
+										archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo), Path.GetFileName(nombre_archivo));
 
 										if (contiene_pdf == true)
 										{
@@ -1120,7 +1120,7 @@ namespace HGInetMiFacturaElectonicaController
 
 									if (!string.IsNullOrEmpty(documento.StrUrlArchivoZip))
 									{
-										bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace("ws", "attach"));
+										bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace("ws", "ad"));
 									}
 									else
 									{
@@ -1181,6 +1181,10 @@ namespace HGInetMiFacturaElectonicaController
 								adjunto.Nombre = nombre_pdf;
 								archivos.Add(adjunto);
 							}
+
+							mensaje = mensaje.Replace("{Anexos}", "");
+							mensaje = mensaje.Replace("{ObservacionAnexos}", "");
+							mensaje = mensaje.Replace("{UrlAnexos}", "");
 						}
 						
 

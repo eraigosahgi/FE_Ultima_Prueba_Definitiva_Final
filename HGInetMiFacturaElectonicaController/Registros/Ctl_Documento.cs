@@ -3907,7 +3907,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				if (doc.IntDocTipo < TipoDocumento.AcuseRecibo.GetHashCode())
 				{
-					nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
+					nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, TipoDocumento.Attached, documento_obj.Prefijo);
 
 					resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(doc.StrIdSeguridad, documento_obj.DatosObligado, documento_obj.DatosAdquiriente, ambiente_dian, doc);
 				}
@@ -3925,7 +3925,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
 				resultado.IdSeguridadPeticion = new Guid();
 				resultado.DocumentoTipo = TipoDocumento.Attached;
-				resultado.NombreXml = nombre_archivo.Replace("face", "attach");
+				resultado.NombreXml = nombre_archivo;
 
 				// valida el nodo de ExtensionContent
 				resultado.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(resultado.DocumentoXml);
