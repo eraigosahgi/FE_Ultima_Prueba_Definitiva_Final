@@ -1055,7 +1055,7 @@ namespace HGInetMiFacturaElectonicaController
 									// genera la compresión del archivo en zip
 									using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
 									{
-										archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo), Path.GetFileName(nombre_archivo));
+										archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo), string.Format("{0}.xml",nombre_archivo));
 
 										if (contiene_pdf == true)
 										{
@@ -1120,7 +1120,8 @@ namespace HGInetMiFacturaElectonicaController
 
 									if (!string.IsNullOrEmpty(documento.StrUrlArchivoZip))
 									{
-										bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace("ws", "ad"));
+										string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoZip);
+										bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
 									}
 									else
 									{
@@ -1129,7 +1130,7 @@ namespace HGInetMiFacturaElectonicaController
 
 									string ruta_fisica_appl = Convert.ToBase64String(bytes_applications);
 
-									string nombre_xml_app = nombre_archivo.Replace("xml", "zip");
+									string nombre_xml_app = string.Format("{0}.zip", nombre_archivo);
 
 									if (!string.IsNullOrEmpty(ruta_fisica_appl))
 									{
@@ -1140,8 +1141,8 @@ namespace HGInetMiFacturaElectonicaController
 
 									}
 
-									if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo)))
-										Archivo.Borrar(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo));
+									if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo)))
+										Archivo.Borrar(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo));
 
 								}
 								catch (Exception excepcion)
@@ -1247,7 +1248,7 @@ namespace HGInetMiFacturaElectonicaController
 					string mensaje = (string.IsNullOrEmpty(id_peticion) ? "Reenvio de Documento" : "Notificación Documento");
 					clase_auditoria.Crear(documento.StrIdSeguridad, peticion, empresa_obligado.StrIdentificacion, proceso, TipoRegistro.Proceso, procedencia, usuario, mensaje, string.Empty, respuesta_email, documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
 				}
-				catch (Exception) { throw; }
+				catch (Exception) { }
 				return respuesta_email;
 			}
 			catch (Exception excepcion)
