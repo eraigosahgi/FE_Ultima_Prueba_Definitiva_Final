@@ -1705,14 +1705,18 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 
-		public List<TblDocumentos> Obtener(string identificacion_empresa)
+		public List<TblDocumentos> ObtenerPorMes(string identificacion_empresa, int mes, string identificacion_adquiriente)
 		{
 			try
 			{
+				context.Configuration.LazyLoadingEnabled = false;
+
 				var respuesta = (from datos in context.TblDocumentos
 								 where datos.StrEmpresaFacturador.Equals(identificacion_empresa)
+								 && datos.DatFechaIngreso.Month.Equals(mes)
+								 && datos.StrEmpresaAdquiriente.Equals(identificacion_adquiriente)
 								 select datos
-								 );
+								 ).OrderBy(y => y.IntNumero);
 
 				return respuesta.ToList();
 			}

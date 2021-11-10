@@ -17,7 +17,7 @@ namespace HGInetUBLv2_1
 	public partial class NominaXML
 	{
 
-		public static FacturaE_Documento CrearDocumento(Guid id_documento, Nomina documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo, string ambiente_dian, ref string cadena_cufe)
+		public static FacturaE_Documento CrearDocumento(Guid id_documento, Nomina documento, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TipoDocumento tipo, string ambiente_dian, ref string cadena_cufe, string cune_nov)
 		{
 			try
 			{
@@ -32,10 +32,10 @@ namespace HGInetUBLv2_1
 				NominaIndividualType nomina = new NominaIndividualType();
 				XmlSerializerNamespaces namespaces_xml = NamespacesXML.ObtenerNamespaces(tipo);
 
-				//******validar esta variable				
+				//Variacion de Nomina			
 				nomina.Novedad = new NominaIndividualTypeNovedad();
-				nomina.Novedad.Value = false;
-				nomina.Novedad.CUNENov = "";
+				nomina.Novedad.Value = documento.VariacionNomina;
+				nomina.Novedad.CUNENov = cune_nov;
 
 				#region nnomina.NumeroSecuenciaXML //Número de documento: Número de documento nomina.
 				string numero_documento = "";

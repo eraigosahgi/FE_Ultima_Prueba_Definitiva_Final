@@ -6,6 +6,10 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaController.Properties;
+using HGInetMiFacturaElectonicaController.Registros;
+using LibreriaGlobalHGInet.Funciones;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -533,7 +537,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			if (TipoDocumento.Nomina.Equals(tipo_doc))
 			{
-				resultado = HGInetUBLv2_1.NominaXML.CrearDocumento(id_seguridad, (Nomina)documento, extension_documento, tipo_doc, ambiente_dian, ref cadena_cufe);
+				//Se valida si se es un documento con variacion para que obtenga el documento principal
+				string cune_nov = string.Empty;
+				if (documento.VariacionNomina == true)
+				{
+					Ctl_Documento ctl = new Ctl_Documento();
+					List<TblDocumentos> lista_doc = ctl.ObtenerPorMes(documento.DatosEmpleador.Identificacion, Fecha.GetFecha().Month, documento.DatosTrabajador.Identificacion);
+
+					if (lista_doc != null && lista_doc.Count > 0)
+					{
+						cune_nov = lista_doc.Where(x => x.IntDocTipo == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault().StrCufe;
+					}
+
+				}
+				resultado = HGInetUBLv2_1.NominaXML.CrearDocumento(id_seguridad, (Nomina)documento, extension_documento, tipo_doc, ambiente_dian, ref cadena_cufe, cune_nov);
 			}
 			else if (TipoDocumento.NominaAjuste.Equals(tipo_doc))
 			{

@@ -98,7 +98,103 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						ListaPlanes[i].reservado = ListaPlanes[i].reservado + 1;
 					}
 				}
-				//Planes y transacciones
+
+				//Se valida si en la peticion envian variaciones de nomina para procesarla primero y luego continuar con las demas dominas
+				List<Nomina> documentos_novedades = documentos.Where(x => x.VariacionNomina == true).ToList();
+
+				if (documentos_novedades != null && documentos_novedades.Count > 0)
+				{
+					//Obtengo solo los documentos de los empleados que presentan variacion y las ordeno en orden ascendente para que se gestione primero la principal y luego la variacion
+					List<Nomina> doc_nov = documentos.Where(x => documentos_novedades.Any(x2 => x2.DatosTrabajador.Identificacion == x.DatosTrabajador.Identificacion)).OrderBy(y => y.Documento).ToList();
+
+					string prefijo_doc_variacion = string.Empty;
+					long doc_variacion = 0;
+					foreach (Nomina item in doc_nov)
+					{
+						bool procesar_novedad = true;
+
+						if (item.VariacionNomina == true)
+						{
+							string cude_nom_var = string.Empty;
+							try
+							{
+								cude_nom_var = respuesta.Where(x => x.Identificacion == item.DatosTrabajador.Identificacion && x.IdEstado >= 200).FirstOrDefault().Cufe;
+							}
+							catch (Exception)
+							{}
+							if (string.IsNullOrEmpty(cude_nom_var))
+							{
+								Ctl_Documento _nom = new Ctl_Documento();
+
+								//Si envian los documentos uno a uno entonces consulto en el mes nominas recibidas con las condiciones de mes, emisor y trabajador y tomo la primera que debe ser la principal
+								if (doc_variacion == 0 && string.IsNullOrEmpty(prefijo_doc_variacion))
+								{
+									List<TblDocumentos> lista_doc = _nom.ObtenerPorMes(item.DatosEmpleador.Identificacion, Fecha.GetFecha().Month, item.DatosTrabajador.Identificacion);
+									if (lista_doc != null && lista_doc.Count > 0)
+									{
+										prefijo_doc_variacion = lista_doc.Where(x => x.IntDocTipo == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault().StrPrefijo;
+										doc_variacion = lista_doc.Where(x => x.IntDocTipo == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault().IntNumero;
+									}
+								}
+								
+								//Consulto el documento que esta plataforma segun el numero y el prefijo
+								TblDocumentos nomina_validad = _nom.Obtener(item.DatosEmpleador.Identificacion, doc_variacion, prefijo_doc_variacion, TipoDocumento.Nomina.GetHashCode());
+
+								//Si no encuentra el documento o no esta recibido o validado correctamente por la DIAN no gestiona la variacion
+								if (nomina_validad == null || nomina_validad.IdCategoriaEstado < 200)
+								{
+									DocumentoRespuesta respuesta_doc = new DocumentoRespuesta()
+									{
+										Aceptacion = 0,
+										CodigoRegistro = item.CodigoRegistro,
+										Cufe = "",
+										DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
+										DescripcionEstado = Enumeracion.GetDescription(CategoriaEstado.NoRecibido),
+										DocumentoTipo = TipoDocumento.Nomina.GetHashCode(),
+										Documento = item.Documento,
+										Error = new LibreriaGlobalHGInet.Error.Error("No se encontró documento principal de novedad o este documento no esta validado corectamente por la DIAN", LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, null),
+										EstadoDian = null,
+										FechaRecepcion = fecha_actual,
+										FechaUltimoProceso = fecha_actual,
+										IdDocumento = "",
+										Identificacion = item.DatosTrabajador.Identificacion,
+										IdProceso = proceso_actual.GetHashCode(),
+										MotivoRechazo = "",
+										NumeroResolucion = string.Empty,
+										Prefijo = item.Prefijo,
+										ProcesoFinalizado = 0,
+										UrlPdf = "",
+										UrlXmlUbl = "",
+										IdEstado = estado.GetHashCode(),
+										IdPeticion = id_peticion,
+										IdentificacionObligado = (item.DatosEmpleador != null) ? item.DatosEmpleador.Identificacion : "",
+										DescuentaSaldo = false,
+										IdVersionDian = (facturador_electronico != null) ? facturador_electronico.IntVersionDian : 0
+									};
+									respuesta.Add(respuesta_doc);
+									procesar_novedad = false;
+								}
+							}
+
+						}
+						else
+						{
+							prefijo_doc_variacion = item.Prefijo;
+							doc_variacion = item.Documento;
+						}
+
+
+						if (procesar_novedad == true)
+						{
+							DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual);
+							respuesta.Add(item_respuesta);
+						}
+						
+						//Cuando se gestiona los documentos con variacion se quitan del paquete principal y lo gestione el proceso de siempre
+						documentos.Remove(item);
+					}
+				}
+
 				Parallel.ForEach<Nomina>(documentos, item =>
 				{
 					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual);

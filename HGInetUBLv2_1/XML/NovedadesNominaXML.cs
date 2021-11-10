@@ -549,18 +549,24 @@ namespace HGInetUBLv2_1
 
 				devengado.Dotacion = devengados_doc.Dotacion;
 
-				if (practicante == true && devengados_doc.ApoyoSostenimiento == 0)
-				{
-					devengado.ApoyoSostSpecified = true;
-					devengado.ApoyoSost = devengados_doc.SueldoTrabajado;
-					devengado.Basico.SueldoTrabajado = 0;
-				}
-				else if (devengados_doc.ApoyoSostenimiento > 0)
+				if (devengados_doc.ApoyoSostenimiento > 0)
 				{
 					devengado.ApoyoSostSpecified = true;
 					devengado.ApoyoSost = devengados_doc.ApoyoSostenimiento;
-					devengado.Basico.SueldoTrabajado = 0;
 				}
+
+				//if (practicante == true && devengados_doc.ApoyoSostenimiento == 0)
+				//{
+				//	devengado.ApoyoSostSpecified = true;
+				//	devengado.ApoyoSost = devengados_doc.SueldoTrabajado;
+				//	devengado.Basico.SueldoTrabajado = 0;
+				//}
+				//else if (devengados_doc.ApoyoSostenimiento > 0)
+				//{
+				//	devengado.ApoyoSostSpecified = true;
+				//	devengado.ApoyoSost = devengados_doc.ApoyoSostenimiento;
+				//	//devengado.Basico.SueldoTrabajado = 0;
+				//}
 				devengado.Teletrabajo = devengados_doc.Teletrabajo;
 				devengado.BonifRetiro = devengados_doc.BonifRetiro;
 				devengado.Indemnizacion = devengados_doc.Indemnizacion;
