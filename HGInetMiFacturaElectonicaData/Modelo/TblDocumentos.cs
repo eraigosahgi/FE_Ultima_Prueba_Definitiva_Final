@@ -66,11 +66,11 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }
-        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
         public virtual TblEmpresas TblEmpresasAdquiriente { get; set; }
         public virtual TblEmpresas TblEmpresasFacturador { get; set; }
         public virtual TblEmpresasResoluciones TblEmpresasResoluciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPagosDetalles> TblPagosDetalles { get; set; }
+        public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
     }
 }

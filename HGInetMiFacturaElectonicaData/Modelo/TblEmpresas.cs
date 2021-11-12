@@ -21,11 +21,11 @@ namespace HGInetMiFacturaElectonicaData.Modelo
             this.TblEmpresasFacturador = new HashSet<TblDocumentos>();
             this.TblFormatos = new HashSet<TblFormatos>();
             this.TblOpcionesUsuario = new HashSet<TblOpcionesUsuario>();
-            this.TblPlanesTransacciones = new HashSet<TblPlanesTransacciones>();
             this.TblUsuarios = new HashSet<TblUsuarios>();
             this.TblEmpresasResoluciones = new HashSet<TblEmpresasResoluciones>();
             this.TblPagosElectronicos = new HashSet<TblPagosElectronicos>();
             this.TblPagosElectronicos1 = new HashSet<TblPagosElectronicos>();
+            this.TblPlanesTransacciones = new HashSet<TblPlanesTransacciones>();
         }
     
         public string StrIdentificacion { get; set; }
@@ -93,8 +93,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblOpcionesUsuario> TblOpcionesUsuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblUsuarios> TblUsuarios { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblEmpresasResoluciones> TblEmpresasResoluciones { get; set; }
@@ -102,5 +100,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
     }
 }

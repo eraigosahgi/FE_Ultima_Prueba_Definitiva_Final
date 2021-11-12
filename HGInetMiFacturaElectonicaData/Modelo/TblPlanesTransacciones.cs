@@ -37,12 +37,13 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public short IntMesesVence { get; set; }
         public string DocumentoRef { get; set; }
         public Nullable<System.DateTime> DatFechaInicio { get; set; }
+        public int IntTipoDocumento { get; set; }
     
-        public virtual TblUsuarios TblUsuarios { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
         public virtual TblEmpresas TblEmpresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPagosElectronicos> TblPagosElectronicos { get; set; }
+        public virtual TblUsuarios TblUsuarios { get; set; }
     }
 }
