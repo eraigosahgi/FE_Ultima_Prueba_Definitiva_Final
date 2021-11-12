@@ -223,7 +223,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
 
 				// Nombre del archivo Xml 
-				string archivo_xml = string.Format(@"{0}.xml", NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo, documentoBd.StrPrefijo));
+				string archivo_xml = string.Format(@"{0}.xml", HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo, documentoBd.StrPrefijo));
 
 				if (string.IsNullOrEmpty(respuesta.IdentificacionObligado) && (respuesta.DocumentoTipo == TipoDocumento.AcuseRecibo.GetHashCode()))
 				{
