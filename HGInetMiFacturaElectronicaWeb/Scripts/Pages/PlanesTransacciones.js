@@ -10,6 +10,7 @@ var GestionPlanesApp = angular.module('GestionPlanesApp', ['dx', 'AppMaestrosEnu
 GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesController($scope, $http, $location, SrvMaestrosEnum, SrvFiltro) {
 
 	var TiposProceso = [];
+	var TiposDoc = [];
 	var now = new Date();
 
 	var StrIdSeguridad = location.search.split('IdSeguridad=')[1];
@@ -89,8 +90,9 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
         Datos_T_compra = "",
         Datos_valor_plan = "",
         Datos_E_Plan = "",
-    datos_empresa_asociada = "",
-	Datos_obsrvaciones = "";
+		datos_empresa_asociada = "",
+		Datos_obsrvaciones = "",
+    	Datos_TipoDoc = 0;
 
 
 	//Define los campos del Formulario  
@@ -135,6 +137,34 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
             	validationRules: [{
             		type: "required",
             		message: "Debe indicar el tipo de proceso."
+            	}]
+            });
+
+
+
+			if (StrIdSeguridad != '' && StrIdSeguridad != null) {
+				Consultar(StrIdSeguridad);
+			}
+		});
+
+		SrvMaestrosEnum.ObtenerEnum(11).then(function (data) {
+			TiposDoc = data;
+			//Selección Tipo de Proceso
+			$("#TipoDoc").dxRadioGroup({
+				searchEnabled: true,
+				caption: 'TipoDoc',
+				layout: "horizontal",
+				dataSource: TiposDoc,
+				displayExpr: "Descripcion",
+				Enabled: true,
+				onValueChanged: function (data) {
+					Datos_TiposDoc = data.value.ID;
+				}
+			}
+            ).dxValidator({
+            	validationRules: [{
+            		type: "required",
+            		message: "Debe indicar el tipo de documento que descontara la plataforma."
             	}]
             });
 
@@ -395,7 +425,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			Vence: Datos_Vence,
 			FechaVence: Datos_FechaVence,
 			MesesVence: Datos_Meses_Vence,
-			DocRef: Datos_DocRef
+			DocRef: Datos_DocRef,
+			TipoDoc: Datos_TiposDoc
 		});
 
 		var IdActualizar = (StrIdSeguridad) ? '&' + $.param({ StrIdSeguridad: StrIdSeguridad, Editar: true }) : '';
@@ -404,19 +435,27 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 		$http.post('/api/PlanesTransacciones?' + data + IdActualizar).then(function (response) {
 			$("#wait").hide();
 			try {
-				DevExpress.ui.notify({ message: "El plan ha sido registrado con exito.", position: { my: "center top", at: "center top" } }, "success", 1500);
-				$("#button").hide();
-				$("#btncancelar").hide();
-				setTimeout(IrAConsulta, 1000);
+				
+				if (response.data == "")
+				{
+					DevExpress.ui.notify({ message: "El plan ha sido registrado con exito.", position: { my: "center top", at: "center top" } }, "success", 1500);
+					$("#button").hide();
+					$("#btncancelar").hide();
+					setTimeout(IrAConsulta, 1000);
 
-				try {
-					//Google Analytics
-					if (StrIdSeguridad) {
-						ga('send', 'event', 'Editando_Plan', 'Plan : ' + StrIdSeguridad, sessionStorage.getItem("Usuario"));
-					} else {
-						ga('send', 'event', 'Creando_Plan', 'Nuevo Plan', sessionStorage.getItem("Usuario"));
-					}
-				} catch (e) { }
+					try {
+						//Google Analytics
+						if (StrIdSeguridad) {
+							ga('send', 'event', 'Editando_Plan', 'Plan : ' + StrIdSeguridad, sessionStorage.getItem("Usuario"));
+						} else {
+							ga('send', 'event', 'Creando_Plan', 'Nuevo Plan', sessionStorage.getItem("Usuario"));
+						}
+					} catch (e) { }
+				}
+				else {
+					DevExpress.ui.notify(response.data, 'error', 5000);
+				}
+				
 
 
 
@@ -450,9 +489,14 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				Datos_FechaInicio = response.data[0].FechaInicio;
 				Datos_DocRef = response.data[0].DocRef;
 				Datos_Meses_Vence = response.data[0].MesesVence;
+				Datos_TiposDoc = response.data[0].TipoDoc;
 
 				if (Datos_TiposProceso == 1 || Datos_TiposProceso == 2 || Datos_TiposProceso == 3) {
 					$("#TipoProceso").dxRadioGroup({ value: TiposProceso[BuscarID(TiposProceso, Datos_TiposProceso)] });
+				}
+
+				if (Datos_TiposDoc == 0 || Datos_TiposDoc == 1 || Datos_TiposDoc == 2) {
+					$("#TipoDoc").dxRadioGroup({ value: TiposDoc[BuscarID(TiposDoc, Datos_TiposDoc)] });
 				}
 
 				//$("#txtempresaasociada").dxTextBox({ value: codigo_empresa + ' -- ' + Datos_Nombre_facturador });

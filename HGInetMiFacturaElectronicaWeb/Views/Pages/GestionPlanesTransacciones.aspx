@@ -46,6 +46,12 @@
 										<div data-hgi-filtro="Facturador"></div>
 									</div>
 
+									<div class="col-md-12 col-xs-12" style="margin-top: 16px; z-index: 9;">
+										<div class="dx-field-label" style="font-size: 14px; width: auto;">Tipo Documento:<strom style="color: red;">*</strom></div>
+										<div class="dx-field-value">
+											<div id="TipoDoc" style="margin-left: -4%;"></div>
+										</div>
+									</div>
 
 									<div class="col-md-3 col-xs-12" style="z-index: 9;" id="divCantTransacciones">
 										<label style="margin-top: 16px;">Cantidad Transacciones:<strom style="color: red;">*</strom></label>

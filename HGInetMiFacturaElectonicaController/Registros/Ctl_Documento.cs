@@ -3424,8 +3424,17 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						{
 							controladorplanes = new Ctl_PlanesTransacciones();
 							obj_plan = new List<ObjPlanEnProceso>();
+							int tipo_doc_plan = 0;
+							if (item.IntDocTipo == TipoDocumento.Nomina.GetHashCode() || item.IntDocTipo == TipoDocumento.NominaAjuste.GetHashCode())
+							{
+								tipo_doc_plan = TipoDocPlanes.Nomina.GetHashCode();
+							}
+							else
+							{
+								tipo_doc_plan = TipoDocPlanes.Documento.GetHashCode();
+							}
 							//Obtengo el plan con el que voy a descontar el saldo
-							obj_plan = controladorplanes.ObtenerPlanesActivos(item.StrEmpresaFacturador, 1);
+							obj_plan = controladorplanes.ObtenerPlanesActivos(item.StrEmpresaFacturador, 1, tipo_doc_plan);
 							if (obj_plan != null)
 							{
 								item.StrIdPlanTransaccion = obj_plan[0].plan;

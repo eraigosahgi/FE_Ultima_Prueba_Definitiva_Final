@@ -145,6 +145,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							}
 						}
 						break;
+					case 11:
+						//Metodo para obtener los datos del enumerable de tipo de Compra: 0: Mixto, 1 Documento, 2 Nomina
+						foreach (var value in Enum.GetValues(typeof(HGInetMiFacturaElectonicaData.TipoDocPlanes)))
+						{
+							string[] datos_enum = string.Format("{0},{1}", (int)value, (Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.TipoDocPlanes>((int)value)))).Split(',');
+							datos.Add(datos_enum);
+						}
+						break;
 				}
 				return (datos);
 			}

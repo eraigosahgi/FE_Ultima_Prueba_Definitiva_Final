@@ -110,6 +110,7 @@
     <Compile Include="Enumerables\ProcesoEstado.cs" />
     <Compile Include="Enumerables\TipoAlerta.cs" />
     <Compile Include="Enumerables\TipoCompra.cs" />
+    <Compile Include="Enumerables\TipoDocPlanes.cs" />
     <Compile Include="Enumerables\TipoHoraNomina.cs" />
     <Compile Include="Enumerables\TipoOperacionV2.cs" />
     <Compile Include="Enumerables\TipoFormato.cs" />

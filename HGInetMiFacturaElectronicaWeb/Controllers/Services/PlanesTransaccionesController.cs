@@ -66,7 +66,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					CodigoEstado = d.IntEstado,
 					Facturador = d.StrEmpresaFacturador,
 					CodCompra = d.IntTipoProceso,
-					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0
+					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0,
+					TipoDoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocPlanes>(d.IntTipoDocumento))
 				});
 
 				return Ok(retorno);
@@ -118,7 +119,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Tipoproceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoCompra>(d.IntTipoProceso)),
 					CodigoEstado = d.IntEstado,
 					CodCompra = d.IntTipoProceso,
-					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0
+					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0,
+					TipoDoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocPlanes>(d.IntTipoDocumento))
 				});
 
 				return Ok(retorno);
@@ -177,7 +179,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					CodigoEstado = d.IntEstado,
 					Facturador = d.StrEmpresaFacturador,
 					CodCompra = d.IntTipoProceso,
-					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0
+					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0,
+					TipoDoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocPlanes>(d.IntTipoDocumento))
 				});
 
 				return Ok(retorno);
@@ -303,7 +306,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					FechaVence = d.DatFechaVencimiento,
 					MesesVence = d.IntMesesVence,
 					DocRef = d.DocumentoRef,
-					FechaInicio = (d.DatFechaInicio == null) ? "" : d.DatFechaInicio.Value.ToString(Fecha.formato_fecha_hginet)
+					FechaInicio = (d.DatFechaInicio == null) ? "" : d.DatFechaInicio.Value.ToString(Fecha.formato_fecha_hginet),
+					TipoDoc = d.IntTipoDocumento
 				});
 
 				return Ok(retorno);
@@ -329,7 +333,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="StrEmpresaFacturador"></param>
 		/// <param name="Tipo"></param>
 		/// <returns></returns>
-		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri] short MesesVence, [FromUri] string DocRef)
+		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri] short MesesVence, [FromUri] string DocRef, [FromUri]int TipoDoc)
 		{
 			try
 			{
@@ -352,6 +356,18 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					ObjPlanTransacciones.IntMesesVence = MesesVence;
 				}
+
+				ObjPlanTransacciones.IntTipoDocumento = TipoDoc;
+
+				if (TipoDoc > 0 && IntTipoProceso == 2 && Estado == 0)
+				{
+					Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+					List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.ObtenerPlanesMixto(ObjPlanTransacciones.StrEmpresaUsuario);
+
+					if (datos != null && datos.Count > 0)
+						return Ok("El Facturador Electrónico tiene registrado otro plan como Mixto, realice el ajuste de ese plan y a continuacion genere este nuevo plan");
+				}
+				
 
 
 				//if (Vence && MesesVence>0)

@@ -271,6 +271,36 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return datos_plan;
 		}
 
+		public List<TblPlanesTransacciones> ObtenerPlanesMixto(string Identificacion)
+		{
+
+			//context.Configuration.LazyLoadingEnabled = false;
+
+			List<TblPlanesTransacciones> datos_plan = new List<TblPlanesTransacciones>();
+
+			//Ctl_Empresa Controlador = new Ctl_Empresa();
+
+			//var ListaFacturadores = Controlador.ObtenerFacturadores();
+
+			DateTime Fecha_Actual = Fecha.GetFecha().Date;
+
+			int Estado = EstadoPlan.Habilitado.GetHashCode();
+			int TipoPlan = TipoCompra.PostPago.GetHashCode();
+			int TipoDocumeto = TipoDocPlanes.Mixto.GetHashCode();
+
+			context.Configuration.LazyLoadingEnabled = false;
+
+			//Consultamos los planes del facturador
+			datos_plan = (from t in context.TblPlanesTransacciones
+													   where (t.StrEmpresaFacturador.Equals(Identificacion))
+														&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
+														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) || (t.IntTipoProceso == TipoPlan))
+														&& (t.IntTipoDocumento == TipoDocumeto)
+													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFecha }).ToList();
+
+			return datos_plan;
+		}
+
 		/// <summary>
 		/// Retorna una lista de facturadores (string) con la relación de la bolsa de los planes
 		/// </summary>
@@ -387,13 +417,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="identificacion">Identificación del facturador</param>
 		/// <param name="cantidaddoc">Cantidad de documentos a procesar</param>
 		/// <returns></returns>
-		public List<ObjPlanEnProceso> ObtenerPlanesActivos(string identificacion, int cantidaddoc)
+		public List<ObjPlanEnProceso> ObtenerPlanesActivos(string identificacion, int cantidaddoc, int TipoDoc)
 		{
 			context.Configuration.LazyLoadingEnabled = false;
 
 			int Estado = EstadoPlan.Habilitado.GetHashCode();
 			int Plan_PostPago = TipoCompra.PostPago.GetHashCode();
 			DateTime Fecha_Actual = Fecha.GetFecha().Date;
+
+			int tipo_doc_mixto = TipoDocPlanes.Mixto.GetHashCode();
 
 
 			#region Proceso de descuento por empresa descuento y propios planes
@@ -404,6 +436,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 													   where (t.StrEmpresaFacturador.Equals(identificacion))
 														&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
 														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) || (t.IntTipoProceso == Plan_PostPago))
+														&& ((t.IntTipoDocumento == TipoDoc) || t.IntTipoDocumento == tipo_doc_mixto)
 													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFecha }).ToList();
 
 			//Calculamos el saldo disponible de la lista de planes del facturador
