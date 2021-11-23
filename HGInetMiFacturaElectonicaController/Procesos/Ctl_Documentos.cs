@@ -1151,10 +1151,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					decimal total_calculado = decimal.Round(documento.ValorSubtotal + documento.ValorIva + documento.ValorImpuestoConsumo + documento.ValorCargo - documento.ValorDescuento, MidpointRounding.AwayFromZero);
 
 					//Para las facturas del sector SALUD, los anticipos serán indicados como valores DESCONTABLES,PayableAmount (ID FAU14)
-					//if (documento.SectorSalud != null && documento.SectorSalud.CamposSector.Count > 0)
-					//{
-					//	total_calculado -= decimal.Round(documento.ValorAnticipo, MidpointRounding.AwayFromZero);
-					//}
+					if (documento.SectorSalud != null && documento.SectorSalud.CamposSector.Count > 0)
+					{
+						total_calculado -= decimal.Round(documento.ValorAnticipo, MidpointRounding.AwayFromZero);
+					}
 
 					if (total_calculado != decimal.Round(documento.Total, MidpointRounding.AwayFromZero))
 					{

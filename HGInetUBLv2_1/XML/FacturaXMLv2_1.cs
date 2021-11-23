@@ -60,7 +60,8 @@ namespace HGInetUBLv2_1
 				//Documento Tipo Sector Salud
 				if (documento.SectorSalud != null)
 				{
-					facturaXML.CustomizationID.Value = "SS-Recaudo";
+					//Se hace cambio para que al momento de validar el anticipo no rechace el documento la DIAN por ser del sector salud.
+					facturaXML.CustomizationID.Value = "SS-CUFE";//"SS-Recaudo";
 					facturaXML.CustomizationID.schemeID = "SS-CUFE";
 				}
 				
