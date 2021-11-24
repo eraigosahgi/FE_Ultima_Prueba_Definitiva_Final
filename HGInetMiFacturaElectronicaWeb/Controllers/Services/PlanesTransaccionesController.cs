@@ -362,7 +362,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				if (TipoDoc > 0 && IntTipoProceso == 2 && Estado == 0)
 				{
 					Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-					List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.ObtenerPlanesMixto(ObjPlanTransacciones.StrEmpresaUsuario);
+					List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.ObtenerPlanesMixto(ObjPlanTransacciones.StrEmpresaFacturador);
 
 					if (datos != null && datos.Count > 0)
 						return Ok("El Facturador Electrónico tiene registrado otro plan como Mixto, realice el ajuste de ese plan y a continuacion genere este nuevo plan");
@@ -399,7 +399,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="StrEmpresaFacturador"></param>
 		/// <param name="Tipo"></param>
 		/// <returns></returns>
-		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri]System.Guid StrIdSeguridad, [FromUri] short MesesVence, [FromUri] string DocRef, [FromUri]bool Editar)
+		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri]System.Guid StrIdSeguridad, [FromUri] short MesesVence, [FromUri] string DocRef, [FromUri]int TipoDoc, [FromUri]bool Editar)
 		{
 			try
 			{
@@ -422,6 +422,17 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				if (Vence)
 				{
 					ObjPTransacciones.IntMesesVence = MesesVence;
+				}
+
+				ObjPTransacciones.IntTipoDocumento = TipoDoc;
+
+				if (TipoDoc > 0 && IntTipoProceso == 2 && Estado == 0)
+				{
+					Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+					List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.ObtenerPlanesMixto(ObjPTransacciones.StrEmpresaFacturador);
+
+					if (datos != null && datos.Count > 0)
+						return Ok("El Facturador Electrónico tiene registrado otro plan como Mixto, realice el ajuste de ese plan y a continuacion genere este nuevo plan");
 				}
 
 				//if (Vence && MesesVence > 0)
