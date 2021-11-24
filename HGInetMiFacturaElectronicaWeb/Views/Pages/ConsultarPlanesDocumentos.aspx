@@ -4,8 +4,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 
-    <script src="../../Scripts/Services/MaestrosEnum.js?vjs20201019"></script>
-    <script src="../../Scripts/Pages/ConsultarPlanesDocumentos.js?vjs20201019"></script>
+    <script src="../../Scripts/Services/MaestrosEnum.js?vjs20211124"></script>
+    <script src="../../Scripts/Pages/ConsultarPlanesDocumentos.js?vjs20211124"></script>
 
     <div data-ng-app="GestionPlanesApp" data-ng-controller="ConsultaPlanesController">
 
