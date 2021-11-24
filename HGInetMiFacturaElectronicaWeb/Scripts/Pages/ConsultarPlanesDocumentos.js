@@ -422,7 +422,12 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                      	caption: "Tipo",
                      	dataField: "Tipoproceso"
                      }
+					 ,
+                     {
 
+                     	caption: "TipoDoc",
+                     	dataField: "TipoDoc"
+                     }
                      ,
                       {
 
@@ -489,6 +494,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 			$scope.CodigoEmpresaFacturador = response.data[0].CodigoEmpresaFacturador;
 			$scope.EmpresaFacturador = response.data[0].EmpresaFacturador;
 			$scope.Tipo = response.data[0].Tipo;
+			$scope.TipoDoc = response.data[0].TipoDoc;
 			$scope.Observaciones = response.data[0].Observaciones;
 			$scope.Estado = response.data[0].Estado;
 			$scope.FechaVence = response.data[0].FechaVence;
