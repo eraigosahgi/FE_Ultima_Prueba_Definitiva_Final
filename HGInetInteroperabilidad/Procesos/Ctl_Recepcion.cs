@@ -14,6 +14,8 @@ using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.Properties;
 using LibreriaGlobalHGInet.RegistroLog;
+using MailKit;
+using MimeKit;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -853,6 +855,11 @@ namespace HGInetInteroperabilidad.Procesos
 				bool respuesta = false;
 				string ruta_xml = string.Empty;
 
+				//Ubicacion del archivo del Mail original para re-enviar correo cuando se presente algun fallo si se requiere
+				string Nombre_arch_mail = Path.GetFileName(ruta_archivo);
+				string ruta_archi_mail = ruta_archivo.Replace(string.Format("\\{0}", Nombre_arch_mail), "");
+				ruta_archi_mail = string.Format(@"{0}\{1}.mail", ruta_archi_mail, Nombre_arch_mail);
+
 				// 0 - AttachDocument, 1 - ApplicationResponse(Acuse Cliente)
 				int tipo_doc_proceso = 0;
 
@@ -904,6 +911,7 @@ namespace HGInetInteroperabilidad.Procesos
 				XmlSerializer serializacion1 = null;
 				AttachedDocumentType obj_attach_serializado = null;
 				Acuse respuesta_adquiriente = null;
+				bool archivo_attach_cumple = true;
 
 				try
 				{
@@ -911,8 +919,27 @@ namespace HGInetInteroperabilidad.Procesos
 					serializacion1 = new XmlSerializer(typeof(AttachedDocumentType));
 
 					obj_attach_serializado = (AttachedDocumentType)serializacion1.Deserialize(xml_reader_serializacion);
+
+					if (obj_attach_serializado.Attachment == null)
+					{
+						archivo_attach_cumple = false;
+
+						try
+						{
+							List<string> mensajes = new List<string>();
+							mensajes.Add(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico", Path.GetFileName(ruta_xml)));
+
+							ReEnviarCorreoErro(ruta_archi_mail, mensajes);
+
+						}
+						catch (Exception e)
+						{
+						}
+
+						throw new ApplicationException(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico", Path.GetFileName(ruta_xml)));
+					}
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
 					try
 					{
@@ -928,7 +955,10 @@ namespace HGInetInteroperabilidad.Procesos
 					catch (Exception excepcion)
 					{
 						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-						throw new ApplicationException(string.Format("Error al serializar el archivo en la ruta {0} Detalle: {1}", ruta_xml, excepcion.Message));
+						if (archivo_attach_cumple == true)
+							throw new ApplicationException(string.Format("Error al serializar el archivo en la ruta {0} Detalle: {1}", ruta_xml, excepcion.Message));
+						else
+							throw new ApplicationException(string.Format("Error al serializar el archivo en la ruta {0} Detalle: {1}", ruta_xml, ex.Message));
 					}
 
 				}
@@ -955,6 +985,31 @@ namespace HGInetInteroperabilidad.Procesos
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 
+		}
+
+		public static void ReEnviarCorreoErro(string ruta_archivo_mail, List<string> mensajes_inconsistencias)
+		{
+			try
+			{
+				UniqueId id_mensaje = new UniqueId(Convert.ToUInt16(Fecha.GetFecha().Day));
+
+				MimeMessage mail_original = MimeMessage.Load(ruta_archivo_mail);
+
+				// obtiene el asunto del correo electrónico
+				string asunto = mail_original.Subject;
+
+				List<string> asunto_params = asunto.Split(';').ToList();
+
+				// validar y obtener la empresa
+				Ctl_Empresa _empresa = new Ctl_Empresa();
+				TblEmpresas empresa = _empresa.ValidarInteroperabilidad(asunto_params[0]);
+
+				Ctl_MailRecepcion.EnviarAlerta(id_mensaje, mail_original, empresa, mensajes_inconsistencias);
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.envio, "inconsistencia tratando de enviar el correo original al remitente");
+			}
 		}
 
 
@@ -1287,7 +1342,7 @@ namespace HGInetInteroperabilidad.Procesos
 						//asignacion plan de documentos
 						try
 						{
-							ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_receptor.StrIdentificacion, 1);
+							ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_receptor.StrIdentificacion, 1, TipoDocPlanes.Documento.GetHashCode());
 
 							if (ListaPlanes == null)
 							{

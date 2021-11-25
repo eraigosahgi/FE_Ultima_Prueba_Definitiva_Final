@@ -221,11 +221,11 @@ namespace HGInetInteroperabilidad.Procesos
 									string ruta_archivos = string.Format("{0}\\{1}Mail\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion.Replace("recepcion", "no procesados"));
 									ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
 
-									string ruta_directorio_mail = string.Format("{0}\\{1}\\", ruta_archivos, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address, id_mail.ToString()));
+									string ruta_directorio_mail = string.Format("{0}\\{1}\\", ruta_archivos, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0,10), id_mail.ToString()));
 									ruta_directorio_mail = Directorio.CrearDirectorio(ruta_directorio_mail);
 
 									// almacena el correo electrónico temporalmente
-									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_directorio_mail, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address, id_mail.ToString()));
+									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_directorio_mail, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0, 10), id_mail.ToString()));
 
 									// almacena los adjuntos del correo electrónico temporalmente
 									List<string> rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_directorio_mail);
@@ -265,11 +265,22 @@ namespace HGInetInteroperabilidad.Procesos
 
 									MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
 
-									if (remitente_reply.Equals(Constantes.EmailRemitente))
+									if (remitente_reply.Address.Equals(Constantes.EmailRemitente))
 										remitente_reply.Address = Constantes.EmailCopiaOculta;
 
 									List<MailboxAddress> correos_destino = new List<MailboxAddress>();
 									//correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
+
+									try
+									{
+										MailboxAddress reply_to = mensaje.InReplyTo.OfType<MailboxAddress>().Single();
+
+										correos_destino.Add(new MailboxAddress(asunto, reply_to.Address));
+									}
+									catch (Exception ex)
+									{
+									  
+									}
 
 									//Si se sabe quien es la empresa receptora(Adquiriente) se hace envio del correo original y el por que no se proceso
 									if (empresa != null)
@@ -289,7 +300,7 @@ namespace HGInetInteroperabilidad.Procesos
 										BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
 										cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
 									}
-									catch (Exception)
+									catch (Exception ex)
 									{}
 
 									// mueve el mensaje a no procesado de la bandeja de entrada
@@ -515,7 +526,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 		}
 
-		public static void EnviarAlerta(UniqueId id_mensaje, MimeMessage mensaje, TblEmpresas empresa, List<string> mensajes, Cl_MailImap cliente_imap)
+		public static void EnviarAlerta(UniqueId id_mensaje, MimeMessage mensaje, TblEmpresas empresa, List<string> mensajes)
 		{
 			MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
 
@@ -533,9 +544,32 @@ namespace HGInetInteroperabilidad.Procesos
 
 			MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
 
+			if (remitente_reply.Address.Equals(Constantes.EmailRemitente))
+				remitente_reply.Address = Constantes.EmailCopiaOculta;
+
 			List<MailboxAddress> correos_destino = new List<MailboxAddress>();
 			//correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
 			correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
+
+			try
+			{
+				MailboxAddress reply_to = mensaje.ReplyTo.OfType<MailboxAddress>().Single();
+
+				if (!remitente_reply.Address.Equals(reply_to.Address))
+					correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, reply_to.Address));
+			}
+			catch (Exception)
+			{
+			}
+
+			// obtener los parámetros de configuración para la lectura POP
+			string servidor = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.servidor");
+			int puerto = Convert.ToInt32(Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.puerto"));
+			string usuario = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.usuario");
+			string clave = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.clave");
+			bool habilitar_ssl = Convert.ToBoolean(Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.ssl"));
+
+			Cl_MailImap cliente_imap = new Cl_MailImap(servidor, puerto, usuario, clave, habilitar_ssl);
 
 			BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
 			cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
