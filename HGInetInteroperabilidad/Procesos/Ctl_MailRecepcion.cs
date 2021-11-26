@@ -236,7 +236,7 @@ namespace HGInetInteroperabilidad.Procesos
 									{
 										Ctl_Descomprimir.Procesar(rutas_archivos[0], ruta_descomprimir);
 									}
-									catch (Exception)
+									catch (Exception ex)
 									{}
 
 									try
@@ -263,17 +263,21 @@ namespace HGInetInteroperabilidad.Procesos
 										Clave = configuracion_server.Clave,
 									};
 
+									List<MailboxAddress> correos_destino = new List<MailboxAddress>();
+
+									MailboxAddress remitente_re = new MailboxAddress(Constantes.NombreRemitenteEmail,Constantes.EmailRemitente);
+
 									MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
 
 									if (remitente_reply.Address.Equals(Constantes.EmailRemitente))
 										remitente_reply.Address = Constantes.EmailCopiaOculta;
 
-									List<MailboxAddress> correos_destino = new List<MailboxAddress>();
-									//correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
+
+									correos_destino.Add(new MailboxAddress(asunto, remitente_reply.Address));
 
 									try
 									{
-										MailboxAddress reply_to = mensaje.InReplyTo.OfType<MailboxAddress>().Single();
+										MailboxAddress reply_to = mensaje.ReplyTo.OfType<MailboxAddress>().Single();
 
 										correos_destino.Add(new MailboxAddress(asunto, reply_to.Address));
 									}
@@ -298,7 +302,7 @@ namespace HGInetInteroperabilidad.Procesos
 									try
 									{
 										BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
-										cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
+										cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_re, correos_destino, contenido, true);
 									}
 									catch (Exception ex)
 									{}
@@ -542,12 +546,17 @@ namespace HGInetInteroperabilidad.Procesos
 				Clave = configuracion_server.Clave,
 			};
 
+			List<MailboxAddress> correos_destino = new List<MailboxAddress>();
+
+			MailboxAddress remitente_re = new MailboxAddress(Constantes.NombreRemitenteEmail, Constantes.EmailRemitente);
+
 			MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
 
 			if (remitente_reply.Address.Equals(Constantes.EmailRemitente))
 				remitente_reply.Address = Constantes.EmailCopiaOculta;
 
-			List<MailboxAddress> correos_destino = new List<MailboxAddress>();
+			correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, remitente_reply.Address));
+
 			//correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
 			correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
 
@@ -572,7 +581,7 @@ namespace HGInetInteroperabilidad.Procesos
 			Cl_MailImap cliente_imap = new Cl_MailImap(servidor, puerto, usuario, clave, habilitar_ssl);
 
 			BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
-			cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_reply, correos_destino, contenido, true);
+			cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_re, correos_destino, contenido, true);
 		}
 
 
