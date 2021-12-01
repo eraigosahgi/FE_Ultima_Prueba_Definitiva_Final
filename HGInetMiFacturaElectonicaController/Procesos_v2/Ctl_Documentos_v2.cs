@@ -92,21 +92,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 
 					//Si el documento es nomina no se hace validaciones por parte de la plataforma y se ajustan segun validaciones que reporta la DIAN.
-					if (tipo_doc < TipoDocumento.AcuseRecibo)
+					//if (tipo_doc < TipoDocumento.AcuseRecibo)
+					//{
+
+					//}
+
+					// valida la información del documento
+					respuesta = Procesos.Ctl_Documentos.Validar(documento_obj, tipo_doc, resolucion, ref respuesta, empresa);
+					if (respuesta.Error != null && documento_existente == true)
 					{
-						// valida la información del documento
-						respuesta = Procesos.Ctl_Documentos.Validar(documento_obj, tipo_doc, resolucion, ref respuesta, empresa);
-						if (respuesta.Error != null && documento_existente == true)
-						{
-							//Se actualiza el estado del documento en BD para que lo envien de nuevo
-							documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
-							Ctl_Documento num_doc = new Ctl_Documento();
-							documento_ex = num_doc.Actualizar(documento_ex);
-							respuesta.IdProceso = documento_ex.IntIdEstado;
-							respuesta.IdEstado = documento_ex.IdCategoriaEstado;
-						}
-						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
+						//Se actualiza el estado del documento en BD para que lo envien de nuevo
+						documento_ex.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+						Ctl_Documento num_doc = new Ctl_Documento();
+						documento_ex = num_doc.Actualizar(documento_ex);
+						respuesta.IdProceso = documento_ex.IntIdEstado;
+						respuesta.IdEstado = documento_ex.IdCategoriaEstado;
 					}
+					Procesos.Ctl_Documentos.ValidarRespuesta(respuesta);
 
 					//Validacion si es un documento de nomina y si se esta validando el objeto enviado
 					bool continuar_proceso = true;

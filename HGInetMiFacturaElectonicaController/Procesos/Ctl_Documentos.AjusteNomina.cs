@@ -379,6 +379,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						else
 						{
 							resolucion_doc.StrIdSetDian = resol_nomina.StrIdSetDian;
+							resolucion_doc.DatFechaActualizacion = Fecha.GetFecha();
 							//resolucion_doc.IntVersionDian = resol_factura.IntVersionDian;
 							_resolucion.Edit(resolucion_doc);
 						}

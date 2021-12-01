@@ -401,6 +401,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if ((!facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo)) &&(facturador_electronico.IntHabilitacion < 99) && (string.IsNullOrEmpty(resolucion_doc.StrIdSetDian) || !resolucion_doc.StrIdSetDian.Equals(item.NumeroResolucion)))
 					{
 						resolucion_doc.StrIdSetDian = item.NumeroResolucion;
+						resolucion_doc.DatFechaActualizacion = Fecha.GetFecha();
 						//resolucion_doc.IntVersionDian = resol_factura.IntVersionDian;
 						_resolucion.Edit(resolucion_doc);
 					}
@@ -615,11 +616,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//if (!DateTime.TryParseExact(documento.DatosPeriodo.FechaLiquidacion.ToString("yyyy-MM-dd"), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out validar_fecha))
 					//	throw new ApplicationException(string.Format("La FechaLiquidacion '{0}' no es válida", documento.DatosPeriodo.FechaLiquidacion));
 
-					if (documento.DatosPeriodo.FechaLiquidacionInicio.Day > 1)
-						throw new ApplicationException(string.Format("El dia que reporta en FechaLiquidacionInicio {0} no es válido según el periodo que esta informando", documento.DatosPeriodo.FechaLiquidacionInicio.Day));
+					//if (documento.DatosPeriodo.FechaLiquidacionInicio.Day > 1)
+					//	throw new ApplicationException(string.Format("El dia que reporta en FechaLiquidacionInicio {0} no es válido según el periodo que esta informando", documento.DatosPeriodo.FechaLiquidacionInicio.Day));
 
-					if (!(DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month) == documento.DatosPeriodo.FechaLiquidacionFin.Day || documento.DatosPeriodo.FechaLiquidacionInicio.Day + 1 == DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month)))
-						throw new ApplicationException(string.Format("El dia que reporta en FechaLiquidacionFin {0} no es válido según el periodo que esta informando", documento.DatosPeriodo.FechaLiquidacionFin));
+					//if (!(DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month) == documento.DatosPeriodo.FechaLiquidacionFin.Day || documento.DatosPeriodo.FechaLiquidacionInicio.Day + 1 == DateTime.DaysInMonth(documento.DatosPeriodo.FechaLiquidacionFin.Year, documento.DatosPeriodo.FechaLiquidacionFin.Month)))
+					//	throw new ApplicationException(string.Format("El dia que reporta en FechaLiquidacionFin {0} no es válido según el periodo que esta informando", documento.DatosPeriodo.FechaLiquidacionFin));
 
 					if (documento.DatosPeriodo.TiempoLaborado <= 0)
 						throw new ApplicationException(string.Format("El Tiempo Laborado {0} no es válido", documento.DatosPeriodo.TiempoLaborado));

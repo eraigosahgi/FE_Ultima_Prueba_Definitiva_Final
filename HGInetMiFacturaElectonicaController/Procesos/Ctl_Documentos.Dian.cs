@@ -229,7 +229,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					doc_tipo = TipoDocumento.AcuseRecibo;
 					carpeta_xml = carpeta_xml.Replace("FacturaEConsultaDian", "XmlAcuse");
-					archivo_xml = string.Format(@"{0}-{1}-2.xml", NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo, documentoBd.StrPrefijo), respuesta.Documento);
+					archivo_xml = string.Format(@"{0}-{1}-2.xml", HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo, documentoBd.StrPrefijo), respuesta.Documento);
 				}
 
 				// ruta del xml
