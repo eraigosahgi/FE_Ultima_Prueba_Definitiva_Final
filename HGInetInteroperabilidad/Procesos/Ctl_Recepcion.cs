@@ -1246,7 +1246,7 @@ namespace HGInetInteroperabilidad.Procesos
 						//Validaciones del objeto
 						Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.Factura);
 
-						nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.Factura, documento_obj.Prefijo);
+						nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.Factura, documento_obj.Prefijo);
 					}
 					else if (attach_document.DocumentoElectronico.Contains("<cbc:CreditNoteTypeCode"))
 					{
@@ -1256,7 +1256,7 @@ namespace HGInetInteroperabilidad.Procesos
 						//Validaciones del objeto
 						Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaCredito);
 
-						nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaCredito, documento_obj.Prefijo);
+						nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaCredito, documento_obj.Prefijo);
 					}
 					else if (attach_document.DocumentoElectronico.Contains("<cbc:DebitNoteTypeCode"))
 					{
@@ -1266,7 +1266,7 @@ namespace HGInetInteroperabilidad.Procesos
 						//Validaciones del objeto
 						Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaDebito);
 
-						nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaDebito, documento_obj.Prefijo);
+						nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaDebito, documento_obj.Prefijo);
 
 					}
 

@@ -169,7 +169,7 @@ namespace HGInetUBLv2_1
 				if (cliente.Party.Contact != null)
 				{
 					adquiriente.Telefono = (cliente.Party.Contact.Telephone == null) ? string.Empty :cliente.Party.Contact.Telephone.Value;
-					adquiriente.Email = cliente.Party.Contact.ElectronicMail.Value;
+					adquiriente.Email = (cliente.Party.Contact.ElectronicMail == null) ? string.Empty : cliente.Party.Contact.ElectronicMail.Value;
 				}
 				//Valida si tiene pagina web
 				if (cliente.Party.WebsiteURI != null)
