@@ -2208,35 +2208,35 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//if (deduccion == null)
 			//	throw new Exception("No se encontró deducciones en el documento.");
 
-			if (deduccion.Salud != null)
-			{
-				//if (deduccion.Salud.Porcentaje != 4)
-				//	throw new ApplicationException(string.Format("El Porcentaje con valor {0} de la Deduccion de Salud no está bien formado", deduccion.Salud.Porcentaje));
+			//if (deduccion.Salud != null)
+			//{
+			//	//if (deduccion.Salud.Porcentaje != 4)
+			//	//	throw new ApplicationException(string.Format("El Porcentaje con valor {0} de la Deduccion de Salud no está bien formado", deduccion.Salud.Porcentaje));
 
-				//if (deduccion.Salud.Deduccion <= 0)
-				//	throw new ApplicationException(string.Format("La Deduccion de Salud con valor de {0} no está bien formado", deduccion.Salud.Deduccion));
+			//	//if (deduccion.Salud.Deduccion <= 0)
+			//	//	throw new ApplicationException(string.Format("La Deduccion de Salud con valor de {0} no está bien formado", deduccion.Salud.Deduccion));
 
-				//valor_deduccion += deduccion.Salud.Deduccion;
-			}
-			else
-			{
-				throw new Exception("No se encontró deduccion de salud en el documento.");
-			}
+			//	//valor_deduccion += deduccion.Salud.Deduccion;
+			//}
+			//else
+			//{
+			//	throw new Exception("No se encontró deduccion de salud en el documento.");
+			//}
 
-			if (deduccion.Pension != null)
-			{
-				//if (deduccion.Pension.Porcentaje != 4)
-				//	throw new ApplicationException(string.Format("El Porcentaje con valor {0} de la Deduccion de Pension no está bien formado", deduccion.Pension.Porcentaje));
+			//if (deduccion.Pension != null)
+			//{
+			//	//if (deduccion.Pension.Porcentaje != 4)
+			//	//	throw new ApplicationException(string.Format("El Porcentaje con valor {0} de la Deduccion de Pension no está bien formado", deduccion.Pension.Porcentaje));
 
-				//if (deduccion.Pension.Deduccion <= 0)
-				//	throw new ApplicationException(string.Format("La Deduccion de Pension con valor de {0} no está bien formado", deduccion.Pension.Deduccion));
+			//	//if (deduccion.Pension.Deduccion <= 0)
+			//	//	throw new ApplicationException(string.Format("La Deduccion de Pension con valor de {0} no está bien formado", deduccion.Pension.Deduccion));
 
-				//valor_deduccion += deduccion.Pension.Deduccion;
-			}
-			else
-			{
-				throw new Exception("No se encontró deduccion de salud en el documento.");
-			}
+			//	//valor_deduccion += deduccion.Pension.Deduccion;
+			//}
+			//else
+			//{
+			//	throw new Exception("No se encontró deduccion de salud en el documento.");
+			//}
 
 			//if (deduccion.DatosFondoSP != null)
 			//{
