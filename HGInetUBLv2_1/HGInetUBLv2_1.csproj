@@ -1270,6 +1270,7 @@
     <Compile Include="Dian\ListaValores\CodigoPostal.cs" />
     <Compile Include="Dian\ListaValores\TipoImpuestoTercero-2.1.cs" />
     <Compile Include="Dian\ListaValores\TipoReferenciaAdicional.cs" />
+    <Compile Include="Dian\ListaValores\TipoTrabajador.cs" />
     <Compile Include="Dian\Structures\AdditionalMonetaryTotal.cs" />
     <Compile Include="Dian\Structures\AuthorizationProvider.cs" />
     <Compile Include="Dian\Structures\AuthrorizedInvoices.cs" />

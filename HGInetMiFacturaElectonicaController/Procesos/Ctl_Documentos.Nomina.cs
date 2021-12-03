@@ -652,7 +652,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					ListaMediosPago list_medio = new ListaMediosPago();
 					ListaItem medio = list_medio.Items.Where(d => d.Codigo.Equals(documento.DatosPago.Metodo.ToString())).FirstOrDefault();
-					if (medio == null)
+					if (medio == null || documento.DatosPago.Metodo.Equals(0))
 						throw new ApplicationException(string.Format("El Medio de Pago {0} no es válido según Estandar DIAN", documento.DatosPago.Metodo));
 
 					if (medio.Codigo.Equals("42"))

@@ -1859,14 +1859,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerNombre", tipo).Replace("de tipo", "del"));
 
 			if (string.IsNullOrEmpty(trabajador.TipoTrabajador))
-				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "TipoTrabajador", tipo).Replace("de tipo", "del"));
 
-			//****Falta validar con el listado de la DIAN
+			TipoTrabajador list_tipotrabajador = new TipoTrabajador();
+			ListaItem tipotrabajador = list_tipotrabajador.Items.Where(d => d.Codigo.Equals(trabajador.TipoTrabajador)).FirstOrDefault();
+			if (tipotrabajador == null)
+				throw new ArgumentException(string.Format("El Código del Tipo de Trabajador {0} no es valido segun el estandar de la DIAN", trabajador.TipoTrabajador));
 
 			if (string.IsNullOrEmpty(trabajador.SubTipoTrabajador))
-				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
+				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "SubTipoTrabajador", tipo).Replace("de tipo", "del"));
 
-			//****Falta validar con el listado de la DIAN
+			if (!trabajador.SubTipoTrabajador.Equals("00") && !trabajador.SubTipoTrabajador.Equals("01"))
+				throw new ArgumentException(string.Format("El Código del SubTipo de Trabajador {0} no es valido segun el estandar de la DIAN", trabajador.TipoTrabajador));
 
 			if ((trabajador.TipoContrato < 0) || (trabajador.TipoContrato > 5))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DV", tipo).Replace("de tipo", "del"));
