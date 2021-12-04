@@ -1066,6 +1066,73 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						}
 
 					}
+
+					try
+					{
+						var Tarea = TareaPlanesVencidoshabilitados();
+					}
+					catch (Exception)
+					{
+
+					}
+
+					return CrearPlan;
+				});
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+			}
+		}
+
+		public async Task TareaPlanesVencidoshabilitados()
+		{
+			try
+			{
+				var Tarea = SondaPlanesVencidoshabilitados();
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion);
+			}
+		}
+
+		public async Task SondaPlanesVencidoshabilitados()
+		{
+			bool CrearPlan = true;
+			try
+
+			{
+				await Task.Factory.StartNew(() =>
+				{
+					//Obtenemos todos los planes activos				
+					List<TblPlanesTransacciones> planes = new List<TblPlanesTransacciones>();
+					byte habilitado = Convert.ToByte(EstadoPlan.Habilitado.GetHashCode());
+
+					DateTime fecha_actual = Fecha.GetFecha().Date;
+
+					context.Configuration.LazyLoadingEnabled = false;
+					planes = (from datos in context.TblPlanesTransacciones
+							  where datos.IntEstado == habilitado  &&
+							  datos.DatFechaVencimiento < fecha_actual
+							  select datos).ToList();
+
+					//Itereamos la lista de planes activos validar diferencias
+					foreach (var item in planes)
+					{
+
+						try
+						{
+							item.IntEstado = EstadoPlan.Procesado.GetHashCode();
+							this.Edit(item);
+						}
+						catch (Exception excepcion)
+						{
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+						}
+
+					}
 					return CrearPlan;
 				});
 			}
