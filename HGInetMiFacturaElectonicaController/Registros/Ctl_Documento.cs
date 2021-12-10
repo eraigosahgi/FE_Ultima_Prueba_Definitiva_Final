@@ -2299,7 +2299,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="objetoBd"></param>
 		/// <param name="reenvio">Si es para reenviar correo valida existencia de la Respuesta de la DIAN</param>
 		/// <returns></returns>
-		public static object ConvertirServicio(TblDocumentos objetoBd, bool reenvio = false)
+		public static object ConvertirServicio(TblDocumentos objetoBd, bool reenvio = false, bool proceso_adquiriente = false)
 		{
 			//Asigna a un objeto dinamico el objeto enviado por el usuario
 			var documento_obj = (dynamic)null;
@@ -2437,7 +2437,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			documento_obj.FechaUltimoProceso = objetoBd.DatFechaActualizaEstado;
 			//documento_obj.Neto = objetoBd.IntValorNeto;
 
-			if (!reenvio)
+			if (!reenvio && proceso_adquiriente == false)
 			{
 				//Obtiene la carpeta donde quedo la consulta de la DIAN
 				TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(objetoBd.IntDocTipo);
@@ -2476,11 +2476,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//asigna la ruta que tiene el archivo donde se guardo la consulta que se hizo a la DIAN
 				documento_obj.EstadoDian = new RespuestaDian();
 				documento_obj.EstadoDian.UrlXmlRespuesta = ruta_xml;
-
-				//Construye la url publica para el acuse de recibo del documento
-				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
-				documento_obj.UrlAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", objetoBd.StrIdSeguridad.ToString()));
 			}
+
+			//Construye la url publica para el acuse de recibo del documento
+			PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+			documento_obj.UrlAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", objetoBd.StrIdSeguridad.ToString()));
 
 			return documento_obj;
 		}
