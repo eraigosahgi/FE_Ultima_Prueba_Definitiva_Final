@@ -57,11 +57,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 
+				lista_resolucion = _resolucion.ObtenerResolucionesPorTipo(facturador_electronico.StrIdentificacion, TipoDocumento.NominaAjuste.GetHashCode());
+
 				// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
 				if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 				{
 
-					lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*", false);
+					string set_Id = documentos.FirstOrDefault().NumeroResolucion;
+
+					if ( lista_resolucion.Count > 0 && !string.IsNullOrEmpty(set_Id) && !facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+					{
+						foreach (var item in lista_resolucion)
+						{
+							item.StrIdSetDian = set_Id;
+
+						}
+					}
+
 					foreach (var item in documentos)
 					{
 						//Se valida que la nota sea de reemplazo
@@ -70,35 +82,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					}
 				}
-				else
-				{
-					//Validar proceso cuando este en produccion si requiere alguna resolucion
-					/*
-					lista_resolucion = _resolucion.ObtenerResoluciones(facturador_electronico.StrIdentificacion, "*", false);
 
-
-					List<string> resoluciones_docs = documentos.Select(_res => _res.NumeroResolucion).Distinct().ToList();
-
-					List<string> resoluciones_bd = lista_resolucion.Select(_res => _res.StrNumResolucion).Distinct().ToList<string>();
-
-					//Valida si hay items de una lista que no esten en otra
-					List<string> resol = resoluciones_docs.Except(resoluciones_bd, StringComparer.OrdinalIgnoreCase).ToList();
-
-					if ((resol != null || resol.Count > 0) && documentos[0].TipoOperacion != 50)
-					{
-						// actualiza las resoluciones de los servicios web de la DIAN en la base de datos
-						lista_resolucion = new List<TblEmpresasResoluciones>();
-						lista_resolucion = Ctl_Resoluciones.Actualizar(id_peticion, facturador_electronico);
-					}*/
-
-				}
-
-				/*
-				if (lista_resolucion == null)
-					throw new ApplicationException(string.Format("No se encontraron las resoluciones para el Facturador Electrónico '{0}'", facturador_electronico.StrIdentificacion));
-				else if (!lista_resolucion.Any())
-					throw new ApplicationException(string.Format("No se encontraron las resoluciones para el Facturador Electrónico '{0}'", facturador_electronico.StrIdentificacion));
-				*/
 
 				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
 
@@ -137,7 +121,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Planes y transacciones
 				Parallel.ForEach<NominaAjuste>(documentos, item =>
 				{
-					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual);
+					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
 					respuesta.Add(item_respuesta);
 				});
 
@@ -207,7 +191,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			return respuesta;
 		}
 
-		private static DocumentoRespuesta Procesar(NominaAjuste item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual)
+		private static DocumentoRespuesta Procesar(NominaAjuste item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion)
 		{
 			DocumentoRespuesta item_respuesta = new DocumentoRespuesta() { DescuentaSaldo = false };
 
@@ -328,11 +312,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				TblEmpresasResoluciones resolucion = null;
 
-				List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
+				//List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
 
 				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 
-				lista_resolucion = _resolucion.ObtenerResolucionesPorTipo(item.DatosEmpleador.Identificacion, TipoDocumento.NominaAjuste.GetHashCode());
+				//lista_resolucion = _resolucion.ObtenerResolucionesPorTipo(item.DatosEmpleador.Identificacion, TipoDocumento.NominaAjuste.GetHashCode());
 
 				TblEmpresasResoluciones resolucion_doc = null;
 

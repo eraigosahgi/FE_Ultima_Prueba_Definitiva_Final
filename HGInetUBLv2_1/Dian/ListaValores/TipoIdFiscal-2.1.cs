@@ -27,6 +27,7 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("31", "NIT", "NIT"),
 			new ListaItem("41", "Pasaporte ", "Pasaporte "),
 			new ListaItem("42", "Documento de identificación extranjero ", "Documento de identificación extranjero "),
+			new ListaItem("47", "PEP", "PEP"),
 			new ListaItem("50", "NIT de otro país", "NIT de otro país"),
 			new ListaItem("91", "NUIP * ", "NUIP * "),
 

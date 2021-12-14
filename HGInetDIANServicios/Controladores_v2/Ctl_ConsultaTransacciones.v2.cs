@@ -133,7 +133,7 @@ namespace HGInetDIANServicios
 									respuesta.IsValid = false;
 								}
 							}
-							else if (respuesta.IsValid.Equals(false) && !string.IsNullOrEmpty(respuesta.StatusDescription) && !respuesta.StatusCode.Equals("66"))
+							else if (respuesta.IsValid.Equals(false) && !string.IsNullOrEmpty(respuesta.StatusDescription) && !respuesta.StatusCode.Equals("66") && !respuesta.StatusDescription.Contains("Batch en proceso"))
 							{
 								respuesta.StatusCode = "99";
 								respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("Se generó inconsistencia en la Plataforma de la DIAN: {0}, Radicado:{1}", respuesta.StatusDescription, TrackId)).ToArray();

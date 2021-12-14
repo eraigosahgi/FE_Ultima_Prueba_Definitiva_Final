@@ -165,10 +165,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
                     {
                         if (item != null)
                         {
-                            //Envia el objeto de Bd a convertir a objeto de servicio
-                            objeto = Ctl_Documento.ConvertirServicio(item);
+							//Envia el objeto de Bd a convertir a objeto de servicio
+							objeto = Ctl_Documento.ConvertirServicio(item, false, true);
 
-                        }
+						}
                     }
                     catch (Exception excepcion)
                     {

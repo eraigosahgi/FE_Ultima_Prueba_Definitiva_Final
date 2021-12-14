@@ -55,9 +55,27 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (!facturador_electronico.IntObligado)
 					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
 
+				List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
+
+				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
+
+				lista_resolucion = _resolucion.ObtenerResolucionesPorTipo(facturador_electronico.StrIdentificacion, TipoDocumento.Nomina.GetHashCode());
+
 				// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
 				if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 				{
+
+					if (!facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+					{
+						string set_Id = documentos.FirstOrDefault().NumeroResolucion;
+
+						foreach (var item in lista_resolucion)
+						{
+							item.StrIdSetDian = set_Id;
+
+						}
+					}
+
 					foreach (var item in documentos)
 					{
 						item.DatosTrabajador.Email = facturador_electronico.StrMailAdmin;
@@ -186,7 +204,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 						if (procesar_novedad == true)
 						{
-							DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual);
+							DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
 							respuesta.Add(item_respuesta);
 						}
 						
@@ -197,7 +215,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				Parallel.ForEach<Nomina>(documentos, item =>
 				{
-					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual);
+					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
 					respuesta.Add(item_respuesta);
 				});
 
@@ -267,7 +285,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			return respuesta;
 		}
 
-		private static DocumentoRespuesta Procesar(Nomina item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual)
+		private static DocumentoRespuesta Procesar(Nomina item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion)
 		{
 			DocumentoRespuesta item_respuesta = new DocumentoRespuesta() { DescuentaSaldo = false };
 
@@ -358,11 +376,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				TblEmpresasResoluciones resolucion = null;
 
-				List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
+				//List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
 
 				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 
-				lista_resolucion = _resolucion.ObtenerResolucionesPorTipo(item.DatosEmpleador.Identificacion,TipoDocumento.Nomina.GetHashCode());
+				//lista_resolucion = _resolucion.ObtenerResolucionesPorTipo(item.DatosEmpleador.Identificacion,TipoDocumento.Nomina.GetHashCode());
 
 				TblEmpresasResoluciones resolucion_doc = null;
 
@@ -370,6 +388,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					// filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
 					resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosEmpleador.Identificacion) &&
+																									   _resolucion_doc.StrPrefijo.Equals(item.Prefijo) && _resolucion_doc.IntTipoDoc == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault();
+				}
+				else
+				{
+					lista_resolucion = _resolucion.ObtenerResolucionesPorTipo(item.DatosEmpleador.Identificacion, TipoDocumento.Nomina.GetHashCode());
+
+					if (lista_resolucion.Count > 0)
+						resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosEmpleador.Identificacion) &&
 																									   _resolucion_doc.StrPrefijo.Equals(item.Prefijo) && _resolucion_doc.IntTipoDoc == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault();
 				}
 

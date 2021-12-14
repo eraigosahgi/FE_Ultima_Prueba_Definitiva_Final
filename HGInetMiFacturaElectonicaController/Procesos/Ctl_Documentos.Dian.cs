@@ -160,7 +160,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 			documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
 
-			if (empresa.IntVersionDian == 2 && acuse.Response.Equals(200))
+			if (empresa.IntVersionDian == 2 && !string.IsNullOrEmpty(IdSetDian) && !string.IsNullOrEmpty(acuse.KeyV2))
 				documentoBd.StrIdRadicadoDian = Guid.Parse(acuse.KeyV2);
 
 			documento_tmp.Actualizar(documentoBd);

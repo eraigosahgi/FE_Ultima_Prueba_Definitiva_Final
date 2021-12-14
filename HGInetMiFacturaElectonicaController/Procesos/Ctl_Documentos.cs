@@ -1921,19 +1921,19 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			devengados_cal = ValidarDevengados(documento.DatosDevengados, dias_laborales_periodo, documento.DatosTrabajador.Sueldo);
 
-			//if (!Numero.Tolerancia(devengados_cal, documento.DevengadosTotal, 2))
-			//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "DevengadosTotal", documento.DevengadosTotal, devengados_cal));
+			if (!Numero.Tolerancia(devengados_cal, documento.DevengadosTotal, 2))
+				throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "DevengadosTotal", documento.DevengadosTotal, devengados_cal));
 
 			//Se valida las deducciones del documento
 			deducciones_cal = ValidarDeducciones(documento.DatosDeducciones);
 
-			//if (!Numero.Tolerancia(deducciones_cal, documento.DeduccionesTotal, 2))
-			//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "DeduccionesTotal", documento.DeduccionesTotal, deducciones_cal));
+			if (!Numero.Tolerancia(deducciones_cal, documento.DeduccionesTotal, 2))
+				throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "DeduccionesTotal", documento.DeduccionesTotal, deducciones_cal));
 
-			//totalcomprobante_cal = devengados_cal - deducciones_cal;
+			totalcomprobante_cal = devengados_cal - deducciones_cal;
 
-			//if (!Numero.Tolerancia(totalcomprobante_cal, documento.ComprobanteTotal, 2))
-			//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "ComprobanteTotal", documento.ComprobanteTotal, totalcomprobante_cal));
+			if (!Numero.Tolerancia(totalcomprobante_cal, documento.ComprobanteTotal, 2))
+				throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según calculos de la informacion enviada por valor {2}", "ComprobanteTotal", documento.ComprobanteTotal, totalcomprobante_cal));
 
 
 		}
@@ -1954,10 +1954,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//if (devengado.DiasTrabajados > dias_laborales_periodo || devengado.DiasTrabajados < 0)
 			//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del devengado no está bien formado", "DiasTrabajados", devengado.DiasTrabajados));
 
-			//if (devengado.DatosTransporte != null)
-			//{
-			//	valor_devengado += devengado.DatosTransporte.Sum(x => x.AuxilioTransporte) + devengado.DatosTransporte.Sum(x => x.ViaticoManuAlojS) + devengado.DatosTransporte.Sum(x => x.ViaticoManuAlojNS);
-			//}
+			if (devengado.DatosTransporte != null)
+			{
+				valor_devengado += devengado.DatosTransporte.Sum(x => x.AuxilioTransporte) + devengado.DatosTransporte.Sum(x => x.ViaticoManuAlojS) + devengado.DatosTransporte.Sum(x => x.ViaticoManuAlojNS);
+			}
 
 			//Se valida Horas extras, festivas, nocturnas y recargos
 			if (devengado.DatosHoras != null && devengado.DatosHoras.Count > 0)
@@ -1994,7 +1994,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//if (item.Valor < 0)
 					//	throw new ApplicationException(string.Format("El Valor de las Horas con valor {0} identificada con el código {1} del devengado no está bien formado", item.Valor, tipo_hora));
 
-					//valor_devengado += item.Valor;
+					valor_devengado += item.Valor;
 				}
 				//valor_devengado += devengado.DatosHoras.Sum(x => x.Valor);
 			}
@@ -2021,30 +2021,30 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//{
 					//	dias_vacaciones += item.Cantidad;
 					//}
-					//valor_devengado += item.Pago;
+					valor_devengado += item.Pago;
 
 				}
 
 			}
 
-			//if (devengado.PagoPrima != null)
-			//{
-			//	if (devengado.PagoPrima.Pago != null)
-			//	{
-			//		if (devengado.PagoPrima.Cantidad > 0 && devengado.PagoPrima.Pago.Pago == 0)
-			//			throw new ApplicationException(string.Format("No se encuentra el valor del pago de la prima con cantidad {0} en el devengado", devengado.PagoPrima.Cantidad));
+			if (devengado.PagoPrima != null)
+			{
+				if (devengado.PagoPrima.Pago != null)
+				{
+					//if (devengado.PagoPrima.Cantidad > 0 && devengado.PagoPrima.Pago.Pago == 0)
+					//	throw new ApplicationException(string.Format("No se encuentra el valor del pago de la prima con cantidad {0} en el devengado", devengado.PagoPrima.Cantidad));
 
-			//		if (devengado.PagoPrima.Cantidad == 0 && devengado.PagoPrima.Pago.Pago > 0)
-			//			throw new ApplicationException(string.Format("No se encuentra la cantidad de dias del pago de la Prima Salarial por el valor de {0} en el devengado", devengado.PagoPrima.Pago.Pago));
+					//if (devengado.PagoPrima.Cantidad == 0 && devengado.PagoPrima.Pago.Pago > 0)
+					//	throw new ApplicationException(string.Format("No se encuentra la cantidad de dias del pago de la Prima Salarial por el valor de {0} en el devengado", devengado.PagoPrima.Pago.Pago));
 
-			//		if (devengado.PagoPrima.Cantidad == 0 && devengado.PagoPrima.Pago.PagoNS > 0)
-			//			throw new ApplicationException(string.Format("No se encuentra la cantidad de dias del pago de la Prima No Salarial por el valor de {0} en el devengado", devengado.PagoPrima.Pago.PagoNS));
+					//if (devengado.PagoPrima.Cantidad == 0 && devengado.PagoPrima.Pago.PagoNS > 0)
+					//	throw new ApplicationException(string.Format("No se encuentra la cantidad de dias del pago de la Prima No Salarial por el valor de {0} en el devengado", devengado.PagoPrima.Pago.PagoNS));
 
-			//		valor_devengado += devengado.PagoPrima.Pago.Pago + devengado.PagoPrima.Pago.PagoNS;
+					valor_devengado += devengado.PagoPrima.Pago.Pago + devengado.PagoPrima.Pago.PagoNS;
 
-			//	}
+				}
 
-			//}
+			}
 
 			if (devengado.Incapacidades != null && devengado.Incapacidades.Count > 0)
 			{
@@ -2061,7 +2061,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//	throw new ApplicationException(string.Format("No se encuentra el valor del pago de la Incapacidad con cantidad {0} en el devengado", item.Cantidad));
 
 					//dias_incapacidad += item.Cantidad;
-					//valor_devengado += item.Pago;
+					valor_devengado += item.Pago;
 
 				}
 
@@ -2082,39 +2082,39 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//	throw new ApplicationException(string.Format("No se encuentra el valor del pago de la Licencia con cantidad {0} en el devengado", item.Cantidad));
 
 					//dias_licencia += item.Cantidad;
-					//valor_devengado += item.Pago;
+					valor_devengado += item.Pago;
 
 				}
 
 			}
 
-			//if (devengado.Bonificaciones != null && devengado.Bonificaciones.Count > 0)
-			//{
-			//	foreach (NovedadSalNoSal item in devengado.Bonificaciones)
-			//	{
+			if (devengado.Bonificaciones != null && devengado.Bonificaciones.Count > 0)
+			{
+				foreach (NovedadSalNoSal item in devengado.Bonificaciones)
+				{
 
-			//		if (item.Pago == 0 && item.PagoNS == 0)
-			//			throw new ApplicationException("No se encontró valor para la Bonificación en el devengado");
+					//if (item.Pago == 0 && item.PagoNS == 0)
+						//throw new ApplicationException("No se encontró valor para la Bonificación en el devengado");
 
-			//		valor_devengado += item.Pago + item.PagoNS;
+					valor_devengado += item.Pago + item.PagoNS;
 
-			//	}
+				}
 
-			//}
+			}
 
-			//if (devengado.Auxilios != null && devengado.Auxilios.Count > 0)
-			//{
-			//	foreach (NovedadSalNoSal item in devengado.Auxilios)
-			//	{
+			if (devengado.Auxilios != null && devengado.Auxilios.Count > 0)
+			{
+				foreach (NovedadSalNoSal item in devengado.Auxilios)
+				{
 
-			//		if (item.Pago == 0 && item.PagoNS == 0)
-			//			throw new ApplicationException("No se encontró valor para los Auxilios en el devengado");
+					//if (item.Pago == 0 && item.PagoNS == 0)
+					//	throw new ApplicationException("No se encontró valor para los Auxilios en el devengado");
 
-			//		valor_devengado += item.Pago + item.PagoNS;
+					valor_devengado += item.Pago + item.PagoNS;
 
-			//	}
+				}
 
-			//}
+			}
 
 			//if (devengado.HuelgaLegal != null && devengado.HuelgaLegal.Count > 0)
 			//{
@@ -2139,53 +2139,53 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//if (item.PagoConcepto.Pago == 0 && item.PagoConcepto.PagoNS == 0)
 					//	throw new ApplicationException(string.Format("No se encontró valor del concepto {0} en el devengado", item.DescripcionConcepto));
 
-					//valor_devengado += item.PagoConcepto.Pago + item.PagoConcepto.PagoNS;
+					valor_devengado += item.PagoConcepto.Pago + item.PagoConcepto.PagoNS;
 
 				}
 
 			}
 
-			//if (devengado.Compensaciones != null && devengado.Compensaciones.Count > 0)
-			//{
-			//	foreach (NovedadSalNoSal item in devengado.Compensaciones)
-			//	{
+			if (devengado.Compensaciones != null && devengado.Compensaciones.Count > 0)
+			{
+				foreach (NovedadSalNoSal item in devengado.Compensaciones)
+				{
 
-			//		if (item.Pago == 0 && item.PagoNS == 0)
-			//			throw new ApplicationException("No se encontró valor para la Compensacion en el devengado");
+					//if (item.Pago == 0 && item.PagoNS == 0)
+					//	throw new ApplicationException("No se encontró valor para la Compensacion en el devengado");
 
-			//		valor_devengado += item.Pago + item.PagoNS;
+					valor_devengado += item.Pago + item.PagoNS;
 
-			//	}
+				}
 
-			//}
+			}
 
-			//if (devengado.BonoEPCTV != null && devengado.BonoEPCTV.Count > 0)
-			//{
-			//	foreach (NovedadSalNoSal item in devengado.BonoEPCTV)
-			//	{
+			if (devengado.BonoEPCTV != null && devengado.BonoEPCTV.Count > 0)
+			{
+				foreach (NovedadSalNoSal item in devengado.BonoEPCTV)
+				{
 
-			//		if (item.Pago == 0 && item.PagoNS == 0)
-			//			throw new ApplicationException("No se encontró valor para los Bonos Electrónicos o de Papel de Servicio, Cheques, Tarjetas, Vales en el devengado");
+					//if (item.Pago == 0 && item.PagoNS == 0)
+					//	throw new ApplicationException("No se encontró valor para los Bonos Electrónicos o de Papel de Servicio, Cheques, Tarjetas, Vales en el devengado");
 
-			//		valor_devengado += item.Pago + item.PagoNS;
+					valor_devengado += item.Pago + item.PagoNS;
 
-			//	}
+				}
 
-			//}
+			}
 
-			//if (devengado.BonoAlimentacion != null && devengado.BonoAlimentacion.Count > 0)
-			//{
-			//	foreach (NovedadSalNoSal item in devengado.BonoAlimentacion)
-			//	{
+			if (devengado.BonoAlimentacion != null && devengado.BonoAlimentacion.Count > 0)
+			{
+				foreach (NovedadSalNoSal item in devengado.BonoAlimentacion)
+				{
 
-			//		if (item.Pago == 0 && item.PagoNS == 0)
-			//			throw new ApplicationException("No se encontró valor para los Bonos de Alimentación en el devengado");
+					//if (item.Pago == 0 && item.PagoNS == 0)
+					//	throw new ApplicationException("No se encontró valor para los Bonos de Alimentación en el devengado");
 
-			//		valor_devengado += item.Pago + item.PagoNS;
+					valor_devengado += item.Pago + item.PagoNS;
 
-			//	}
+				}
 
-			//}
+			}
 
 			//dias_trabajados = dias_laborales_periodo - dias_incapacidad - dias_licencia - dias_vacaciones;
 
@@ -2195,11 +2195,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//if (!Numero.Tolerancia(devengado.SueldoTrabajado,(dias_trabajados * valor_dia), 10))
 			//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del devengado no está bien formado", "SueldoTrabajado", devengado.SueldoTrabajado));
 
-			//decimal Comisiones = devengado.Comisiones != null ? devengado.Comisiones.Sum() : 0;
-			//decimal PagosTerceros = devengado.PagosTerceros != null ? devengado.PagosTerceros.Sum() : 0;
-			//decimal Anticipos = devengado.Anticipos != null ? devengado.Anticipos.Sum() : 0;
+			decimal Comisiones = devengado.Comisiones != null ? devengado.Comisiones.Sum() : 0;
+			decimal PagosTerceros = devengado.PagosTerceros != null ? devengado.PagosTerceros.Sum() : 0;
+			decimal Anticipos = devengado.Anticipos != null ? devengado.Anticipos.Sum() : 0;
 
-			//valor_devengado += devengado.SueldoTrabajado + Comisiones + PagosTerceros + Anticipos + devengado.Dotacion + devengado.Teletrabajo + devengado.BonifRetiro + devengado.Indemnizacion ;
+			valor_devengado += devengado.SueldoTrabajado + Comisiones + PagosTerceros + Anticipos + devengado.Dotacion + devengado.Teletrabajo + devengado.BonifRetiro + devengado.Indemnizacion;
 
 			return valor_devengado;
 
@@ -2212,79 +2212,79 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//if (deduccion == null)
 			//	throw new Exception("No se encontró deducciones en el documento.");
 
-			//if (deduccion.Salud != null)
-			//{
-			//	//if (deduccion.Salud.Porcentaje != 4)
-			//	//	throw new ApplicationException(string.Format("El Porcentaje con valor {0} de la Deduccion de Salud no está bien formado", deduccion.Salud.Porcentaje));
+			if (deduccion.Salud != null)
+			{
+				//if (deduccion.Salud.Porcentaje != 4)
+				//	throw new ApplicationException(string.Format("El Porcentaje con valor {0} de la Deduccion de Salud no está bien formado", deduccion.Salud.Porcentaje));
 
-			//	//if (deduccion.Salud.Deduccion <= 0)
-			//	//	throw new ApplicationException(string.Format("La Deduccion de Salud con valor de {0} no está bien formado", deduccion.Salud.Deduccion));
+				//if (deduccion.Salud.Deduccion <= 0)
+				//	throw new ApplicationException(string.Format("La Deduccion de Salud con valor de {0} no está bien formado", deduccion.Salud.Deduccion));
 
-			//	//valor_deduccion += deduccion.Salud.Deduccion;
-			//}
+				valor_deduccion += deduccion.Salud.Deduccion;
+			}
 			//else
 			//{
 			//	throw new Exception("No se encontró deduccion de salud en el documento.");
 			//}
 
-			//if (deduccion.Pension != null)
-			//{
-			//	//if (deduccion.Pension.Porcentaje != 4)
-			//	//	throw new ApplicationException(string.Format("El Porcentaje con valor {0} de la Deduccion de Pension no está bien formado", deduccion.Pension.Porcentaje));
+			if (deduccion.Pension != null)
+			{
+				//if (deduccion.Pension.Porcentaje != 4)
+				//	throw new ApplicationException(string.Format("El Porcentaje con valor {0} de la Deduccion de Pension no está bien formado", deduccion.Pension.Porcentaje));
 
-			//	//if (deduccion.Pension.Deduccion <= 0)
-			//	//	throw new ApplicationException(string.Format("La Deduccion de Pension con valor de {0} no está bien formado", deduccion.Pension.Deduccion));
+				//if (deduccion.Pension.Deduccion <= 0)
+				//	throw new ApplicationException(string.Format("La Deduccion de Pension con valor de {0} no está bien formado", deduccion.Pension.Deduccion));
 
-			//	//valor_deduccion += deduccion.Pension.Deduccion;
-			//}
+				valor_deduccion += deduccion.Pension.Deduccion;
+			}
 			//else
 			//{
 			//	throw new Exception("No se encontró deduccion de salud en el documento.");
 			//}
 
-			//if (deduccion.DatosFondoSP != null)
-			//{
-			//	if (deduccion.DatosFondoSP.Porcentaje > 0 && deduccion.DatosFondoSP.DeduccionFSP == 0)
-			//		throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Fondo de Seguridad Pensional y no valor de deducción", deduccion.Pension.Porcentaje));
+			if (deduccion.DatosFondoSP != null)
+			{
+				//if (deduccion.DatosFondoSP.Porcentaje > 0 && deduccion.DatosFondoSP.DeduccionFSP == 0)
+				//	throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Fondo de Seguridad Pensional y no valor de deducción", deduccion.Pension.Porcentaje));
 
-			//	if (deduccion.DatosFondoSP.Porcentaje == 0 && deduccion.DatosFondoSP.DeduccionFSP > 0)
-			//		throw new ApplicationException(string.Format("Se encontró deducción con valor {0} del Fondo de Seguridad Pensional y no porcentaje aplicado", deduccion.DatosFondoSP.DeduccionFSP));
+				//if (deduccion.DatosFondoSP.Porcentaje == 0 && deduccion.DatosFondoSP.DeduccionFSP > 0)
+				//	throw new ApplicationException(string.Format("Se encontró deducción con valor {0} del Fondo de Seguridad Pensional y no porcentaje aplicado", deduccion.DatosFondoSP.DeduccionFSP));
 
-			//	if (deduccion.DatosFondoSP.PorcentajeSub > 0 && deduccion.DatosFondoSP.DeduccionSub == 0)
-			//		throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Fondo de Subsistencia y no valor de deducción", deduccion.Pension.Porcentaje));
+				//if (deduccion.DatosFondoSP.PorcentajeSub > 0 && deduccion.DatosFondoSP.DeduccionSub == 0)
+				//	throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Fondo de Subsistencia y no valor de deducción", deduccion.Pension.Porcentaje));
 
-			//	if (deduccion.DatosFondoSP.PorcentajeSub == 0 && deduccion.DatosFondoSP.DeduccionSub > 0)
-			//		throw new ApplicationException(string.Format("Se encontró deducción con valor {0} del Fondo de Subsistencia y no porcentaje aplicado", deduccion.DatosFondoSP.DeduccionFSP));
+				//if (deduccion.DatosFondoSP.PorcentajeSub == 0 && deduccion.DatosFondoSP.DeduccionSub > 0)
+				//	throw new ApplicationException(string.Format("Se encontró deducción con valor {0} del Fondo de Subsistencia y no porcentaje aplicado", deduccion.DatosFondoSP.DeduccionFSP));
 
-			//	valor_deduccion += deduccion.DatosFondoSP.DeduccionFSP + deduccion.DatosFondoSP.DeduccionSub;
-			//}
+				valor_deduccion += deduccion.DatosFondoSP.DeduccionFSP + deduccion.DatosFondoSP.DeduccionSub;
+			}
 
-			//if (deduccion.DatosSindicatos != null && deduccion.DatosSindicatos.Count > 0)
-			//{
-			//	foreach (NovedadDeduccion item in deduccion.DatosSindicatos)
-			//	{
-			//		if (item.Porcentaje > 0 && item.Deduccion == 0)
-			//			throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Sindicatos y no valor de deducción", item.Porcentaje));
+			if (deduccion.DatosSindicatos != null && deduccion.DatosSindicatos.Count > 0)
+			{
+				foreach (NovedadDeduccion item in deduccion.DatosSindicatos)
+				{
+					//if (item.Porcentaje > 0 && item.Deduccion == 0)
+					//	throw new ApplicationException(string.Format("Se encontró porcentaje con valor {0} de Sindicatos y no valor de deducción", item.Porcentaje));
 
-			//		if (item.Porcentaje == 0 && item.Deduccion > 0)
-			//			throw new ApplicationException(string.Format("Se encontró deducción con valor {0} de Sindicatos y no porcentaje aplicado", item.Deduccion));
+					//if (item.Porcentaje == 0 && item.Deduccion > 0)
+					//	throw new ApplicationException(string.Format("Se encontró deducción con valor {0} de Sindicatos y no porcentaje aplicado", item.Deduccion));
 
-			//		valor_deduccion += item.Deduccion;
+					valor_deduccion += item.Deduccion;
 
-			//	}
-			//}
+				}
+			}
 
-			//if (deduccion.DatosSanciones != null && deduccion.DatosSanciones.Count > 0)
-			//{
-			//	foreach (Sancion item in deduccion.DatosSanciones)
-			//	{
-			//		if (item.SancionPublic == 0 && item.SancionPriv == 0)
-			//			throw new ApplicationException("No se encontró valor para la Sancion en la Deducción");
+			if (deduccion.DatosSanciones != null && deduccion.DatosSanciones.Count > 0)
+			{
+				foreach (Sancion item in deduccion.DatosSanciones)
+				{
+					//if (item.SancionPublic == 0 && item.SancionPriv == 0)
+					//	throw new ApplicationException("No se encontró valor para la Sancion en la Deducción");
 
-			//		valor_deduccion += item.SancionPublic + item.SancionPriv;
+					valor_deduccion += item.SancionPublic + item.SancionPriv;
 
-			//	}
-			//}
+				}
+			}
 
 			if (deduccion.DatosLibranzas != null && deduccion.DatosLibranzas.Count > 0)
 			{
@@ -2296,25 +2296,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//if (item.Deduccion == 0)
 					//	throw new ApplicationException(string.Format("No se encontró valor Libranza {0} en la Deducción", item.Descripcion));
 
-					//valor_deduccion += item.Deduccion;
+					valor_deduccion += item.Deduccion;
 
 				}
 
 			}
 
-			//decimal OtrasDeducciones = deduccion.OtrasDeducciones != null ? deduccion.OtrasDeducciones.Sum() : 0;
+			decimal OtrasDeducciones = deduccion.OtrasDeducciones != null ? deduccion.OtrasDeducciones.Sum() : 0;
 
 			if (deduccion.PagosTerceros != null && deduccion.PagosTerceros.Sum() == 0)
 				throw new ApplicationException("No se encontró valor de Pagos a Tercero en la Deducción");
 
-			//decimal PagosTerceros = deduccion.PagosTerceros != null ? deduccion.PagosTerceros.Sum() : 0;
-			//decimal Anticipos = deduccion.Anticipos != null ? deduccion.Anticipos.Sum() : 0;
+			decimal PagosTerceros = deduccion.PagosTerceros != null ? deduccion.PagosTerceros.Sum() : 0;
+			decimal Anticipos = deduccion.Anticipos != null ? deduccion.Anticipos.Sum() : 0;
 
-			//valor_deduccion += PagosTerceros + Anticipos +
-			//				   OtrasDeducciones + deduccion.PensionVoluntaria +
-			//                   deduccion.RetencionFuente + deduccion.ICA + deduccion.AFC + deduccion.Cooperativa +
-			//                   deduccion.EmbargoFiscal + deduccion.PlanComplementarios + deduccion.Educacion +
-			//                   deduccion.Reintegro + deduccion.Deuda;
+			valor_deduccion += PagosTerceros + Anticipos +
+							   OtrasDeducciones + deduccion.PensionVoluntaria +
+							   deduccion.RetencionFuente + deduccion.ICA + deduccion.AFC + deduccion.Cooperativa +
+							   deduccion.EmbargoFiscal + deduccion.PlanComplementarios + deduccion.Educacion +
+							   deduccion.Reintegro + deduccion.Deuda;
 
 			return valor_deduccion;
 
