@@ -431,7 +431,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
 					List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.ObtenerPlanesMixto(ObjPTransacciones.StrEmpresaFacturador);
 
-					if (datos != null && datos.Count > 0)
+					if (datos != null && datos.Count() > 1)
 						return Ok("El Facturador Electrónico tiene registrado otro plan como Mixto, realice el ajuste de ese plan y a continuacion genere este nuevo plan");
 				}
 

@@ -2046,6 +2046,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			}
 
+			if (devengado.PagoCesantias != null)
+			{
+				valor_devengado += devengado.PagoCesantias.Pago + devengado.PagoCesantias.PagoIntereses;
+
+			}
+
 			if (devengado.Incapacidades != null && devengado.Incapacidades.Count > 0)
 			{
 				foreach (NovedadGeneral item in devengado.Incapacidades)

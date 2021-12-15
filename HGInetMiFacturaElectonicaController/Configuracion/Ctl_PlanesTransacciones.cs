@@ -113,6 +113,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			Ptransaccion.IntMesesVence = datos_plan.IntMesesVence;
 			Ptransaccion.DatFechaVencimiento = datos_plan.DatFechaVencimiento;
 			Ptransaccion.DatFechaVencimiento = Ptransaccion.DatFechaVencimiento;
+			Ptransaccion.IntTipoDocumento = datos_plan.IntTipoDocumento;
 
 			if (Ptransaccion.IntMesesVence > 0 && Ptransaccion.DatFechaInicio != null)
 			{
@@ -285,7 +286,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			DateTime Fecha_Actual = Fecha.GetFecha().Date;
 
 			int Estado = EstadoPlan.Habilitado.GetHashCode();
-			int TipoPlan = TipoCompra.PostPago.GetHashCode();
+			int TipoPlan = TipoCompra.Compra.GetHashCode();
 			int TipoDocumeto = TipoDocPlanes.Mixto.GetHashCode();
 
 			context.Configuration.LazyLoadingEnabled = false;
@@ -294,7 +295,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			datos_plan = (from t in context.TblPlanesTransacciones
 													   where (t.StrEmpresaFacturador.Equals(Identificacion))
 														&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
-														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) || (t.IntTipoProceso == TipoPlan))
+														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) && (t.IntTipoProceso == TipoPlan))
 														&& (t.IntTipoDocumento == TipoDocumeto)
 													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFecha }).ToList();
 
