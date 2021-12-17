@@ -1903,10 +1903,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//	dias_laborales_periodo -= 1;
 
 			//Se valida los devengados del documento
-			if (tipo_nomina.Equals(TipoDocumento.Nomina) && documento.VariacionNomina == true)
-			{
-				dias_laborales_periodo = Convert.ToInt16(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<PeriodoNomina>(documento.PeriodoNomina)));
-			}
+			//if (tipo_nomina.Equals(TipoDocumento.Nomina) && documento.VariacionNomina == true)
+			//{
+			//	dias_laborales_periodo = Convert.ToInt16(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<PeriodoNomina>(documento.PeriodoNomina)));
+			//}
 			//else if (tipo_nomina.Equals(TipoDocumento.NominaAjuste) && !documento.DatosDevengados.DiasTrabajados.Equals(30))
 			//{
 			//	dias_laborales_periodo = Convert.ToInt16(Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<PeriodoNomina>(documento.PeriodoNomina)));
@@ -1942,11 +1942,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		public static decimal ValidarDevengados(Devengados devengado, int dias_laborales_periodo, decimal salario_empleado)
 		{
 			decimal valor_devengado = 0;
-			int dias_incapacidad = 0;
-			int dias_licencia = 0;
-			int dias_trabajados = 0;
-			int dias_vacaciones = 0;
-			decimal valor_dia = salario_empleado / dias_laborales_periodo;
+			//int dias_incapacidad = 0;
+			//int dias_licencia = 0;
+			//int dias_trabajados = 0;
+			//int dias_vacaciones = 0;
+			//decimal valor_dia = salario_empleado / dias_laborales_periodo;
 
 			//if (devengado == null)
 			//	throw new Exception("No se encontró devengados en el documento.");
