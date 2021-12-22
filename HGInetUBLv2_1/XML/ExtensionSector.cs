@@ -159,6 +159,7 @@ namespace HGInetUBLv2_1
 					Collection datos_coleccion = new Collection();
 					datos_coleccion.schemeName = usuario;
 					datos_coleccion.AdditionalInformation = datos_adicionales.ToArray();
+					datos_adicionales = new List<AdditionalInformationType1>();
 					datos_usuario.Add(datos_coleccion);
 				}
 			}
