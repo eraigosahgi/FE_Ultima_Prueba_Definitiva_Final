@@ -2205,7 +2205,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			decimal PagosTerceros = devengado.PagosTerceros != null ? devengado.PagosTerceros.Sum() : 0;
 			decimal Anticipos = devengado.Anticipos != null ? devengado.Anticipos.Sum() : 0;
 
-			valor_devengado += devengado.SueldoTrabajado + Comisiones + PagosTerceros + Anticipos + devengado.Dotacion + devengado.Teletrabajo + devengado.BonifRetiro + devengado.Indemnizacion;
+			valor_devengado += devengado.SueldoTrabajado + devengado.ApoyoSostenimiento + Comisiones + PagosTerceros + Anticipos + devengado.Dotacion + devengado.Teletrabajo + devengado.BonifRetiro + devengado.Indemnizacion;
 
 			return valor_devengado;
 
