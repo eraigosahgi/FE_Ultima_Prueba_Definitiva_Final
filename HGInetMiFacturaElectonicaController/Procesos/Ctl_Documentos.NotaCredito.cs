@@ -24,6 +24,7 @@ using System.Xml;
 using LibreriaGlobalHGInet.Error;
 using Newtonsoft.Json;
 using LibreriaGlobalHGInet.RegistroLog;
+using System.Text.RegularExpressions;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -253,6 +254,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			Ctl_DocumentosAudit _auditoria = new Ctl_DocumentosAudit();
 
+			//Se lee un archivo json y se convierte a objeto nota para pruebas
+			//NotaCredito obj_nc = new NotaCredito();
+			//string objeto = System.IO.File.ReadAllText(@"E:\Desarrollo\jzea\Proyectos\HGInetMiFacturaElectronica\Codigo\HGInetMiFacturaElectronicaWeb\dms\Debug\811021438-NQA-990007445.json").ToString();
+			//obj_nc = JsonConvert.DeserializeObject<NotaCredito>(objeto);
+			//item = obj_nc;
+
 			//Si el documento enviado ya existe retorna la informacion que se tiene almacenada
 			bool doc_existe = false;
 
@@ -320,6 +327,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 					}
 				}
+
+				//Valido que si el prefijo trae espacios en blanco, los quite y luego valide
+				string prefijo_sin_espacio = Regex.Replace(item.Prefijo, @"\s", "");
+
+				if (!item.Prefijo.Equals(prefijo))
+					throw new ApplicationException(string.Format("El prefijo {0} contiene espacio en blanco, corrijalo y envie de nuevo", item.Prefijo));
 
 				// filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
 				TblEmpresasResoluciones resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&

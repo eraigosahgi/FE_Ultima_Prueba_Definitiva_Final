@@ -22,6 +22,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LibreriaGlobalHGInet.Error;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
+using System.Text.RegularExpressions;
 
 namespace HGInetMiFacturaElectonicaController.Procesos
 {
@@ -320,6 +321,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 					}
 				}
+
+				//Valido que si el prefijo trae espacios en blanco, los quite y luego valide
+				string prefijo_sin_espacio = Regex.Replace(item.Prefijo, @"\s", "");
+
+				if (!item.Prefijo.Equals(prefijo))
+					throw new ApplicationException(string.Format("El prefijo {0} contiene espacio en blanco, corrijalo y envie de nuevo", item.Prefijo));
 
 				// filtra la resolución del documento con las condiciones de nit, prefijo y tipo de documento
 				TblEmpresasResoluciones resolucion_doc = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
