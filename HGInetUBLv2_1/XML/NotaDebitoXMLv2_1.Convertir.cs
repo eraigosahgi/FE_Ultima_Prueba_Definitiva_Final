@@ -31,13 +31,25 @@ namespace HGInetUBLv2_1
 			{
 				NotaDebito nota_debito_obj = new NotaDebito();
 
-				Match numero_doc = Regex.Match(nota_debito_ubl.ID.Value, "\\d+");
+				if (documento_bd != null)
+				{
+					nota_debito_obj.Documento = documento_bd.IntNumero;
 
-				Match pref = Regex.Match(nota_debito_ubl.ID.Value, "\\D+");
+					nota_debito_obj.Prefijo = documento_bd.StrPrefijo;
 
-				nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+				}
+				else
+				{
+					Match numero_doc = Regex.Match(nota_debito_ubl.ID.Value, "\\d+");
 
-				nota_debito_obj.Prefijo = pref.Value.ToString();
+					Match pref = Regex.Match(nota_debito_ubl.ID.Value, "\\D+");
+
+					nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+
+					nota_debito_obj.Prefijo = pref.Value.ToString();
+				}
+
+				
 
 				//Se obtiene el proveedor Emisor del documento
 				foreach (XmlNode item in nota_debito_ubl.UBLExtensions[0].ExtensionContent.ChildNodes)

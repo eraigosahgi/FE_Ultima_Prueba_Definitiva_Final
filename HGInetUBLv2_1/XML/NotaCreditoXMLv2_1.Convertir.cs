@@ -30,13 +30,24 @@ namespace HGInetUBLv2_1
 			{
 				NotaCredito nota_credito_obj = new NotaCredito();
 
-				Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
+				if (documento_bd != null)
+				{
+					nota_credito_obj.Documento = documento_bd.IntNumero;
 
-				Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
+					nota_credito_obj.Prefijo = documento_bd.StrPrefijo;
+				}
+				else
+				{
+					Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
 
-				nota_credito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+					Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
 
-				nota_credito_obj.Prefijo = pref.Value.ToString();
+					nota_credito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+
+					nota_credito_obj.Prefijo = pref.Value.ToString();
+				}
+
+				
 
 
 				//Se obtiene el proveedor Emisor del documento
