@@ -897,6 +897,18 @@ namespace HGInetInteroperabilidad.Procesos
 					catch (Exception)
 					{ }
 
+					try
+					{
+						mensajes = new List<string>();
+						mensajes.Add(string.Format("No se encontró un archivo con extension de {0} de tipo Attached Document para procesar", Path.GetFileName(ruta_xml)));
+
+						ReEnviarCorreoErro(ruta_archi_mail, mensajes);
+
+					}
+					catch (Exception e)
+					{
+					}
+
 					ruta_archivo = string.Format("{0}\\Archivo_errores.json", ruta_archivo);
 
 					// almacena el objeto en archivo json
