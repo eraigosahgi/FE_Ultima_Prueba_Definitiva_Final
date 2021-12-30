@@ -394,7 +394,7 @@ namespace HGInetUBLv2_1
 
 				decimal subtotal = nota_credito.CreditNoteLine.Sum(s => s.LineExtensionAmount.Value);
 				decimal base_impuesto = 0.00M;
-				if (documento.DocumentoDetalles.Sum(b => b.BaseImpuestoIva) == documento.DocumentoDetalles.Sum(s => s.ValorSubtotal))
+				if ((documento.DocumentoDetalles.Sum(b => b.BaseImpuestoIva) == documento.DocumentoDetalles.Sum(s => s.ValorSubtotal)) && (documento.DocumentoDetalles.Where(g => g.ProductoGratis == true) == null))
 				{
 					base_impuesto = subtotal;
 				}
