@@ -423,7 +423,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				ObjPTransacciones.StrEmpresaFacturador = StrEmpresaFacturador.Trim();
 				ObjPTransacciones.StrIdSeguridad = StrIdSeguridad;
 				ObjPTransacciones.DocumentoRef = (!string.IsNullOrEmpty(DocRef)) ? DocRef.Trim() : string.Empty;
-				ObjPTransacciones.DatFechaVencimiento = FechaVence;
 				if (Vence)
 				{
 					ObjPTransacciones.IntMesesVence = MesesVence;
@@ -431,14 +430,21 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					{
 						ObjPTransacciones.DatFechaVencimiento = FechaVence;
 					}
+					else
+					{
+						TblPlanesTransacciones plan_edicion = clase_planes.ObtenerIdSeguridad(StrIdSeguridad);
+						if (plan_edicion.DatFechaVencimiento != null)
+						{
+							ObjPTransacciones.DatFechaVencimiento = plan_edicion.DatFechaVencimiento;
+						}
+					}
 				}
 
 				ObjPTransacciones.IntTipoDocumento = TipoDoc;
 
 				if (TipoDoc > 0 && IntTipoProceso == 2 && Estado == 0)
 				{
-					Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-					List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.ObtenerPlanesMixto(ObjPTransacciones.StrEmpresaFacturador);
+					List<TblPlanesTransacciones> datos = clase_planes.ObtenerPlanesMixto(ObjPTransacciones.StrEmpresaFacturador);
 
 					if (datos != null && datos.Count() > 1)
 						return Ok("El Facturador Electrónico tiene registrado otro plan como Mixto, realice el ajuste de ese plan y a continuacion genere este nuevo plan");
