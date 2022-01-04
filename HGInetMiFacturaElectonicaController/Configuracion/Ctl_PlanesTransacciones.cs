@@ -700,7 +700,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				PlanesTransacciones.DatFechaInicio = Fecha.GetFecha();
 
 				//Si Meses de Vencimiento es mayor a cero, entonces el plan vence
-				if (PlanesTransacciones.IntMesesVence > 0)
+				if (PlanesTransacciones.IntMesesVence > 0 && PlanesTransacciones.DatFechaVencimiento == null)
 				{
 					//Se agregan los meses de vencimiento al mes a la fecha actual para que comience a contar desde hoy los meses indicados
 					PlanesTransacciones.DatFechaVencimiento = Fecha.GetFecha().AddMonths(PlanesTransacciones.IntMesesVence);

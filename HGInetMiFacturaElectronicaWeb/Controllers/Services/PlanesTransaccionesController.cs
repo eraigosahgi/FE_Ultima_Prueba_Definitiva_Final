@@ -333,7 +333,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="StrEmpresaFacturador"></param>
 		/// <param name="Tipo"></param>
 		/// <returns></returns>
-		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri] short MesesVence, [FromUri] string DocRef, [FromUri]int TipoDoc)
+		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri] short MesesVence, [FromUri] string DocRef, [FromUri]int TipoDoc, [FromUri]bool editfecha)
 		{
 			try
 			{
@@ -355,6 +355,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				if (Vence)
 				{
 					ObjPlanTransacciones.IntMesesVence = MesesVence;
+					if (editfecha)
+					{
+						ObjPlanTransacciones.DatFechaVencimiento = FechaVence;
+					}
 				}
 
 				ObjPlanTransacciones.IntTipoDocumento = TipoDoc;
@@ -399,7 +403,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="StrEmpresaFacturador"></param>
 		/// <param name="Tipo"></param>
 		/// <returns></returns>
-		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri]System.Guid StrIdSeguridad, [FromUri] short MesesVence, [FromUri] string DocRef, [FromUri]int TipoDoc, [FromUri]bool Editar)
+		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri]System.Guid StrIdSeguridad, [FromUri] short MesesVence, [FromUri] string DocRef, [FromUri]int TipoDoc, [FromUri]bool editfecha, [FromUri]bool Editar)
 		{
 			try
 			{
@@ -419,9 +423,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				ObjPTransacciones.StrEmpresaFacturador = StrEmpresaFacturador.Trim();
 				ObjPTransacciones.StrIdSeguridad = StrIdSeguridad;
 				ObjPTransacciones.DocumentoRef = (!string.IsNullOrEmpty(DocRef)) ? DocRef.Trim() : string.Empty;
+				ObjPTransacciones.DatFechaVencimiento = FechaVence;
 				if (Vence)
 				{
 					ObjPTransacciones.IntMesesVence = MesesVence;
+					if (editfecha)
+					{
+						ObjPTransacciones.DatFechaVencimiento = FechaVence;
+					}
 				}
 
 				ObjPTransacciones.IntTipoDocumento = TipoDoc;

@@ -4,10 +4,10 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20211124"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20211124"></script>
-	<script src="../../Scripts/Pages/PlanesTransacciones.js?vjs20211124"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20211124"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20220104"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20220104"></script>
+	<script src="../../Scripts/Pages/PlanesTransacciones.js?vjs20220104"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20220104"></script>
 
 	<div data-ng-app="GestionPlanesApp" data-ng-controller="GestionPlanesController" data-ng-init="consumido=false" data-ng-cloak>
 
@@ -70,16 +70,27 @@
 										<div class="col-md-12 text-center" style="margin-top: 10px; z-index: 9;">
 											<div id="Vence"></div>
 										</div>
+
 									</div>
 
 									<div id="panelfechaVencimiento" class="col-md-5">
-									<div class="col-md-6 " style="z-index: 9;" >
+									<div class="col-md-4 " style="z-index: 9;" >
 										<label style="margin-top: 16px;">Meses vence:</label>
 										<div id="MesesVence"></div>
 									</div>
 
-									<div class="col-md-6"  style="margin-top: 16px; z-index: 9;">
-										<label id="TituloFecVenc" style="display:none">Fecha Vencimiento:</label>
+									<div class="col-md-3" style="margin-top: 16px; z-index: 9;">
+										<div class="col-md-12 text-center">
+											<label>Editar Fecha?</label>
+										</div>
+										<div class="col-md-12 text-center" style="margin-top: 10px; z-index: 9;">
+											<div id="editfecha"></div>
+										</div>
+
+									</div>
+
+									<div class="col-md-5"  style="z-index: 9;">
+										<label style="margin-top: 16px;">Fecha Vencimiento:</label>
 										<div id="FechaVence"></div>
 									</div>
 									</div>

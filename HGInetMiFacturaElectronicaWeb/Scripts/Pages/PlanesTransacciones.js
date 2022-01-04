@@ -23,10 +23,12 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
            fecha_fin = "",
            Datos_Email = true,
 		   Datos_Vence = true,
+		   Datos_editfecha = false,
 		   Datos_FechaVence = "",
            codigo_adquiriente = "";
 
 	$scope.Vence = true;
+	$scope.editfecha = false;
 
 	$scope.Tprocesados = "";
 	$scope.Tdisponibles = "";
@@ -335,6 +337,21 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 		}
 	});
 
+	$("#editfecha").dxCheckBox({
+		name: "editfecha",
+		value: false,
+		onValueChanged: function (data) {
+			Datos_editfecha = data.value;
+			if (Datos_editfecha) {
+				$scope.editfecha = true;
+				//$('#panelfechaVencimiento').show();
+			} else {
+				$scope.editfecha = false;
+				//$('#panelfechaVencimiento').hide();
+			}
+		}
+	});
+
 	var FVence = new Date(now);
 	FVence.setFullYear(FVence.getFullYear() + 1);
 	Datos_FechaVence = FVence.toISOString();
@@ -342,9 +359,10 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 
 	$("#FechaVence").dxDateBox({
 		value: FVence,
+		type: 'date',
 		width: '100%',
-		readOnly: true,
-		visible: false,
+		//readOnly: true,
+		visible: true,
 		displayFormat: "yyyy-MM-dd",
 		onValueChanged: function (data) {
 			Datos_FechaVence = new Date(data.value).toISOString();
@@ -410,7 +428,6 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			return false;
 		}
 
-
 		var data = $.param({
 			IntTipoProceso: Datos_TiposProceso,
 			StrEmpresa: codigo_facturador,
@@ -426,7 +443,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			FechaVence: Datos_FechaVence,
 			MesesVence: Datos_Meses_Vence,
 			DocRef: Datos_DocRef,
-			TipoDoc: Datos_TiposDoc
+			TipoDoc: Datos_TiposDoc,
+			editfecha: Datos_editfecha
 		});
 
 		var IdActualizar = (StrIdSeguridad) ? '&' + $.param({ StrIdSeguridad: StrIdSeguridad, Editar: true }) : '';
@@ -489,6 +507,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				Datos_FechaInicio = response.data[0].FechaInicio;
 				Datos_DocRef = response.data[0].DocRef;
 				Datos_Meses_Vence = response.data[0].MesesVence;
+				Datos_FechaVence = response.data[0].FechaVence;
 				Datos_TiposDoc = response.data[0].TipoDoc;
 
 				if (Datos_TiposProceso == 1 || Datos_TiposProceso == 2 || Datos_TiposProceso == 3) {
@@ -524,21 +543,23 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				if (Datos_Meses_Vence == 0) {
 					$("#Vence").dxCheckBox({ value: false });
 					$('#panelfechaVencimiento').hide();
-					$('#TituloFecVenc').hide();
+					//$('#TituloFecVenc').hide();
 				} else {
 					$("#Vence").dxCheckBox({ value: true });
 					$("#FechaVence").dxDateBox({ value: response.data[0].FechaVence });
 					$("#FechaVence").dxDateBox({ visible: true });
-					$('#TituloFecVenc').show();
+					//$('#TituloFecVenc').show();
 				}
 
-				if (response.data[0].FechaVence == null || Datos_T_Procesadas == 0) {
-					$('#TituloFecVenc').hide();
-					$("#FechaVence").dxDateBox({ visible: false });
+				if (response.data[0].FechaVence == null && Datos_T_Procesadas == 0) {
+					$("#FechaVence").dxDateBox({ visible: true });
+					//$('#TituloFecVenc').show();
+					var FVence = new Date(now);
+					$("#FechaVence").dxDateBox({ value: FVence });
 				} else {
 					$("#FechaVence").dxDateBox({ value: response.data[0].FechaVence });
 					$("#FechaVence").dxDateBox({ visible: true });
-					$('#TituloFecVenc').show();
+					//$('#TituloFecVenc').show();
 				}
 
 				$("#MesesVence").dxNumberBox({ value: Datos_Meses_Vence });
