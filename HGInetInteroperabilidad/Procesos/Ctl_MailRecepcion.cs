@@ -195,15 +195,15 @@ namespace HGInetInteroperabilidad.Procesos
 								PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 								// id de recepción
-								Guid id_mail = Guid.NewGuid();
+								string identificador_mail = Cl_Fecha.GetFecha().ToString("yyyy-MM-dd-HH-mm-ss");
 
 								if (correo_procesado)
 								{  
-									string ruta_archivos = string.Format("{0}\\{1}{2}\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion, empresa.StrIdSeguridad);
+									string ruta_archivos = string.Format("{0}\\{1}{2}\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion, empresa.StrIdentificacion);
 									ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
 
 									// almacena el correo electrónico temporalmente
-									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_archivos, id_mail.ToString());
+									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_archivos, identificador_mail);
 
 									// almacena los adjuntos del correo electrónico temporalmente
 									List<string> rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_archivos);
@@ -221,11 +221,11 @@ namespace HGInetInteroperabilidad.Procesos
 									string ruta_archivos = string.Format("{0}\\{1}Mail\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion.Replace("recepcion", "no procesados"));
 									ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
 
-									string ruta_directorio_mail = string.Format("{0}\\{1}\\", ruta_archivos, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0,10), id_mail.ToString()));
+									string ruta_directorio_mail = string.Format("{0}\\{1}\\", ruta_archivos, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0,10), identificador_mail));
 									ruta_directorio_mail = Directorio.CrearDirectorio(ruta_directorio_mail);
 
 									// almacena el correo electrónico temporalmente
-									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_directorio_mail, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0, 10), id_mail.ToString()));
+									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_directorio_mail, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0, 10), identificador_mail));
 
 									// almacena los adjuntos del correo electrónico temporalmente
 									List<string> rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_directorio_mail);

@@ -172,7 +172,7 @@ namespace HGInetInteroperabilidad.Configuracion
 
 									ruta_dir_facturador_borrar = string.Empty;
 								}
-								catch (Exception)
+								catch (Exception ex)
 								{}
 							}
 						}
@@ -356,9 +356,17 @@ namespace HGInetInteroperabilidad.Configuracion
 								archivo.Delete();
 							}
 						}
-						
+
 						// genera la descompresión del archivo zip
-						file.ExtractToDirectory(destino);
+						try
+						{ 
+							file.ExtractToDirectory(destino);
+						}
+						catch (Exception excepcion)
+						{
+							string msg = string.Format("Error al extaer los archivos del zip '{0}'", destino);
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, msg);
+						}
 
 						file.Dispose();
 					}
