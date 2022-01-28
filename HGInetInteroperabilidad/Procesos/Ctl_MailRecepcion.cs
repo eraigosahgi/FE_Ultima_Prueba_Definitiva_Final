@@ -214,6 +214,17 @@ namespace HGInetInteroperabilidad.Procesos
 
 									// elimina el mensaje después de procesado de la bandeja de entrada
 									cliente_imap.Eliminar(id_mensaje);
+
+									//se notifica al correo emisor y del facturador(Adquiriente) que recibio
+									try
+									{
+										mensajes.Add("Correo cumple con parametros establecidos por la DIAN, los archivos pasan al proceso de importar a plataforma");
+										RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
+									}
+									catch (Exception)
+									{
+
+									}
 								}
 								else
 								{
@@ -234,7 +245,7 @@ namespace HGInetInteroperabilidad.Procesos
 									string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
 									try
 									{
-										Ctl_Descomprimir.Procesar(rutas_archivos[0], ruta_descomprimir);
+										Ctl_Descomprimir.Procesar(rutas_archivos.First(x => x.Contains(".zip")), ruta_descomprimir);
 									}
 									catch (Exception ex)
 									{}
@@ -249,60 +260,10 @@ namespace HGInetInteroperabilidad.Procesos
 									catch (Exception)
 									{}
 
-									MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
-
-									// notificar por correo electrónico
-									// -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
-									Cl_MailCliente cliente_smtp = new Cl_MailCliente()
-									{
-										Servidor = configuracion_server.Servidor,
-										Puerto = configuracion_server.Puerto,
-										Habilitar_ssl = configuracion_server.HabilitaSsl,
-										TimeOut = 120000,
-										Usuario = configuracion_server.Usuario,
-										Clave = configuracion_server.Clave,
-									};
-
-									List<MailboxAddress> correos_destino = new List<MailboxAddress>();
-
-									MailboxAddress remitente_re = new MailboxAddress(Constantes.NombreRemitenteEmail,Constantes.EmailRemitente);
-
-									MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
-
-									if (remitente_reply.Address.Equals(Constantes.EmailRemitente))
-										remitente_reply.Address = Constantes.EmailCopiaOculta;
-
-
-									correos_destino.Add(new MailboxAddress(asunto, remitente_reply.Address));
-
+									//Se notifica al correo emisor que no se procesa el correo y la razon 
 									try
 									{
-										MailboxAddress reply_to = mensaje.ReplyTo.OfType<MailboxAddress>().Single();
-
-										correos_destino.Add(new MailboxAddress(asunto, reply_to.Address));
-									}
-									catch (Exception ex)
-									{
-									  
-									}
-
-									//Si se sabe quien es la empresa receptora(Adquiriente) se hace envio del correo original y el por que no se proceso
-									if (empresa != null)
-									{
-										correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
-									}
-									else
-									{
-										correos_destino.Add(new MailboxAddress(asunto, Constantes.EmailCopiaOculta));
-										Ctl_Empresa _empresa = new Ctl_Empresa();
-										empresa = _empresa.Obtener(Constantes.NitResolucionconPrefijo);
-									}
-
-
-									try
-									{
-										BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
-										cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_re, correos_destino, contenido, true);
+										RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
 									}
 									catch (Exception ex)
 									{}
@@ -352,6 +313,75 @@ namespace HGInetInteroperabilidad.Procesos
 
 
 		/// <summary>
+		/// Proceso para enviar Alerta en caso de inconsistencia con el correo original por no cumplir una condicion del Asunto o para notificar que pasa a procesar los archivos e importar a Plataforma
+		/// </summary>
+		/// <param name="empresa"></param>
+		/// <param name="mensajes"></param>
+		/// <param name="mensaje"></param>
+		/// <param name="asunto"></param>
+		/// <param name="cliente_imap"></param>
+		/// <param name="id_mensaje"></param>
+		public static void RenviarAlerta(TblEmpresas empresa, List<string> mensajes,MimeMessage mensaje, string asunto, Cl_MailImap cliente_imap, UniqueId id_mensaje)
+		{
+
+
+			MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
+
+			// notificar por correo electrónico
+			// -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
+			Cl_MailCliente cliente_smtp = new Cl_MailCliente()
+			{
+				Servidor = configuracion_server.Servidor,
+				Puerto = configuracion_server.Puerto,
+				Habilitar_ssl = configuracion_server.HabilitaSsl,
+				TimeOut = 120000,
+				Usuario = configuracion_server.Usuario,
+				Clave = configuracion_server.Clave,
+			};
+
+			List<MailboxAddress> correos_destino = new List<MailboxAddress>();
+
+			MailboxAddress remitente_re = new MailboxAddress(Constantes.NombreRemitenteEmail, Constantes.EmailRemitente);
+
+			MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
+
+			if (remitente_reply.Address.Equals(Constantes.EmailRemitente))
+				remitente_reply.Address = Constantes.EmailCopiaOculta;
+
+
+			correos_destino.Add(new MailboxAddress(asunto, remitente_reply.Address));
+
+			try
+			{
+				MailboxAddress reply_to = mensaje.ReplyTo.OfType<MailboxAddress>().Single();
+
+				correos_destino.Add(new MailboxAddress(asunto, reply_to.Address));
+			}
+			catch (Exception ex)
+			{
+
+			}
+
+			//Si se sabe quien es la empresa receptora(Adquiriente) se hace envio del correo original y el por que no se proceso
+			if (empresa != null)
+			{
+				correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
+			}
+			
+
+			try
+			{
+				BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
+				cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_re, correos_destino, contenido, true);
+			}
+			catch (Exception ex)
+			{ }
+
+		}
+
+
+
+		/// <summary>
 		/// Contenido del correo electrónico para notificación de inconsistencias
 		/// </summary>
 		/// <param name="empresa">adquiriente</param>
@@ -361,8 +391,8 @@ namespace HGInetInteroperabilidad.Procesos
 		{
 			try
 			{
-				if (empresa == null)
-					throw new ApplicationException("No se encontró información de la empresa.");
+				//if (empresa == null)
+				//	throw new ApplicationException("No se encontró información de la empresa.");
 					
 				BodyBuilder contenido = new BodyBuilder();
 				
@@ -379,15 +409,26 @@ namespace HGInetInteroperabilidad.Procesos
 					if (file != null)
 					{
 						// Datos del Tercero
-						if (empresa.StrTipoIdentificacion.Equals("31"))
-							mensaje = mensaje.Replace("{TipoPersona}", "Señores");
+						if (empresa == null)
+						{
+							mensaje = mensaje.Replace("{TipoPersona}", "");
+							mensaje = mensaje.Replace("{NombreTercero}", "");
+							mensaje = mensaje.Replace("{NitTercero} -", "");
+							mensaje = mensaje.Replace("{Digitov}", "");
+							mensaje = mensaje.Replace("Nit.", "");
+						}
 						else
-							mensaje = mensaje.Replace("{TipoPersona}", "Señor (a)");
+						{
+							if (empresa.StrTipoIdentificacion.Equals("31"))
+								mensaje = mensaje.Replace("{TipoPersona}", "Señores");
+							else
+								mensaje = mensaje.Replace("{TipoPersona}", "Señor (a)");
 
-						mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
-						mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
-						mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
-						
+							mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
+							mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
+							mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
+						}
+
 						string detalle = string.Empty;
 
 						foreach (string item in mensajes)
