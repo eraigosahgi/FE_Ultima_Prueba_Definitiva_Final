@@ -29,6 +29,7 @@ namespace HGInetMiFacturaElectonicaData.Formatos
 		public byte[] EmpresaLogo { get; set; }
 		public string Entidad { get; set; }
 		public string EntidadDes { get; set; }
+		public string MedioPago { get; set; }
 		public DateTime Fecha { get; set; }
 		public string Observacion { get; set; }
 		public string CodigoQR { get; set; }

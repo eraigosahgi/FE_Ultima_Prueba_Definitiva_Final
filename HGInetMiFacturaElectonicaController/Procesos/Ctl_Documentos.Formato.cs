@@ -324,6 +324,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				objeto_result.EmpleadoSalario = documento.DatosTrabajador.Sueldo;
 				objeto_result.EmpleadoCuenta = (documento.DatosPago != null) ? documento.DatosPago.NumeroCuenta : "";
 
+				objeto_result.MedioPago = (documento.DatosPago != null) ? documento.DatosPago.TerminoPago_Descripcion : "Instrumento no definido";
+
 				//Informacion del documento
 				objeto_result.Documento = documento.Documento;
 				objeto_result.Prefijo = documento.Prefijo;
