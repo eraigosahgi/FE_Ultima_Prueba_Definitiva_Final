@@ -325,6 +325,8 @@ namespace HGInetUBLv2_1
 						else if (factura_ubl.InvoiceLine[i].Item.StandardItemIdentification != null)
 						{
 							detalle.ProductoCodigoEAN = factura_ubl.InvoiceLine[i].Item.StandardItemIdentification.ID.Value;
+							if (string.IsNullOrEmpty(detalle.ProductoCodigo) || detalle.ProductoCodigo.Equals("0"))
+								detalle.ProductoCodigo = detalle.ProductoCodigoEAN;
 						}
 						detalle.ProductoNombre = factura_ubl.InvoiceLine[i].Item.Description[0].Value;
 						if (factura_ubl.InvoiceLine[i].Item.AdditionalInformation != null)

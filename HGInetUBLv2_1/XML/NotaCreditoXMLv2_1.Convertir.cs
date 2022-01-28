@@ -254,7 +254,13 @@ namespace HGInetUBLv2_1
 						if (nota_credito_ubl.CreditNoteLine[i].Item.SellersItemIdentification != null)
 							detalle.ProductoCodigo = nota_credito_ubl.CreditNoteLine[i].Item.SellersItemIdentification.ID.Value;
 						if (nota_credito_ubl.CreditNoteLine[i].Item.StandardItemIdentification != null)
+						{
 							detalle.ProductoCodigoEAN = nota_credito_ubl.CreditNoteLine[i].Item.StandardItemIdentification.ID.Value;
+
+							if (string.IsNullOrEmpty(detalle.ProductoCodigo) || detalle.ProductoCodigo.Equals("0"))
+								detalle.ProductoCodigo = detalle.ProductoCodigoEAN;
+						}
+							
 						detalle.ProductoNombre = nota_credito_ubl.CreditNoteLine[i].Item.Description[0].Value;
 						if (nota_credito_ubl.CreditNoteLine[i].Item.AdditionalInformation != null)
 						{
