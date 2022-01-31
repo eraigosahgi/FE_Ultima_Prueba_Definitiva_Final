@@ -142,8 +142,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && (documento_obj.DatosPago != null))
 					{
+						//Se agrega estos metodos que son los mas normales en la nomina para el tema de impresion
+						if (documento_obj.DatosPago.Metodo != 1 && documento_obj.DatosPago.Metodo != 10 && documento_obj.DatosPago.Metodo != 42 && documento_obj.DatosPago.Metodo && 47)
+						{
+							documento_obj.DatosPago.Metodo = 1;
+						}	
 						ListaMediosPago list_medio = new ListaMediosPago();
-						ListaItem medio = list_medio.Items.Where(d => d.Codigo.Equals(documento_obj.DatosPago.Forma.ToString())).FirstOrDefault();
+						ListaItem medio = list_medio.Items.Where(d => d.Codigo.Equals(documento_obj.DatosPago.Metodo.ToString())).FirstOrDefault();
 						documento_obj.DatosPago.TerminoPago_Descripcion = medio.Descripcion;
 					}
 
