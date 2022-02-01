@@ -143,7 +143,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && (documento_obj.DatosPago != null))
 					{
 						//Se agrega estos metodos que son los mas normales en la nomina para el tema de impresion
-						if (documento_obj.DatosPago.Metodo != 1 && documento_obj.DatosPago.Metodo != 10 && documento_obj.DatosPago.Metodo != 42 && documento_obj.DatosPago.Metodo && 47)
+						if (documento_obj.DatosPago.Metodo != 1 && documento_obj.DatosPago.Metodo != 10 && documento_obj.DatosPago.Metodo != 42 && documento_obj.DatosPago.Metodo != 47)
 						{
 							documento_obj.DatosPago.Metodo = 1;
 						}	
