@@ -15,6 +15,8 @@ namespace HGInetUBLv2_1
 		{
 			NominaAjuste nomina_objeto = new NominaAjuste();
 
+			nomina_objeto.TipoNota = 1;
+
 			try
 			{
 			   
@@ -114,6 +116,8 @@ namespace HGInetUBLv2_1
 				{
 					NominaIndividualDeAjusteTypeEliminar eliminar = new NominaIndividualDeAjusteTypeEliminar();
 					eliminar = nomina_ubl.Eliminar;
+
+					nomina_objeto.TipoNota = 2;
 
 					nomina_objeto.NumeroPred = eliminar.EliminandoPredecesor.NumeroPred;
 					nomina_objeto.CUNEPred = eliminar.EliminandoPredecesor.CUNEPred;

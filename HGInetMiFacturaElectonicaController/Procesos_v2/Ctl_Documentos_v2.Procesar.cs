@@ -1,5 +1,6 @@
 ﻿using HGInetDIANServicios;
 using HGInetMiFacturaElectonicaController.Auditorias;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
@@ -141,6 +142,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					documento_obj = HGInetUBLv2_1.NominaXML.Convertir(conversion, documento);
 					documento.StrCufe = documento_obj.Cune;
+					Ctl_Empresa empresa_config = new Ctl_Empresa();
+					documento_obj.DatosTrabajador.Email = empresa_config.Obtener(documento.StrEmpresaAdquiriente).StrMailAdmin;
+
+
 				}
 				else if (tipo_documento == TipoDocumento.NominaAjuste)
 				{
@@ -150,6 +155,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					
 					documento_obj = HGInetUBLv2_1.NominaAjusteXML.Convertir(conversion, documento);
 					documento.StrCufe = documento_obj.Cune;
+					if (documento_obj.TipoNota.Equals(1))
+					{
+						Ctl_Empresa empresa_config = new Ctl_Empresa();
+						documento_obj.DatosTrabajador.Email = empresa_config.Obtener(documento.StrEmpresaAdquiriente).StrMailAdmin;
+					}
+					
 				}
 
 				// convierte los datos del objeto en texto XML 

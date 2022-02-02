@@ -375,6 +375,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										adquirienteBd = empresa_config.Crear(trabajador);
 									}
 								}
+								else
+								{
+									if (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste)
+									{
+										if (!adquirienteBd.StrMailAdmin.Equals(documento_obj.DatosTrabajador.Email))
+										{
+											empresa_config = new Ctl_Empresa();
+											adquirienteBd.StrMailAdmin = documento_obj.DatosTrabajador.Email;
+											adquirienteBd = empresa_config.Actualizar(adquirienteBd);
+										}
+									}
+								}
 							}
 							catch (Exception excepcion)
 							{
