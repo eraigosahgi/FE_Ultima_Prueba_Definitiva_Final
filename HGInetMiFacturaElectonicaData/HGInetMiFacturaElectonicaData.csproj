@@ -226,6 +226,9 @@
     <Compile Include="Modelo\TblEmpresasResoluciones.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\TblEventosRadian.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblFormatos.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>

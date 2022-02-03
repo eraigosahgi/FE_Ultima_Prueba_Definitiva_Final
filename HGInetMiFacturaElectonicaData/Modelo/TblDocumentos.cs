@@ -18,6 +18,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public TblDocumentos()
         {
             this.TblPagosDetalles = new HashSet<TblPagosDetalles>();
+            this.TblEventosRadian = new HashSet<TblEventosRadian>();
         }
     
         public System.Guid StrIdSeguridad { get; set; }
@@ -72,5 +73,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblPagosDetalles> TblPagosDetalles { get; set; }
         public virtual TblPlanesTransacciones TblPlanesTransacciones { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblEventosRadian> TblEventosRadian { get; set; }
     }
 }

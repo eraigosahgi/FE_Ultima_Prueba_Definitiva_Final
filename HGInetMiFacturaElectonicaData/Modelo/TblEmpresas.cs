@@ -83,6 +83,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public Nullable<System.Guid> ComercioConfigId { get; set; }
         public string ComercioConfigDescrip { get; set; }
         public bool IntInteroperabilidad { get; set; }
+        public bool IntRadian { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }
