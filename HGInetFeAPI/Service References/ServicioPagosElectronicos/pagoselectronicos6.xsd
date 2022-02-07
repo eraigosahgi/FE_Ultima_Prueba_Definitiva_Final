@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/pagoselectronicos.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+  <xs:import schemaLocation="http://localhost:61436/Wcf/pagoselectronicos.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
   <xs:complexType name="ArrayOfPagoElectronicoRespuesta">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="PagoElectronicoRespuesta" nillable="true" type="tns:PagoElectronicoRespuesta" />
@@ -70,4 +70,20 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="PagoElectronicoRespuestaPorFecha" nillable="true" type="tns:PagoElectronicoRespuestaPorFecha" />
+  <xs:complexType name="ArrayOfPagoElectronicoRespuestaAgrupadoPorFecha">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PagoElectronicoRespuestaAgrupadoPorFecha" nillable="true" type="tns:PagoElectronicoRespuestaAgrupadoPorFecha" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPagoElectronicoRespuestaAgrupadoPorFecha" nillable="true" type="tns:ArrayOfPagoElectronicoRespuestaAgrupadoPorFecha" />
+  <xs:complexType name="PagoElectronicoRespuestaAgrupadoPorFecha">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Ciclo" type="xs:int" />
+      <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FormaPago" type="xs:int" />
+      <xs:element minOccurs="0" name="Pago_Electronico_Respuesta_Por_Fecha" nillable="true" type="tns:ArrayOfPagoElectronicoRespuestaPorFecha" />
+      <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PagoElectronicoRespuestaAgrupadoPorFecha" nillable="true" type="tns:PagoElectronicoRespuestaAgrupadoPorFecha" />
 </xs:schema>

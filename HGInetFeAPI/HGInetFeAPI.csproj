@@ -363,6 +363,9 @@
     <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.ConsultaAgrupadosPorFechaElaboracionResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorCodigoRegistroResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -373,17 +376,17 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos2.wsdl" />
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos21.wsdl" />
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos3.wsdl" />
     <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos4.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos41.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos5.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos42.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos6.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos43.xsd">
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos7.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioReenvioDocumento\HGInetFeAPI.ServicioReenvioDocumento.RecepcionResponse.datasource">
@@ -622,9 +625,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ServicioFactura\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -656,6 +656,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioNomina\nomina.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos11.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

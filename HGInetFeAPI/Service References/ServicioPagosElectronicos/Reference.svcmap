@@ -21,16 +21,16 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/pagoselectronicos.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:61436/wcf/pagoselectronicos.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="pagoselectronicos4.xsd" MetadataType="Schema" ID="2bd979a4-9503-4089-a5b2-df20740a478b" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/pagoselectronicos.svc?xsd=xsd3" />
-    <MetadataFile FileName="pagoselectronicos41.xsd" MetadataType="Schema" ID="5ef5d3a7-1270-48de-8cb1-a21fe5d3a773" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/pagoselectronicos.svc?xsd=xsd2" />
-    <MetadataFile FileName="pagoselectronicos2.wsdl" MetadataType="Wsdl" ID="ca1735ff-b6c6-48a5-a366-207e16a9e5c9" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/pagoselectronicos.svc?wsdl" />
-    <MetadataFile FileName="pagoselectronicos42.xsd" MetadataType="Schema" ID="b8599ca2-ee3c-4a85-a924-dff3cc5840d2" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/pagoselectronicos.svc?xsd=xsd1" />
-    <MetadataFile FileName="pagoselectronicos43.xsd" MetadataType="Schema" ID="75432eea-df92-4ca0-958f-59381376be86" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/pagoselectronicos.svc?xsd=xsd0" />
-    <MetadataFile FileName="pagoselectronicos.disco" MetadataType="Disco" ID="60bc6bd1-e547-413b-bfb6-d8af7441dc5e" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/pagoselectronicos.svc?disco" />
-    <MetadataFile FileName="pagoselectronicos21.wsdl" MetadataType="Wsdl" ID="34c37287-c43b-4fd1-ae90-3bde659216a2" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/pagoselectronicos.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="pagoselectronicos4.xsd" MetadataType="Schema" ID="d4e8d661-4a04-46b5-8236-d600296c1abd" SourceId="1" SourceUrl="http://localhost:61436/Wcf/pagoselectronicos.svc?xsd=xsd0" />
+    <MetadataFile FileName="pagoselectronicos5.xsd" MetadataType="Schema" ID="66a43252-1e01-455a-9aec-2f844057cfee" SourceId="1" SourceUrl="http://localhost:61436/Wcf/pagoselectronicos.svc?xsd=xsd1" />
+    <MetadataFile FileName="pagoselectronicos6.xsd" MetadataType="Schema" ID="4259ffc9-eb68-4a90-8f65-f36baa48244c" SourceId="1" SourceUrl="http://localhost:61436/Wcf/pagoselectronicos.svc?xsd=xsd2" />
+    <MetadataFile FileName="pagoselectronicos7.xsd" MetadataType="Schema" ID="17e93d2c-3bec-4388-a4ec-712c14c3809b" SourceId="1" SourceUrl="http://localhost:61436/Wcf/pagoselectronicos.svc?xsd=xsd3" />
+    <MetadataFile FileName="pagoselectronicos2.wsdl" MetadataType="Wsdl" ID="b2149879-ce7c-444b-a5e7-8dfed98b3d49" SourceId="1" SourceUrl="http://localhost:61436/Wcf/pagoselectronicos.svc?wsdl" />
+    <MetadataFile FileName="pagoselectronicos11.disco" MetadataType="Disco" ID="934e8588-96d9-4ccc-bafb-3ef254a66e7f" SourceId="1" SourceUrl="http://localhost:61436/Wcf/pagoselectronicos.svc?disco" />
+    <MetadataFile FileName="pagoselectronicos3.wsdl" MetadataType="Wsdl" ID="73cc4d1a-e055-44e2-85da-5e9f9fb9fdc2" SourceId="1" SourceUrl="http://localhost:61436/Wcf/pagoselectronicos.svc?wsdl=wsdl0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
