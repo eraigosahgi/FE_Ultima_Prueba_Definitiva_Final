@@ -29,6 +29,12 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		[WebInvoke(Method = "GET")]
 		List<PagoElectronicoRespuestaPorFecha> ConsultaPorFechaElaboracion(string DataKey, string Identificacion, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0);
 
+
+		[OperationContract(Name = "ConsultaAgrupadosPorFechaElaboracion")]
+		[FaultContract(typeof(Error), Action = "ConsultaAgrupadosPorFechaElaboracion", Name = "Error")]
+		[WebInvoke(Method = "GET")]
+		List<PagoElectronicoRespuestaAgrupadoPorFecha> ConsultaAgrupadosPorFechaElaboracion(string DataKey, string Identificacion, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0);
+
 		[OperationContract(Name = "ActualizarEstadoPago")]
 		[FaultContract(typeof(Error), Action = "ActualizarEstadoPago", Name = "Error")]
 		[WebInvoke(Method = "GET")]

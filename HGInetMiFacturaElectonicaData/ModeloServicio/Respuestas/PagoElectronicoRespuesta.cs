@@ -107,7 +107,6 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas
 
 	}
 
-
 	public class PagoElectronicoRespuestaPorFecha
 	{
 		/// <summary>
@@ -181,6 +180,29 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas
 		/// Objeto de tipo Error 
 		/// </summary>
 		public Error Error { get; set; }
+
+	}
+
+
+	public class PagoElectronicoRespuestaAgrupadoPorFecha
+	{
+		/// <summary>
+		/// Fecha de pago
+		/// </summary>
+		public DateTime Fecha { get; set; }
+		/// <summary>
+		/// Ciclo de la transacción (PSE)
+		/// </summary>
+		public int Ciclo { get; set; }
+		/// <summary>
+		/// Forma de pago
+		/// </summary>
+		public int FormaPago { get; set; }
+		/// <summary>
+		/// Valor del pago
+		/// </summary>
+		public decimal Valor { get; set; }
+		public List<PagoElectronicoRespuestaPorFecha> Pago_Electronico_Respuesta_Por_Fecha { get; set; }
 
 	}
 }

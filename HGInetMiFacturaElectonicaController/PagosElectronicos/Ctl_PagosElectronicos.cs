@@ -1442,7 +1442,168 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 		}
 
 
+		/// <summary>
+		/// Obtiene los pagos entre un rango de fechas especifica
+		/// </summary>
+		/// <param name="identificacion_obligado">Identificación del Facturador</param>
+		/// <param name="FechaInicial">Fecha Inicial</param>
+		/// <param name="FechaFinal">Fecha Final</param>
+		/// <param name="Procesados">0 Todos Los Pagos, 1 Pagos Procesados, 2 Pagos que aun no se han Procesado</param>
+		/// <returns>List<PagoElectronicoRespuesta></returns>
+		/// List<PagoElectronicoRespuestaAgrupadoPorFecha>
+		public List<PagoElectronicoRespuestaAgrupadoPorFecha> ConsultaAgrupadosPorFechaElaboracion(string identificacion_obligado, DateTime FechaInicial, DateTime FechaFinal, int Procesados = 0)
+		{
+			try
+			{
+				//Valida que los parametros sean correctos.
+				if (string.IsNullOrWhiteSpace(identificacion_obligado))
+					throw new ApplicationException("Número de identificación del obligado inválido.");
 
+
+				List<PagoElectronicoRespuestaAgrupadoPorFecha> lista_respuesta = new List<PagoElectronicoRespuestaAgrupadoPorFecha>();
+
+				//Creamos variable para saber si la consulta en con pagos aprobados o no aprobados.
+				bool estado_pago = (Procesados == 1) ? true : false;
+
+
+				var lista_pagos = (from pagos in context.TblPagosElectronicos
+								   where pagos.StrEmpresaFacturador.Equals(identificacion_obligado)
+										   && pagos.DatFechaRegistro >= FechaInicial
+										   && pagos.DatFechaRegistro <= FechaFinal
+										   && (pagos.IntProcesado == estado_pago || Procesados == 0)
+										   && pagos.IntFormaPago == 31//Tarjeta de Credito
+								   select pagos).ToList();
+
+
+				List<PagoElectronicoRespuestaAgrupadoPorFecha> Lista_Resultado = new List<PagoElectronicoRespuestaAgrupadoPorFecha>();
+				List<PagoElectronicoRespuestaPorFecha> Lista_Resultado_Detalle = new List<PagoElectronicoRespuestaPorFecha>();
+
+				PagoElectronicoRespuestaPorFecha resultado = new PagoElectronicoRespuestaPorFecha();
+
+				Ctl_Documento _doc = new Ctl_Documento();
+
+				foreach (var pago in lista_pagos)
+				{
+
+					var data = new PagoElectronicoRespuestaAgrupadoPorFecha();
+					data.Fecha = pago.DatFechaRegistro;
+					data.Ciclo = pago.IntClicloTransaccion.Value;
+					data.FormaPago = pago.IntFormaPago.Value;
+					data.Valor = pago.IntValorPago;
+
+					Lista_Resultado_Detalle = new List<PagoElectronicoRespuestaPorFecha>();
+					foreach (var detalle in pago.TblPagosDetalles)
+					{
+
+						TblDocumentos documento = _doc.ObtenerDocumento(detalle.StrIdSeguridadDoc);
+						resultado = new PagoElectronicoRespuestaPorFecha();
+
+						resultado.Documento = documento.IntNumero;
+						resultado.Cufe = documento.StrCufe;
+						resultado.Identificacion = documento.StrEmpresaAdquiriente;
+						resultado.IdDocumento = documento.StrIdSeguridad.ToString();
+						resultado.IdRegistro = pago.StrIdRegistro.ToString();
+						resultado.DocumentoTipo = documento.IntDocTipo;
+						resultado.Fecha = pago.DatFechaRegistro;
+						resultado.IdPago = pago.StrIdSeguridadPago;
+						resultado.ReferenciaCUS = pago.StrTransaccionCUS;
+						resultado.TicketID = pago.StrTicketID;
+						resultado.PagoEstadoDescripcion = pago.StrMensaje;
+						resultado.PagoEstado = pago.IntEstadoPago;
+						resultado.Valor = detalle.IntValorPago;
+						resultado.FormaPago = pago.IntFormaPago.ToString();
+						resultado.Franquicia = pago.StrCodigoFranquicia;
+
+						Lista_Resultado_Detalle.Add(resultado);
+
+					}
+					data.Pago_Electronico_Respuesta_Por_Fecha = Lista_Resultado_Detalle;
+
+					//
+					Lista_Resultado.Add(data);
+				}
+
+
+
+				var lista_pagos_pse = (from pagos in context.TblPagosElectronicos
+									   where pagos.StrEmpresaFacturador.Equals(identificacion_obligado)
+											   && pagos.DatFechaRegistro >= FechaInicial
+											   && pagos.DatFechaRegistro <= FechaFinal
+											   && (pagos.IntProcesado == estado_pago || Procesados == 0)
+											   && pagos.IntFormaPago == 29 //PSE
+									   group pagos by new { pagos.StrEmpresaFacturador, pagos.IntEstadoPago, pagos.IntFormaPago, pagos.IntClicloTransaccion, pagos.DatFechaRegistro.Year, pagos.DatFechaRegistro.Month, pagos.DatFechaRegistro.Day } into pago
+									   select pago).OrderByDescending(x => x.FirstOrDefault().StrTicketID).ToList();
+
+
+
+				PagoElectronicoRespuestaPorFecha PagoAgrupado = new PagoElectronicoRespuestaPorFecha();
+				foreach (var item in lista_pagos_pse)
+				{
+					var data = new PagoElectronicoRespuestaAgrupadoPorFecha();
+					data.Fecha = item.FirstOrDefault().DatFechaRegistro;
+					data.Ciclo = item.FirstOrDefault().IntClicloTransaccion.Value;
+					data.FormaPago = item.FirstOrDefault().IntFormaPago.Value;
+					data.Valor = item.Select(d => d.IntValorPago).Sum();
+
+					Lista_Resultado_Detalle = new List<PagoElectronicoRespuestaPorFecha>();
+					foreach (var item2 in item)
+					{
+						
+
+						var pagos2 = (from pagos in context.TblPagosElectronicos
+									  where pagos.StrIdRegistro == item2.StrIdRegistro
+									  select pagos).FirstOrDefault();
+
+						
+
+						foreach (var detalle in pagos2.TblPagosDetalles)
+						{
+
+							
+							TblDocumentos documento = _doc.ObtenerDocumento(detalle.StrIdSeguridadDoc);
+							resultado = new PagoElectronicoRespuestaPorFecha();
+
+							resultado.Documento = documento.IntNumero;
+							resultado.Cufe = documento.StrCufe;
+							resultado.Identificacion = documento.StrEmpresaAdquiriente;
+							resultado.IdDocumento = documento.StrIdSeguridad.ToString();
+							resultado.IdRegistro = pagos2.StrIdRegistro.ToString();
+							resultado.DocumentoTipo = documento.IntDocTipo;
+							resultado.Fecha = pagos2.DatFechaRegistro;
+							resultado.IdPago = pagos2.StrIdSeguridadPago;
+							resultado.ReferenciaCUS = pagos2.StrTransaccionCUS;
+							resultado.TicketID = pagos2.StrTicketID;
+							resultado.PagoEstadoDescripcion = pagos2.StrMensaje;
+							resultado.PagoEstado = pagos2.IntEstadoPago;
+							resultado.Valor = detalle.IntValorPago;
+							resultado.FormaPago = pagos2.IntFormaPago.ToString();
+							resultado.Franquicia = pagos2.StrCodigoFranquicia;
+
+							Lista_Resultado_Detalle.Add(resultado);
+
+						}
+												
+					}
+					data.Pago_Electronico_Respuesta_Por_Fecha = Lista_Resultado_Detalle;
+
+					Lista_Resultado.Add(data);
+
+				}
+
+
+				var datos = JsonConvert.SerializeObject(Lista_Resultado);
+
+				lista_respuesta = JsonConvert.DeserializeObject<List<PagoElectronicoRespuestaAgrupadoPorFecha>>(datos);
+
+
+				return lista_respuesta;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
 
 		/// <summary>
 		/// Obtiene los documentos por Código de Registros
