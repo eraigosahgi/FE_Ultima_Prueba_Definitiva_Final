@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace HGInetInteroperabilidad.Procesos
 {
@@ -138,8 +139,8 @@ namespace HGInetInteroperabilidad.Procesos
 									{
 										Ctl_Empresa _empresa = new Ctl_Empresa();
 
-										if (asunto_params[0].Contains("Fwd:"))
-											asunto_params[0] = asunto_params[0].Replace("Fwd:", "").Trim();
+										Match numero_idebtificacion = Regex.Match(asunto_params[0], "\\d+");
+										asunto_params[0] = numero_idebtificacion.Value;
 
 										empresa = _empresa.Obtener(asunto_params[0]);
 
@@ -210,10 +211,17 @@ namespace HGInetInteroperabilidad.Procesos
 
 									// descomprime el zip adjunto
 									string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
-									Ctl_Descomprimir.Procesar(rutas_archivos[0], ruta_descomprimir);
+									Ctl_Descomprimir.Procesar(rutas_archivos.First(x => x.Contains(".zip")), ruta_descomprimir);
 
 									// elimina el mensaje después de procesado de la bandeja de entrada
-									cliente_imap.Eliminar(id_mensaje);
+									try
+									{
+										cliente_imap.Eliminar(id_mensaje);
+									}
+									catch (Exception ex)
+									{
+									   
+									}
 
 									//se notifica al correo emisor y del facturador(Adquiriente) que recibio
 									try

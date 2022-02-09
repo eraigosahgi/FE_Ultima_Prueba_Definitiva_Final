@@ -351,7 +351,8 @@ namespace HGInetInteroperabilidad.Configuracion
 						{
 							// valida que los archivos no tengan extensiones definidas
 							if ((archivo.FullName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) || (archivo.FullName.EndsWith(".bat", StringComparison.OrdinalIgnoreCase))
-								|| (archivo.FullName.EndsWith(".accdb", StringComparison.OrdinalIgnoreCase)) || (archivo.FullName.EndsWith(".mdb", StringComparison.OrdinalIgnoreCase)))
+								|| (archivo.FullName.EndsWith(".accdb", StringComparison.OrdinalIgnoreCase)) || (archivo.FullName.EndsWith(".mdb", StringComparison.OrdinalIgnoreCase))
+								|| (archivo.FullName.EndsWith(".png", StringComparison.OrdinalIgnoreCase)))
 							{
 								archivo.Delete();
 							}
