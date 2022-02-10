@@ -1325,6 +1325,7 @@ namespace HGInetInteroperabilidad.Procesos
 						try
 						{
 							documento_bd = Convertir(documento_obj, Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc), facturador_emisor, nombre_archivo, documento_obj.IdentificacionProveedor, contiene_pdf, contiene_anexo);
+							documento_bd.IntEnvioMail = false;
 						}
 						catch (Exception excepcion)
 						{
@@ -1404,6 +1405,20 @@ namespace HGInetInteroperabilidad.Procesos
 					{   // envía el correo del documento al Adquiriente(Facturador Receptor)
 						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 						email.NotificacionDocumento(documento_bd, (string.IsNullOrEmpty(documento_obj.DatosObligado.Telefono)) ? "vacio" : documento_obj.DatosObligado.Telefono, facturador_receptor.StrMailRecepcion, string.Empty, Procedencia.Plataforma, string.Empty, ProcesoEstado.EnvioEmailAcuse, string.Empty, false, true);
+						try
+						{
+							Ctl_ProcesosCorreos proceso_correo = new Ctl_ProcesosCorreos();
+							TblProcesoCorreo correo_doc = proceso_correo.Obtener(documento_bd.StrIdSeguridad);
+							if (correo_doc != null && correo_doc.IntEnvioMail == true)
+							{
+								documento_bd.IntEnvioMail = true;
+								ctl_doc.Actualizar(documento_bd);
+							}
+						}
+						catch (Exception excepcion)
+						{
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, "Error validando el envio del correo al Adquiriente desde interoperabilidad");
+						}
 						//documento_bd.IntIdEstado = Convert.ToInt16(ProcesoEstado.Finalizacion.GetHashCode());
 					}
 					catch (Exception excepcion)
