@@ -40,7 +40,6 @@ using HGInetMiFacturaElectonicaData.ModeloServicio.Respuestas;
 using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using System.IO.Compression;
 using HGInetUBL;
-using HGInetDIANServicios;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -1907,219 +1906,100 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (doc == null)
 					throw new ArgumentException(string.Format(LibreriaGlobalHGInet.Properties.RecursoMensajes.ObjectNotExistError, "el documento", doc.IntNumero));
 
-				bool continuar_proceso = true;
+				//*******Cuando se haga proceso de Radian Quitar Validacion
+				if (estado.Equals(4))
+					doc.IntAdquirienteRecibo = 1;
+				else
+					doc.IntAdquirienteRecibo = estado;
 
-				Ctl_EventosRadian evento = new Ctl_EventosRadian();
-				List<TblEventosRadian> list_evento = null;
+				doc.StrAdquirienteMvoRechazo = motivo_rechazo;
+				doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
+				if (doc.IntIdEstado > (short)ProcesoEstado.EnvioZip.GetHashCode())
+					doc.IntIdEstado = (short)ProcesoEstado.RecepcionAcuse.GetHashCode();
 
-				TblEventosRadian acuse = null;
+				// obtiene los datos del facturador electrónico
+				TblEmpresas facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador, false);
 
-				TblEventosRadian recibo = null;
+				//obtiene los datos del proveedor del facturador
+				ctl_empresa = new Ctl_Empresa();
+				TblEmpresas proveedor_emisor = ctl_empresa.Obtener(doc.StrProveedorEmisor, false);
 
 				// obtiene los datos del adquiriente
-				TblEmpresas adquiriente = null;
 				ctl_empresa = new Ctl_Empresa();
-				if (doc.TblEmpresasAdquiriente == null)
-					adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente, false);
-				else
-					adquiriente = doc.TblEmpresasAdquiriente;
+				TblEmpresas adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente, false);
 
-				if (adquiriente.IntRadian == true)
+				FacturaE_Documento resultado = new FacturaE_Documento();
+
+				//Crea el XML del Acuse
+				resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, proveedor_emisor, proveedor_emisor, estado, motivo_rechazo);
+
+				#region Registro RADIAN
+				//Se valida si el adquiriente es cliente nuestro para registrar el evento en la DIAN 
+				//if (adquiriente.IntObligado == true)
+				//{
+				//	try
+				//	{
+				//		// ruta del zip
+				//		string ruta_zip = string.Format(@"{0}\{1}.zip", resultado.RutaArchivosEnvio, resultado.NombreZip);
+
+				//		// elimina el archivo xml si existe
+				//		if (Archivo.ValidarExistencia(ruta_zip))
+				//			Archivo.Borrar(ruta_zip);
+
+				//		// genera la compresión del archivo en zip
+				//		using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
+				//		{
+				//			archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", resultado.RutaArchivosEnvio, resultado.NombreXml), Path.GetFileName(string.Format("{0}.xml", resultado.NombreXml)));
+				//			archive.Dispose();
+				//		}
+
+				//		DocumentoRespuesta resp = new DocumentoRespuesta();
+
+				//		//**---Se debe hacer proceso obtener el set de pruebas cuando este haciendo pruebas para el Radian y si no enviarlo por el metodo de produccion
+				//		HGInetDIANServicios.DianFactura.AcuseRecibo acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, "ba876bc7-2894-43ff-9b4f-d3e8f69bf35e", estado);
+
+				//		resp.Documento = estado;
+				//		resp.DocumentoTipo = TipoDocumento.AcuseRecibo.GetHashCode();
+
+				//		Ctl_Documentos.Consultar(doc, facturador, ref resp, acuse.KeyV2);
+				//	}
+				//	catch (Exception excepcion)
+				//	{
+				//		RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+				//	}
+				//} 
+				#endregion
+
+				try
 				{
-					list_evento = evento.Obtener(doc.StrIdSeguridad);
-
-					if (list_evento != null && list_evento.Count > 0)
+					// envía el correo del acuse de recibo al facturador electrónico
+					if (estado != AdquirienteRecibo.AprobadoTacito.GetHashCode())
 					{
-
-						acuse = list_evento.Where(x => x.IntEstadoEvento == 1).FirstOrDefault();
-
-						if (acuse != null && estado == CodigoResponseV2.Recibido.GetHashCode())
-							continuar_proceso = false;
+						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+						email.RespuestaAcuse(doc, facturador, adquiriente, resultado.RutaArchivosProceso, "", Procedencia.Usuario, usuario);
 					}
+					if (doc.IntIdEstado > (short)ProcesoEstado.EnvioZip.GetHashCode())
+						doc.IntIdEstado = (short)ProcesoEstado.Finalizacion.GetHashCode();
 				}
+				catch (Exception) { }
 
+				doc.DatFechaActualizaEstado = Fecha.GetFecha();
+				doc.StrUrlAcuseUbl = resultado.RutaArchivosProceso;
+				Ctl_Documento actualizar_doc = new Ctl_Documento();
+				doc = actualizar_doc.Actualizar(doc);
 
-				if (continuar_proceso == true)
-				{
-					//*******Cuando se haga proceso de Radian Quitar Validacion
-					if (estado.Equals(5))
-						doc.IntAdquirienteRecibo = 1;
-					else
-						doc.IntAdquirienteRecibo = estado;
-
-					doc.StrAdquirienteMvoRechazo = motivo_rechazo;
-					doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
-					if (doc.IntIdEstado > (short)ProcesoEstado.EnvioZip.GetHashCode() && estado != CodigoResponseV2.Recibido.GetHashCode())
-						doc.IntIdEstado = (short)ProcesoEstado.RecepcionAcuse.GetHashCode();
-
-					// obtiene los datos del facturador electrónico
-					TblEmpresas facturador = null;
-					if (doc.TblEmpresasFacturador == null)
-						facturador = ctl_empresa.Obtener(doc.StrEmpresaFacturador, false);
-					else
-						facturador = doc.TblEmpresasFacturador;
-
-					//obtiene los datos del proveedor del facturador
-					ctl_empresa = new Ctl_Empresa();
-					TblEmpresas proveedor_emisor = ctl_empresa.Obtener(doc.StrProveedorEmisor, false);
-
-					FacturaE_Documento resultado = null;
-
-					//Crea el XML del Acuse
-					if (acuse == null)
-						resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, proveedor_emisor, proveedor_emisor, estado, motivo_rechazo);
-
-					//********* Sacar a un metodo a parte y enviar el proceso cuantas veces se necesita.
-
-					//Se valida si el adquiriente es cliente nuestro para registrar el evento en la DIAN 
-					if (adquiriente.IntRadian == true)
-					{
-
-						if ((list_evento == null || list_evento.Count == 0) && estado == CodigoResponseV2.Recibido.GetHashCode())
-						{
-							acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)estado);
-						}
-						else if ((list_evento == null || list_evento.Count == 0) && estado != CodigoResponseV2.Recibido.GetHashCode())
-						{
-							try
-							{
-								acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode());
-							}
-							catch (Exception)
-							{
-
-							}
-
-							try
-							{
-								//Crea el XML del Acuse
-								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, proveedor_emisor, proveedor_emisor, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo);
-								recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode());
-							}
-							catch (Exception)
-							{
-
-							}
-
-							if (acuse != null && recibo != null)
-							{
-								//Crea el XML del Acuse
-								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, proveedor_emisor, proveedor_emisor, estado, motivo_rechazo);
-								EnviarAcuse(resultado, adquiriente, facturador, doc, estado);
-							}
-						}
-						else if (list_evento != null && list_evento.Count > 0 && estado != CodigoResponseV2.Recibido.GetHashCode())
-						{
-
-							acuse = list_evento.Where(x => x.IntEstadoEvento == 1).FirstOrDefault();
-
-							recibo = list_evento.Where(x => x.IntEstadoEvento == 4).FirstOrDefault();
-
-							if (acuse == null && estado != CodigoResponseV2.Recibido.GetHashCode())
-							{
-								acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode());
-							}
-
-
-							if (recibo == null && estado != CodigoResponseV2.Aceptado.GetHashCode())
-							{
-								//Crea el XML del Acuse
-								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, proveedor_emisor, proveedor_emisor, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo);
-								recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode());
-							}
-
-							TblEventosRadian expresa = list_evento.Where(x => x.IntEstadoEvento == 5).FirstOrDefault();
-
-							if (acuse != null && recibo != null && expresa == null)
-							{
-								//Crea el XML del Acuse
-								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, proveedor_emisor, proveedor_emisor, estado, motivo_rechazo);
-								EnviarAcuse(resultado, adquiriente, facturador, doc, estado);
-							}
-							else if (expresa != null)
-							{
-								//Crea el XML del Acuse
-								Acuse objeto_acuse = null;
-								try
-								{
-									// lee el archivo XML en UBL desde la ruta pública
-									string contenido_xml = Archivo.ObtenerContenido(expresa.StrUrlEvento);
-
-									// valida el contenido del archivo
-									if (string.IsNullOrWhiteSpace(contenido_xml))
-										throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
-
-									// convierte el contenido de texto a xml
-									XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
-
-									// convierte el objeto de acuerdo con el tipo de documento
-									XmlSerializer serializacion1 = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
-
-									HGInetUBLv2_1.ApplicationResponseType conversion = (HGInetUBLv2_1.ApplicationResponseType)serializacion1.Deserialize(xml_reader);
-
-									objeto_acuse = HGInetUBLv2_1.AcuseReciboXMLv2_1.Convertir(conversion);
-								}
-								catch (Exception ex)
-								{
-								   
-								}
-
-								if (objeto_acuse == null)
-								{
-									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, proveedor_emisor, proveedor_emisor, estado, motivo_rechazo);
-								}
-								else
-								{
-									resultado.Documento = objeto_acuse;
-									resultado.CUFE = objeto_acuse.CufeDocumento;
-									resultado.DocumentoTipo = TipoDocumento.AcuseRecibo;
-									resultado.NombreXml = Path.GetFileNameWithoutExtension(expresa.StrUrlEvento);
-								}
-								
-								EnviarAcuse(resultado, adquiriente, facturador, doc, estado);
-							}
-
-						}
-					}
-
-					try
-					{
-						// envía el correo del acuse de recibo al facturador electrónico
-						if (estado != AdquirienteRecibo.AprobadoTacito.GetHashCode() && estado == CodigoResponseV2.Expresa.GetHashCode())
-						{
-							//********el adjunto debe ser un attach document con la aceptacion expresa o con el rechazo y la respuesta de la DIAN
-							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-							doc.StrUrlAcuseUbl = resultado.RutaArchivosProceso;
-							email.RespuestaAcuse(doc, facturador, adquiriente, resultado.RutaArchivosProceso, "", Procedencia.Usuario, usuario, estado, resultado.CUFE);
-						}
-						//if (doc.IntIdEstado > (short)ProcesoEstado.EnvioZip.GetHashCode() && estado != CodigoResponseV2.Recibido.GetHashCode())
-						//	doc.IntIdEstado = (short)ProcesoEstado.Finalizacion.GetHashCode();
-					}
-					catch (Exception) { }
-
-					if (resultado != null && estado == CodigoResponseV2.Expresa.GetHashCode())
-					{
-						doc.DatFechaActualizaEstado = Fecha.GetFecha();
-						doc.StrUrlAcuseUbl = resultado.RutaArchivosProceso;
-						Ctl_Documento actualizar_doc = new Ctl_Documento();
-						doc = actualizar_doc.Actualizar(doc);
-
-						doc.TblEmpresasFacturador = facturador;
-						doc.TblEmpresasAdquiriente = adquiriente;
-
-						try
-						{
-							Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
-							int estado_doc = Ctl_Documento.ObtenerCategoria(doc.IntIdEstado);
-							clase_auditoria.Crear(doc.StrIdSeguridad, new Guid(), facturador.StrIdentificacion, ProcesoEstado.RecepcionAcuse, TipoRegistro.Proceso, Procedencia.Usuario, usuario, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>(ProcesoEstado.RecepcionAcuse.GetHashCode())), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(doc.IntAdquirienteRecibo)), doc.StrPrefijo, Convert.ToString(doc.IntNumero), estado_doc);
-						}
-						catch (Exception) { throw; }
-					}
-
-				}
-				
-
+				doc.TblEmpresasFacturador = facturador;
+				doc.TblEmpresasAdquiriente = adquiriente;
 				retorno.Add(doc);
+
+
+				try
+				{
+					Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
+					int estado_doc = Ctl_Documento.ObtenerCategoria(doc.IntIdEstado);
+					clase_auditoria.Crear(doc.StrIdSeguridad, new Guid(), facturador.StrIdentificacion, ProcesoEstado.RecepcionAcuse, TipoRegistro.Proceso, Procedencia.Usuario, usuario, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.ProcesoEstado>(ProcesoEstado.RecepcionAcuse.GetHashCode())), Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.AdquirienteRecibo>(doc.IntAdquirienteRecibo)), doc.StrPrefijo, Convert.ToString(doc.IntNumero), estado_doc);
+				}
+				catch (Exception) { throw; }
 
 
 				return retorno;
@@ -2133,80 +2013,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 		#endregion
-
-		public TblEventosRadian EnviarAcuse(FacturaE_Documento resultado, TblEmpresas adquiriente, TblEmpresas facturador, TblDocumentos doc, short estado)
-		{
-
-			TblEventosRadian eventobd = null;
-
-			try
-			{
-
-				// ruta del zip
-				string ruta_zip = string.Format(@"{0}\{1}.zip", resultado.RutaArchivosEnvio, resultado.NombreZip);
-
-				// elimina el archivo xml si existe
-				if (Archivo.ValidarExistencia(ruta_zip))
-					Archivo.Borrar(ruta_zip);
-
-				// genera la compresión del archivo en zip
-				using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
-				{
-					archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", resultado.RutaArchivosEnvio, resultado.NombreXml), Path.GetFileName(string.Format("{0}.xml", resultado.NombreXml)));
-					archive.Dispose();
-				}
-
-				DocumentoRespuesta resp = new DocumentoRespuesta();
-
-				HGInetDIANServicios.DianFactura.AcuseRecibo acuse = new HGInetDIANServicios.DianFactura.AcuseRecibo();
-
-				if (doc.TblEmpresasResoluciones == null)
-				{
-					TblEmpresasResoluciones resolucion = null;
-					Ctl_EmpresaResolucion ctrl = new Ctl_EmpresaResolucion();
-					resolucion = ctrl.Obtener(adquiriente.StrIdentificacion, doc.StrNumResolucion, doc.StrPrefijo);
-					if (resolucion != null)
-						doc.TblEmpresasResoluciones = resolucion;
-
-				}
-
-				if (adquiriente.IntHabilitacion < Habilitacion.Produccion.GetHashCode() && doc.StrProveedorEmisor.Equals(Constantes.NitResolucionconPrefijo))
-				{
-
-					//**---Se debe hacer proceso obtener el set de pruebas cuando este haciendo pruebas para el Radian y si no enviarlo por el metodo de produccion
-					acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
-
-					Ctl_Documentos.Consultar(doc, facturador, ref resp, acuse.KeyV2);
-
-				}
-				else
-				{
-					acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
-				}
-
-				if (resp.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
-				{
-					var acuse_obj = (dynamic)null;
-					acuse_obj = resultado.Documento;
-					long IdAcuse = Convert.ToInt64(acuse_obj.IdAcuse);
-					DateTime fecha_acuse = acuse.ReceivedDateTime;
-					Ctl_EventosRadian evento = new Ctl_EventosRadian();
-					eventobd = evento.Convertir(doc, estado, IdAcuse, fecha_acuse);
-					eventobd.StrUrlEvento = resultado.RutaArchivosProceso;
-					evento.Crear(eventobd);
-				}
-
-				resp.Documento = estado;
-				resp.DocumentoTipo = TipoDocumento.AcuseRecibo.GetHashCode();
-
-			}
-			catch (Exception excepcion)
-			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
-			}
-
-			return eventobd;
-		}
 
 		/// <summary>
 		/// Convierte respuesta a un objeto de Acuse y Ubl
@@ -2263,28 +2069,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					doc_acuse.IdAcuse = string.Format("{0}9", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
-				case CodigoResponseV2.Aval:
-					doc_acuse.IdAcuse = string.Format("{0}12", doc.IntNumero);
-					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
-					break;
 				case CodigoResponseV2.EndosoPc:
 					doc_acuse.IdAcuse = string.Format("{0}15", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.MandatoG:
 					doc_acuse.IdAcuse = string.Format("{0}20", doc.IntNumero);
-					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
-					break;
-				case CodigoResponseV2.TerminacionMandatoG:
-					doc_acuse.IdAcuse = string.Format("{0}21", doc.IntNumero);
-					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
-					break;
-				case CodigoResponseV2.PagoFvTV:
-					doc_acuse.IdAcuse = string.Format("{0}22", doc.IntNumero);
-					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
-					break;
-				case CodigoResponseV2.InformePago:
-					doc_acuse.IdAcuse = string.Format("{0}23", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				default:
@@ -2348,7 +2138,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			resultado.NombreZip = resultado.NombreXml;
 
 			// valida el nodo de ExtensionContent
-			if (cod_acuse.GetHashCode() < CodigoResponseV2.Inscripcion.GetHashCode() || cod_acuse.Equals(CodigoResponseV2.CancelacionEG) || cod_acuse.Equals(CodigoResponseV2.MandatoG) || cod_acuse.Equals(CodigoResponseV2.TerminacionMandatoG))
+			if (cod_acuse.GetHashCode() < CodigoResponseV2.Inscripcion.GetHashCode() || cod_acuse.Equals(CodigoResponseV2.CancelacionEG) || cod_acuse.Equals(CodigoResponseV2.MandatoG))
 			{
 				resultado.DocumentoXml = HGInetUBL.ExtensionDian.ValidarNodo(resultado.DocumentoXml);
 			}
@@ -2509,18 +2299,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="objetoBd"></param>
 		/// <param name="reenvio">Si es para reenviar correo valida existencia de la Respuesta de la DIAN</param>
 		/// <returns></returns>
-		public static object ConvertirServicio(TblDocumentos objetoBd, bool reenvio = false, bool proceso_adquiriente = false, bool evento_radian = false)
+		public static object ConvertirServicio(TblDocumentos objetoBd, bool reenvio = false, bool proceso_adquiriente = false)
 		{
 			//Asigna a un objeto dinamico el objeto enviado por el usuario
 			var documento_obj = (dynamic)null;
 
 			// lee el archivo XML en UBL desde la ruta pública
 			string contenido_xml = Archivo.ObtenerContenido(objetoBd.StrUrlArchivoUbl);
-
-			if (evento_radian == true)
-			{
-				contenido_xml = Archivo.ObtenerContenido(objetoBd.StrUrlAcuseUbl);
-			}
 
 			// valida el contenido del archivo
 			if (string.IsNullOrWhiteSpace(contenido_xml))
@@ -2533,7 +2318,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			XmlSerializer serializacion = null;
 
 			//Segun el tipo del documento lo asigna al objeto dinamico y convierte el Ubl en objeto de servicio
-			if (objetoBd.IntDocTipo == TipoDocumento.Factura.GetHashCode() && evento_radian == false)
+			if (objetoBd.IntDocTipo == TipoDocumento.Factura.GetHashCode())
 			{
 				FacturaConsulta factura = new FacturaConsulta();
 				documento_obj = factura;
@@ -2558,7 +2343,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				documento_obj.DatosFactura.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
 
 			}
-			else if (objetoBd.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode() && evento_radian == false)
+			else if (objetoBd.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
 			{
 
 				NotaCreditoConsulta nota_credito = new NotaCreditoConsulta();
@@ -2585,7 +2370,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				documento_obj.DatosNotaCredito.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
 			}
-			else if (objetoBd.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode() && evento_radian == false)
+			else if (objetoBd.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
 			{
 
 				NotaDebitoConsulta nota_debito = new NotaDebitoConsulta();
@@ -2612,24 +2397,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
 				documento_obj.DatosNotaDebito.CodigoRegistro = objetoBd.StrIdSeguridad.ToString();
-
-			}
-			else if (evento_radian == true)
-			{
-
-				AcuseConsulta evento = new AcuseConsulta();
-
-				documento_obj = evento;
-
-				serializacion = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
-
-				HGInetUBLv2_1.ApplicationResponseType conversion = (HGInetUBLv2_1.ApplicationResponseType)serializacion.Deserialize(xml_reader);
-
-				Acuse objeto_acuse = HGInetUBLv2_1.AcuseReciboXMLv2_1.Convertir(conversion);
-
-				documento_obj.DatosAcuse = objeto_acuse;
-
-				documento_obj.DatosAcuse.IdSeguridad = objetoBd.StrIdSeguridad.ToString();
 
 			}
 			//else if (objetoBd.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
@@ -2714,9 +2481,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			//Construye la url publica para el acuse de recibo del documento
 			PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 			documento_obj.UrlAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", objetoBd.StrIdSeguridad.ToString()));
-
-			if (evento_radian == true)
-				documento_obj.UrlAcuse = objetoBd.StrUrlAcuseUbl;
 
 			return documento_obj;
 		}
@@ -3317,166 +3081,166 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			try
 			{
 				await Task.Factory.StartNew(() =>
+				{
+
+					List<string> lista = Coleccion.ConvertirLista(ListaDoc, ',');
+					foreach (string Idseg in Coleccion.ConvertirLista(ListaDoc, ','))
 					{
 
-						List<string> lista = Coleccion.ConvertirLista(ListaDoc, ',');
-						foreach (string Idseg in Coleccion.ConvertirLista(ListaDoc, ','))
+						PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+						TblDocumentos documento = ObtenerPorIdSeguridad(Guid.Parse(Idseg)).FirstOrDefault();
+
+						var documento_obj = (dynamic)null;
+
+						FacturaE_Documento documento_result = new FacturaE_Documento();
+
+						documento_result.IdSeguridadDocumento = Guid.Parse(documento.StrIdSeguridad.ToString());
+						documento_result.IdSeguridadTercero = documento.TblEmpresasFacturador.StrIdSeguridad;
+						documento_result.DocumentoTipo = Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo);
+						documento_result.NombreXml = HGInetUBL.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
+						documento_result.NombrePdf = documento_result.NombreXml;
+
+						XmlSerializer serializacion = null;
+
+						// ruta física del xml
+						string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento.TblEmpresasFacturador.StrIdSeguridad);
+						carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+
+						documento_result.RutaArchivosEnvio = carpeta_xml;
+
+						// ruta del xml
+						string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_xml, documento_result.NombreXml);
+
+						if (documento.IntVersionDian == 1)
 						{
+							//Se lee un xml de una ruta
+							FileStream xml_reader = new FileStream(ruta_xml, FileMode.Open);
 
-							PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-							TblDocumentos documento = ObtenerPorIdSeguridad(Guid.Parse(Idseg)).FirstOrDefault();
-
-							var documento_obj = (dynamic)null;
-
-							FacturaE_Documento documento_result = new FacturaE_Documento();
-
-							documento_result.IdSeguridadDocumento = Guid.Parse(documento.StrIdSeguridad.ToString());
-							documento_result.IdSeguridadTercero = documento.TblEmpresasFacturador.StrIdSeguridad;
-							documento_result.DocumentoTipo = Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo);
-							documento_result.NombreXml = HGInetUBL.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
-							documento_result.NombrePdf = documento_result.NombreXml;
-
-							XmlSerializer serializacion = null;
-
-							// ruta física del xml
-							string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento.TblEmpresasFacturador.StrIdSeguridad);
-							carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
-
-							documento_result.RutaArchivosEnvio = carpeta_xml;
-
-							// ruta del xml
-							string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_xml, documento_result.NombreXml);
-
-							if (documento.IntVersionDian == 1)
+							// convierte el objeto de acuerdo con el tipo de documento
+							if (documento.IntDocTipo == TipoDocumento.Factura.GetHashCode())
 							{
-								//Se lee un xml de una ruta
-								FileStream xml_reader = new FileStream(ruta_xml, FileMode.Open);
+								HGInetUBL.InvoiceType conversion = new HGInetUBL.InvoiceType();
 
-								// convierte el objeto de acuerdo con el tipo de documento
-								if (documento.IntDocTipo == TipoDocumento.Factura.GetHashCode())
-								{
-									HGInetUBL.InvoiceType conversion = new HGInetUBL.InvoiceType();
+								serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
 
-									serializacion = new XmlSerializer(typeof(HGInetUBL.InvoiceType));
+								conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
 
-									conversion = (HGInetUBL.InvoiceType)serializacion.Deserialize(xml_reader);
-
-									documento_obj = HGInetUBL.FacturaXML.Convertir(conversion, documento);
-
-								}
-								else if (documento.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
-								{
-
-									HGInetUBL.CreditNoteType conversion = new HGInetUBL.CreditNoteType();
-
-									serializacion = new XmlSerializer(typeof(HGInetUBL.CreditNoteType));
-
-									conversion = (HGInetUBL.CreditNoteType)serializacion.Deserialize(xml_reader);
-
-									documento_obj = HGInetUBL.NotaCreditoXML.Convertir(conversion, documento);
-
-								}
-								else if (documento.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
-								{
-									HGInetUBL.DebitNoteType conversion = new HGInetUBL.DebitNoteType();
-
-									serializacion = new XmlSerializer(typeof(HGInetUBL.DebitNoteType));
-
-									conversion = (HGInetUBL.DebitNoteType)serializacion.Deserialize(xml_reader);
-
-									documento_obj = HGInetUBL.NotaDebitoXML.Convertir(conversion, documento);
-
-								}
-
-								// cerrar la lectura del archivo xml
-								xml_reader.Close();
+								documento_obj = HGInetUBL.FacturaXML.Convertir(conversion, documento);
 
 							}
-							else
+							else if (documento.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
 							{
-								//Se lee un xml de una ruta
-								FileStream xml_reader = new FileStream(ruta_xml, FileMode.Open);
 
-								// convierte el objeto de acuerdo con el tipo de documento
-								if (documento.IntDocTipo == TipoDocumento.Factura.GetHashCode())
-								{
-									serializacion = new XmlSerializer(typeof(InvoiceType));
+								HGInetUBL.CreditNoteType conversion = new HGInetUBL.CreditNoteType();
 
-									InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+								serializacion = new XmlSerializer(typeof(HGInetUBL.CreditNoteType));
 
-									documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, documento);
+								conversion = (HGInetUBL.CreditNoteType)serializacion.Deserialize(xml_reader);
 
+								documento_obj = HGInetUBL.NotaCreditoXML.Convertir(conversion, documento);
 
-								}
-								else if (documento.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
-								{
-									serializacion = new XmlSerializer(typeof(CreditNoteType));
+							}
+							else if (documento.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+							{
+								HGInetUBL.DebitNoteType conversion = new HGInetUBL.DebitNoteType();
 
-									CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+								serializacion = new XmlSerializer(typeof(HGInetUBL.DebitNoteType));
 
-									documento_obj = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, documento);
+								conversion = (HGInetUBL.DebitNoteType)serializacion.Deserialize(xml_reader);
 
-								}
-								else if (documento.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
-								{
-									serializacion = new XmlSerializer(typeof(DebitNoteType));
-
-									DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
-
-									documento_obj = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, documento);
-
-								}
-								else if (documento.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
-								{
-									serializacion = new XmlSerializer(typeof(NominaIndividualType));
-
-									NominaIndividualType conversion = (NominaIndividualType)serializacion.Deserialize(xml_reader);
-
-									documento_obj = HGInetUBLv2_1.NominaXML.Convertir(conversion, documento);
-
-								}
-								else if (documento.IntDocTipo == TipoDocumento.NominaAjuste.GetHashCode())
-								{
-									serializacion = new XmlSerializer(typeof(NominaIndividualDeAjusteType));
-
-									NominaIndividualDeAjusteType conversion = (NominaIndividualDeAjusteType)serializacion.Deserialize(xml_reader);
-
-									documento_obj = HGInetUBLv2_1.NominaAjusteXML.Convertir(conversion, documento);
-
-								}
-
-								//if (!string.IsNullOrEmpty(documento.StrFormato))
-								//{
-								//	documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(documento.StrFormato);
-								//}
-
-								string contenido_formato = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
-
-								if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(contenido_formato))
-								{
-									documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(contenido_formato);
-								}
-
-								// cerrar la lectura del archivo xml
-								xml_reader.Close();
+								documento_obj = HGInetUBL.NotaDebitoXML.Convertir(conversion, documento);
 
 							}
 
+							// cerrar la lectura del archivo xml
+							xml_reader.Close();
 
-							// valida la conversión del objeto
-							if (documento_obj == null)
-								throw new ArgumentException("No se recibieron datos para realizar el proceso");
+						}
+						else
+						{
+							//Se lee un xml de una ruta
+							FileStream xml_reader = new FileStream(ruta_xml, FileMode.Open);
 
-							documento_result.Documento = documento_obj;
+							// convierte el objeto de acuerdo con el tipo de documento
+							if (documento.IntDocTipo == TipoDocumento.Factura.GetHashCode())
+							{
+								serializacion = new XmlSerializer(typeof(InvoiceType));
 
-							DocumentoRespuesta respuesta = new DocumentoRespuesta();
-							//Genera Formato PDF
-							Ctl_Documentos.GuardarFormato(documento_obj, documento, ref respuesta, ref documento_result, documento.TblEmpresasFacturador);
+								InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+
+								documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, documento);
+
+
+							}
+							else if (documento.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
+							{
+								serializacion = new XmlSerializer(typeof(CreditNoteType));
+
+								CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+
+								documento_obj = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, documento);
+
+							}
+							else if (documento.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
+							{
+								serializacion = new XmlSerializer(typeof(DebitNoteType));
+
+								DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+
+								documento_obj = HGInetUBLv2_1.NotaDebitoXMLv2_1.Convertir(conversion, documento);
+
+							}
+							else if (documento.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
+							{
+								serializacion = new XmlSerializer(typeof(NominaIndividualType));
+
+								NominaIndividualType conversion = (NominaIndividualType)serializacion.Deserialize(xml_reader);
+
+								documento_obj = HGInetUBLv2_1.NominaXML.Convertir(conversion, documento);
+
+							}
+							else if (documento.IntDocTipo == TipoDocumento.NominaAjuste.GetHashCode())
+							{
+								serializacion = new XmlSerializer(typeof(NominaIndividualDeAjusteType));
+
+								NominaIndividualDeAjusteType conversion = (NominaIndividualDeAjusteType)serializacion.Deserialize(xml_reader);
+
+								documento_obj = HGInetUBLv2_1.NominaAjusteXML.Convertir(conversion, documento);
+
+							}
+
+							//if (!string.IsNullOrEmpty(documento.StrFormato))
+							//{
+							//	documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(documento.StrFormato);
+							//}
+
+							string contenido_formato = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
+
+							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(contenido_formato))
+							{
+								documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(contenido_formato);
+							}
+
+							// cerrar la lectura del archivo xml
+							xml_reader.Close();
 
 						}
 
-					});
+
+						// valida la conversión del objeto
+						if (documento_obj == null)
+							throw new ArgumentException("No se recibieron datos para realizar el proceso");
+
+						documento_result.Documento = documento_obj;
+
+						DocumentoRespuesta respuesta = new DocumentoRespuesta();
+						//Genera Formato PDF
+						Ctl_Documentos.GuardarFormato(documento_obj, documento, ref respuesta, ref documento_result, documento.TblEmpresasFacturador);
+
+					}
+
+				});
 			}
 			catch (Exception excepcion)
 			{
@@ -4096,7 +3860,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="doc">Objeto BD del documento</param>
 		/// <param name="facturador">Informacion del Facturador(Tbl)</param>
 		/// <returns></returns>
-		public static bool ConvertirAttachedDoc(object documento, TblDocumentos doc, TblEmpresas facturador, int evento_radian = 0, string cude_evento = "")
+		public static bool ConvertirAttachedDoc(object documento, TblDocumentos doc, TblEmpresas facturador)
 		{
 
 			bool doc_creado = false;
@@ -4107,16 +3871,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (documento == null)
 				{
 					var documento_ser = (dynamic)null;
-
-					if (evento_radian == 0)
-					{
-						documento_ser = ConvertirServicio(doc, false);
-					}	
-					else
-					{
-						documento_ser = ConvertirServicio(doc, true, true, true);
-					}
-						
+					documento_ser = ConvertirServicio(doc, false);
 					if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode())
 					{
 						documento_obj = documento_ser.DatosFactura;
@@ -4133,12 +3888,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					{
 						documento_obj = documento_ser.DatosNomina;
 					}
-					else if (evento_radian > 0)
-					{
-						documento_obj = documento_ser.DatosAcuse;
-					}
 				}
-				else if (evento_radian == 0)
+				else
 				{
 					documento_obj = documento;
 				}
@@ -4149,13 +3900,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 				string ambiente_dian = "1";
 
-				if (evento_radian > 0)
-				{
-					//if (facturador.IntHabilitacion.Equals(Habilitacion.Produccion.GetHashCode()))
-					//	ambiente_dian = "1";
-					//else
-					//	ambiente_dian = "2";
-				}
+				//if (facturador.IntHabilitacion.Equals(Habilitacion.Produccion.GetHashCode()))
+				//	ambiente_dian = "1";
+				//else
+				//	ambiente_dian = "2";
 
 				TipoDocumento tipo_doc = Enumeracion.GetEnumObjectByValue<TipoDocumento>(doc.IntDocTipo);
 
@@ -4170,31 +3918,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//Convierte el objeto en archivo XML-UBL
 				FacturaE_Documento resultado = null;
 
-				if (doc.IntDocTipo < TipoDocumento.AcuseRecibo.GetHashCode() && evento_radian == 0)
+				if (doc.IntDocTipo < TipoDocumento.AcuseRecibo.GetHashCode())
 				{
 					nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, TipoDocumento.Attached, documento_obj.Prefijo);
 
-					resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(doc.StrIdSeguridad.ToString(), documento_obj.DatosObligado, documento_obj.DatosAdquiriente, ambiente_dian, doc);
+					resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(doc.StrIdSeguridad, documento_obj.DatosObligado, documento_obj.DatosAdquiriente, ambiente_dian, doc);
 				}
-				else if (evento_radian > 0)
+				else if (doc.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
 				{
-					nombre_archivo = Path.GetFileNameWithoutExtension(doc.StrUrlAcuseUbl);
+					nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
 					Ctl_Empresa emp = new Ctl_Empresa();
 					obligado_empleador = Ctl_Empresa.Convertir(facturador);
-					adquiriente_tratrajador = Ctl_Empresa.Convertir(doc.TblEmpresasAdquiriente);
+					adquiriente_tratrajador = emp.ConvertirTrabajador(documento_obj.DatosTrabajador);
 
-					resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(string.Format("{0}{1}",doc.IntNumero,evento_radian), obligado_empleador, adquiriente_tratrajador, ambiente_dian, doc, evento_radian, doc.StrUrlAcuseUbl, cude_evento);
+					resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(doc.StrIdSeguridad, obligado_empleador, adquiriente_tratrajador, ambiente_dian, doc);
+
 				}
-				//else if (doc.IntDocTipo == TipoDocumento.Nomina.GetHashCode())
-				//{
-				//	nombre_archivo = HGInetUBL.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), facturador.StrIdentificacion, tipo_doc, documento_obj.Prefijo);
-				//	Ctl_Empresa emp = new Ctl_Empresa();
-				//	obligado_empleador = Ctl_Empresa.Convertir(facturador);
-				//	adquiriente_tratrajador = emp.ConvertirTrabajador(documento_obj.DatosTrabajador);
-
-				//	resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(doc.StrIdSeguridad.ToString(), obligado_empleador, adquiriente_tratrajador, ambiente_dian, doc);
-
-				//}
 				resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
 				resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
 				resultado.IdSeguridadPeticion = new Guid();
@@ -4235,10 +3974,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				try
 				{
-					if (evento_radian == 0)
-						respuesta = Ctl_Documentos.UblFirmar(facturador, doc, ref respuesta, ref resultado);
-					else
-						respuesta = Ctl_Documentos.UblFirmar(doc.TblEmpresasAdquiriente, doc, ref respuesta, ref resultado);
+					respuesta = Ctl_Documentos.UblFirmar(facturador, doc, ref respuesta, ref resultado);
 
 					// elimina el archivo xml si existe
 					if (!Archivo.ValidarExistencia(ruta_arch_fimado))
@@ -4583,7 +4319,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							//FechaActual = new DateTime(2021, 11, 05);
 
 							int dias_mes = DateTime.DaysInMonth(FechaActual.Year, FechaActual.AddMonths(-1).Month);
-							FechaInicial = FechaActual.AddMonths(-1).AddDays( 1 - FechaActual.Day);
+							FechaInicial = FechaActual.AddMonths(-1).AddDays(1 - FechaActual.Day);
 							FechaFinal = FechaActual.AddMonths(-1).AddDays(dias_mes - FechaActual.Day);
 
 							List<EstadisticaDocumentos> respuesta = ObtenerPorEstado(FechaInicial, FechaFinal, resumen_mes);
@@ -4635,7 +4371,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				catch (Exception excepcion)
 				{
-					Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error Enviando documento Por la sonda - {0}",excepcion.InnerException.Message));
+					Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error Enviando documento Por la sonda - {0}", excepcion.InnerException.Message));
 					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 				}
 
@@ -4648,14 +4384,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 			try
 			{
-				
+
 				int estado_rechazado = CategoriaEstado.NoRecibido.GetHashCode();
 				int estado_validado = CategoriaEstado.ValidadoDian.GetHashCode();
 				int estado_enviado = CategoriaEstado.EnvioDian.GetHashCode();
 				int estado_recibido = CategoriaEstado.Recibido.GetHashCode();
-				
+
 				context.Configuration.LazyLoadingEnabled = false;
-			   
+
 				if (resumen_mes == false)
 				{
 					try
@@ -4671,7 +4407,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					}
 					catch (Exception excepcion)
 					{
-						Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error Agrupando por Facturador y estado Rechazado - {0}",excepcion.InnerException.Message));
+						Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error Agrupando por Facturador y estado Rechazado - {0}", excepcion.InnerException.Message));
 						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 					}
 				}
@@ -4713,7 +4449,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							try
 							{
 								fact_estados = agrupacion.Where(x => x.Id_Facturador == item).ToList();
-								
+
 								estado.Id_Facturador = item;
 								try
 								{
@@ -4791,13 +4527,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					return respuesta;
 				}
 
-				
+
 
 
 			}
 			catch (Exception excepcion)
 			{
-				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta,"Error Consultando documentos Por la sonda - {0}");
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Error Consultando documentos Por la sonda - {0}");
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
