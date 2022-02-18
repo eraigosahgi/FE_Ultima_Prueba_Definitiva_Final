@@ -1298,6 +1298,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					TblDocumentos documento_bd = new TblDocumentos();
 					Ctl_Documento ctl_doc = new Ctl_Documento();
+					bool doc_nuevo = true;
 
 					//valida si el Documento ya existe en Base de Datos
 					documento_bd = ctl_doc.Obtener(facturador_emisor.StrIdentificacion, documento_obj.Documento, documento_obj.Prefijo);
@@ -1400,31 +1401,38 @@ namespace HGInetInteroperabilidad.Procesos
 						}
 
 					}
-
-					try
-					{   // envía el correo del documento al Adquiriente(Facturador Receptor)
-						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-						email.NotificacionDocumento(documento_bd, (string.IsNullOrEmpty(documento_obj.DatosObligado.Telefono)) ? "vacio" : documento_obj.DatosObligado.Telefono, facturador_receptor.StrMailRecepcion, string.Empty, Procedencia.Plataforma, string.Empty, ProcesoEstado.EnvioEmailAcuse, string.Empty, false, true);
+					else
+					{
+						doc_nuevo = false;
+					}
+					
+					if (doc_nuevo == true || documento_bd.IntEnvioMail == false)
+					{
 						try
-						{
-							Ctl_ProcesosCorreos proceso_correo = new Ctl_ProcesosCorreos();
-							TblProcesoCorreo correo_doc = proceso_correo.Obtener(documento_bd.StrIdSeguridad);
-							if (correo_doc != null && correo_doc.IntEnvioMail == true)
+						{   // envía el correo del documento al Adquiriente(Facturador Receptor)
+							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+							email.NotificacionDocumento(documento_bd, (string.IsNullOrEmpty(documento_obj.DatosObligado.Telefono)) ? "vacio" : documento_obj.DatosObligado.Telefono, facturador_receptor.StrMailRecepcion, string.Empty, Procedencia.Plataforma, string.Empty, ProcesoEstado.EnvioEmailAcuse, string.Empty, false, true);
+							try
 							{
-								documento_bd.IntEnvioMail = true;
-								ctl_doc.Actualizar(documento_bd);
+								Ctl_ProcesosCorreos proceso_correo = new Ctl_ProcesosCorreos();
+								TblProcesoCorreo correo_doc = proceso_correo.Obtener(documento_bd.StrIdSeguridad);
+								if (correo_doc != null && correo_doc.IntEnvioMail == true)
+								{
+									documento_bd.IntEnvioMail = true;
+									ctl_doc.Actualizar(documento_bd);
+								}
 							}
+							catch (Exception excepcion)
+							{
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, "Error validando el envio del correo al Adquiriente desde interoperabilidad");
+							}
+							//documento_bd.IntIdEstado = Convert.ToInt16(ProcesoEstado.Finalizacion.GetHashCode());
 						}
 						catch (Exception excepcion)
 						{
-							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, "Error validando el envio del correo al Adquiriente desde interoperabilidad");
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+							throw new ApplicationException(string.Format("Error al notificar al facturador receptor la recepcion del documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 						}
-						//documento_bd.IntIdEstado = Convert.ToInt16(ProcesoEstado.Finalizacion.GetHashCode());
-					}
-					catch (Exception excepcion)
-					{
-						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-						throw new ApplicationException(string.Format("Error al notificar al facturador receptor la recepcion del documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 					}
 
 					respuesta = true;
