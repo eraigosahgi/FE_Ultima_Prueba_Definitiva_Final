@@ -579,7 +579,7 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 		}
 
-		public static void EnviarAlerta(UniqueId id_mensaje, MimeMessage mensaje, TblEmpresas empresa, List<string> mensajes)
+		public static void EnviarAlerta(UniqueId id_mensaje, MimeMessage mensaje, List<string> mensajes)
 		{
 			MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
 
@@ -604,17 +604,32 @@ namespace HGInetInteroperabilidad.Procesos
 			if (remitente_reply.Address.Equals(Constantes.EmailRemitente))
 				remitente_reply.Address = Constantes.EmailCopiaOculta;
 
-			correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, remitente_reply.Address));
+			// obtiene el asunto del correo electrónico
+			string asunto = mensaje.Subject;
 
-			//correos_destino.Add(new MailboxAddress("jzea@hgi.com.co"));
-			correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
+			List<string> asunto_params = asunto.Split(';').ToList();
+
+			// validar y obtener la empresa
+			Ctl_Empresa _empresa = new Ctl_Empresa();
+
+			Match numero_idebtificacion = Regex.Match(asunto_params[0], "\\d+");
+
+			TblEmpresas empresa = _empresa.Obtener(numero_idebtificacion.Value);
+
+			correos_destino.Add(new MailboxAddress(remitente_reply.Name, remitente_reply.Address));
+
+			if (empresa != null)
+				correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
+			
+			//Se envia una copia del correo a Tic para saber que correo no se proceso
+			correos_destino.Add(new MailboxAddress(Constantes.NombreRemitenteEmail, Constantes.EmailCopiaOculta));
 
 			try
 			{
 				MailboxAddress reply_to = mensaje.ReplyTo.OfType<MailboxAddress>().Single();
 
 				if (!remitente_reply.Address.Equals(reply_to.Address))
-					correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, reply_to.Address));
+					correos_destino.Add(new MailboxAddress(reply_to.Name, reply_to.Address));
 			}
 			catch (Exception)
 			{

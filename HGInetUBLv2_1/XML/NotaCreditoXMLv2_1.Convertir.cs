@@ -47,56 +47,28 @@ namespace HGInetUBLv2_1
 					nota_credito_obj.Prefijo = pref.Value.ToString();
 				}
 
-				
-
-
 				//Se obtiene el proveedor Emisor del documento
-				foreach (XmlNode item in nota_credito_ubl.UBLExtensions[0].ExtensionContent.ChildNodes)
+				foreach (UBLExtensionType item_extension in nota_credito_ubl.UBLExtensions)
 				{
-					if (item.LocalName.Equals("SoftwareProvider"))
+					if (item_extension.ExtensionContent.LocalName.Equals("DianExtensions")) 
 					{
-						foreach (XmlNode item_child in item.ChildNodes)
+						foreach (XmlNode item in item_extension.ExtensionContent.ChildNodes)
 						{
-							if (item_child.LocalName.Equals("ProviderID"))
+							if (item.LocalName.Equals("SoftwareProvider"))
 							{
-								nota_credito_obj.IdentificacionProveedor = item_child.InnerText;
+								foreach (XmlNode item_child in item.ChildNodes)
+								{
+									if (item_child.LocalName.Equals("ProviderID"))
+									{
+										nota_credito_obj.IdentificacionProveedor = item_child.InnerText;
+									}
+								}
 							}
 						}
 					}
+
 				}
 
-				//if (documento_bd != null && !string.IsNullOrEmpty(documento_bd.StrPrefijo))
-				//	nota_credito_obj.Prefijo = documento_bd.StrPrefijo;
-
-
-				//captura el numero del documento y valida proceso de interoperabilidad
-				//if (interopeabilidad)
-				//{
-				//	Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
-
-				//	int cant_num = numero_doc.Value.Count();
-
-				//	Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
-
-				//	nota_credito_obj.Documento = Convert.ToInt64(numero_doc.Value);
-
-				//	nota_credito_obj.Prefijo = pref.Value.ToString();
-				//}
-				//else
-				//{
-				//	if (string.IsNullOrEmpty(nota_credito_obj.Prefijo))
-				//	{
-				//		nota_credito_obj.Documento = Convert.ToInt64(nota_credito_ubl.ID.Value);
-				//	}
-				//	else
-				//	{
-				//		string documento = nota_credito_ubl.ID.Value;
-				//		if (documento.Substring(0, nota_credito_obj.Prefijo.Length).Equals(nota_credito_obj.Prefijo))
-				//		{
-				//			nota_credito_obj.Documento = Convert.ToInt64(documento.Substring(nota_credito_obj.Prefijo.Length));
-				//		}
-				//	}
-				//}
 				//Capturo la informacion del encabezado del documento
 				if (nota_credito_ubl.UUID != null)
 					nota_credito_obj.Cufe = nota_credito_ubl.UUID.Value;

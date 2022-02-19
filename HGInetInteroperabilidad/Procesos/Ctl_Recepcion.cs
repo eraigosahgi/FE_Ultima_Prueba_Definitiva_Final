@@ -981,7 +981,7 @@ namespace HGInetInteroperabilidad.Procesos
 				//Se valida si no es un acuse de un cliente
 				if (tipo_doc_proceso == 0)
 				{
-					respuesta = ProcesarAttach(obj_attach_serializado, ruta_archivo);
+					respuesta = ProcesarAttach(obj_attach_serializado, ruta_archivo, ruta_archi_mail);
 				}
 				else
 				{
@@ -1007,16 +1007,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 				MimeMessage mail_original = MimeMessage.Load(ruta_archivo_mail);
 
-				// obtiene el asunto del correo electrónico
-				string asunto = mail_original.Subject;
-
-				List<string> asunto_params = asunto.Split(';').ToList();
-
-				// validar y obtener la empresa
-				Ctl_Empresa _empresa = new Ctl_Empresa();
-				TblEmpresas empresa = _empresa.ValidarInteroperabilidad(asunto_params[0]);
-
-				Ctl_MailRecepcion.EnviarAlerta(id_mensaje, mail_original, empresa, mensajes_inconsistencias);
+				Ctl_MailRecepcion.EnviarAlerta(id_mensaje, mail_original, mensajes_inconsistencias);
 			}
 			catch (Exception excepcion)
 			{
@@ -1211,7 +1202,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 		}
 
-		public static bool ProcesarAttach(AttachedDocumentType obj_attach_serializado, string ruta_archivo)
+		public static bool ProcesarAttach(AttachedDocumentType obj_attach_serializado, string ruta_archivo, string ruta_archivo_mail)
 		{
 
 			bool respuesta = false;
@@ -1238,10 +1229,23 @@ namespace HGInetInteroperabilidad.Procesos
 
 				// obtiene los datos del Adquiriente enviado, que es nuestro facturador(Cliente)
 				Ctl_Empresa empresa = new Ctl_Empresa();
-				TblEmpresas facturador_receptor = empresa.ValidarInteroperabilidad(attach_document.Identificacionadquiriente);
+				TblEmpresas facturador_receptor = null;
+				try
+				{
+					facturador_receptor = empresa.ValidarInteroperabilidad(attach_document.Identificacionadquiriente);
+				}
+				catch (Exception excepcion)
+				{
+					List<string> mensajes = new List<string>();
+					mensajes.Add(string.Format("Error validando el Facturador receptor Detalle: {0}", excepcion.Message));
+
+					ReEnviarCorreoErro(ruta_archivo_mail, mensajes);
+					throw new ApplicationException(string.Format("Error validando el Facturador receptor Detalle: {0}", excepcion.Message));
+				}
+				
 
 				//Si tiene habilitado este servicio hace todo el proceso
-				if (facturador_receptor.IntInteroperabilidad == true)
+				if (facturador_receptor != null && facturador_receptor.IntInteroperabilidad == true)
 				{
 					// representación de datos en objeto
 					var documento_obj = (dynamic)null;

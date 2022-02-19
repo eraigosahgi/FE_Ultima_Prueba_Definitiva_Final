@@ -49,47 +49,28 @@ namespace HGInetUBLv2_1
 					nota_debito_obj.Prefijo = pref.Value.ToString();
 				}
 
-				
-
 				//Se obtiene el proveedor Emisor del documento
-				foreach (XmlNode item in nota_debito_ubl.UBLExtensions[0].ExtensionContent.ChildNodes)
+				foreach (UBLExtensionType item_extension in nota_debito_ubl.UBLExtensions)
 				{
-					if (item.LocalName.Equals("SoftwareProvider"))
+					if (item_extension.ExtensionContent.LocalName.Equals("DianExtensions"))
 					{
-						foreach (XmlNode item_child in item.ChildNodes)
+						foreach (XmlNode item in item_extension.ExtensionContent.ChildNodes)
 						{
-							if (item_child.LocalName.Equals("ProviderID"))
+							if (item.LocalName.Equals("SoftwareProvider"))
 							{
-								nota_debito_obj.IdentificacionProveedor = item_child.InnerText;
+								foreach (XmlNode item_child in item.ChildNodes)
+								{
+									if (item_child.LocalName.Equals("ProviderID"))
+									{
+										nota_debito_obj.IdentificacionProveedor = item_child.InnerText;
+									}
+								}
 							}
 						}
 					}
+
 				}
-
-				//nota_debito_obj.Prefijo = documento_bd.StrPrefijo;
-
-				////captura el numero del documento y valida proceso de interoperabilidad
-				//if (interopeabilidad)
-				//{
-				//	Match numero_doc = Regex.Match(nota_debito_ubl.ID.Value, "\\d+");
-
-				//	nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
-				//}
-				//else
-				//{
-				//	if (string.IsNullOrEmpty(nota_debito_obj.Prefijo))
-				//	{
-				//		nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value);
-				//	}
-				//	else
-				//	{
-				//		string documento = nota_debito_ubl.ID.Value;
-				//		if (documento.Substring(0, nota_debito_obj.Prefijo.Length).Equals(nota_debito_obj.Prefijo))
-				//		{
-				//			nota_debito_obj.Documento = Convert.ToInt64(documento.Substring(nota_debito_obj.Prefijo.Length));
-				//		}
-				//	}
-				//}
+				
 				//Capturo la informacion del encabezado del documento
 				if (nota_debito_ubl.UUID != null)
 					nota_debito_obj.Cufe = nota_debito_ubl.UUID.Value;
