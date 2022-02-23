@@ -1716,7 +1716,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						plan_pruebas.IntTipoDocumento = TipoDocPlanes.Mixto.GetHashCode();
 						plan_pruebas.IntTipoProceso = Convert.ToByte(TipoCompra.Cortesia.GetHashCode());
 						plan_pruebas.StrEmpresaFacturador = tbl_empresa.StrIdentificacion;
-						plan_pruebas.StrUsuario = "HGIERP";
+						plan_pruebas.StrUsuario = tbl_empresa.StrIdentificacion;
 						plan_pruebas.StrEmpresaUsuario = empresa.Identificacion_EmpresaEmisor;
 
 						ctl_plan.Crear(plan_pruebas, true);
