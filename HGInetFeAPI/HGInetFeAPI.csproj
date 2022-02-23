@@ -212,6 +212,9 @@
     <None Include="Service References\ServicioEmpresas\empresas3.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServicioEmpresas\HGInetFeAPI.ServicioEmpresas.CrearResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\ServicioEmpresas\HGInetFeAPI.ServicioEmpresas.ObtenerResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

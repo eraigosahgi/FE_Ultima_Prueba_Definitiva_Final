@@ -8,14 +8,19 @@
       <xs:element minOccurs="0" name="EmailPagos" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="EmailRecepcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="EmailRecepcionDian" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FacturaE" type="xs:boolean" />
       <xs:element minOccurs="0" name="HorasAcuseTacito" type="xs:short" />
       <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdentificacionDv" type="xs:int" />
+      <xs:element minOccurs="0" name="Identificacion_EmpresaEmisor" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ManejaAnexo" type="xs:boolean" />
+      <xs:element minOccurs="0" name="NominaE" type="xs:boolean" />
       <xs:element minOccurs="0" name="PinSoftware" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="RazonSocial" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Telefono" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TipoIdentificacion" type="xs:int" />
       <xs:element minOccurs="0" name="VersionDian" type="xs:int" />
+      <xs:element minOccurs="0" name="idseguridad_EmpresaEmisor" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Empresa" nillable="true" type="tns:Empresa" />

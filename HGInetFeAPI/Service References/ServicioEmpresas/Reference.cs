@@ -42,6 +42,9 @@ namespace HGInetFeAPI.ServicioEmpresas {
         private string EmailRecepcionDianField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool FacturaEField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private short HorasAcuseTacitoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -51,7 +54,13 @@ namespace HGInetFeAPI.ServicioEmpresas {
         private int IdentificacionDvField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string Identificacion_EmpresaEmisorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private bool ManejaAnexoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool NominaEField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string PinSoftwareField;
@@ -63,7 +72,13 @@ namespace HGInetFeAPI.ServicioEmpresas {
         private string TelefonoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int TipoIdentificacionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int VersionDianField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string idseguridad_EmpresaEmisorField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -154,6 +169,19 @@ namespace HGInetFeAPI.ServicioEmpresas {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool FacturaE {
+            get {
+                return this.FacturaEField;
+            }
+            set {
+                if ((this.FacturaEField.Equals(value) != true)) {
+                    this.FacturaEField = value;
+                    this.RaisePropertyChanged("FacturaE");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public short HorasAcuseTacito {
             get {
                 return this.HorasAcuseTacitoField;
@@ -193,6 +221,19 @@ namespace HGInetFeAPI.ServicioEmpresas {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Identificacion_EmpresaEmisor {
+            get {
+                return this.Identificacion_EmpresaEmisorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.Identificacion_EmpresaEmisorField, value) != true)) {
+                    this.Identificacion_EmpresaEmisorField = value;
+                    this.RaisePropertyChanged("Identificacion_EmpresaEmisor");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public bool ManejaAnexo {
             get {
                 return this.ManejaAnexoField;
@@ -201,6 +242,19 @@ namespace HGInetFeAPI.ServicioEmpresas {
                 if ((this.ManejaAnexoField.Equals(value) != true)) {
                     this.ManejaAnexoField = value;
                     this.RaisePropertyChanged("ManejaAnexo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool NominaE {
+            get {
+                return this.NominaEField;
+            }
+            set {
+                if ((this.NominaEField.Equals(value) != true)) {
+                    this.NominaEField = value;
+                    this.RaisePropertyChanged("NominaE");
                 }
             }
         }
@@ -245,6 +299,19 @@ namespace HGInetFeAPI.ServicioEmpresas {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int TipoIdentificacion {
+            get {
+                return this.TipoIdentificacionField;
+            }
+            set {
+                if ((this.TipoIdentificacionField.Equals(value) != true)) {
+                    this.TipoIdentificacionField = value;
+                    this.RaisePropertyChanged("TipoIdentificacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public int VersionDian {
             get {
                 return this.VersionDianField;
@@ -253,6 +320,19 @@ namespace HGInetFeAPI.ServicioEmpresas {
                 if ((this.VersionDianField.Equals(value) != true)) {
                     this.VersionDianField = value;
                     this.RaisePropertyChanged("VersionDian");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string idseguridad_EmpresaEmisor {
+            get {
+                return this.idseguridad_EmpresaEmisorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.idseguridad_EmpresaEmisorField, value) != true)) {
+                    this.idseguridad_EmpresaEmisorField = value;
+                    this.RaisePropertyChanged("idseguridad_EmpresaEmisor");
                 }
             }
         }
@@ -392,6 +472,13 @@ namespace HGInetFeAPI.ServicioEmpresas {
         
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/Obtener", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/ObtenerResponse")]
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioEmpresas.ObtenerResponse> ObtenerAsync(HGInetFeAPI.ServicioEmpresas.ObtenerRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/Crear", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/CrearResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioEmpresas.Error), Action="Crear", Name="Error")]
+        HGInetFeAPI.ServicioEmpresas.CrearResponse Crear(HGInetFeAPI.ServicioEmpresas.CrearRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/Crear", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/CrearResponse")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioEmpresas.CrearResponse> CrearAsync(HGInetFeAPI.ServicioEmpresas.CrearRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -455,6 +542,38 @@ namespace HGInetFeAPI.ServicioEmpresas {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="Crear", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class CrearRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public HGInetFeAPI.ServicioEmpresas.Empresa empresa_nueva;
+        
+        public CrearRequest() {
+        }
+        
+        public CrearRequest(HGInetFeAPI.ServicioEmpresas.Empresa empresa_nueva) {
+            this.empresa_nueva = empresa_nueva;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="CrearResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class CrearResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public bool CrearResult;
+        
+        public CrearResponse() {
+        }
+        
+        public CrearResponse(bool CrearResult) {
+            this.CrearResult = CrearResult;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface ServicioEmpresasChannel : HGInetFeAPI.ServicioEmpresas.ServicioEmpresas, System.ServiceModel.IClientChannel {
     }
@@ -496,6 +615,14 @@ namespace HGInetFeAPI.ServicioEmpresas {
         
         public System.Threading.Tasks.Task<HGInetFeAPI.ServicioEmpresas.ObtenerResponse> ObtenerAsync(HGInetFeAPI.ServicioEmpresas.ObtenerRequest request) {
             return base.Channel.ObtenerAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioEmpresas.CrearResponse Crear(HGInetFeAPI.ServicioEmpresas.CrearRequest request) {
+            return base.Channel.Crear(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioEmpresas.CrearResponse> CrearAsync(HGInetFeAPI.ServicioEmpresas.CrearRequest request) {
+            return base.Channel.CrearAsync(request);
         }
     }
 }

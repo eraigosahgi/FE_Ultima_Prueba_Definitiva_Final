@@ -23,6 +23,15 @@
   <wsdl:message name="ServicioEmpresas_Obtener_Error_FaultMessage">
     <wsdl:part name="detail" element="tns:Error" />
   </wsdl:message>
+  <wsdl:message name="ServicioEmpresas_Crear_InputMessage">
+    <wsdl:part name="parameters" element="tns:Crear" />
+  </wsdl:message>
+  <wsdl:message name="ServicioEmpresas_Crear_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CrearResponse" />
+  </wsdl:message>
+  <wsdl:message name="ServicioEmpresas_Crear_Error_FaultMessage">
+    <wsdl:part name="detail" element="tns:Error" />
+  </wsdl:message>
   <wsdl:portType name="ServicioEmpresas">
     <wsdl:operation name="Test">
       <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/Test" message="tns:ServicioEmpresas_Test_InputMessage" />
@@ -32,6 +41,11 @@
       <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/Obtener" message="tns:ServicioEmpresas_Obtener_InputMessage" />
       <wsdl:output wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/ObtenerResponse" message="tns:ServicioEmpresas_Obtener_OutputMessage" />
       <wsdl:fault wsaw:Action="Obtener" name="Error" message="tns:ServicioEmpresas_Obtener_Error_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Crear">
+      <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/Crear" message="tns:ServicioEmpresas_Crear_InputMessage" />
+      <wsdl:output wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/CrearResponse" message="tns:ServicioEmpresas_Crear_OutputMessage" />
+      <wsdl:fault wsaw:Action="Crear" name="Error" message="tns:ServicioEmpresas_Crear_Error_FaultMessage" />
     </wsdl:operation>
   </wsdl:portType>
 </wsdl:definitions>
