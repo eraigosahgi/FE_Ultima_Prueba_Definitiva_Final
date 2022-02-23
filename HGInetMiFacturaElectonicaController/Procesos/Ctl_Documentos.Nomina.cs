@@ -656,9 +656,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					int validacion_fecha = DateTime.Compare(documento.DatosPeriodo.FechaLiquidacionFin, Fecha.GetFecha());
 
 					if (validacion_fecha > 0)
-						throw new ApplicationException(string.Format("El mes que reporta {0} no es válido según normatividad de nomina electrónica", documento.DatosPeriodo.FechaLiquidacionFin.Month));
-					else if (documento.DatosPeriodo.FechaLiquidacionFin.Month >= Fecha.GetFecha().Month && documento.DatosPeriodo.FechaLiquidacionFin.Month != 12)
-						throw new ApplicationException(string.Format("El mes que reporta {0} no es válido según normatividad de nomina electrónica", documento.DatosPeriodo.FechaLiquidacionFin.Month));
+					{
+						if (documento.DatosPeriodo.FechaLiquidacionFin.Month >= Fecha.GetFecha().Month && documento.DatosPeriodo.FechaLiquidacionFin.Month != 12)
+							throw new ApplicationException(string.Format("El mes que reporta {0} no es válido según normatividad de nomina electrónica", documento.DatosPeriodo.FechaLiquidacionFin.Month));
+					}
+					
 
 					/*
 					if (documento.DatosPeriodo.FechaRetiro != null)
