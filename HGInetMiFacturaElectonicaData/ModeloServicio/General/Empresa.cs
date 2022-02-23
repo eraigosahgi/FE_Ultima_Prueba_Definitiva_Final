@@ -22,5 +22,10 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public bool ManejaAnexo { get; set; }
 		public int VersionDian { get; set; }
 		public string PinSoftware { get; set; }
+		public int TipoIdentificacion { get; set; }
+		public string idseguridad_EmpresaEmisor { get; set; }
+		public string Identificacion_EmpresaEmisor { get; set; }
+		public bool FacturaE { get; set; }
+		public bool NominaE { get; set; }
 	}
 }

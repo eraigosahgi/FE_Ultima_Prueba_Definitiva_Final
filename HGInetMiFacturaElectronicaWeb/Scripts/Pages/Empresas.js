@@ -1757,6 +1757,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#PermiteConsultarTodosLosDocumentos ").dxCheckBox({ value: true });
 				}
 
+				if (Datos_Serial != null) {
+					$("#txtSerial").dxTextBox({ value: Datos_Serial });
+					$("#txtSerial").dxTextBox({ readOnly: true });
+				}
+
 				//Proceso de validación de Correo****************************
 				//Si la Empresa esta activa, no hago validaciones de ningún tipo
 
@@ -1780,10 +1785,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					Set_EmpresaDescuenta((response.data[0].StrEmpresaDescuenta) ? response.data[0].StrEmpresaDescuenta : Datos_Idententificacion)
 					if (Datos_Observaciones != null) {
 						$("#txtobservaciones").dxTextArea({ value: Datos_Observaciones });
-					}
-
-					if (Datos_Serial != null) {
-						$("#txtSerial").dxTextBox({ value: Datos_Serial });
 					}
 
 					if (Datos_Adquiriente == 1) {

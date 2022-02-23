@@ -21,5 +21,10 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		[FaultContract(typeof(Error), Action = "Obtener", Name = "Error")]
 		[WebInvoke(Method = "GET")]
 		Empresa Obtener(string DataKey, string Identificacion);
+
+		[OperationContract(Name = "Crear")]
+		[FaultContract(typeof(Error), Action = "Crear", Name = "Error")]
+		[WebInvoke(Method = "Post")]
+		bool Crear(Empresa empresa_nueva);
 	}
 }

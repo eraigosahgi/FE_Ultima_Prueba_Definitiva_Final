@@ -11,6 +11,7 @@ using LibreriaGlobalHGInet.Error;
 using System.ServiceModel.Activation;
 using System.Text;
 using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaController.Properties;
 
 namespace HGInetMiFacturaElectronicaWeb.wcf
 {
@@ -61,6 +62,55 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 						respuesta.PinSoftware = data_dian_habilitacion.Pin;
 					}
 					
+				}
+
+				return respuesta;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+
+
+		/// <summary>
+		/// Crea o actualiza la Empresa Desde el ERP de HGI	en la plataforma.
+		/// </summary>
+		/// <param name="empresa_nueva">Objeto con la In</param>
+		/// <returns></returns>
+		public bool Crear(Empresa empresa_nueva)
+		{
+			try
+			{
+				if (empresa_nueva == null)
+					throw new ApplicationException("Informacion no encontrada");
+
+				if (string.IsNullOrWhiteSpace(empresa_nueva.idseguridad_EmpresaEmisor))
+					throw new ApplicationException("idseguridad de la empresa inválido.");
+
+				if (!empresa_nueva.Identificacion_EmpresaEmisor.Equals(Constantes.NitResolucionconPrefijo))
+					throw new ApplicationException("Servicio no disponible");
+
+				bool respuesta = true;
+
+				//Válida que si sea HGI el que utiliza este metodo.
+				Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+
+				TblEmpresas hgi = ctl_empresa.Obtener(empresa_nueva.Identificacion_EmpresaEmisor, false);
+
+				if (!hgi.StrIdSeguridad.Equals(Guid.Parse(empresa_nueva.idseguridad_EmpresaEmisor)))
+					throw new ApplicationException("idseguridad de la empresa inválido.");
+
+				//Obtiene los datos de la empresa.
+				try
+				{
+					TblEmpresas datos_tbl = ctl_empresa.ConvertirEmpresaErP(empresa_nueva);
+				}
+				catch (Exception exec)
+				{
+					Error error = new Error(CodigoError.ERROR_AGREGAR, exec);
+					throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
 				}
 
 				return respuesta;

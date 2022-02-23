@@ -4,12 +4,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Services/SrvResoluciones.js?vjs20201021"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs20201021"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20201021"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20201021"></script>
-	<script src="../../Scripts/Pages/Empresas.js?vjs20201021"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20201021"></script>
+	<script src="../../Scripts/Services/SrvResoluciones.js?vjs2022022"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs2022022"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs2022022"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs2022022"></script>
+	<script src="../../Scripts/Pages/Empresas.js?vjs2022022"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs2022022"></script>
 
 	<div data-ng-app="EmpresasApp" data-ng-controller="GestionEmpresasController" class="col-md-12">
 		<div data-ng-include="'Partials/ModalResoluciones.html'"></div>
@@ -87,6 +87,15 @@
 										<div id="ModalConfiguracionPagos"></div>
 									</div>
 								</div>
+
+								<div class="col-md-12 text-left" style="z-index: 8;">
+									<label style="margin-top: 16px; padding-top: 1%;">
+										Serial:
+
+									</label>
+									<div id="txtSerial"></div>
+								</div>
+
 								<%--<div class="col-md-2" style="z-index: 9;">
 									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">P. Parciales?:</label>
 									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 20px">
@@ -251,14 +260,6 @@
 									<label style="margin-top: 16px; padding-top: 1%;">Observaciones:</label>
 									<div id="txtobservaciones"></div>
 									<div id="tooltip_txtobservaciones">Se pueden especificar observaciones adicionales</div>
-								</div>
-
-								<div class="col-md-12 text-left" style="z-index: 8;">
-									<label style="margin-top: 16px; padding-top: 1%;">
-										Serial:
-
-									</label>
-									<div id="txtSerial"></div>
 								</div>
 
 								<div class="col-md-12 text-left" style="z-index: 8;">

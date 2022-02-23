@@ -1642,5 +1642,155 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		#endregion
 
+		/// <summary>
+		/// Metodo para crear o actualizar un empresa desde el ERP de HGI
+		/// </summary>
+		/// <param name="empresa"></param>
+		/// <returns></returns>
+		public TblEmpresas ConvertirEmpresaErP(Empresa empresa)
+		{
+			//Obtiene los datos de la empresa.
+			TblEmpresas tbl_empresa = Obtener(empresa.Identificacion);
+
+			List<ObjVerificacionEmail> ListaEmailRegistro = new List<ObjVerificacionEmail>();
+
+			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+			//Valida si se obtuvieron datos y convierte la tbl a Empresa.
+			if (tbl_empresa == null)
+			{
+				
+				tbl_empresa = new TblEmpresas();
+
+				tbl_empresa.StrTipoIdentificacion = empresa.TipoIdentificacion.ToString();
+				tbl_empresa.StrIdentificacion = empresa.Identificacion;
+				tbl_empresa.IntIdentificacionDv = Convert.ToInt16(empresa.IdentificacionDv);
+				tbl_empresa.StrRazonSocial = empresa.RazonSocial;
+				tbl_empresa.StrTelefono = empresa.Telefono;
+
+				tbl_empresa.IntAdquiriente = true;
+				tbl_empresa.IntObligado = true;
+
+				tbl_empresa.StrSerial = empresa.PinSoftware;
+				tbl_empresa.IntCertFirma = 0;
+				tbl_empresa.IntAcuseTacito = 0;
+
+				tbl_empresa.IntIdEstado = Convert.ToInt16(EstadoEmpresa.ACTIVA.GetHashCode());
+				tbl_empresa.IntVersionDian = 2;
+				
+				tbl_empresa.StrEmpresaAsociada = empresa.Identificacion;
+				tbl_empresa.StrEmpresaDescuento = empresa.Identificacion;
+				tbl_empresa.IntNumUsuarios = 1;
+
+				tbl_empresa.StrMailAdmin = empresa.EmailAdmin;
+				tbl_empresa.StrMailAcuse = empresa.EmailAdmin;
+				tbl_empresa.StrMailEnvio = empresa.EmailAdmin;
+				tbl_empresa.StrMailRecepcion = empresa.EmailAdmin;
+				tbl_empresa.StrMailPagos = empresa.EmailAdmin;
+
+				ListaEmailRegistro.Add(new ObjVerificacionEmail { email = empresa.EmailAdmin });
+				
+				if (!plataforma_datos.RutaPublica.Contains("habilitacion") && !plataforma_datos.RutaPublica.Contains("localhost"))
+				{
+					tbl_empresa.IntHabilitacion = Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode());
+				}
+				else
+				{
+					tbl_empresa.IntHabilitacion = empresa.FacturaE == true ? Convert.ToByte(Habilitacion.Pruebas.GetHashCode()) : Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode());
+					tbl_empresa.IntHabilitacionNomina = empresa.NominaE == true ? Convert.ToByte(Habilitacion.Pruebas.GetHashCode()) : tbl_empresa.IntHabilitacionNomina;
+					
+				}
+
+				tbl_empresa = Guardar(tbl_empresa, ListaEmailRegistro);
+
+				if ((empresa.FacturaE == true || empresa.NominaE == true) && (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost")))
+				{
+					try
+					{
+						Ctl_PlanesTransacciones ctl_plan = new Ctl_PlanesTransacciones();
+						TblPlanesTransacciones plan_pruebas = new TblPlanesTransacciones();
+
+						plan_pruebas.IntMesesVence = 12;
+						plan_pruebas.IntEstado = EstadoPlan.Habilitado.GetHashCode();
+						plan_pruebas.IntNumTransaccCompra = 100;
+						plan_pruebas.IntTipoDocumento = TipoDocPlanes.Mixto.GetHashCode();
+						plan_pruebas.IntTipoProceso = Convert.ToByte(TipoCompra.Cortesia.GetHashCode());
+						plan_pruebas.StrEmpresaFacturador = tbl_empresa.StrIdentificacion;
+						plan_pruebas.StrUsuario = "HGIERP";
+						plan_pruebas.StrEmpresaUsuario = empresa.Identificacion_EmpresaEmisor;
+
+						ctl_plan.Crear(plan_pruebas, true);
+					}
+					catch (Exception excepcion)
+					{
+						Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, "Error Creando el Plan de documentos para las pruebas");
+					}
+					
+				}
+
+
+			}
+			else
+			{
+				tbl_empresa.IntObligado = tbl_empresa.IntObligado == false ? true : tbl_empresa.IntObligado;
+
+				if (!tbl_empresa.StrMailAdmin.Equals(empresa.EmailAdmin))
+				{
+					tbl_empresa.StrMailAdmin = empresa.EmailAdmin;
+					ListaEmailRegistro.Add(new ObjVerificacionEmail { email = empresa.EmailAdmin });
+				}
+
+				if (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost"))
+				{
+					bool crear_plan = false;
+
+					if (empresa.NominaE == true && (tbl_empresa.IntHabilitacionNomina == null || tbl_empresa.IntHabilitacionNomina == Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode())))
+						crear_plan = true;
+
+					if (empresa.FacturaE == true && (tbl_empresa.IntHabilitacion == null || tbl_empresa.IntHabilitacion == Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode())))
+						crear_plan = true;
+
+					tbl_empresa.IntHabilitacion = (empresa.FacturaE == true && tbl_empresa.IntHabilitacion == Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode())) ? Convert.ToByte(Habilitacion.Pruebas.GetHashCode()) : tbl_empresa.IntHabilitacion;
+					tbl_empresa.IntHabilitacionNomina = (empresa.NominaE == true && (tbl_empresa.IntHabilitacionNomina == null || tbl_empresa.IntHabilitacionNomina == Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode()))) ? Convert.ToByte(Habilitacion.Pruebas.GetHashCode()) : tbl_empresa.IntHabilitacionNomina;
+
+					tbl_empresa = Editar(tbl_empresa, true, ListaEmailRegistro);
+
+					if (crear_plan == true)
+					{
+						try
+						{
+							Ctl_PlanesTransacciones ctl_plan = new Ctl_PlanesTransacciones();
+							List<TblPlanesTransacciones> list_plan = ctl_plan.Obtener(empresa.Identificacion, TipoCompra.Cortesia.GetHashCode().ToString(), EstadoPlan.Habilitado.GetHashCode().ToString(), 1, Fecha.GetFecha().AddYears(-1), Fecha.GetFecha().AddDays(1));
+
+							TblPlanesTransacciones plan_prueba_activo = list_plan.Where(x => x.IntEstado == 0 && x.DatFechaVencimiento >= Fecha.GetFecha().AddMonths(1)).FirstOrDefault();
+
+							if (plan_prueba_activo == null)
+							{
+								TblPlanesTransacciones plan_pruebas = new TblPlanesTransacciones();
+								
+								plan_pruebas.IntMesesVence = 12;
+								plan_pruebas.IntEstado = EstadoPlan.Habilitado.GetHashCode();
+								plan_pruebas.IntNumTransaccCompra = 100;
+								plan_pruebas.IntTipoDocumento = TipoDocPlanes.Mixto.GetHashCode();
+								plan_pruebas.IntTipoProceso = Convert.ToByte(TipoCompra.Cortesia.GetHashCode());
+								plan_pruebas.StrEmpresaFacturador = tbl_empresa.StrIdentificacion;
+								plan_pruebas.StrUsuario = "HGIERP";
+								plan_pruebas.StrEmpresaUsuario = empresa.Identificacion_EmpresaEmisor;
+
+								ctl_plan.Crear(plan_pruebas, true);
+							}
+						}
+						catch (Exception excepcion)
+						{
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, "Error Creando el Plan de documentos actualizando la empresa para las pruebas");
+						}
+					}
+				}
+
+			}
+
+			return tbl_empresa;
+		}
+
 	}
 }
