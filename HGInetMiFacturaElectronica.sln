@@ -373,6 +373,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso643003", "Caso643003", 
 		Documentacion\Liberaciones\Caso643003\TblEventosRadian.txt = Documentacion\Liberaciones\Caso643003\TblEventosRadian.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "646319", "646319", "{6724C77F-DF4F-4711-A912-CBB2824176E2}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\646319\IntEnvioNominaMail-TblEmpresas.txt = Documentacion\Liberaciones\646319\IntEnvioNominaMail-TblEmpresas.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -574,5 +579,6 @@ Global
 		{A0BD85EF-B35A-42FC-BE77-B690F89F3467} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{F748C7A1-B65E-4A85-87D3-38F4A911BF4B} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{CC2F66C0-8863-4A23-896C-CBE914C3D0B5} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{6724C77F-DF4F-4711-A912-CBB2824176E2} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal

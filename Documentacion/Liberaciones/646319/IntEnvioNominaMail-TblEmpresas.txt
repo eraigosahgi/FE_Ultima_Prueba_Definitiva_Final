@@ -1,0 +1,3 @@
+ALTER TABLE TblEmpresas ADD
+IntEnvioNominaMail bit NOT NULL Default(0)
+GO
