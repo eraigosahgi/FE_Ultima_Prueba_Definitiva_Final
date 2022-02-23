@@ -6,8 +6,8 @@
 <head runat="server">
 	<title></title>
 
-	<script src="../../Scripts/config.js?vjs20201019"></script>
-	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs20201019"></script>
+	<script src="../../Scripts/config.js?vjs20220223"></script>
+	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs20220223"></script>
 
 	<style type="text/css">
 		#outlook a {
@@ -253,6 +253,10 @@
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Habilitación Nómina:</td>
 																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{HabilitacionNom}}</td>
+																							</tr>
+																							<tr>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Envio Nómina Email:</td>
+																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{EnvioNominaMail}}</td>
 																							</tr>
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">versión:</td>

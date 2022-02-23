@@ -1,5 +1,4 @@
-﻿
-using HGInetMiFacturaElectonicaController.Auditorias;
+﻿using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.PagosElectronicos;
 using HGInetMiFacturaElectonicaController.Properties;
@@ -600,21 +599,21 @@ namespace HGInetMiFacturaElectonicaController
 				try
 				{
 
-					// ruta física del xml
-					string carpeta_archivos = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
-					carpeta_archivos = string.Format(@"{0}\{1}", carpeta_archivos, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
-
-					// Nombre del archivo Xml 
-					string nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
-
-					// ruta del xml
-					string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_archivos, nombre_archivo);
-
-					if (!Archivo.ValidarExistencia(ruta_xml))
-						throw new ApplicationException("No se encontró ruta de archivo de respuesta de la DIAN");
-
 					if (empresa_obligado.IntPdfCampoDian == true && interoperabilidad == false && tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste)
 					{
+
+						// ruta física del xml
+						string carpeta_archivos = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
+						carpeta_archivos = string.Format(@"{0}\{1}", carpeta_archivos, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
+
+						// Nombre del archivo Xml 
+						string nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
+
+						// ruta del xml
+						string ruta_xml = string.Format(@"{0}\{1}.xml", carpeta_archivos, nombre_archivo);
+
+						if (!Archivo.ValidarExistencia(ruta_xml))
+							throw new ApplicationException("No se encontró ruta de archivo de respuesta de la DIAN");
 
 						//Proceso para obtener la fecha y hora de la respuesta de la DIAN
 						//string ruta_archivo = string.Format(@"{0}\{1}.xml", documento_result.RutaArchivosProceso.Replace("XmlFacturaE", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian), documento_result.NombreXml);
@@ -917,8 +916,18 @@ namespace HGInetMiFacturaElectonicaController
 
 						string ruta_acuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", documento.StrIdSeguridad.ToString()));
 
-						mensaje = mensaje.Replace("{RutaUrl}", ruta_acuse);
 						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
+
+						if (tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste)
+						{
+
+							mensaje = mensaje.Replace("{RutaUrl}", ruta_acuse);
+							//string otro_boton = "<td style='border:2px solid #b0afaf;border-radius:3px;color:#ffffff;cursor:auto;padding:10px 25px;' align='center' valign='middle' bgcolor='#040461'><a href='" + ruta_acuse + "' style='text-decoration:none;background:#040461;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:17px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;' target='_blank'>Pagar</a></td>";
+
+							string boton_acuse = "<td style='border:2px solid #b0afaf;border-radius:3px;color:#ffffff;cursor:auto;padding:10px 25px;' align='center' valign='middle' bgcolor='#040461'><a href='" + ruta_acuse + "' style='text-decoration:none;background:#040461;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:17px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;' target='_blank'>Acuse de Recibo</a></td>";
+
+							mensaje = mensaje.Replace("{Acuse}", boton_acuse);
+						}
 
 						bool IdPago = false;
 
@@ -942,6 +951,18 @@ namespace HGInetMiFacturaElectonicaController
 
 							mensaje = mensaje.Replace("{PSE}", otro_boton);
 
+						}
+
+						if (tipo_documento == TipoDocumento.Nomina || tipo_documento == TipoDocumento.NominaAjuste)
+						{
+
+							mensaje = mensaje.Replace("Adjunto encontrará los archivos relacionados con el documento generado. Para continuar con el proceso debes realizar el acuse de recibo {PSETexto}:", "Adjunto encontrará la representación gráfica relacionada con el documento generado.");
+
+							mensaje = mensaje.Replace("Si el enlace anterior no funciona, copie y pegue la siguiente URL en su navegador web:", "Si el adjunto no funciona, copie y pegue la siguiente URL en su navegador web:");
+
+							mensaje = mensaje.Replace("{RutaUrl}", documento.StrUrlArchivoPdf);
+
+							mensaje = mensaje.Replace("{Acuse}", "");
 						}
 
 						mensaje = mensaje.Replace("{TotalPagar}", "");
@@ -978,7 +999,7 @@ namespace HGInetMiFacturaElectonicaController
 
 						//****Proceso donde se hace el zip que contiene un AttachDocument tipo xml, una Representacion grafica tipo pdf y un archivo Anexo tipo zip
 						//Para documentos diferentes a la Nomina
-						if  (tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste)
+						if (tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste)
 						{
 
 							string nombre_xml = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, tipo_documento, documento.StrPrefijo);//Path.GetFileName(documento.StrUrlArchivoUbl);
@@ -1055,7 +1076,7 @@ namespace HGInetMiFacturaElectonicaController
 									// genera la compresión del archivo en zip
 									using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
 									{
-										archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo), string.Format("{0}.xml",nombre_archivo));
+										archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo), string.Format("{0}.xml", nombre_archivo));
 
 										if (contiene_pdf == true)
 										{
@@ -1187,7 +1208,7 @@ namespace HGInetMiFacturaElectonicaController
 							mensaje = mensaje.Replace("{ObservacionAnexos}", "");
 							mensaje = mensaje.Replace("{UrlAnexos}", "");
 						}
-						
+
 
 						// envía el correo electrónico
 						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);

@@ -470,7 +470,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 							// envía el mail de documentos al adquiriente
-							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
+							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode() )
 							{
 								//Crea el attached para poder ser enviado en el correo con los demas archivos menos en nomina.
 								if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
@@ -485,9 +485,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(excepcion.Message), 1, false);
 									}
 								}
-								
 
-								if ((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
+								bool enviar_correo = true;
+
+								//Se hace validacion si es documento de nomina y no tiene habilitado el envio de correo
+								if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && empresa.IntEnvioNominaMail == false)
+									enviar_correo = false;
+
+
+								if (((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo)) && (enviar_correo == true) )
 								{
 									//Registro el documento en la tabla correo para gestionarlo
 									try
@@ -515,6 +521,36 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										Task pago = pagos.GenerarNotaPago(documento_obj.CufeFactura, documentoBd);
 									}
 
+								}
+								else if (enviar_correo == false)
+								{
+									//Se actualiza respuesta de envio solo cuando es la nomina y la empresa no esta habilitada	
+									respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.Finalizacion);
+									respuesta.FechaUltimoProceso = Fecha.GetFecha();
+									respuesta.IdProceso = ProcesoEstado.Finalizacion.GetHashCode();
+
+									//Actualiza Documento en Base de Datos
+									documentoBd.DatFechaActualizaEstado = Fecha.GetFecha();
+									documentoBd.IntIdEstado = (short)respuesta.IdProceso;
+
+									//Actualizo el estado del documento para enviar al proveedor receptor
+									documento_tmp = new Ctl_Documento();
+									documento_tmp.Actualizar(documentoBd);
+
+									//Actualiza la categoria con el nuevo estado
+									respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+									respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+
+									try
+									{
+										ValidarRespuesta(respuesta, respuesta.UrlPdf);
+
+										//int estado_doc = Ctl_Documento.ObtenerCategoria(documentoBd.IntIdEstado);
+										//string mensaje = (string.IsNullOrEmpty(respuesta.IdPeticion.ToString()) ? "Reenvio de Documento" : "Proceso Completo");
+									 // //clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, empresa_obligado.StrIdentificacion, proceso, TipoRegistro.Proceso, procedencia, usuario, "No fue posible el envio del documento, favor validar con el Adquiriente ó hacer el reenvío del documento desde nuestra Plataforma ", string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
+										//clase_auditoria.Crear(documentoBd.StrIdSeguridad, Guid.Empty, empresa.StrIdentificacion, ProcesoEstado.Finalizacion, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, mensaje, string.Empty, null, documentoBd.StrPrefijo, Convert.ToString(documentoBd.IntNumero), estado_doc);
+									}
+									catch (Exception) { }
 								}
 								else
 								{

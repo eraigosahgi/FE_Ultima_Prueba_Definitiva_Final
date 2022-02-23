@@ -50,6 +50,7 @@ id_seguridad = "",
 Datos_ClaveCert = "",
 Datos_Serial = "",
 Datos_Serial_Cloud = "",
+Datos_EnvioNominaMail = 0,
 Datos_proveedores = "";
 //Desde hasta en la consulta de la grid
 var Desde = 0;
@@ -234,6 +235,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		Datos_PermitePagosParciales = false,
 		Datos_PermiteConsultarTodosLosDocumentos = false,
 		Datos_EmailRecepcion = false,
+		Datos_EnvioNominaMail = false,
 		Datos_Numero_usuarios = 1,
 		Datos_Horas_Acuse = 0,
 		Datos_ComercioConfigId = "",
@@ -840,6 +842,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}
 			});
 
+			$("#EnvioNominaMail").dxCheckBox({
+				name: "EnvioNominaMail",
+				onValueChanged: function (data) {
+					Datos_EnvioNominaMail = (data.value == true) ? 1 : 0;
+				}
+			});
+
 			//****************En caso de Ser Administración o Integrador, muestro estos puntos
 
 
@@ -1365,10 +1374,21 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		});
 
 
-
-
 		$("#tooltip_EmailRecepcion").dxPopover({
 			target: "#EmailRecepcion",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
+		$("#tooltip_EnvioNomina").dxPopover({
+			target: "#EnvioNominaMail",
 			showEvent: {
 				name: "mouseenter",
 				delay: 500
@@ -1692,6 +1712,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_PermitePagosParciales = response.data[0].IntPagoEParcial;
 				Datos_PermiteConsultarTodosLosDocumentos = response.data[0].IntPagosPermiteConsTodos;
 				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
+				Datos_EnvioNominaMail = response.data[0].IntEnvioNominaMail;
 				Datos_estado = response.data[0].Estado;
 				Datos_postpago = response.data[0].Postpago;
 				Datos_Email_Envio = response.data[0].StrMailEnvio;
@@ -1808,6 +1829,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					} else {
 						$("#EmailRecepcion").dxCheckBox({ value: false });
 					}
+
+					try {
+						if (Datos_EnvioNominaMail == 1) {
+							$("#EnvioNominaMail").dxCheckBox({ value: true });
+						}
+					} catch (e) { }
 
 					$("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
 
@@ -2000,7 +2027,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				DatCertVence: Datos_FechaCert,
 				StrSerialCloudServices: Datos_Serial_Cloud,
 				IntDebug: Datos_debug,
-				IntInteroperabilidad : Datos_InterOp 
+				IntInteroperabilidad: Datos_InterOp,
+				IntEnvioNominaMail: Datos_EnvioNominaMail,
 			});
 			var tipo = Datos_Tipo;
 

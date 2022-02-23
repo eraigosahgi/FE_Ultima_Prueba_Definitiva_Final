@@ -483,6 +483,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntIdEstado = empresa.IntIdEstado;
 					EmpresaActualiza.IntCobroPostPago = empresa.IntCobroPostPago;
 					EmpresaActualiza.IntEnvioMailRecepcion = empresa.IntEnvioMailRecepcion;
+					EmpresaActualiza.IntEnvioNominaMail = empresa.IntEnvioNominaMail;
 					EmpresaActualiza.IntVersionDian = empresa.IntVersionDian;
 					EmpresaActualiza.IntTimeout = empresa.IntTimeout;
 

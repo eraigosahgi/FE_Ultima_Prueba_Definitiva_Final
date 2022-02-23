@@ -274,6 +274,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Perfil = d.IntAdquiriente,
 				Habilitacion = d.IntHabilitacion,
 				Habilitacion_NominaE = d.IntHabilitacionNomina,
+				IntEnvioNominaMail = d.IntEnvioNominaMail,
 				IdSeguridad = d.StrIdSeguridad,
 				Intadquiriente = d.IntAdquiriente,
 				intObligado = d.IntObligado,
@@ -391,6 +392,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntPagoEParcial = ObjEmpresa.IntPagoEParcial;
 				Empresa.IntPagosPermiteConsTodos = ObjEmpresa.IntPagosPermiteConsTodos;
 				Empresa.IntEnvioMailRecepcion = ObjEmpresa.IntEnvioMailRecepcion;
+				Empresa.IntEnvioNominaMail = ObjEmpresa.IntEnvioNominaMail;
 				Empresa.IntVersionDian = ObjEmpresa.IntVersionDian;
 				Empresa.StrEmpresaDescuento = (string.IsNullOrEmpty(ObjEmpresa.StrEmpresaDescuento) ? ObjEmpresa.StrIdentificacion.Trim() : ObjEmpresa.StrEmpresaDescuento.Trim());
 				Empresa.StrSerialCloudServices = ObjEmpresa.StrSerialCloudServices;
