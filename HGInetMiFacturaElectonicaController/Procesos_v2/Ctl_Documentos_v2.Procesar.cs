@@ -302,7 +302,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							if ((documento.StrProveedorReceptor == null) || documento.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo))
 							{
-								if (documento.IntEnvioMail == null || documento.IntEnvioMail == false)
+								bool enviar_correo = true;
+
+								//Se hace validacion si es documento de nomina y no tiene habilitado el envio de correo
+								if ((tipo_documento == TipoDocumento.Nomina || tipo_documento == TipoDocumento.NominaAjuste) && empresa.IntEnvioNominaMail == false)
+									enviar_correo = false;
+
+								if ((documento.IntEnvioMail == null || documento.IntEnvioMail == false) && enviar_correo == true)
 								{
 									respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
 									Ctl_Documento documento_tmp = new Ctl_Documento();
@@ -312,9 +318,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								else
 								{
 									//Actualiza la respuesta
-									respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
-									respuesta.FechaUltimoProceso = Fecha.GetFecha();
-									respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
+									if (tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste)
+									{
+										respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioEmailAcuse);
+										respuesta.FechaUltimoProceso = Fecha.GetFecha();
+										respuesta.IdProceso = ProcesoEstado.EnvioEmailAcuse.GetHashCode();
+
+									}
+									else
+									{
+										respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.Finalizacion);
+										respuesta.FechaUltimoProceso = Fecha.GetFecha();
+										respuesta.IdProceso = ProcesoEstado.Finalizacion.GetHashCode();
+									}
+
 
 									//Actualiza Documento en Base de Datos
 									documento.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
@@ -326,7 +343,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									//Actualiza la categoria con el nuevo estado
 									respuesta.IdEstado = documento.IdCategoriaEstado;
 									respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documento.IdCategoriaEstado));
-									ValidarRespuesta(respuesta, respuesta.DescripcionEstado, null, false);
+									if (tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste)
+										ValidarRespuesta(respuesta, respuesta.DescripcionEstado, null, false);
+									else
+										ValidarRespuesta(respuesta, respuesta.UrlPdf);
 								}
 
 							}
