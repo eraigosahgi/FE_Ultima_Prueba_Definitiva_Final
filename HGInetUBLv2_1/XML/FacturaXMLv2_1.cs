@@ -93,9 +93,9 @@ namespace HGInetUBLv2_1
 
 				#region Contingencia-Dia Sin Iva
 				//Fechas Dia Sin IVA
-				DateTime fecha1 = new DateTime(2021, 10, 28);
-				DateTime fecha2 = new DateTime(2021, 11, 19);
-				DateTime fecha3 = new DateTime(2021, 12, 03);
+				DateTime fecha1 = new DateTime(2022, 03, 11);
+				DateTime fecha2 = new DateTime(2022, 06, 17);
+				DateTime fecha3 = new DateTime(2022, 12, 02);
 
 				bool dia_sin_iva = false;
 
