@@ -1383,7 +1383,10 @@
     <Compile Include="Enumeraciones\Ctl_Enumeracion.cs" />
     <Compile Include="Radian\ConstanciadePagosType.cs" />
     <Compile Include="Radian\CustomTagGeneralType1.cs" />
+    <Compile Include="Radian\InformacionAvalType.cs" />
     <Compile Include="Radian\InformacionNegociacionType.cs" />
+    <Compile Include="Radian\InformacionPagoType.cs" />
+    <Compile Include="Radian\InformacionParaelPagoType.cs" />
     <Compile Include="Salud\AdditionalInformationType.cs" />
     <Compile Include="Salud\CampoValorType.cs" />
     <Compile Include="Salud\Collection.cs" />

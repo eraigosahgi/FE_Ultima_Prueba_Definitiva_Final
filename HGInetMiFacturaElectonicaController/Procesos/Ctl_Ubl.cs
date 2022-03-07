@@ -121,10 +121,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 					string ambiente_dian = string.Empty;
 
-					if (plataforma_datos.RutaPublica.Contains("app"))
-						ambiente_dian = "1";
-					else
+					if (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost"))
 						ambiente_dian = "2";
+					else
+						ambiente_dian = "1";
 
 					resultado = HGInetUBLv2_1.FacturaXMLv2_1.CrearDocumento(id_documento, documento, extension_documento, ambiente_dian, ref cadena_cufe);
 					break;
@@ -239,10 +239,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 					string ambiente_dian = string.Empty;
 
-					if (plataforma_datos.RutaPublica.Contains("app"))
-						ambiente_dian = "1";
-					else
+					if (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost"))
 						ambiente_dian = "2";
+					else
+						ambiente_dian = "1";
 
 					resultado = HGInetUBLv2_1.NotaCreditoXMLv2_1.CrearDocumento(id_seguridad, documento, extension_documento, tipo_doc, ambiente_dian, ref cadena_cufe);
 					break;
@@ -358,10 +358,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 					string ambiente_dian = string.Empty;
 
-					if (plataforma_datos.RutaPublica.Contains("app"))
-						ambiente_dian = "1";
-					else
+					if (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost"))
 						ambiente_dian = "2";
+					else
+						ambiente_dian = "1";
 
 					resultado = HGInetUBLv2_1.NotaDebitoXML2_1.CrearDocumento(id_documento, documento, extension_documento, tipo_doc, ambiente_dian, ref cadena_cufe);
 					break;
@@ -530,10 +530,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 			string ambiente_dian = string.Empty;
 
-			if (plataforma_datos.RutaPublica.Contains("app"))
-				ambiente_dian = "1";
-			else
+			if (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost"))
 				ambiente_dian = "2";
+			else
+				ambiente_dian = "1";
 
 			if (TipoDocumento.Nomina.Equals(tipo_doc))
 			{

@@ -103,7 +103,7 @@
 
 	<div runat="server" class="form-horizontal" ng-app="App" ng-controller="AcuseReciboController" data-ng-cloak="" data-ng-init="DetalleAcuse=true">
 
-	<!--Aplicacion de Pagos-->
+		<!--Aplicacion de Pagos-->
 		<div data-ng-include="'ModalPagos.aspx'"></div>
 		<div data-ng-include="'Partials/ModalFormasDePago.html'"></div>
 		<div data-ng-include="'Partials/ModalPagosEmbebida.html'"></div>
@@ -191,28 +191,26 @@
 						<div>
 							<!-- PANEL CONTIENE LAS OPCIONES DE RESPUESTA APROBAR/RECHAZAR Y MOTIVO -->
 							<div id="PanelOpcionesAdquiriente" style="margin-top: -25px" data-ng-show="{{datos.CamposVisibles && datos.EstadoCat !=400}}" class="dx-fieldset">
-
-
+												   
 								<form data-ng-submit="onFormSubmit($event)">
 
 									<div>
 										<h4 class="panel-title text-bold text-center">Respuesta Acuse</h4>
 										<br />
-										<%--<div class="col-md-12 ">
+										<div class="col-md-12">
 
-											<label><strong>Acuse documento:</strong></label>
-											<input type="radio" style="cursor: pointer" class="w3-radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
-
-											<div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar" style="margin-left: 20px"></div>
+											<label><strong>Recibo del bien o prestación del servicio</strong></label>
+											<input type="radio" style="cursor: pointer" class="w3-radio" value="3" data-ng-model="value" id="rb_acuse" name="group2" ng-change="ValidarEstado(value)" data-ng-show="{{datos.IntAdquirienteRecibo != 4}}"/>
+											 <label class="text-danger" data-ng-show="{{datos.IntAdquirienteRecibo > 3}}">Ejecutado</label>
 										</div>
-										<br />--%>
+										<br />
 										<div class="col-md-12 ">
 
-											<label><strong>Aceptación documento:</strong></label>
-											<input type="radio" style="cursor: pointer" class="w3-radio" value="1" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+											<label><strong>Aceptación Expresa:</strong></label>
+											<input type="radio" style="cursor: pointer" class="w3-radio" value="1" data-ng-model="value" id="rb_expresa" name="group1" ng-change="ValidarEstado(value)" />
 
-											<label style="margin-left: 20px;"><strong>Rechazar:</strong></label>
-											<input type="radio" style="cursor: pointer" class="w3-radio" value="2" data-ng-model="value" name="group1" ng-change="ValidarEstado(value)" />
+											<label style="margin-left: 20px;"><strong>Reclamos a la Venta:</strong></label>
+											<input type="radio" style="cursor: pointer" class="w3-radio" value="2" data-ng-model="value" id="rb_rechazo" name="group1" ng-change="ValidarEstado(value)" />
 										</div>
 										<br />
 									</div>
@@ -222,13 +220,12 @@
 									<div class="col-lg-12 text-right" style="margin-top: -15px">
 										<div data-dx-button="ButtonOptionsRechazar" data-ng-if="RechazarVar"></div>
 										<div data-dx-button="ButtonOptionsAceptar" data-ng-if="AceptarVar"></div>
-										<%--<div data-dx-button="ButtonOptionsAcuse" data-ng-if="AcuseVar"></div>--%>
+										<div data-dx-button="ButtonOptionsAcuse" data-ng-if="AcuseVar" data-ng-show="{{datos.IntAdquirienteRecibo != 4}}"></div>
 										&nbsp;&nbsp;&nbsp;
                                     
 									</div>
 
 								</form>
-
 							</div>
 						</div>
 						<div id="PanelInformacionArchivos" style="font-size: 15px" class="dx-fieldset">
@@ -259,7 +256,7 @@
 										<a class="btn btn-default" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" data-ng-hide="datos.tipodoc=='Nota Crédito' || datos.poseeIdComercio==false || datos.Estatus !=1" data-ng-click="ConsultarDetallesPago()">Historial Pagos</a>
 									</div>
 									<div id="cmdpago" style="display: inline-block; margin-bottom: 5%">
-										<a class="btn btn-default" id="btnpago"  style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" data-ng-click="ConsultarPago1('','1',true,true)" data-ng-show="datos.tipodoc!='Nota Crédito' && datos.poseeIdComercio==true && datos.Estatus ==3">Realizar Pago</a>
+										<a class="btn btn-default" id="btnpago" style="background: rgb(51, 122, 183); color: white; text-transform: initial !important; font-size: 14px; text-align: center;" target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" data-ng-click="ConsultarPago1('','1',true,true)" data-ng-show="datos.tipodoc!='Nota Crédito' && datos.poseeIdComercio==true && datos.Estatus ==3">Realizar Pago</a>
 									</div>
 								</div>
 
@@ -403,9 +400,6 @@
 				</div>
 			</div>
 		</form>--%>
-
-		
-
 	</div>
 
 	<%--Panel carga o Loading--%>

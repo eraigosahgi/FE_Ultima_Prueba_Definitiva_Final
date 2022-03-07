@@ -174,6 +174,85 @@ namespace HGInetUBLv2_1
 					root.AppendChild(nodo_value);
 
 					break;
+				case CodigoResponseV2.InformePago:
+
+					InformacionParaelPagoType informe_pago = new InformacionParaelPagoType();
+					informe_pago.Name = new Name();
+					informe_pago.Name.Value = "ValorFEV-TV";
+					informe_pago.Value = new Value();
+					informe_pago.Value.Value = valor_fe.ToString().Replace(",", ".");
+
+					TagGeneral.InformacionParaelPago = informe_pago;
+
+					xmlSerializer = new XmlSerializer(TagGeneral.GetType());
+					stWriter = new StreamWriter(memStream);
+
+					xmlSerializer.Serialize(stWriter, TagGeneral);
+					buffer = Encoding.UTF8.GetString(memStream.GetBuffer());
+
+					extension_sector.LoadXml(buffer);
+
+					extension_sector.DocumentElement.RemoveAllAttributes();
+
+					root = extension_sector.DocumentElement.FirstChild;
+
+					break;
+				case CodigoResponseV2.Aval:
+
+					InformacionAvalarType informacion_aval = new InformacionAvalarType();
+
+					informacion_aval.Name = new Name();
+					informacion_aval.Name.Value = "ValorFEVavala";
+					informacion_aval.Value = new Value();
+					informacion_aval.Value.Value = valor_fe.ToString().Replace(",", ".");
+
+					TagGeneral.InformacionAvalar = informacion_aval;
+
+					xmlSerializer = new XmlSerializer(TagGeneral.GetType());
+
+					stWriter = new StreamWriter(memStream);
+
+					xmlSerializer.Serialize(stWriter, TagGeneral);
+					buffer = Encoding.UTF8.GetString(memStream.GetBuffer());
+
+					extension_sector.LoadXml(buffer);
+
+					extension_sector.DocumentElement.RemoveAllAttributes();
+
+					root = extension_sector.DocumentElement.FirstChild;
+
+					break;
+				case CodigoResponseV2.PagoFvTV:
+
+					InformacionPagoType pago = new InformacionPagoType();
+					pago.Name = new Name();
+					pago.Name.Value = "ValorActualTituloValor";
+					pago.Value = new Value();
+					pago.Value.Value = valor_fe.ToString().Replace(",", ".");
+
+					TagGeneral.InformacionPagos = pago;
+
+					xmlSerializer = new XmlSerializer(TagGeneral.GetType());
+					stWriter = new StreamWriter(memStream);
+
+					xmlSerializer.Serialize(stWriter, TagGeneral);
+					buffer = Encoding.UTF8.GetString(memStream.GetBuffer());
+
+					extension_sector.LoadXml(buffer);
+
+					extension_sector.DocumentElement.RemoveAllAttributes();
+
+					root = extension_sector.DocumentElement.FirstChild;
+
+					nodo_name = extension_sector.DocumentElement.FirstChild.FirstChild.Clone();
+					nodo_name.InnerText = "ValorPendienteTituloValor";
+					root.AppendChild(nodo_name);
+
+					nodo_value = extension_sector.DocumentElement.FirstChild.ChildNodes[1].Clone();
+					nodo_value.InnerText = "00";
+					root.AppendChild(nodo_value);
+
+					break;
 				default:
 					break;
 			}  

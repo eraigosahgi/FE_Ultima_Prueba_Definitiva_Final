@@ -1222,36 +1222,50 @@ namespace HGInetMiFacturaElectonicaController
 								if (correo_doc == null)
 									correo_doc = proceso_correo.Crear(documento.StrIdSeguridad);
 
-								//Valida que el registro sea nuevo para que lo haga solo en el proceso principal
-								if (correo_doc.IntEnvioMail == false && string.IsNullOrEmpty(correo_doc.StrIdMensaje))
+								MensajeEnvio error_mail = respuesta_email.Where(x => x.Error != null).FirstOrDefault();
+
+								//*******agregar logica cuando el correo esta bloqueado para informar al facturador
+								if (error_mail == null)
 								{
-
-									correo_doc.IntEnvioMail = true;
-
-									//obtengo el primer MessageID
-									try
+									//Valida que el registro sea nuevo para que lo haga solo en el proceso principal
+									if (correo_doc.IntEnvioMail == false && string.IsNullOrEmpty(correo_doc.StrIdMensaje))
 									{
-										correo_doc.StrIdMensaje = respuesta_email.FirstOrDefault().Data.FirstOrDefault().MessageID.ToString();
-										correo_doc.StrMailEnviado = respuesta_email.FirstOrDefault().Data.FirstOrDefault().Email;
+
+										correo_doc.IntEnvioMail = true;
+
+										//obtengo el primer MessageID
+										try
+										{
+											correo_doc.StrIdMensaje = respuesta_email.FirstOrDefault().Data.FirstOrDefault().MessageID.ToString();
+											correo_doc.StrMailEnviado = respuesta_email.FirstOrDefault().Data.FirstOrDefault().Email;
+										}
+										catch (Exception excepcion)
+										{
+											Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error asiganando el MessageID y Email");
+											correo_doc.IntEnvioMail = false;
+										}
+
 									}
-									catch (Exception excepcion)
+									else if (correo_doc.IntEnvioMail == true)
 									{
-										Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error asiganando el MessageID y Email");
 										correo_doc.IntEnvioMail = false;
 									}
+									else
+									{
+										correo_doc.IntEnvioMail = true;
+									}
 
-								}
-								else if (correo_doc.IntEnvioMail == true)
-								{
-									correo_doc.IntEnvioMail = false;
-								}
-								else
-								{
-									correo_doc.IntEnvioMail = true;
-								}
+									//Actualizo tabla de correos
+									correo_doc = proceso_correo.Actualizar(correo_doc);
 
-								//Actualizo tabla de correos
-								correo_doc = proceso_correo.Actualizar(correo_doc);
+									//Se hace el registro del evento de recepcion del documento siempre y cuando el correo no presente bloqueo
+									if (correo_doc.IntEnvioMail == true && empresa_adquiriente.IntRadian == true)
+									{
+										Ctl_EventosRadian evento = new Ctl_EventosRadian();
+										Task envio_acuse = evento.ProcesoCrearAcuseRecibo(correo_doc.StrIdMensaje, documento.StrIdSeguridad);
+									}
+								}
+								
 							}
 							catch (Exception e)
 							{
@@ -1680,7 +1694,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// </summary>
 		/// <param name="documento">Datos del documento</param>
 		/// <returns></returns>
-		public List<MensajeEnvio> RespuestaAcuse(TblDocumentos documento, TblEmpresas facturador, TblEmpresas adquiriente, string ruta_archivo, string mail = "", Procedencia procedencia = Procedencia.Plataforma, string usuario = "")
+		public List<MensajeEnvio> RespuestaAcuse(TblDocumentos documento, TblEmpresas facturador, TblEmpresas adquiriente, string ruta_archivo, string mail = "", Procedencia procedencia = Procedencia.Plataforma, string usuario = "", int evento_radian = 0, string cude_evento = "")
 		{
 			Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
 			List<MensajeEnvio> respuesta_email = new List<MensajeEnvio>();
@@ -1689,7 +1703,30 @@ namespace HGInetMiFacturaElectonicaController
 			{
 				string ruta_plantilla_html = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaAcuse);
 
-				string asunto = "Respuesta Acuse de Recibo";
+				//Asunto: Debe informarse la palabra Evento; Número del documento referenciado; NIT del generador del
+				//evento; Nombre del generador del evento; Número del documento electrónico; Código del tipo de
+				//documento según tabla 13.1.6; Línea de negocio(este último opcional, acuerdo comercial entre las partes)
+
+
+				string asunto = string.Empty;
+
+				CodigoResponseV2 tipo_evento = Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(evento_radian);
+
+				string cod_acuse = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(evento_radian));
+
+				string numero_evento = string.Format("{0}{1}", documento.IntNumero, evento_radian);
+
+				//Si tiene linea de negocio se agrega en el asunto
+				if (!string.IsNullOrEmpty(documento.StrLineaNegocio))
+				{
+					asunto = string.Format("{0};{1};{2};{3};{4};{5};{6}", "evento", documento.IntNumero, adquiriente.StrIdentificacion, adquiriente.StrRazonSocial, numero_evento, cod_acuse, documento.StrLineaNegocio);
+				}
+				else
+				{
+					asunto = string.Format("{0};{1};{2};{3};{4};{5}", "evento",documento.IntNumero, adquiriente.StrIdentificacion, adquiriente.StrRazonSocial, numero_evento, cod_acuse);
+				}
+
+				//string asunto = "Respuesta Acuse de Recibo";
 
 				// envía como email de respuesta el Adquiriente
 				DestinatarioEmail remitente = new DestinatarioEmail();
@@ -1760,7 +1797,7 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{NombreTercero}", adquiriente.StrRazonSocial);
 						mensaje = mensaje.Replace("{NitTercero}", adquiriente.StrIdentificacion);
 						mensaje = mensaje.Replace("{EmailTercero}", adquiriente.StrMailEnvio);
-						mensaje = mensaje.Replace("{GuidDocumento}", documento.StrIdSeguridad.ToString());
+						mensaje = mensaje.Replace("{GuidDocumento}", documento.StrCufe);
 
 
 						//Datos del Documento
@@ -1779,23 +1816,7 @@ namespace HGInetMiFacturaElectonicaController
 								break;
 						}
 
-						string estado_respuesta = string.Empty;
-
-						switch (documento.IntAdquirienteRecibo)
-						{
-							case 1:
-								estado_respuesta = "Aprobada"; //"Acuse";
-								break;
-							case 2:
-								estado_respuesta = "Rechazada";
-								break;
-							case 3:
-								estado_respuesta = "Aprobado Tácito";
-								break;
-							case 4:
-								estado_respuesta = "Aprobada";
-								break;
-						}
+						string estado_respuesta = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(evento_radian));
 
 						if (documento.IntAdquirienteRecibo == 1 && !string.IsNullOrWhiteSpace(documento.StrAdquirienteMvoRechazo))
 							mensaje = mensaje.Replace("{MotivoRechazo}", "Observaciones: " + documento.StrAdquirienteMvoRechazo);
@@ -1809,24 +1830,69 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{Estadorespuesta}", estado_respuesta);
 						mensaje = mensaje.Replace("{FechaDocumento}", documento.DatAdquirienteFechaRecibo.Value.ToString(Fecha.formato_fecha_hora));
 
-
 						List<Adjunto> archivos = new List<Adjunto>();
 
-						if (string.IsNullOrEmpty(ruta_archivo))
-							throw new ApplicationException("No se encontró ruta de archivo xml");
-
-						byte[] bytes_xml = Archivo.ObtenerWeb(ruta_archivo);
-						string ruta_fisica_xml = Convert.ToBase64String(bytes_xml);
-						string nombre_xml = Path.GetFileName(ruta_archivo);
-
-						if (!string.IsNullOrEmpty(ruta_fisica_xml))
+						if (adquiriente.IntRadian == true)
 						{
-							Adjunto adjunto = new Adjunto();
-							adjunto.ContenidoB64 = ruta_fisica_xml;
-							adjunto.Nombre = nombre_xml;
-							archivos.Add(adjunto);
+							//Se agrega
+							bool attached = Ctl_Documento.ConvertirAttachedDoc(null, documento, documento.TblEmpresasFacturador, evento_radian, cude_evento);
+
+							PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+							string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, documento.TblEmpresasFacturador.StrIdSeguridad.ToString());
+							carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+
+							string nombre_archivo = Path.GetFileNameWithoutExtension(documento.StrUrlAcuseUbl);
+
+							// ruta del zip
+							string ruta_zip = string.Format(@"{0}\{1}.zip", carpeta_xml, nombre_archivo);
+
+							// genera la compresión del archivo en zip
+							using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
+							{
+								archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo), string.Format("{0}.xml", nombre_archivo));
+
+								archive.Dispose();
+							}
+
+							
+
+							if (string.IsNullOrEmpty(ruta_zip))
+								throw new ApplicationException("No se encontró ruta de archivo zip");
+
+							byte[] bytes_applications = Archivo.ObtenerBytes(ruta_zip);
+							string ruta_fisica_zip = Convert.ToBase64String(bytes_applications);
+							string nombre_xml = Path.GetFileName(ruta_zip);
+
+							if (!string.IsNullOrEmpty(ruta_fisica_zip))
+							{
+								Adjunto adjunto = new Adjunto();
+								adjunto.ContenidoB64 = ruta_fisica_zip;
+								adjunto.Nombre = nombre_xml;
+								archivos.Add(adjunto);
+							}
+						}
+						else
+						{
+							if (string.IsNullOrEmpty(ruta_archivo))
+								throw new ApplicationException("No se encontró ruta de archivo xml");
+
+							byte[] bytes_xml = Archivo.ObtenerWeb(ruta_archivo);
+							string ruta_fisica_xml = Convert.ToBase64String(bytes_xml);
+							string nombre_xml = Path.GetFileName(ruta_archivo);
+
+							if (!string.IsNullOrEmpty(ruta_fisica_xml))
+							{
+								Adjunto adjunto = new Adjunto();
+								adjunto.ContenidoB64 = ruta_fisica_xml;
+								adjunto.Nombre = nombre_xml;
+								archivos.Add(adjunto);
+							}
 						}
 
+						
+
+						
 						// envía el correo electrónico
 						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
 

@@ -18,7 +18,7 @@ namespace HGInetUBLv2_1
 	public partial class AcuseReciboXMLv2_1
 	{
 
-		public static FacturaE_Documento CrearDocumento(Acuse documento, TblEmpresas proveedor_receptor, TblEmpresas proveedor_emisor, string ambiente, string pin_sw, string cufe_docreferenciado, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TblDocumentos documento_factura, CodigoResponseV2 tipo_acuse)
+		public static FacturaE_Documento CrearDocumento(Acuse documento, string ambiente, string pin_sw, string cufe_docreferenciado, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TblDocumentos documento_factura, CodigoResponseV2 tipo_acuse)
         {
 
 			try
@@ -62,12 +62,6 @@ namespace HGInetUBLv2_1
 				}
 				else
 				{
-					tercero_dian.Identificacion = "800197268";
-					tercero_dian.IdentificacionDv = 4;
-					tercero_dian.TipoIdentificacion = 31;
-					tercero_dian.RazonSocial = "Dirección de Impuestos y Aduanas Nacionales";
-					tercero_dian.CodigoTributo = "01";
-
 					switch (tipo_acuse)
 					{
 						case CodigoResponseV2.Inscripcion:
@@ -86,10 +80,22 @@ namespace HGInetUBLv2_1
 							Customization.Value = documento.CodigoRespuesta;
 							break;
 						case CodigoResponseV2.MandatoG:
-							Customization.Value = "433";
+							Customization.Value = "431";
 							//****Si el atributo @schemeID del elemento CustomizationID es igual a 2 se debe informar el DocumentResponse/cac:LineResponse y embeber el documento de “Evidencia del Contrato de Mandato”
 							Customization.schemeID = "1";
 							cant_response = 2;
+							break;
+						case CodigoResponseV2.TerminacionMandatoG:
+							Customization.Value = "442";
+							break;
+						case CodigoResponseV2.Aval:
+							Customization.Value = "035";
+							break;
+						case CodigoResponseV2.PagoFvTV:
+							Customization.Value = "452";
+							break;
+						case CodigoResponseV2.InformePago:
+							Customization.Value = "046";
 							break;
 						default:
 							break;
@@ -145,7 +151,7 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
-				if (tipo_acuse.Equals(CodigoResponseV2.AprobadoTacito) || tipo_acuse.GetHashCode() > CodigoResponseV2.Expresa.GetHashCode() && !tipo_acuse.Equals(CodigoResponseV2.CancelacionEG))
+				if (tipo_acuse.Equals(CodigoResponseV2.AprobadoTacito) || tipo_acuse.GetHashCode() > CodigoResponseV2.Expresa.GetHashCode() && !tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.InformePago))
 				{
 					List<NoteType> notas = new List<NoteType>();
 					NoteType nota = new NoteType();
@@ -153,18 +159,24 @@ namespace HGInetUBLv2_1
 					bool receptor = false;
 					bool mandato = false;
 
+					tercero_dian.Identificacion = "800197268";
+					tercero_dian.IdentificacionDv = 4;
+					tercero_dian.TipoIdentificacion = 31;
+					tercero_dian.RazonSocial = "Dirección de Impuestos y Aduanas Nacionales";
+					tercero_dian.CodigoTributo = "01";
+
 					switch (tipo_acuse)
 					{
 						case CodigoResponseV2.AprobadoTacito:
 							nota.Value = string.Format("Manifiesto bajo la gravedad de juramento que transcurridos 3 días hábiles siguientes a la fecha de recepción de la mercancía o del servicio en la referida factura de este evento, el adquirente {0} identificado con NIT {1} no manifestó expresamente la aceptación o rechazo de la referida factura, ni reclamó en contra de su contenido.", documento.DatosAdquiriente.RazonSocial, documento.DatosAdquiriente.Identificacion);
-							if (acuse.CustomizationID.Value.Equals("1"))
-								tercero_dian = documento.DatosObligado;
+							//if (acuse.CustomizationID.Value.Equals("1"))
+							//	tercero_dian = documento.DatosObligado;
 							break;
 						case CodigoResponseV2.Inscripcion:
-							nota.Value = string.Format("HGI SAS \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
+							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
 							break;
 						case CodigoResponseV2.EndosoPp:
-							nota.Value = string.Format("HGI SAS \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
+							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
 							notas.Add(nota);
 							nota = new NoteType();
 							nota.Value = "sin mi responsabilidad u otra equivalente";
@@ -172,7 +184,7 @@ namespace HGInetUBLv2_1
 							tercero_dian = documento.DatosObligado;
 							break;
 						case CodigoResponseV2.EndosoG:
-							nota.Value = string.Format("HGI SAS \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
+							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
 							notas.Add(nota);
 							nota = new NoteType();
 							nota.Value = "\"en garantía\", \"en prenda\" u otra equivalente";
@@ -180,7 +192,7 @@ namespace HGInetUBLv2_1
 							tercero_dian = documento.DatosObligado;
 							break;
 						case CodigoResponseV2.EndosoPc:
-							nota.Value = string.Format("HGI SAS \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
+							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
 							notas.Add(nota);
 							nota = new NoteType();
 							nota.Value = "\"en procuración\", \"al cobro\" u otra equivalente";
@@ -188,7 +200,7 @@ namespace HGInetUBLv2_1
 							tercero_dian = documento.DatosObligado;
 							break;
 						case CodigoResponseV2.MandatoG:
-							nota.Value = string.Format("HGI SAS \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
+							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
 							notas.Add(nota);
 							nota = new NoteType();
 							//"XXXX, identificado con la cédula de ciudadanía (o el documento de identificación que corresponda) No. XXXX, expresamente manifiesto que obro en nombre y representación de YYYY,
@@ -197,26 +209,66 @@ namespace HGInetUBLv2_1
 							receptor = true;
 							mandato = true;
 							break;
+						case CodigoResponseV2.TerminacionMandatoG:
+							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
+							notas.Add(nota);
+							nota = new NoteType();
+							//"XXXX, identificado con la cédula de ciudadanía (o el documento de identificación que corresponda) No. XXXX, expresamente manifiesto que obro en nombre y representación de YYYY,
+							nota.Value = "Constancia de que no se encuentra pendiente de ejecución ningún acto en virtud del mandato que se cancela";
+							mandato = true;
+							break;
+						case CodigoResponseV2.Aval:
+							//nota.Value = string.Format("HGI SAS \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
+							//notas.Add(nota);
+							//nota = new NoteType();
+							//"XXXX, identificado con la cédula de ciudadanía (o el documento de identificación que corresponda) No. XXXX, expresamente manifiesto que obro en nombre y representación de YYYY,
+							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. , identificado con (documento de identidad) No. {0}, manifiesto expresamente que con la inclusión de mi firma en el presente documento actúo por aval de {1} respecto de la(s) Factura(s) Electrónica(s) de Venta como Título Valor identificada(s) con el(los) CUFE No. {2} , de forma parcial por valor de 1.000.000 pesos", documento.DatosObligado.Identificacion, "BILLY FACTUREX SAS", "d63e04ebd3357cf3b18dd67d047160d639f24ddbcec9b62d332b0ce4ea3ddbe3870257725208e44449e6b3ef66c35efa");
+							participacion_endoso = documento_factura.IntVlrTotal;
+							break;
+						case CodigoResponseV2.PagoFvTV:
+							//nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. , identificado con (documento de identidad) No. {0}, manifiesto expresamente que con la inclusión de mi firma en el presente documento actúo por aval de {1} respecto de la(s) Factura(s) Electrónica(s) de Venta como Título Valor identificada(s) con el(los) CUFE No. {2} , de forma parcial por valor de 1.000.000 pesos", documento.DatosObligado.Identificacion, "BILLY FACTUREX SAS", "d63e04ebd3357cf3b18dd67d047160d639f24ddbcec9b62d332b0ce4ea3ddbe3870257725208e44449e6b3ef66c35efa");
+							participacion_endoso = documento_factura.IntVlrTotal;
+							break;
 						default:
 							break;
 					}
-					
-					notas.Add(nota);
-					acuse.Note = notas.ToArray();
+					if (!string.IsNullOrEmpty(nota.Value))
+						notas.Add(nota);
+					if (notas.Count > 0)
+						acuse.Note = notas.ToArray();
 
 					// Información del emisor del evento
-					acuse.SenderParty = ObtenerTercero(documento.DatosAdquiriente, proveedor_receptor, receptor, participacion_endoso, mandato);	
-					acuse.ReceiverParty = ObtenerTercero(tercero_dian, proveedor_receptor, true, participacion_endoso);
+					acuse.SenderParty = ObtenerTercero(documento.DatosAdquiriente, receptor, participacion_endoso, mandato);
+					if (tipo_acuse.Equals(CodigoResponseV2.Aval) || tipo_acuse.Equals(CodigoResponseV2.PagoFvTV))
+					{
+						participacion_endoso = 0;
+					}
+					acuse.ReceiverParty = ObtenerTercero(tercero_dian, true, participacion_endoso);
 				}
 				else
 				{
-					#region acuse.SenderParty - Información del emisor del evento
-					acuse.SenderParty = ObtenerTercero(documento.DatosAdquiriente, proveedor_receptor, false);
-					#endregion
 
-					#region acuse.ReceiverParty - Información del receptor del evento
-					acuse.ReceiverParty = ObtenerTercero(documento.DatosObligado, proveedor_receptor, true);
-					#endregion
+					if (!tipo_acuse.Equals(CodigoResponseV2.InformePago))
+					{
+						#region acuse.SenderParty - Información del emisor del evento
+						acuse.SenderParty = ObtenerTercero(documento.DatosAdquiriente, false);
+						#endregion
+
+						#region acuse.ReceiverParty - Información del receptor del evento
+						acuse.ReceiverParty = ObtenerTercero(documento.DatosObligado, true);
+						#endregion
+					}
+					else
+					{
+						#region acuse.SenderParty - Información del emisor del evento
+						acuse.SenderParty = ObtenerTercero(documento.DatosObligado, false);
+						#endregion
+
+						#region acuse.ReceiverParty - Información del receptor del evento
+						acuse.ReceiverParty = ObtenerTercero(documento.DatosAdquiriente, true);
+						#endregion
+					}
+
 				}
 
 				#region Document response -  Document reference 
@@ -224,7 +276,7 @@ namespace HGInetUBLv2_1
                 DocumentResponseType DocumentResponse = new DocumentResponseType();
                 ResponseType response = new ResponseType();
 
-				if (!tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG))
+				if (!tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG) && !tipo_acuse.Equals(CodigoResponseV2.TerminacionMandatoG) && !tipo_acuse.Equals(CodigoResponseV2.InformePago) && !tipo_acuse.Equals(CodigoResponseV2.Aval) && !tipo_acuse.Equals(CodigoResponseV2.PagoFvTV))
 				{
 					response.ReferenceID = new ReferenceIDType();
 					response.ReferenceID.Value = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
@@ -255,9 +307,9 @@ namespace HGInetUBLv2_1
 				else if (tipo_acuse.Equals(CodigoResponseV2.CancelacionEG))
 				{
 					//Se debe obtener el evento de endoso en garantia que se va a cancelar
-					documento.Documento = 9900012398;
+					documento.Documento = 9900012898;
 					documento.Prefijo = string.Empty;
-					cufe_docreferenciado = "ac00bf950ff9b4cff9078fa845a6a090ec31494d754cc2ea397b531ae721cb3eafdc74220f595dbfe8909ec9c10057c1";
+					cufe_docreferenciado = "dd7cca62c2c6f0ec21f72383642bb9ddafe5b4942433c3f34f9606945f1a956b42d5a60b8ee675fcd586c5e6696e05dc";
 					documento.TipoDocumento = "96";
 				}
 				else if (tipo_acuse.Equals(CodigoResponseV2.MandatoG))
@@ -269,6 +321,34 @@ namespace HGInetUBLv2_1
 					response.ResponseCode.listID = "3";
 
 					//Fecha desde cuando puede actuar el Mandatario
+					response.EffectiveDate = new EffectiveDateType();
+					response.EffectiveDate.Value = Fecha.GetFecha();
+				}
+				else if (tipo_acuse.Equals(CodigoResponseV2.TerminacionMandatoG))
+				{
+					//Se debe obtener el evento de Mandato que se va a cancelar
+					documento.Documento = 99000128920;
+					documento.Prefijo = string.Empty;
+					cufe_docreferenciado = "cf6eb19f4728dcc76eeebfdd5377bd235e605ba04dc988118f5ab9d171e3c658b1d612ddac9c2c25480f30a6dca50011";
+					documento.TipoDocumento = "96";
+					//Fecha desde cuando puede actuar el Mandatario
+					response.EffectiveDate = new EffectiveDateType();
+					response.EffectiveDate.Value = Fecha.GetFecha();
+				}
+				else if (tipo_acuse.Equals(CodigoResponseV2.Aval))
+				{
+					//Se debe obtener el evento de endoso en garantia que se va a cancelar
+					documento.Documento = 990003013;
+					documento.Prefijo = "SETP";
+					cufe_docreferenciado = "f6100f110157d2a5bf21bcc4f9c8a808875cc1e549c8c9830c6833592b53c1233b8bc7857a63a03531cbe92d2ff8638d";
+					documento.TipoDocumento = "01";
+				}
+				else if (tipo_acuse.Equals(CodigoResponseV2.PagoFvTV))
+				{
+					//1 - Pago a factura sin limitacion, 2 - Pago a factura con limitacion
+					response.ResponseCode.listID = "2";
+
+					//Correspone a la fecha donde se realizo el pago parcial o total del titulo valor
 					response.EffectiveDate = new EffectiveDateType();
 					response.EffectiveDate.Value = Fecha.GetFecha();
 				}
@@ -295,7 +375,7 @@ namespace HGInetUBLv2_1
 				DocumentReference.DocumentTypeCode = new DocumentTypeCodeType();
                 DocumentReference.DocumentTypeCode.Value = documento.TipoDocumento;
 
-				if (tipo_acuse.GetHashCode() > CodigoResponseV2.Expresa.GetHashCode() && !tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG))
+				if (tipo_acuse.GetHashCode() > CodigoResponseV2.Expresa.GetHashCode() && !tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG) && !tipo_acuse.Equals(CodigoResponseV2.TerminacionMandatoG) && !tipo_acuse.Equals(CodigoResponseV2.Aval))
 				{
 					DocumentReference.ValidityPeriod = new PeriodType();
 					DocumentReference.ValidityPeriod.EndDate = new EndDateType();
@@ -311,6 +391,10 @@ namespace HGInetUBLv2_1
 					DocumentReference = new DocumentReferenceType();
 					DocumentReference.ID = new IDType();
 					DocumentReference.ID.Value = "1";
+
+					DocumentReference.DocumentDescription = new DocumentDescriptionType[1];
+					DocumentReference.DocumentDescription[0] = new DocumentDescriptionType();
+					DocumentReference.DocumentDescription[0].Value = "Se puede relacionar un CUFE, varios CUFES o Todas las facturas de tipo invoice (01) por un tiempo limitado";
 
 					//Grupo de información para informar el tiempo del mandato
 					DocumentReference.ValidityPeriod = new PeriodType();
@@ -379,10 +463,10 @@ namespace HGInetUBLv2_1
 					response = new ResponseType();
 
 					response.ResponseCode = new ResponseCodeType();
-					response.ResponseCode.Value = "ALL17-PT;R01-PT";
+					response.ResponseCode.Value = "ALL17-PT";
 					Description = new DescriptionType[1];
 					description = new DescriptionType();
-					description.Value = "Mandato por documento General;Registrar, firmar y consultar documento electrónico tipo ApplicationResponse - Acuse de recibo";
+					description.Value = "Mandato por documento General";
 					Description[0] = description;
 					response.Description = Description;
 					DocumentResponse1.Response = response;
@@ -416,10 +500,32 @@ namespace HGInetUBLv2_1
 				if (tipo_acuse.Equals(CodigoResponseV2.EndosoPp) || tipo_acuse.Equals(CodigoResponseV2.EndosoG) || tipo_acuse.Equals(CodigoResponseV2.EndosoPc))
 				{
 					ApplicationResponseType acuse_temp = new ApplicationResponseType();
-					acuse_temp.ReceiverParty = ObtenerTercero(documento.DatosAdquiriente, proveedor_receptor, false);
+					acuse_temp.ReceiverParty = ObtenerTercero(documento.DatosAdquiriente, false);
 					DocumentReference.IssuerParty = new PartyType();
 					DocumentReference.IssuerParty.PartyTaxScheme = new PartyTaxSchemeType[1];
 					DocumentReference.IssuerParty.PartyTaxScheme = acuse_temp.ReceiverParty.PartyTaxScheme;
+				}
+
+				if (tipo_acuse.Equals(CodigoResponseV2.Aval))
+				{
+					PartyLegalEntityType entidad = new PartyLegalEntityType();
+					entidad.RegistrationName = new RegistrationNameType();
+					entidad.RegistrationName.Value = "8005097";
+					entidad.CompanyID = new CompanyIDType();
+					entidad.CompanyID.schemeID = "4";
+					entidad.CompanyID.Value = "8005097";
+					entidad.CompanyID.schemeName = "13";
+					entidad.CompanyID.schemeAgencyID = "195";
+					entidad.CompanyID.schemeAgencyName = "CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)";
+					entidad.CompanyID.schemeVersionID = "2";
+
+					entidad.CorporateStockAmount = new CorporateStockAmountType();
+					entidad.CorporateStockAmount.Value = 1000000;
+					entidad.CorporateStockAmount.currencyID = "COP";
+
+					acuse.DocumentResponse[0].IssuerParty = new PartyType();
+					acuse.DocumentResponse[0].IssuerParty.PartyLegalEntity = new PartyLegalEntityType[1];
+					acuse.DocumentResponse[0].IssuerParty.PartyLegalEntity[0] = entidad;
 				}
 
 
@@ -427,27 +533,28 @@ namespace HGInetUBLv2_1
 
 
 				#region Persona que recibe el documento y realiza el Acuse Anexo Tecnico Ver. 1.8
-				
+
 				//Se requiere agregar al acuse de recibo informar la persona que lo hace con estas propiedades.
-				//if (acuse.CustomizationID.Value.Equals("1") || acuse.CustomizationID.Value.Equals("362") || acuse.CustomizationID.Value.Equals("364"))
-				//{
-				//	acuse.DocumentResponse[0].IssuerParty = new PartyType();
-				//	acuse.DocumentResponse[0].IssuerParty.Person = new PersonType[1];
-				//	PersonType persona = new PersonType();
-				//	persona.ID = new IDType();
-				//	persona.ID.Value = "1040731459";
-				//	persona.ID.schemeName = "13";
-				//	persona.FirstName = new FirstNameType();
-				//	persona.FirstName.Value = "Jhon Stivens";
-				//	persona.FamilyName = new FamilyNameType();
-				//	persona.FamilyName.Value = "Zea Velasquez";
-				//	//--Opcional el cargo
-				//	persona.JobTitle = new JobTitleType();
-				//	persona.JobTitle.Value = "Auxiliar de Cartera";
-				//	persona.OrganizationDepartment = new OrganizationDepartmentType();
-				//	persona.OrganizationDepartment.Value = "Cartera";
-				//	acuse.DocumentResponse[0].IssuerParty.Person[0] = persona;
-				//}
+				if (acuse.CustomizationID.Value.Equals("1") || acuse.CustomizationID.Value.Equals("362") || acuse.CustomizationID.Value.Equals("364"))
+				{
+					acuse.DocumentResponse[0].IssuerParty = new PartyType();
+					acuse.DocumentResponse[0].IssuerParty.Person = new PersonType[1];
+					PersonType persona = new PersonType();
+					persona.ID = new IDType();
+					persona.ID.Value = documento.DatosAdquiriente.Identificacion;//"1040731459";
+					persona.ID.schemeName = documento.DatosAdquiriente.TipoIdentificacion.ToString();//"13";
+					persona.ID.schemeID = documento.DatosAdquiriente.IdentificacionDv.ToString();
+					persona.FirstName = new FirstNameType();
+					persona.FirstName.Value = "NA";//"Jhon Stivens";
+					persona.FamilyName = new FamilyNameType();
+					persona.FamilyName.Value = "NA";//"Zea Velasquez";
+					//--Opcional el cargo
+					persona.JobTitle = new JobTitleType();
+					persona.JobTitle.Value = documento.DatosAdquiriente.RazonSocial;//"Auxiliar de Cartera";
+					persona.OrganizationDepartment = new OrganizationDepartmentType();
+					persona.OrganizationDepartment.Value = documento.DatosAdquiriente.RazonSocial;//"Cartera";
+					acuse.DocumentResponse[0].IssuerParty.Person[0] = persona;
+				}
 
 
 				#endregion
@@ -460,7 +567,7 @@ namespace HGInetUBLv2_1
 				{
 					//-----Se debe agregar validacion cuando es endoso la propiedad response.ResponseCode.listID si es 2 el calculo tiene un cambio
 					string code_response = string.Empty;
-					if (response.ResponseCode.listID != null && response.ResponseCode.listID.Equals("2"))
+					if (response.ResponseCode.listID != null && response.ResponseCode.listID.Equals("2") && !tipo_acuse.Equals(CodigoResponseV2.PagoFvTV))
 					{
 						code_response = response.ResponseCode.listID;
 					}
@@ -498,7 +605,7 @@ namespace HGInetUBLv2_1
 				UBLExtensionDian.ExtensionContent = ExtensionDian.Obtener(resolucion, TipoDocumento.AcuseRecibo, acuse.ID.Value, ruta_qr_Dian);
 				UBLExtensions.Add(UBLExtensionDian);
 
-				if (tipo_acuse.GetHashCode() > CodigoResponseV2.Expresa.GetHashCode() && !tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG))
+				if (tipo_acuse.GetHashCode() > CodigoResponseV2.Expresa.GetHashCode() && !tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG) && !tipo_acuse.Equals(CodigoResponseV2.TerminacionMandatoG))
 				{
 					UBLExtensionType UBLExtensionSector = new UBLExtensionType();
 					UBLExtensionSector.ExtensionContent = ExtensionRadian.ObtenerRadianInscripcion(documento_factura.IntVlrTotal, tipo_acuse);
@@ -576,7 +683,7 @@ namespace HGInetUBLv2_1
 		/// <param name="tercero">Objeto Adquiriente</param>
 		/// <param name="proveedor_receptor">Objeto del Proveedor del Adquiriente</param>
 		/// <returns>Objeto ubl con la informacion del generador del documento electrónico</returns>
-		private static PartyType ObtenerTercero(Tercero tercero, TblEmpresas proveedor_receptor, bool receptor, decimal participacion_endoso = 0, bool mandato = false)
+		private static PartyType ObtenerTercero(Tercero tercero, bool receptor, decimal participacion_endoso = 0, bool mandato = false)
         {
             try
             {
@@ -685,25 +792,28 @@ namespace HGInetUBLv2_1
 					Party.Person = new PersonType[1];
 					Party.Person[0] = person;
 
-					PowerOfAttorneyType mandante = new PowerOfAttorneyType();
-					mandante.ID = new IDType();
-					mandante.ID.schemeID = tercero.IdentificacionDv.ToString();
-					mandante.ID.schemeName = tercero.TipoIdentificacion.ToString();
-					mandante.ID.Value = tercero.Identificacion;
+					if (receptor == true)
+					{
+						PowerOfAttorneyType mandante = new PowerOfAttorneyType();
+						mandante.ID = new IDType();
+						mandante.ID.schemeID = tercero.IdentificacionDv.ToString();
+						mandante.ID.schemeName = tercero.TipoIdentificacion.ToString();
+						mandante.ID.Value = tercero.Identificacion;
 
-					//Debe corresponde a un “código” del numeral 13.2.5. Tipo de Mandante y Debe corresponde a una “descripción” del numeral 13.2.5. Tipo de Mandante
-					mandante.Description = new DescriptionType[1];
-					DescriptionType Description = new DescriptionType();
-					Description.Value = "Mandante Facturador Electrónico";
-					mandante.Description[0] = Description;
-					mandante.AgentParty = new PartyType();
-					mandante.AgentParty.PartyIdentification = new PartyIdentificationType[1];
-					mandante.AgentParty.PartyIdentification[0] = new PartyIdentificationType();
-					mandante.AgentParty.PartyIdentification[0].ID = new IDType();
-					mandante.AgentParty.PartyIdentification[0].ID.Value = "Mandante-FE";
+						//Debe corresponde a un “código” del numeral 13.2.5. Tipo de Mandante y Debe corresponde a una “descripción” del numeral 13.2.5. Tipo de Mandante
+						mandante.Description = new DescriptionType[1];
+						DescriptionType Description = new DescriptionType();
+						Description.Value = "Mandante Facturador Electrónico";
+						mandante.Description[0] = Description;
+						mandante.AgentParty = new PartyType();
+						mandante.AgentParty.PartyIdentification = new PartyIdentificationType[1];
+						mandante.AgentParty.PartyIdentification[0] = new PartyIdentificationType();
+						mandante.AgentParty.PartyIdentification[0].ID = new IDType();
+						mandante.AgentParty.PartyIdentification[0].ID.Value = "Mandante-FE";
 
-					Party.PowerOfAttorney = new PowerOfAttorneyType[1];
-					Party.PowerOfAttorney[0] = mandante;
+						Party.PowerOfAttorney = new PowerOfAttorneyType[1];
+						Party.PowerOfAttorney[0] = mandante;
+					}
 				}
 
 				//Se comenta proceso en espera de normatividad de interoperabilidad

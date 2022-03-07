@@ -60,7 +60,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			DocumentoRespuesta respuesta = new DocumentoRespuesta()
 			{
 				Aceptacion = documento.IntAdquirienteRecibo,
-				DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(documento.IntAdquirienteRecibo)),
+				DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CodigoResponseV2>(documento.IntAdquirienteRecibo)),
 				CodigoRegistro = documento.StrObligadoIdRegistro,
 				Cufe = documento.StrCufe,
 				DescripcionProceso = Enumeracion.GetDescription(proceso_actual),
@@ -331,7 +331,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										respuesta.FechaUltimoProceso = Fecha.GetFecha();
 										respuesta.IdProceso = ProcesoEstado.Finalizacion.GetHashCode();
 									}
-
+									
 
 									//Actualiza Documento en Base de Datos
 									documento.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
@@ -400,7 +400,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 					// envía el mail de acuse de recibo al facturador electrónico
-					if ((documento.IntAdquirienteRecibo > AdquirienteRecibo.Pendiente.GetHashCode() && documento.IntAdquirienteRecibo < AdquirienteRecibo.AprobadoTacito.GetHashCode()) && (documento.IntIdEstado != ProcesoEstado.Finalizacion.GetHashCode()))
+					if ((documento.IntAdquirienteRecibo > CodigoResponseV2.Pendiente.GetHashCode() && documento.IntAdquirienteRecibo < CodigoResponseV2.AprobadoTacito.GetHashCode()) && (documento.IntIdEstado != ProcesoEstado.Finalizacion.GetHashCode()))
 					{
 
 						Ctl_Documento ctl_documento = new Ctl_Documento();

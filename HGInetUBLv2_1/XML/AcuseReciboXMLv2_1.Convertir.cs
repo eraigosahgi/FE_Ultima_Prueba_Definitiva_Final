@@ -25,48 +25,55 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="acuse_ubl">Objeto Acuse para convertir</param>
 		/// <returns>Objeto tipo Acuse</returns>
-		public static Acuse Convertir(ApplicationResponseType acuse_ubl)
+		public static List<Acuse> Convertir(ApplicationResponseType acuse_ubl)
 		{
 
-			Acuse doc_acuse = new Acuse();
+			List<Acuse> Objeto_acuse = new List<Acuse>();
 
 			try
 			{
 
-				Match numero_doc = Regex.Match(acuse_ubl.DocumentResponse[0].DocumentReference[0].ID.Value, "\\d+");
+				for (int i = 0; i < acuse_ubl.DocumentResponse.Length; i++)
+				{
+					Acuse doc_acuse = new Acuse();
 
-				doc_acuse.Documento = Convert.ToInt64(numero_doc.Value);
+					Match numero_doc = Regex.Match(acuse_ubl.DocumentResponse[i].DocumentReference[i].ID.Value, "\\d+");
 
-				doc_acuse.Prefijo = acuse_ubl.DocumentResponse[0].DocumentReference[0].ID.Value.Substring(0, acuse_ubl.DocumentResponse[0].DocumentReference[0].ID.Value.Length - doc_acuse.Documento.ToString().Length);
+					doc_acuse.Documento = Convert.ToInt64(numero_doc.Value);
 
-				doc_acuse.CufeDocumento = acuse_ubl.DocumentResponse[0].DocumentReference[0].UUID.Value;
+					doc_acuse.Prefijo = acuse_ubl.DocumentResponse[i].DocumentReference[i].ID.Value.Substring(0, acuse_ubl.DocumentResponse[i].DocumentReference[i].ID.Value.Length - doc_acuse.Documento.ToString().Length);
 
-				doc_acuse.IdAcuse = acuse_ubl.ID.Value;
-				//doc_acuse.IdSeguridad = acuse.DocumentResponse[0].DocumentReference.UUID.Value;
-				if (acuse_ubl.DocumentResponse[0].DocumentReference[0].DocumentType != null && !string.IsNullOrEmpty(acuse_ubl.DocumentResponse[0].DocumentReference[0].DocumentType.Value))
-					doc_acuse.TipoDocumento = acuse_ubl.DocumentResponse[0].DocumentReference[0].DocumentType.Value;
+					doc_acuse.CufeDocumento = acuse_ubl.DocumentResponse[i].DocumentReference[i].UUID.Value;
 
-				doc_acuse.CodigoRespuesta = acuse_ubl.DocumentResponse[0].Response.ResponseCode.Value;
-				doc_acuse.MvoRespuesta = acuse_ubl.DocumentResponse[0].Response.Description[0].Value;
+					doc_acuse.IdAcuse = acuse_ubl.ID.Value;
+					//doc_acuse.IdSeguridad = acuse.DocumentResponse[0].DocumentReference.UUID.Value;
+					if (acuse_ubl.DocumentResponse[i].DocumentReference[i].DocumentType != null && !string.IsNullOrEmpty(acuse_ubl.DocumentResponse[i].DocumentReference[i].DocumentType.Value))
+						doc_acuse.TipoDocumento = acuse_ubl.DocumentResponse[i].DocumentReference[i].DocumentType.Value;
 
-				Tercero adquiriente = new Tercero();
-				adquiriente.Identificacion = acuse_ubl.SenderParty.PartyTaxScheme[0].CompanyID.Value;
-				adquiriente.RazonSocial = acuse_ubl.SenderParty.PartyTaxScheme[0].RegistrationName.Value;
-				doc_acuse.DatosAdquiriente = adquiriente;
+					doc_acuse.CodigoRespuesta = acuse_ubl.DocumentResponse[i].Response.ResponseCode.Value;
+					doc_acuse.MvoRespuesta = acuse_ubl.DocumentResponse[i].Response.Description[i].Value;
 
-				Tercero obligado = new Tercero();
-				obligado.Identificacion = acuse_ubl.ReceiverParty.PartyTaxScheme[0].CompanyID.Value;
-				obligado.RazonSocial = acuse_ubl.ReceiverParty.PartyTaxScheme[0].RegistrationName.Value;
-				doc_acuse.DatosObligado = obligado;
+					Tercero adquiriente = new Tercero();
+					adquiriente.Identificacion = acuse_ubl.SenderParty.PartyTaxScheme[i].CompanyID.Value;
+					adquiriente.RazonSocial = acuse_ubl.SenderParty.PartyTaxScheme[i].RegistrationName.Value;
+					doc_acuse.DatosAdquiriente = adquiriente;
 
-				DateTime fecha = acuse_ubl.IssueDate.Value;
-				DateTime hora = Convert.ToDateTime(acuse_ubl.IssueTime.Value).AddHours(-5);
+					Tercero obligado = new Tercero();
+					obligado.Identificacion = acuse_ubl.ReceiverParty.PartyTaxScheme[i].CompanyID.Value;
+					obligado.RazonSocial = acuse_ubl.ReceiverParty.PartyTaxScheme[i].RegistrationName.Value;
+					doc_acuse.DatosObligado = obligado;
 
-				DateTime fecha_hora = new DateTime(fecha.Year, fecha.Month, fecha.Day, hora.Hour, hora.Minute, hora.Second);
-				
-				doc_acuse.Fecha = Convert.ToDateTime(fecha_hora);
+					DateTime fecha = acuse_ubl.IssueDate.Value;
+					DateTime hora = Convert.ToDateTime(acuse_ubl.IssueTime.Value).AddHours(-5);
 
-				return doc_acuse;
+					DateTime fecha_hora = new DateTime(fecha.Year, fecha.Month, fecha.Day, hora.Hour, hora.Minute, hora.Second);
+
+					doc_acuse.Fecha = Convert.ToDateTime(fecha_hora);
+
+					Objeto_acuse.Add(doc_acuse);
+				}
+
+				return Objeto_acuse;
 
 			}
 			catch (Exception ex)

@@ -81,32 +81,32 @@ namespace HGInetMiFacturaElectronicaWeb
 			RegisterRoutes(RouteTable.Routes);
 
 			//Proceso para guardar la peticion cuando sea un servicio
-			string servicio = context.Request.FilePath.ToLowerInvariant();
+			//string servicio = context.Request.FilePath.ToLowerInvariant();
 
-			string id = string.Empty;
+			//string id = string.Empty;
 
-			try
-			{
-				if (servicio.Contains("wfc"))
-				{
-					//Proceso tomado de https://blogs.msdn.microsoft.com/rodneyviana/2014/02/06/logging-incoming-requests-and-responses-in-an-asp-net-or-wcf-application-in-compatibility-mode/
-					// Crea un guid por cada peticion
-					id = Guid.NewGuid().ToString();
-					//guarda la peticion
-					PeticionHttp input = new PeticionHttp(context, Request.Filter, id, servicio);
-					Request.Filter = input;
-					input.SetFilter(false);
-					//guarda la respuesta
-					PeticionHttp output = new PeticionHttp(context, Response.Filter, id, servicio);
-					output.SetFilter(true);
-					Response.Filter = output;
-				}
-			}
-			catch (Exception excepcion)
-			{
-				//LogExcepcion.Guardar(new Exception(string.Format("Error al procesar la peticion {0}", excepcion), excepcion));
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-			}
+			//try
+			//{
+			//	if (servicio.Contains("wfc"))
+			//	{
+			//		//Proceso tomado de https://blogs.msdn.microsoft.com/rodneyviana/2014/02/06/logging-incoming-requests-and-responses-in-an-asp-net-or-wcf-application-in-compatibility-mode/
+			//		// Crea un guid por cada peticion
+			//		id = Guid.NewGuid().ToString();
+			//		//guarda la peticion
+			//		PeticionHttp input = new PeticionHttp(context, Request.Filter, id, servicio);
+			//		Request.Filter = input;
+			//		input.SetFilter(false);
+			//		//guarda la respuesta
+			//		PeticionHttp output = new PeticionHttp(context, Response.Filter, id, servicio);
+			//		output.SetFilter(true);
+			//		Response.Filter = output;
+			//	}
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	//LogExcepcion.Guardar(new Exception(string.Format("Error al procesar la peticion {0}", excepcion), excepcion));
+			//	RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+			//}
 		}
 
 		void RegisterRoutes(RouteCollection routes)

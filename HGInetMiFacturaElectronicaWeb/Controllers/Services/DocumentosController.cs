@@ -275,7 +275,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.IntNeto,
 					EstadoFactura = d.EstadoFactura,// DescripcionEstadoFactura(d.EstadoFactura),
 					EstadoCategoria = d.EstadoCategoria,//DescripcionCategoriaFactura(d.EstadoCategoria),
-					EstadoAcuse = d.EstadoAcuse,// DescripcionEstadoAcuse(d.EstadoAcuse),
+					EstadoAcuse = DescripcionEstadoAcuse(d.EstadoAcuse),
 					d.MotivoRechazo,
 					AdquirienteMvoRechazo = d.StrAdquirienteMvoRechazo,
 					d.IdentificacionAdquiriente,
@@ -294,7 +294,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.Estado,
 					EstadoEnvioMail = d.EstadoEnvioMail,// DescripcionEstadoEmail(Convert.ToInt16(d.EstadoEnvioMail)),
 					MensajeEnvio = d.MensajeEnvio,// DescripcionMensajeEmail(Convert.ToInt16(d.MensajeEnvio)),
-					d.EnvioMail
+					d.EnvioMail,
+					d.Radian,
+					TituloValor = (d.IntAdquirienteRecibo > 5) ? "Titulo Valor" : "Documento Electrónico"
 				});
 
 				return Ok(retorno);
@@ -449,8 +451,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Xml = d.StrUrlArchivoUbl,
 					d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
-					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
-					CamposVisibles = (d.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode() && d.IntAdquirienteRecibo > (short)AdquirienteRecibo.AprobadoTacito.GetHashCode()) ? true : false,
+					RespuestaVisible = (d.IntAdquirienteRecibo == CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == CodigoResponseV2.Expresa.GetHashCode() || d.IntAdquirienteRecibo == CodigoResponseV2.Inscripcion.GetHashCode()) ? true : false,
+					CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() && d.IntAdquirienteRecibo != (short)CodigoResponseV2.AprobadoTacito.GetHashCode()) ? true : false,
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					//poseeIdComercio = (d.TblEmpresasResoluciones.IntComercioId == null) ? false : (d.TblEmpresasResoluciones.IntComercioId > 0) ? true : false,
 					Estatus = Pago.VerificarSaldo(id_seguridad),
@@ -495,15 +497,21 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				ctl_documento = new Ctl_Documento();
 				TblDocumentos documento = new TblDocumentos();
 				documento = datos.FirstOrDefault();
-				if (((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.Entregado.GetHashCode())))
+				if (((documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode()) || (documento.IntAdquirienteRecibo >= (short)CodigoResponseV2.Aceptado.GetHashCode())))
 				{
 					if ((documento.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode()))
 					{
 						documento.IntEstadoEnvio = (short)EstadoEnvio.Leido.GetHashCode();
-						documento.IntAdquirienteRecibo = (short)AdquirienteRecibo.Pendiente.GetHashCode();
+						//documento.IntAdquirienteRecibo = (short)AdquirienteRecibo.Pendiente.GetHashCode();
 						documento.DatFechaActualizaEstado = Fecha.GetFecha();
 						ctl_documento.Actualizar(documento);
 					}
+				}
+
+				if (documento.TblEmpresasAdquiriente.IntRadian == true && documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode())
+				{
+					Ctl_EventosRadian evento = new Ctl_EventosRadian();
+					Task envio_acuse = evento.ProcesoCrearAcuseRecibo(string.Empty, documento.StrIdSeguridad);
 				}
 
 
@@ -526,8 +534,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Xml = d.StrUrlArchivoUbl,
 					d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
-					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2 || d.IntAdquirienteRecibo == 4) ? true : false,
-					CamposVisibles = (d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Pendiente.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Leido.GetHashCode() || d.IntAdquirienteRecibo == (short)AdquirienteRecibo.Enviado.GetHashCode()) ? true : false,
+					RespuestaVisible = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? false : true,
+					CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? true : false,
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					Estatus = Pago.VerificarSaldo(id_seguridad),
 					XmlAcuse = d.StrUrlAcuseUbl,
@@ -554,7 +562,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				});
 
 				//Si el documento ya tiene acuse de recibo, no guarda en auditoria que el documento esta visto
-				if (((documento.IntAdquirienteRecibo < (short)AdquirienteRecibo.Aprobado.GetHashCode()) || (documento.IntAdquirienteRecibo > (short)AdquirienteRecibo.Entregado.GetHashCode())))
+				if (((documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode()) || (documento.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode())))
 				{
 
 					try
@@ -820,6 +828,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			try
 			{
 				Ctl_Documento ctl_documento = new Ctl_Documento();
+
 				List<TblDocumentos> datos = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo, (!string.IsNullOrEmpty(usuario)) ? usuario : "");
 
 				if (datos == null)
@@ -839,7 +848,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Xml = d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
 					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
-					CamposVisibles = (d.IntAdquirienteRecibo == 0) ? true : false
+					CamposVisibles = (d.IntAdquirienteRecibo == 0 || d.IntAdquirienteRecibo == 4) ? true : false
 				});
 				return Ok(retorno);
 
@@ -2349,6 +2358,28 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Documento = d.TblDocumentos.IntNumero,
 			});
 			return resultado;
+		}
+
+		[HttpGet]
+		[Route("Api/ConsultarEventosRadian")]
+
+		public IHttpActionResult ConsultarEventosRadian(string List_IdSeguridad)
+		{
+			try
+			{
+				Ctl_Documento Controlador = new Ctl_Documento();
+
+				Controlador.ConsultarEventosRadian(List_IdSeguridad);
+
+				return Ok();
+				//}
+				//return Ok();
+			}
+			catch (Exception ex)
+			{
+				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
+				return Conflict();
+			}
 		}
 
 	}

@@ -3,6 +3,8 @@
 var email_destino = "";
 var id_seguridad = "";
 var items_recibo = [];
+var list_doc_idSeguridad = "";
+var array_lis_doc_rad = [];
 var App = angular.module('App', ['dx', 'AppMaestrosEnum', 'AppSrvDocumento', 'AppSrvFiltro']);
 var UsuarioSession = "";
 App.controller('DocObligadoController', function DocObligadoController($scope, $http, $location, SrvMaestrosEnum, SrvDocumento, $rootScope, SrvFiltro) {
@@ -280,7 +282,25 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                 	mode: "select",
                 	title: "Selector de Columnas"
                 },
-
+                onContentReady: function (e) {
+                	$("#gridDocumentos").dxDataGrid({
+                		onToolbarPreparing: function (e) {
+                			e.toolbarOptions.items.unshift({
+                				location: "after",
+                				widget: "dxButton",
+								visible:false,
+                				options: {
+                					icon: "find", elementAttr: { title: "Consultar" },
+                					onClick: function () {
+                						//$http.get('/api/ConsultarEventosRadian?List_IdSeguridad=' + $scope.documentos).then(function (response) {
+                						//})
+                						BotonConsultaEvento(true)
+                					}
+                				}
+                			})
+                		}
+                	});
+                },
 				groupPanel: {
 					allowColumnDragging: true,
 					visible: true
@@ -302,6 +322,8 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
                     		var permite_envio = "class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:5%; font-size:19px'";
 
+                    		var consultar_eventos = "style='pointer-events:auto;cursor: not-allowed;'";
+
                     		if (options.data.Pdf)
                     			visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer;'";
                     		else
@@ -321,8 +343,6 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                     			visible_xml_acuse = "href='" + options.data.XmlAcuse + "' title='ver XML Respuesta acuse' style='pointer-events:auto;cursor: pointer'";
                     		else
                     			options.data.XmlAcuse = "#";
-
-
 
                     		$("<div>")
                                 .append(
@@ -344,6 +364,28 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
                                 .appendTo(container);
                     	}
                     },
+					{
+						caption: "Consulta Radian",
+						cssClass: "col-xs-3 col-md-1",
+						alignment: "center",
+						width: "10%",
+						//dataField: "NumeroDocumento",
+						visible: response.data.Radian,
+						//disable: ((response.data.IntAdquirienteRecibo > 5) && (response.data.EstadoFactura > 7)) ? true : false,
+						cellTemplate: function (container, options) {
+							if (options.data.tipodoc != 'Nota Crédito') {
+								$('<div id="chkdoc_evento_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
+									name: "chkdoc_evento_" + options.data.StrIdSeguridad,
+									disabled: ((options.data.IntAdquirienteRecibo > 5) || (options.data.EstadoFactura < 8)) ? true : false,
+									onValueChanged: function (data) {
+										validarSeleccion();
+									}
+								})
+								.appendTo(container);
+							}
+						}
+
+					},
                     {
                     	caption: "Documento",
                     	cssClass: "col-xs-3 col-md-1",
@@ -380,28 +422,30 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					 {
 					 	caption: "SubTotal",
 					 	cssClass: "col-xs-2 col-md-1",
-					 	dataField: "IntSubTotal"
+					 	dataField: "IntSubTotal",
+					 	visible: false
 					 },
 					  {
 					  	caption: "Neto",
 					  	cssClass: "col-xs-2 col-md-1",
-					  	dataField: "IntNeto"
+					  	dataField: "IntNeto",
+					  	visible: false
 					  },
                      {
                      	caption: "Adquiriente",
                      	cssClass: "hidden-xs col-md-1",
                      	dataField: "IdentificacionAdquiriente"
                      },
+					 {
+					 	caption: "Nombre Adquiriente",
+					 	cssClass: "hidden-xs col-md-1",
+					 	dataField: "NombreAdquiriente"
+					 },
                      {
                      	caption: "Tipo Documento",
                      	cssClass: "hidden-xs col-md-1",
                      	dataField: "tipodoc"
                      },
-                      {
-                      	caption: "Nombre Adquiriente",
-                      	cssClass: "hidden-xs col-md-1",
-                      	dataField: "NombreAdquiriente"
-                      },
                        {
                        	dataField: "EstadoFactura",
                        	caption: "Estado",
@@ -418,6 +462,22 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 								.appendTo(container);
                        	}
                        },
+					   {
+					   	caption: "Radian",
+					   	dataField: "TituloValor",
+					   	cssClass: "hidden-xs col-md-1",
+					   	//lookup: {
+					   	//	dataSource: AdquirienteRecibo,
+					   	//	displayExpr: "Name",
+					   	//	valueExpr: "ID"
+					   	//},
+					   	cellTemplate: function (container, options) {
+					   		var estado = (options.data.IntAdquirienteRecibo > 5) ? 0 : 1;
+					   		$("<div>")
+								.append($(ColocarColorRadian(estado, options.data.TituloValor)))
+								.appendTo(container);
+					   	}
+					   },
 
 					   {
 					   	caption: "Acuse",
@@ -581,6 +641,109 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
 
+
+		function validarSeleccion() {
+			var data = $("#gridDocumentos").dxDataGrid("instance").option().dataSource;
+			var lista = '';
+			var total_seleccionados = 0;
+			for (var i = 0; i < data.length; i++) {
+
+				valor = false;
+
+				try {
+					var valor = $("#chkdoc_evento_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
+				} catch (e) {
+
+				}
+				if (valor) {
+
+					try {
+						if (lista == "")
+						{
+							lista = data[i].StrIdSeguridad;
+						}
+						else
+						{
+							lista += ',' + data[i].StrIdSeguridad;
+						}
+						//lista += (lista) ? ',' + data[i].StrIdSeguridad : data[i].StrIdSeguridad;//'';
+						//lista += "{'" + data[i].StrIdSeguridad + "'}";
+					} catch (e) {
+
+					}
+					
+					total_seleccionados += 1;
+				}
+
+			}
+
+			if (total_seleccionados > 0) {
+				//lista = "[" + lista + "]"
+				$scope.documentos = lista;
+
+				BotonConsultaEvento(true);
+				//$("#consultaeventos").dxButton({ visible: true });
+				//$("#gridDocumentos").dxDataGrid({
+				//	onToolbarPreparing: function (e) {
+				//		e.toolbarOptions.items.unshift({
+				//			location: "after",
+				//			widget: "dxButton",
+				//			visible: true,
+				//			options: {
+				//				icon: "find", elementAttr: { title: "Consultar" },
+				//				onClick: function () {
+				//					//ObtenerProductos();
+				//				}
+				//			}
+				//		})
+				//	}
+				//});
+
+
+			} else {
+				
+				//$("#consultaeventos").dxButton({ visible: false });
+				BotonConsultaEvento(false);
+				$scope.documentos = '';
+				//$("#gridDocumentos").dxDataGrid({
+				//	onToolbarPreparing: function (e) {
+				//		e.toolbarOptions.items.unshift({
+				//			location: "after",
+				//			widget: "dxButton",
+				//			visible: false,
+				//			options: {
+				//				icon: "find", elementAttr: { title: "Consultar" },
+				//				onClick: function () {
+				//					//ObtenerProductos();
+				//				}
+				//			}
+				//		})
+				//	}
+				//});
+			}
+
+		}
+
+		function BotonConsultaEvento(Visible) {
+
+			$("#gridDocumentos").dxDataGrid({
+				onToolbarPreparing: function (e) {
+					e.toolbarOptions.items.unshift({
+						location: "after",
+						widget: "dxButton",
+						visible: Visible,
+						options: {
+							icon: "find", elementAttr: { title: "Consultar" },
+							onClick: function () {
+								$http.get('/api/ConsultarEventosRadian?List_IdSeguridad=' + $scope.documentos).then(function (response) {
+								})
+							}
+						}
+					})
+				}
+			});
+
+		}
 
 	}
 

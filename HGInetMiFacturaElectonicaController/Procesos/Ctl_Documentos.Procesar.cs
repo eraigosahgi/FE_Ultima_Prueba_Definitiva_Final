@@ -117,7 +117,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			DocumentoRespuesta respuesta = new DocumentoRespuesta()
 			{
 				Aceptacion = documento.IntAdquirienteRecibo,
-				DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(documento.IntAdquirienteRecibo)),
+				DescripcionAceptacion = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CodigoResponseV2>(documento.IntAdquirienteRecibo)),
 				CodigoRegistro = documento.StrObligadoIdRegistro,
 				Cufe = documento.StrCufe,
 				DescripcionProceso = Enumeracion.GetDescription(proceso_actual),

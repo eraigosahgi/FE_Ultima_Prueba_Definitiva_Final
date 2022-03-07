@@ -140,7 +140,7 @@ namespace HGInetDIANServicios
 		/// <param name="clave_dian">Clave proporcionada en la plataforma de la Dian</param>
 		/// <param name="ruta_servicio_web">Url del servicio web de la DIAN</param>
 		/// <returns></returns>
-		public static AcuseRecibo EnviarSync_v2(string ruta_zip, string nombre_archivo, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string ambiente, ref List<DianWSValidacionPrevia.DianResponse> respuesta_dian, string cufe_doc, int tipo_doc)
+		public static AcuseRecibo EnviarSync_v2(string ruta_zip, string nombre_archivo, string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string ambiente, ref List<DianWSValidacionPrevia.DianResponse> respuesta_dian, string cufe_doc, int tipo_doc, int proceso_acuse = 0)
 		{
 
 			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
@@ -174,233 +174,231 @@ namespace HGInetDIANServicios
 
 					//if (ambiente.Equals("1"))
 					//{
-						acuse_recibo.Version = "2";
-						acuse_recibo.ReceivedDateTime = Fecha.GetFecha();
+					acuse_recibo.Version = "2";
+					acuse_recibo.ReceivedDateTime = Fecha.GetFecha();
 
-						string archivo = "", carpeta = "";
+					string archivo = "", carpeta = "";
 
-						//Ejecución de produccion DIAN Enviando archivo ZIP	
+					//Ejecución de produccion DIAN Enviando archivo ZIP	
+					try
+					{
+						if (tipo_doc < TipoDocumento.AcuseRecibo.GetHashCode())
+							respuesta = webServiceHab.SendBillSync(nombre_archivo, bytes);
+						else if (tipo_doc == TipoDocumento.AcuseRecibo.GetHashCode())
+							respuesta = webServiceHab.SendEventUpdateStatus(bytes);
+						else
+							respuesta = webServiceHab.SendNominaSync(bytes);
+
+						log_categoria = MensajeCategoria.Archivos;
+						log_accion = MensajeAccion.creacion;
+
+						//Consulta de un documento por el cufe con sus eventos
+						//DianWSValidacionPrevia.DianResponse respuesta2 = webServiceHab.GetStatusEvent("258c0c621305fb3f389553eca6f7151fdc7637d6b42fd420bfb3d1ac2c157748f6db9c8c866304ce5586812715c819e5");
+
+						carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
+
+						archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
+
+						if (tipo_doc == TipoDocumento.AcuseRecibo.GetHashCode())
+						{
+							archivo = string.Format("{0}-ws.xml", Path.GetFileNameWithoutExtension(ruta_zip));
+						}
+
+						// almacena el mensaje de respuesta del servicio web
+						archivo = Xml.GuardarObjeto(respuesta, carpeta, archivo);
+
+					}
+					catch (Exception excepcion)
+					{
+						DateTime fecha_excepcion = Fecha.GetFecha();
+						string msg_custom = string.Format("Error Exec WS => Carpeta: {0} - Archivo: {1} - Fecha Envio: {2} - Fecha Excepcion: {3}", carpeta, archivo, acuse_recibo.ReceivedDateTime, fecha_excepcion);
+
+						RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+					}
+					finally
+					{
 						try
 						{
-							if (tipo_doc < TipoDocumento.Nomina.GetHashCode())
-								respuesta = webServiceHab.SendBillSync(nombre_archivo, bytes);
-							else
-								respuesta = webServiceHab.SendNominaSync(bytes);
 
-							log_categoria = MensajeCategoria.Archivos;
-							log_accion = MensajeAccion.creacion;
-
-							carpeta = Path.GetDirectoryName(ruta_zip) + @"\";
-
-							archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
-
-							// almacena el mensaje de respuesta del servicio web
-							archivo = Xml.GuardarObjeto(respuesta, carpeta, archivo);
-
+							if (webServiceHab != null)
+								if (webServiceHab.State != CommunicationState.Closed)
+									webServiceHab.Close();
 						}
 						catch (Exception excepcion)
 						{
 							DateTime fecha_excepcion = Fecha.GetFecha();
-							string msg_custom = string.Format("Error Exec WS => Carpeta: {0} - Archivo: {1} - Fecha Envio: {2} - Fecha Excepcion: {3}", carpeta, archivo, acuse_recibo.ReceivedDateTime, fecha_excepcion);
+							string msg_custom = string.Format("Error Close WS Envio => Carpeta: {0} - Archivo: {1} - Fecha Envio: {2} - Fecha Excepcion: {3}", carpeta, archivo, acuse_recibo.ReceivedDateTime, fecha_excepcion);
 
 							RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+						}
+
+					}
+
+					acuse_recibo.ResponseDateTime = Fecha.GetFecha();
+
+					log_accion = MensajeAccion.lectura;
+					if (respuesta != null)
+					{
+						//se valida si ya se envio para consultarlo con el cufe que retorna
+						try
+						{
+							if (respuesta.ErrorMessage != null)
+							{
+								if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())) && cufe_doc.Equals(respuesta.XmlDocumentKey))
+								{
+									if (respuesta.ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento"))
+									{
+										respuesta.StatusCode = "94";
+
+										webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
+										webServiceHab.Endpoint.Address =
+											new System.ServiceModel.EndpointAddress(ruta_servicio_web);
+										webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
+
+										string key = respuesta.XmlDocumentKey;
+
+										acuse_recibo.ResponseDateTime = Fecha.GetFecha();
+										DianWSValidacionPrevia.DianResponse respuesta_consulta = webServiceHab.GetStatus(key);
+
+										if (respuesta_consulta.XmlBase64Bytes == null && respuesta.XmlBase64Bytes != null)
+											respuesta_consulta.XmlBase64Bytes = respuesta.XmlBase64Bytes;
+
+											respuesta = respuesta_consulta;
+
+										string nom_archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
+
+										// almacena el mensaje de respuesta de la consulta del servicio web
+										archivo = Xml.GuardarObjeto(respuesta, carpeta, nom_archivo);
+									}
+								}
+							}
+						}
+						catch (Exception excepcion)
+						{
+							DateTime fecha_excepcion = Fecha.GetFecha();
+							string msg_custom = string.Format("[0] - Error conversion mensaje respuesta DIAN {0}, CUFE: {1} - Fecha Envio: {2} - Fecha Excepcion: {3}", nombre_archivo, respuesta.XmlDocumentKey, acuse_recibo.ResponseDateTime, fecha_excepcion);
+							RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
 						}
 						finally
 						{
 							try
 							{
-
 								if (webServiceHab != null)
 									if (webServiceHab.State != CommunicationState.Closed)
 										webServiceHab.Close();
 							}
 							catch (Exception excepcion)
 							{
-								DateTime fecha_excepcion = Fecha.GetFecha();
-								string msg_custom = string.Format("Error Close WS Envio => Carpeta: {0} - Archivo: {1} - Fecha Envio: {2} - Fecha Excepcion: {3}", carpeta, archivo, acuse_recibo.ReceivedDateTime, fecha_excepcion);
+								string msg_custom = string.Format("Error Close WS Consulta => Carpeta: {0} - Archivo: {1}", carpeta, archivo);
 
 								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 							}
-
 						}
 
-						acuse_recibo.ResponseDateTime = Fecha.GetFecha();
+						log_accion = MensajeAccion.cargando;
+						respuesta_dian.Add(respuesta);
 
-						log_accion = MensajeAccion.lectura;
-						if (respuesta != null)
+						log_accion = MensajeAccion.creacion;
+						if (respuesta.StatusCode.Equals("0") || respuesta.StatusCode.Equals("00") || respuesta.StatusCode.Equals("99"))
 						{
-							//se valida si ya se envio para consultarlo con el cufe que retorna
-							try
+							if (respuesta.XmlBase64Bytes != null)
 							{
-								if (respuesta.ErrorMessage != null)
+
+								if (tipo_doc == TipoDocumento.AcuseRecibo.GetHashCode())
 								{
-									if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())) && cufe_doc.Equals(respuesta.XmlDocumentKey))
-									{
-										if (respuesta.ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento"))
-										{
-											respuesta.StatusCode = "94";
-
-											webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
-											webServiceHab.Endpoint.Address =
-												new System.ServiceModel.EndpointAddress(ruta_servicio_web);
-											webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
-
-											string key = respuesta.XmlDocumentKey;
-
-											acuse_recibo.ResponseDateTime = Fecha.GetFecha();
-											DianWSValidacionPrevia.DianResponse respuesta_consulta = webServiceHab.GetStatus(key);
-
-											if (respuesta_consulta.XmlBase64Bytes == null && respuesta.XmlBase64Bytes != null)
-												respuesta_consulta.XmlBase64Bytes = respuesta.XmlBase64Bytes;
-
-												respuesta = respuesta_consulta;
-
-											string nom_archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
-
-											// almacena el mensaje de respuesta de la consulta del servicio web
-											archivo = Xml.GuardarObjeto(respuesta, carpeta, nom_archivo);
-										}
-									}
+									nombre_archivo = string.Format("{0}-{1}", nombre_archivo, proceso_acuse);
 								}
-							}
-							catch (Exception excepcion)
-							{
-								DateTime fecha_excepcion = Fecha.GetFecha();
-								string msg_custom = string.Format("[0] - Error conversion mensaje respuesta DIAN {0}, CUFE: {1} - Fecha Envio: {2} - Fecha Excepcion: {3}", nombre_archivo, respuesta.XmlDocumentKey, acuse_recibo.ResponseDateTime, fecha_excepcion);
-								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 
-							}
-							finally
-							{
+								FileStream fs = null;
+
 								try
 								{
-									if (webServiceHab != null)
-										if (webServiceHab.State != CommunicationState.Closed)
-											webServiceHab.Close();
+									//Guardo el Base64 de la Respuesta
+									Directorio.CrearDirectorio(ruta_xml);
+									using (fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, nombre_archivo),
+										FileMode.Create, FileAccess.ReadWrite))
+									{
+										BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
+										bw.Write(respuesta.XmlBase64Bytes);
+										bw.Close();
+										fs.Close();
+									}
+
+									nombre_archivo = string.Format("{0}-WS-1", nombre_archivo);
+
 								}
 								catch (Exception excepcion)
 								{
-									string msg_custom = string.Format("Error Close WS Consulta => Carpeta: {0} - Archivo: {1}", carpeta, archivo);
+									respuesta.StatusCode = "94";
+									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se guardo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
+									respuesta.IsValid = false;
+
+
+									string msg_custom = string.Format("Error FileB64 => Carpeta: {0} - Archivo: {1}", ruta_xml, nombre_archivo);
 
 									RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
 								}
+								finally
+								{
+									if (fs != null)
+										fs.Close();
+								}
+								log_categoria = MensajeCategoria.ServicioDian;
+								log_accion = MensajeAccion.consulta;
 							}
-
-							log_accion = MensajeAccion.cargando;
-							respuesta_dian.Add(respuesta);
-
-							log_accion = MensajeAccion.creacion;
-							if (respuesta.StatusCode.Equals("0") || respuesta.StatusCode.Equals("00") || respuesta.StatusCode.Equals("99"))
-							{
-								if (respuesta.XmlBase64Bytes != null)
-								{
-									FileStream fs = null;
-
-									try
-									{
-										//Guardo el Base64 de la Respuesta
-										Directorio.CrearDirectorio(ruta_xml);
-										using (fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, nombre_archivo),
-											FileMode.Create, FileAccess.ReadWrite))
-										{
-											BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
-											bw.Write(respuesta.XmlBase64Bytes);
-											bw.Close();
-											fs.Close();
-										}
-
-										nombre_archivo = string.Format("{0}-WS", nombre_archivo);
-
-									}
-									catch (Exception excepcion)
-									{
-										respuesta.StatusCode = "94";
-										respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se guardo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
-										respuesta.IsValid = false;
-
-
-										string msg_custom = string.Format("Error FileB64 => Carpeta: {0} - Archivo: {1}", ruta_xml, nombre_archivo);
-
-										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
-
-									}
-									finally
-									{
-										if (fs != null)
-											fs.Close();
-									}
-									log_categoria = MensajeCategoria.ServicioDian;
-									log_accion = MensajeAccion.consulta;
-								}
-								else if (respuesta.StatusDescription.Equals("En proceso de validación"))
-								{
-									try
-									{
-										respuesta.StatusCode = "94";
-										respuesta.IsValid = false;
-
-										if (respuesta.ErrorMessage == null)
-											respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
-
-									}
-									catch (Exception excepcion)
-									{
-										string msg_custom = string.Format("[1] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
-										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
-
-									}
-								}
-								else
-								{
-									try
-									{
-										respuesta.StatusCode = "99";
-										respuesta.IsValid = false;
-
-										if (respuesta.ErrorMessage == null)
-											respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
-
-									}
-									catch (Exception excepcion)
-									{
-										string msg_custom = string.Format("[2] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
-										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
-
-									}
-								}
-
-								if (respuesta.ErrorMessage != null)
-								{
-									try
-									{
-										acuse_recibo.MessagesFieldV2 = new HGInetDIANServicios.DianWSValidacionPrevia.XmlParamsResponseTrackId[1];
-										acuse_recibo.MessagesFieldV2[0] = new DianWSValidacionPrevia.XmlParamsResponseTrackId();
-										acuse_recibo.MessagesFieldV2[0].ProcessedMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(respuesta.ErrorMessage.ToList(), ",");
-									}
-									catch (Exception excepcion)
-									{
-										string msg_custom = string.Format("[3] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
-										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
-
-										acuse_recibo.MessagesFieldV2[0].ProcessedMessage = String.Empty;
-
-									}
-								}
-							}
-							else
+							else if (respuesta.StatusDescription.Equals("En proceso de validación"))
 							{
 								try
 								{
 									respuesta.StatusCode = "94";
 									respuesta.IsValid = false;
+
 									if (respuesta.ErrorMessage == null)
 										respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
 
 								}
 								catch (Exception excepcion)
 								{
-									string msg_custom = string.Format("[4] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
+									string msg_custom = string.Format("[1] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
 									RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
+								}
+							}
+							else
+							{
+								try
+								{
+									respuesta.StatusCode = "99";
+									respuesta.IsValid = false;
+
+									if (respuesta.ErrorMessage == null)
+										respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
+
+								}
+								catch (Exception excepcion)
+								{
+									string msg_custom = string.Format("[2] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
+									RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
+								}
+							}
+
+							if (respuesta.ErrorMessage != null)
+							{
+								try
+								{
+									acuse_recibo.MessagesFieldV2 = new HGInetDIANServicios.DianWSValidacionPrevia.XmlParamsResponseTrackId[1];
+									acuse_recibo.MessagesFieldV2[0] = new DianWSValidacionPrevia.XmlParamsResponseTrackId();
+									acuse_recibo.MessagesFieldV2[0].ProcessedMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(respuesta.ErrorMessage.ToList(), ",");
+								}
+								catch (Exception excepcion)
+								{
+									string msg_custom = string.Format("[3] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
+									RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
+
+									acuse_recibo.MessagesFieldV2[0].ProcessedMessage = String.Empty;
 
 								}
 							}
@@ -409,25 +407,43 @@ namespace HGInetDIANServicios
 						{
 							try
 							{
-
-								log_categoria = MensajeCategoria.ServicioDian;
-								log_accion = MensajeAccion.consulta;
-
-								respuesta = new DianResponse();
 								respuesta.StatusCode = "94";
-								respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma").ToArray();
 								respuesta.IsValid = false;
-								respuesta_dian.Add(respuesta);
+								if (respuesta.ErrorMessage == null)
+									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
+
 							}
 							catch (Exception excepcion)
 							{
-								string msg_custom = string.Format("[5] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
+								string msg_custom = string.Format("[4] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
 								RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 
 							}
+						}
+					}
+					else
+					{
+						try
+						{
 
+							log_categoria = MensajeCategoria.ServicioDian;
+							log_accion = MensajeAccion.consulta;
+
+							respuesta = new DianResponse();
+							respuesta.StatusCode = "94";
+							respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma").ToArray();
+							respuesta.IsValid = false;
+							respuesta_dian.Add(respuesta);
+						}
+						catch (Exception excepcion)
+						{
+							string msg_custom = string.Format("[5] - Error conversion mensaje respuesta DIAN {0}", nombre_archivo);
+							RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 
 						}
+
+
+					}
 					//}
 				}
 				catch (Exception excepcion)

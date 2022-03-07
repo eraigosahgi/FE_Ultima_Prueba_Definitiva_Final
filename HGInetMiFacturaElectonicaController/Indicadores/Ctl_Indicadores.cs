@@ -184,8 +184,11 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 						case 1: item.Color = "#62C415"; break;
 						case 2: item.Color = "#FF2D00"; break;
 						case 3: item.Color = "#96f495"; break;
+						case 4: item.Color = "#62C415"; break;
+						case 5: item.Color = "#62C415"; break;
+						case 6: item.Color = "#62C415"; break;
 					}
-					item.Titulo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<AdquirienteRecibo>(item.Estado));
+					item.Titulo = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CodigoResponseV2>(item.Estado));
 					item.IdControl = string.Format("Acuse{0}{1}", item.Titulo.Replace(" ", "").Replace("á", "a"), descripcion_tipo);
 					item.Observaciones = string.Format("{0} Documentos", item.Cantidad);
 					item.Porcentaje = Math.Round(((item.Cantidad / cantidad_total) * 100), 1);

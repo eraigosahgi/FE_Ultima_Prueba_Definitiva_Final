@@ -170,6 +170,7 @@
     <Compile Include="ModeloServicio\Nomina\Trabajador.cs" />
     <Compile Include="ModeloServicio\Nomina\Transporte.cs" />
     <Compile Include="ModeloServicio\Nomina\NovedadGeneral.cs" />
+    <Compile Include="ModeloServicio\Respuestas\AcuseConsulta.cs" />
     <Compile Include="ModeloServicio\Respuestas\DocumentoCufe.cs" />
     <Compile Include="ModeloServicio\Respuestas\FacturaConsulta.cs" />
     <Compile Include="ModeloServicio\Respuestas\DocumentoRespuesta.cs" />

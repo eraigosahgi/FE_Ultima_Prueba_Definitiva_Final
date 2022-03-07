@@ -165,6 +165,7 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 		//	//----------------------------------------------------------------
 
 		//};
+						 	
 
 		//Realiza la redirección para dar inicio al pago.
 		function RedireccionPago(id_seguridad, valor_pago) {
@@ -190,6 +191,7 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 			//ControladorApi: /Api/Documentos/
 			//Datos GET: id_seguridad
 			$http.get('/api/ConsultarAcuse?id_seguridad=' + IdSeguridad + '&usuario=' + $scope.Usuario).then(function (response) {
+				$scope.RespuestaAcuse = [];
 				$scope.RespuestaAcuse = response.data;
 
 				$('#plugin').attr('src', $scope.RespuestaAcuse[0].Pdf);
@@ -216,8 +218,8 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 				} catch (e) {
 
 				}
-				//Si estatus es igual a 2, entonces asigno los valores a las variables para ejecutar la consulta de saldo
 
+				//Si estatus es igual a 2, entonces asigno los valores a las variables para ejecutar la consulta de saldo
 				if (response.data[0].Estatus == 2) {
 					$scope.Idregistro = response.data[0].pago[0].StrIdRegistro
 					VerificarEstado();
@@ -258,22 +260,40 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 		}
 		//ValidarEstado(1);
 		$scope.ValidarEstado = function (Estado) {
-			if (Estado == 1 || Estado == 4) {
-				//$scope.AcuseVar = true;
+			
+			if (Estado == 1) {
+				$scope.AcuseVar = false;
+				
+				//document.getElementById("rb_acuse").checked = true;
+				var radiobtn = document.getElementById("rb_acuse");
+				radiobtn.value = true;
+
 				$scope.AceptarVar = true;
 				$scope.RechazarVar = false;
-			} else {
-				//$scope.AcuseVar = false;
+			} else if (Estado == 2) {
+				$scope.AcuseVar = false;
 				$scope.AceptarVar = false;
 				$scope.RechazarVar = true;
-			}//} else if (Estado == 4) {
-			//	$scope.AcuseVar = true;
-			//	$scope.AceptarVar = true;
-			//	$scope.RechazarVar = false;
+			} else if (Estado == 3) {
+				$scope.AcuseVar = true;
+				$scope.AceptarVar = false;
+				$scope.RechazarVar = false;
+			}
 		}
 
-		//Botón Rechazar.
+		//Botón Aceptar.
 		$scope.ButtonOptionsAceptar = {
+			text: "Enviar",
+			type: "success",
+			onClick: function (e) {
+				estado = 5;
+				motivo_rechazo = $('textarea[name=Observaciones]').val();
+				ActualizarDatos();
+			}
+		};
+
+		//Botón Aceptar.
+		$scope.ButtonOptionsAcuse = {
 			text: "Enviar",
 			type: "success",
 			onClick: function (e) {
@@ -283,7 +303,7 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 			}
 		};
 
-		//Botón Aceptar.
+		//Botón Rechazar.
 		$scope.ButtonOptionsRechazar = {
 			text: "Enviar",
 			type: "success",

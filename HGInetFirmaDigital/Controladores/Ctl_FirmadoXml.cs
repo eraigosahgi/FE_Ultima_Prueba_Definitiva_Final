@@ -557,7 +557,7 @@ namespace HGInetFirmaDigital
 									//Se valida si el documento trae informacion de algun sector para que sepa en la ruta donde debe agregar la firma del documento
 									var documento_obj = (dynamic)null;
 									documento_obj = archivo.Documento;
-									if (documento_obj.CodigoRespuesta == "036" || documento_obj.CodigoRespuesta == "037" || documento_obj.CodigoRespuesta == "038" || documento_obj.CodigoRespuesta == "039")
+									if (documento_obj.CodigoRespuesta == "036" || documento_obj.CodigoRespuesta == "037" || documento_obj.CodigoRespuesta == "038" || documento_obj.CodigoRespuesta == "039" || documento_obj.CodigoRespuesta == "045" || documento_obj.CodigoRespuesta == "046" || documento_obj.CodigoRespuesta == "035")
 									{
 										cantidad_extension += 1;
 									}

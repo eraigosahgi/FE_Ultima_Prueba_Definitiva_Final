@@ -1304,7 +1304,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				string ambiente_dian = string.Empty;
 				//
 
-				if (plataforma_datos.RutaPublica.Contains("habilitacion"))
+				if (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost"))
 					ambiente_dian = "2";
 				else
 					ambiente_dian = "1";

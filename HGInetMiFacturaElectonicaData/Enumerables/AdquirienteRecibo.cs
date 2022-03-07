@@ -14,7 +14,7 @@ namespace HGInetMiFacturaElectonicaData
         [AmbientValue("0")]
         Pendiente = 0,
 
-        [Description("Aprobado")]
+        [Description("Acuse Recibo")]
         [AmbientValue("1")]
         Aprobado = 1,
 
@@ -26,19 +26,19 @@ namespace HGInetMiFacturaElectonicaData
         [AmbientValue("3")]
         AprobadoTacito = 3,
 
-        [Description("Entregado")]
+        [Description("Recibo Mercancia")]
         [AmbientValue("4")]
         Entregado = 4,
 
-        [Description("Leído")]
+        [Description("Aceptación Expresa")]
         [AmbientValue("5")]
         Leido = 5,
 
-        [Description("No Entregado")]
+        [Description("Título Valor")]
         [AmbientValue("6")]
         NoEntregado = 6,
 
-        [Description("Enviado")]
+        [Description("Endoso")]
         [AmbientValue("7")]
         Enviado = 7
 
@@ -93,12 +93,28 @@ namespace HGInetMiFacturaElectonicaData
 		[AmbientValue("02")]
 		ValidadoDian = 10,
 
+		[Description("Aval")]
+		[AmbientValue("035")]
+		Aval = 12,
+
 		[Description("Endoso en procuración")]
 		[AmbientValue("039")]
 		EndosoPc = 15,
 
 		[Description("Mandato")]
 		[AmbientValue("043")]
-		MandatoG = 20
+		MandatoG = 20,
+
+		[Description("Terminacion del Mandato")]
+		[AmbientValue("044")]
+		TerminacionMandatoG = 21,
+
+		[Description("Pago de la factura electrónica de venta como título valor")]
+		[AmbientValue("045")]
+		PagoFvTV = 22,
+
+		[Description("Informe para el pago")]
+		[AmbientValue("046")]
+		InformePago = 23
 	}
 }

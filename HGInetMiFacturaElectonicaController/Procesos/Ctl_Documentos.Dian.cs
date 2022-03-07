@@ -791,5 +791,103 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		}
 
 
+		/// <summary>
+		/// Consulta eventos de un documento en la DIAN
+		/// </summary>
+		/// <param name="documentoBd">Documento en BD</param>
+		/// <param name="empresa">Obligado a facturar</param>
+		/// <param name="respuesta">Objeto de respuesta</param>
+		/// <returns>Segun la respuesta de la DIAN cambia el estado del documento</returns>
+		public static DocumentoRespuesta ConsultarEventos(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta)
+		{
+
+			DateTime fecha_actual = Fecha.GetFecha();
+			Ctl_Documento documento_tmp = new Ctl_Documento();
+
+
+			try
+			{
+				string IdSoftware = null;
+				string PinSoftware = null;
+				string url_ws_consulta = null;
+
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				// ruta física del xml
+				string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());
+				carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
+				carpeta_xml = carpeta_xml.Replace("FacturaEConsultaDian", "XmlAcuse");
+
+				// valida la existencia de la carpeta
+				carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
+
+				// Nombre del archivo Xml 
+				string archivo_xml = string.Format(@"{0}-2.xml", HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, TipoDocumento.AcuseRecibo, documentoBd.StrPrefijo));
+
+				// ruta del xml
+				string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
+
+				// elimina el archivo xml si existe
+				if (Archivo.ValidarExistencia(ruta_xml))
+					Archivo.Borrar(ruta_xml);
+
+				string ruta_certificado = string.Empty;
+
+				// obtiene la información de configuración del certificado digital
+				CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
+
+				// obtiene la empresa certificadora
+				EnumCertificadoras empresa_certificadora = EnumCertificadoras.Andes;
+
+				if (certificado.Certificadora.Equals("andes"))
+					empresa_certificadora = EnumCertificadoras.Andes;
+				else if (certificado.Certificadora.Equals("gse"))
+					empresa_certificadora = EnumCertificadoras.Gse;
+
+				// información del certificado digital
+				ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
+
+				// obtiene los datos del proveedor tecnológico de la DIAN para Validación Previa
+				DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+
+				IdSoftware = data_dian.IdSoftware;
+				PinSoftware = data_dian.Pin;
+				//clave = data_dian.ClaveAmbiente;
+				url_ws_consulta = data_dian.UrlWSConsultaTransacciones;
+
+				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
+				{
+					// obtiene los datos de prueba del proveedor tecnológico de la DIAN
+					DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;
+
+					IdSoftware = data_dian_habilitacion.IdSoftware;
+					PinSoftware = data_dian_habilitacion.Pin;
+				}
+
+				ConsultaDocumento resultado_doc = null;
+
+				string xml_archivo = Path.GetFileNameWithoutExtension(archivo_xml);
+
+				// Consulta del documento con validación previa
+				List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> resultado = Ctl_ConsultaTransacciones.Consultar_v2(String.Empty, carpeta_xml, ruta_certificado, certificado.Clave, url_ws_consulta, xml_archivo, documentoBd.StrCufe, true);
+
+				resultado_doc = Ctl_ConsultaTransacciones.ValidarTransaccionV2(resultado);
+				
+				// proceso para validar la respuesta de la DIAN
+				respuesta = ValidarRespuestaConsulta(resultado_doc, documentoBd, empresa, respuesta, archivo_xml, TipoDocumento.AcuseRecibo);
+
+				return respuesta;
+			}
+
+			catch (Exception excepcion)
+			{
+				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la consulta del estado del documento en la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.actualizacion);
+				throw excepcion;
+			}
+
+		}
+
+
 	}
 }

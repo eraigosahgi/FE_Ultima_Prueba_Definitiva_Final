@@ -11,7 +11,13 @@ namespace HGInetUBLv2_1
 	{
 		private InformacionNegociacionType InformacionNegociacionField;
 
+		private InformacionAvalarType InformacionAvalarField;
+
 		private ConstanciadePagosType ConstanciadePagosField;
+
+		private InformacionParaelPagoType InformacionParaelPagoField;
+
+		private InformacionPagoType InformacionPagoField;
 
 		public InformacionNegociacionType InformacionNegociacion
 		{
@@ -25,6 +31,18 @@ namespace HGInetUBLv2_1
 			}
 		}
 
+		public InformacionAvalarType InformacionAvalar
+		{
+			get
+			{
+				return this.InformacionAvalarField;
+			}
+			set
+			{
+				this.InformacionAvalarField = value;
+			}
+		}
+
 		public ConstanciadePagosType ConstanciadePagos
 		{
 			get
@@ -34,6 +52,30 @@ namespace HGInetUBLv2_1
 			set
 			{
 				this.ConstanciadePagosField = value;
+			}
+		}
+
+		public InformacionParaelPagoType InformacionParaelPago
+		{
+			get
+			{
+				return this.InformacionParaelPagoField;
+			}
+			set
+			{
+				this.InformacionParaelPagoField = value;
+			}
+		}
+
+		public InformacionPagoType InformacionPagos
+		{
+			get
+			{
+				return this.InformacionPagoField;
+			}
+			set
+			{
+				this.InformacionPagoField = value;
 			}
 		}
 	}

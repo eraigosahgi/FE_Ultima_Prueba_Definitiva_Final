@@ -44,7 +44,7 @@ namespace HGInetUBLv2_1
 					attach_document.Prefijo = attach_ubl.ParentDocumentLineReference[0].DocumentReference.ID.Value.Substring(0, attach_ubl.ParentDocumentLineReference[0].DocumentReference.ID.Value.Length - attach_document.Documento.ToString().Length);
 				}
 
-				attach_document.CufeDocumentoElectronico = attach_ubl.ParentDocumentLineReference[0].DocumentReference.UUID.Value;
+				attach_document.CufeDocumentoElectronico = (attach_ubl.ParentDocumentLineReference[0].DocumentReference.UUID != null) ? attach_ubl.ParentDocumentLineReference[0].DocumentReference.UUID.Value : string.Empty;
 
 				attach_document.IdentificacionFacturador = attach_ubl.SenderParty.PartyTaxScheme[0].CompanyID.Value;
 

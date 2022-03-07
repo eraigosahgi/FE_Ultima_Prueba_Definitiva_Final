@@ -547,7 +547,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					ApplicationResponseType conversion = (ApplicationResponseType)serializacion.Deserialize(xml_reader);
 
-					documento_obj = AcuseReciboXMLv2_1.Convertir(conversion);
+					documento_obj = AcuseReciboXMLv2_1.Convertir(conversion).FirstOrDefault();
 				}
 
 				// cerrar la lectura del archivo xml
@@ -960,7 +960,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 						ApplicationResponseType conversion = (ApplicationResponseType)serializacion1.Deserialize(xml_reader_serializacion);
 
-						respuesta_adquiriente = AcuseReciboXMLv2_1.Convertir(conversion);
+						respuesta_adquiriente = AcuseReciboXMLv2_1.Convertir(conversion).FirstOrDefault();
 
 						tipo_doc_proceso = 1;
 					}

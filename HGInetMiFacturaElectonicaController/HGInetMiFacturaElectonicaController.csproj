@@ -114,6 +114,7 @@
     <Compile Include="Configuracion\Ctl_Alertas.cs" />
     <Compile Include="Configuracion\Ctl_ConfiguracionInteroperabilidad.cs" />
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />
+    <Compile Include="Configuracion\Ctl_EventosRadian.cs" />
     <Compile Include="Configuracion\Ctl_Formatos.cs" />
     <Compile Include="Configuracion\Ctl_ListaFe.cs" />
     <Compile Include="Configuracion\Ctl_ObtenerCorreos.cs" />

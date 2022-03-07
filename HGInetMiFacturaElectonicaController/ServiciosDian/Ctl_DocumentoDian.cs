@@ -44,7 +44,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 				{
 					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-					if (plataforma_datos.RutaPublica.Contains("app"))
+					if (!plataforma_datos.RutaPublica.Contains("habilitacion") && !plataforma_datos.RutaPublica.Contains("localhost"))
 					{
 						ambiente_dian = "1";
 					}
@@ -183,13 +183,15 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 						bool habilitar_set = false;
 
 						//Si es documento electronico y esta habilitando el set de pruebas
-						if (documento.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode() && empresa.IntHabilitacion < Habilitacion.PruebasDian.GetHashCode())
+						if (documento.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode() && empresa.IntHabilitacion < Habilitacion.PruebasDian.GetHashCode() && empresa.IntRadian == false)
 							habilitar_set = true;
 
 						//Si es un documento de nomina y esta habilitando el set de pruebas
 						if (documento.DocumentoTipo.GetHashCode() > TipoDocumento.Attached.GetHashCode() && empresa.IntHabilitacionNomina < Habilitacion.PruebasDian.GetHashCode())
 							habilitar_set = true;
-
+						
+						if (documento.DocumentoTipo.GetHashCode() == TipoDocumento.AcuseRecibo.GetHashCode() && ambiente_dian.Equals("2") && empresa.IntRadian == true && empresa.IntHabilitacion < Habilitacion.PruebasDian.GetHashCode())
+							habilitar_set = true;
 
 						//Si quiere que el documento sea validado por la DIAN aun si ya tiene el set de pruebas aceptado se pone en ambiente 2 las so propiedades de empresa 
 						if (ambiente_dian.Equals("2") && habilitar_set == true)
@@ -218,7 +220,17 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 								if (enviar_sincronico == true)
 								{
 									//Envio el documento y guardo la respuesta en archivo y en objeto respuesta_dian
-									acuse = Ctl_Factura.EnviarSync_v2(ruta_zip, documento.NombreXml, documento.RutaArchivosProceso.Replace("XmlFacturaE", "FacturaEConsultaDian"), ruta_certificado, certificado.Clave, UrlServicioWeb, ambiente_dian, ref respuesta_dian, documento.CUFE, documentoBd.IntDocTipo);
+									if (documento.DocumentoTipo.GetHashCode() != TipoDocumento.AcuseRecibo.GetHashCode())
+									{
+										acuse = Ctl_Factura.EnviarSync_v2(ruta_zip, documento.NombreXml, documento.RutaArchivosProceso.Replace("XmlFacturaE", "FacturaEConsultaDian"), ruta_certificado, certificado.Clave, UrlServicioWeb, ambiente_dian, ref respuesta_dian, documento.CUFE, documentoBd.IntDocTipo);
+									}
+									else
+									{
+										acuse = Ctl_Factura.EnviarSync_v2(ruta_zip, documento.NombreZip, documento.RutaArchivosEnvio, ruta_certificado, certificado.Clave, UrlServicioWeb, ambiente_dian, ref respuesta_dian, documento.CUFE, documento.DocumentoTipo.GetHashCode(), proceso_acuse);
+									}
+
+
+									
 								}
 								else
 								{

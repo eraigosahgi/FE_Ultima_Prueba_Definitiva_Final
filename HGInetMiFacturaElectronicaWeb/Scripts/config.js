@@ -14,7 +14,11 @@ function ColocarEstado(Estado, Descripcion) {
 
 function ColocarEstadoAcuse(Estado, Descripcion) {
 	Descripcion = GetDescripcionEnum(AdquirienteRecibo, Estado);
-	return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Entregado'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Bloqueado'   title='" + Descripcion + "'" : " class='badge badge-Entregado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
+	return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : " class='badge badge-Aprobado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
+}
+
+function ColocarColorRadian(Estado, Descripcion) {
+	return "<span " + ((Estado == '0') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : " class='badge badge-Aprobado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
 }
 
 
@@ -604,13 +608,13 @@ var CategoriaEstado =
 var AdquirienteRecibo =
 [
 	{ "ID": 0, "Name": "Pendiente" },
-	{ "ID": 1, "Name": "Aprobado" },
+	{ "ID": 1, "Name": "Acuse Recibo" },
 	{ "ID": 2, "Name": "Rechazado" },
 	{ "ID": 3, "Name": "Aprobado Tácito" },
-	{ "ID": 4, "Name": "Entregado" },
-	{ "ID": 5, "Name": "Leído" },
-	{ "ID": 6, "Name": "No Entregado" },
-	{ "ID": 7, "Name": "Enviado" }
+	{ "ID": 4, "Name": "Recibo Mercancia" },
+	{ "ID": 5, "Name": "Aceptación Expresa" },
+	{ "ID": 6, "Name": "Título Valor" },
+	{ "ID": 7, "Name": "Endoso" }
 ];
 
 
