@@ -1941,6 +1941,7 @@
     <Content Include="Scripts\Pages\DocumentosAdmin.js" />
     <Content Include="Scripts\Pages\DocumentosAdquirientePagos.js" />
     <Content Include="Scripts\Pages\DocumentosEmisor.js" />
+    <Content Include="Scripts\Pages\EventosRadian.js" />
     <Content Include="Scripts\Pages\HGIpayConsultaDocumentos.js" />
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ModalAsignarFormato.js" />
@@ -2842,6 +2843,7 @@
     <Content Include="Views\Pages\ModalDetallePlan.html" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ModalConsultaProveedores.aspx" />
+    <Content Include="Views\Pages\Partials\EventosRadian.html" />
     <Content Include="Views\Pages\Partials\LoadingRegistros.html" />
     <Content Include="Views\Pages\Partials\ModalFormasDePago.html" />
     <Content Include="Views\Pages\Partials\ModalPagosEmbebida.html" />
@@ -2900,6 +2902,7 @@
     <Compile Include="Controllers\Services\AlertasController.cs" />
     <Compile Include="Controllers\Services\AuditoriasController.cs" />
     <Compile Include="Controllers\Services\EmpresaResolucionController.cs" />
+    <Compile Include="Controllers\Services\EventosRadianController.cs" />
     <Compile Include="Controllers\Services\FormatosController.cs" />
     <Compile Include="Controllers\Services\IndicadoresController.cs" />
     <Compile Include="Controllers\Services\InteroperabilidadController.cs" />

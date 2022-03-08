@@ -827,6 +827,21 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			try
 			{
+
+				try
+				{
+
+					if (string.IsNullOrEmpty(usuario))
+					{
+						usuario = Sesion.DatosUsuario.StrUsuario; 
+					}
+				}
+				catch (Exception)
+				{
+				}
+
+
+
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
 				List<TblDocumentos> datos = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo, (!string.IsNullOrEmpty(usuario)) ? usuario : "");

@@ -490,8 +490,8 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					   	},
 					   	cellTemplate: function (container, options) {
 
-					   		$("<div>")
-								.append($(ColocarEstadoAcuse(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse)))
+					   		$("<a>")
+								.append($(ColocarEstadoAcuseObligado(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse, options.data.StrIdSeguridad, options.data.NumeroDocumento, codigo_facturador)))
 								.appendTo(container);
 					   	}
 					   },
@@ -778,6 +778,10 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		$rootScope.ConsultarAuditDoc(IdSeguridad, IdFacturador, NumeroDocumento);
 	};
 
+
+	ConsultarEventosRadian = function (IdSeguridad, IdFacturador, NumeroDocumento) {
+		$rootScope.ConsultarEventosRadian(IdSeguridad, IdFacturador, NumeroDocumento);
+	}
 });
 
 

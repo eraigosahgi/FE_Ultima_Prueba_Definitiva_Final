@@ -10,6 +10,7 @@
 	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20201019"></script>
 	<script src="../../Scripts/Pages/DocumentosObligado.js?vjs20201019"></script>
 	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs20201019"></script>
+	<script src="../../Scripts/Pages/EventosRadian.js?vjs20201019"></script>
 	<div data-ng-app="App">
 
 		<!-- CONTENEDOR PRINCIPAL -->
@@ -156,6 +157,7 @@
 		</div>
 
 		<div data-ng-include="'AuditoriaDocumento.aspx'"></div>
+		<div data-ng-include="'Partials/EventosRadian.html'"></div>
 
 	</div>
 

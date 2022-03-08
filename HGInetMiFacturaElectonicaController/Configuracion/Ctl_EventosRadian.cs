@@ -43,7 +43,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return datos;
 		}
 
-
 		public TblEventosRadian Convertir(Guid doc_StrIdSeguridad, short tipo_evento, long numero_evento, DateTime fecha_evento)
 		{
 			TblEventosRadian evento = new TblEventosRadian();

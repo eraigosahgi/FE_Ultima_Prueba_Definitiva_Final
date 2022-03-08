@@ -1,0 +1,70 @@
+﻿
+
+<div id="modal_eventos_radian" class="modal fade" style="display: none;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div id="EncabezadoModal" class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h5 style="margin-bottom: 10px;" class="modal-title">Eventos Radian</h5>
+			</div>
+			<div class="modal-body">
+				<div class="col-md-12 ">
+
+					<!-- JS Modal Auditoría Documento-->
+					<!-- CONTENEDOR PRINCIPAL -->
+					<div data-ng-controller="EventosRadianController">
+
+
+						<div class="col-md-12">
+							<div class="panel panel-white">
+								<div class="panel-body">
+
+									<div class="row">
+
+										<div class="col-sm-4" style="background-color: #F3F3F3;">
+											<Label Style="vertical-align: inherit;"><b>IdSeguridad:</b></Label>
+										</div>
+										<div class="col-sm-8">
+											<Label Style="vertical-align: inherit;" id="IdSeguridad"></Label>
+										</div>
+
+										<div class="col-sm-4" style="background-color: #F3F3F3;">
+											<Label Style="vertical-align: inherit;"><b>Número Documento:</b></Label>
+										</div>
+										<div class="col-sm-8">
+											<Label Style="vertical-align: inherit;" id="NumeroDocumento"></Label>
+										</div>
+
+										<div class="col-sm-4" style="background-color: #F3F3F3;">
+											<Label Style="vertical-align: inherit;"><b>Identificación Obligado:</b></Label>
+										</div>
+										<div class="col-sm-8">
+											<Label Style="vertical-align: inherit;" id="Obligado"></Label>
+										</div>
+										<div class="col-sm-12 text-right">
+											<div id="cmdenviar"></div>
+										</div>
+
+									</div>
+									<br />
+
+									<div class="demo-container">
+										<div id="GridEventosRadianDocumento"></div>
+									</div>
+
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+
+			<div id="divsombra" class="modal-footer" style="margin-top: 22%">
+			</div>
+
+		</div>
+	</div>
+</div>
