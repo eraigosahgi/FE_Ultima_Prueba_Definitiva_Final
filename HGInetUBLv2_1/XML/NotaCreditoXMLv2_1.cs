@@ -134,16 +134,16 @@ namespace HGInetUBLv2_1
 
 				#region nota_credito.Note //Información adicional
 				//Texto libre, relativo al documento
-				nota_credito.Note = new NoteType[1]{
-				new NoteType(){
-					Value =  documento.Nota
-					}
-				};
+				//nota_credito.Note = new NoteType[1]{
+				//new NoteType(){
+				//	Value =  documento.Nota
+				//	}
+				//};
 
 				List<string> notas_documento = new List<string>();
 
 				// agrega los campos adicionales en el XML
-				notas_documento = FormatoNotas.CamposPredeterminados(documento.DocumentoFormato);
+				//notas_documento = FormatoNotas.CamposPredeterminados(documento.DocumentoFormato);
 
 				// agrega las observaciones del documento en la 3ra posición
 				notas_documento.Add(documento.Nota);

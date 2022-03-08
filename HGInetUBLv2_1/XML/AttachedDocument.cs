@@ -126,8 +126,11 @@ namespace HGInetUBLv2_1
 
 				if (contenido_xml.Contains("&lt;") || contenido_xml.Contains("&gt;"))
 				{
-					contenido_xml = contenido_xml.Replace("&lt;", "<");
-					contenido_xml = contenido_xml.Replace("&gt;", ">");
+					if (documentoBd.IntDocTipo != TipoDocumento.NotaCredito.GetHashCode() && !documentoBd.StrEmpresaFacturador.Equals("890924431") && !documentoBd.StrEmpresaAdquiriente.Equals("860072134"))
+					{
+						contenido_xml = contenido_xml.Replace("&lt;", "<");
+						contenido_xml = contenido_xml.Replace("&gt;", ">");
+					}
 				}
 
 				DescriptionType Description = new DescriptionType();
