@@ -400,9 +400,14 @@ namespace HGInetUBLv2_1
 
 						if (factura_ubl.InvoiceLine[i].FreeOfChargeIndicator != null)
 						{
-							detalle.ProductoGratis = factura_ubl.InvoiceLine[i].FreeOfChargeIndicator.Value;
-							if (detalle.ProductoGratis == true)
-								detalle.ProductoGratisPrecioRef = factura_ubl.InvoiceLine[i].PricingReference.AlternativeConditionPrice.FirstOrDefault().PriceTypeCode.Value;
+							if (factura_ubl.InvoiceLine[i].PricingReference != null)
+							{
+								if (factura_ubl.InvoiceLine[i].LineExtensionAmount != null && factura_ubl.InvoiceLine[i].LineExtensionAmount.Value == 0)
+								{
+									detalle.ProductoGratis = factura_ubl.InvoiceLine[i].FreeOfChargeIndicator.Value;
+									detalle.ProductoGratisPrecioRef = factura_ubl.InvoiceLine[i].PricingReference.AlternativeConditionPrice.FirstOrDefault().PriceTypeCode.Value;
+								}
+							}	
 						}
 
 						// valida que el detalle contenga el tag TaxTotal

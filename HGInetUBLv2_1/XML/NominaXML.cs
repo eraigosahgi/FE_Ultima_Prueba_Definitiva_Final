@@ -124,7 +124,10 @@ namespace HGInetUBLv2_1
 					nomina.Pago = new NominaIndividualTypePago();
 					nomina.Pago.Metodo = documento.DatosPago.Metodo.ToString();
 					nomina.Pago.Forma = documento.DatosPago.Forma.ToString();
-					nomina.Pago.NumeroCuenta = documento.DatosPago.NumeroCuenta;
+					if (!string.IsNullOrEmpty(documento.DatosPago.NumeroCuenta))
+					{
+						nomina.Pago.NumeroCuenta = documento.DatosPago.NumeroCuenta;
+					}
 					nomina.Pago.TipoCuenta = documento.DatosPago.TipoCuenta;
 					nomina.Pago.Banco = documento.DatosPago.Banco;
 				}

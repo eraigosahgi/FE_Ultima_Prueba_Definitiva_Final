@@ -451,7 +451,10 @@ namespace HGInetInteroperabilidad.Procesos
 				return contenido;
 			}
 			catch (Exception ex)
-			{	throw new ApplicationException(ex.Message);
+			{
+				//string msg = string.Format("Error al procesar el correo electrónico: {0} - {1} - {2}", fecha.ToString(Cl_Fecha.formato_fecha_hora_completa), remitente, asunto);
+				RegistroLog.EscribirLog(ex, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, "Error Generando plantilla de alerta");
+				throw new ApplicationException(ex.Message);
 			}
 		}
 
@@ -581,71 +584,86 @@ namespace HGInetInteroperabilidad.Procesos
 
 		public static void EnviarAlerta(UniqueId id_mensaje, MimeMessage mensaje, List<string> mensajes)
 		{
-			MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
-
-			// notificar por correo electrónico
-			// -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
-			Cl_MailCliente cliente_smtp = new Cl_MailCliente()
-			{
-				Servidor = configuracion_server.Servidor,
-				Puerto = configuracion_server.Puerto,
-				Habilitar_ssl = configuracion_server.HabilitaSsl,
-				TimeOut = 120000,
-				Usuario = configuracion_server.Usuario,
-				Clave = configuracion_server.Clave,
-			};
-
-			List<MailboxAddress> correos_destino = new List<MailboxAddress>();
-
-			MailboxAddress remitente_re = new MailboxAddress(Constantes.NombreRemitenteEmail, Constantes.EmailRemitente);
-
-			MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
-
-			if (remitente_reply.Address.Equals(Constantes.EmailRemitente))
-				remitente_reply.Address = Constantes.EmailCopiaOculta;
-
-			// obtiene el asunto del correo electrónico
-			string asunto = mensaje.Subject;
-
-			List<string> asunto_params = asunto.Split(';').ToList();
-
-			// validar y obtener la empresa
-			Ctl_Empresa _empresa = new Ctl_Empresa();
-
-			Match numero_idebtificacion = Regex.Match(asunto_params[0], "\\d+");
-
-			TblEmpresas empresa = _empresa.Obtener(numero_idebtificacion.Value);
-
-			correos_destino.Add(new MailboxAddress(remitente_reply.Name, remitente_reply.Address));
-
-			if (empresa != null)
-				correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
-			
-			//Se envia una copia del correo a Tic para saber que correo no se proceso
-			correos_destino.Add(new MailboxAddress(Constantes.NombreRemitenteEmail, Constantes.EmailCopiaOculta));
-
 			try
 			{
-				MailboxAddress reply_to = mensaje.ReplyTo.OfType<MailboxAddress>().Single();
+				MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
 
-				if (!remitente_reply.Address.Equals(reply_to.Address))
-					correos_destino.Add(new MailboxAddress(reply_to.Name, reply_to.Address));
+				// notificar por correo electrónico
+				// -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
+				Cl_MailCliente cliente_smtp = new Cl_MailCliente()
+				{
+					Servidor = configuracion_server.Servidor,
+					Puerto = configuracion_server.Puerto,
+					Habilitar_ssl = configuracion_server.HabilitaSsl,
+					TimeOut = 120000,
+					Usuario = configuracion_server.Usuario,
+					Clave = configuracion_server.Clave,
+				};
+
+				List<MailboxAddress> correos_destino = new List<MailboxAddress>();
+
+				MailboxAddress remitente_re = new MailboxAddress(Constantes.NombreRemitenteEmail, Constantes.EmailRemitente);
+
+				MailboxAddress remitente_reply = mensaje.From.OfType<MailboxAddress>().Single();
+
+				if (remitente_reply.Address.Equals(Constantes.EmailRemitente))
+					remitente_reply.Address = Constantes.EmailCopiaOculta;
+
+				// obtiene el asunto del correo electrónico
+				string asunto = mensaje.Subject;
+
+				List<string> asunto_params = asunto.Split(';').ToList();
+
+				// validar y obtener la empresa
+				Ctl_Empresa _empresa = new Ctl_Empresa();
+
+				Match numero_idebtificacion = Regex.Match(asunto_params[0], "\\d+");
+
+				TblEmpresas empresa = _empresa.Obtener(numero_idebtificacion.Value);
+
+				correos_destino.Add(new MailboxAddress(remitente_reply.Name, remitente_reply.Address));
+
+				if (empresa != null)
+					correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
+
+				//Se envia una copia del correo a Tic para saber que correo no se proceso
+				correos_destino.Add(new MailboxAddress(Constantes.NombreRemitenteEmail, Constantes.EmailCopiaOculta));
+
+				try
+				{
+					MailboxAddress reply_to = mensaje.ReplyTo.OfType<MailboxAddress>().Single();
+
+					if (!remitente_reply.Address.Equals(reply_to.Address))
+						correos_destino.Add(new MailboxAddress(reply_to.Name, reply_to.Address));
+				}
+				catch (Exception)
+				{
+				}
+
+				// obtener los parámetros de configuración para la lectura POP
+				string servidor = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.servidor");
+				int puerto = Convert.ToInt32(Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.puerto"));
+				string usuario = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.usuario");
+				string clave = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.clave");
+				bool habilitar_ssl = Convert.ToBoolean(Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.ssl"));
+
+				Cl_MailImap cliente_imap = new Cl_MailImap(servidor, puerto, usuario, clave, habilitar_ssl);
+
+				BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
+				try
+				{
+					cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_re, correos_destino, contenido, true);
+				}
+				catch (ExcepcionHgi excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion.Excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.envio, "inconsistencia en libreria de envio del correo original al remitente");
+				}
 			}
-			catch (Exception)
+			catch (Exception excepcion)
 			{
+				RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.envio, "inconsistencia enviando el correo original al remitente");
 			}
-
-			// obtener los parámetros de configuración para la lectura POP
-			string servidor = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.servidor");
-			int puerto = Convert.ToInt32(Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.puerto"));
-			string usuario = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.usuario");
-			string clave = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.clave");
-			bool habilitar_ssl = Convert.ToBoolean(Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.ssl"));
-
-			Cl_MailImap cliente_imap = new Cl_MailImap(servidor, puerto, usuario, clave, habilitar_ssl);
-
-			BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
-			cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_re, correos_destino, contenido, true);
+			
 		}
 
 

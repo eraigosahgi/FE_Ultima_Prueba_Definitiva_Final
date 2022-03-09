@@ -849,19 +849,15 @@ namespace HGInetInteroperabilidad.Procesos
 		/// <returns></returns>
 		public static bool ProcesarCorreo(string ruta_archivo)
 		{
+			//Ubicacion del archivo del Mail original para re-enviar correo cuando se presente algun fallo si se requiere
+			string Nombre_arch_mail = Path.GetFileName(ruta_archivo);
+			string ruta_archi_mail = ruta_archivo.Replace(string.Format("\\{0}", Nombre_arch_mail), "");
+			ruta_archi_mail = string.Format(@"{0}\{1}.mail", ruta_archi_mail, Nombre_arch_mail);
 
 			try
 			{
 				bool respuesta = false;
 				string ruta_xml = string.Empty;
-
-				//Ubicacion del archivo del Mail original para re-enviar correo cuando se presente algun fallo si se requiere
-				string Nombre_arch_mail = Path.GetFileName(ruta_archivo);
-				string ruta_archi_mail = ruta_archivo.Replace(string.Format("\\{0}", Nombre_arch_mail), "");
-				ruta_archi_mail = string.Format(@"{0}\{1}.mail", ruta_archi_mail, Nombre_arch_mail);
-
-				// 0 - AttachDocument, 1 - ApplicationResponse(Acuse Cliente)
-				int tipo_doc_proceso = 0;
 
 				try
 				{
@@ -923,8 +919,7 @@ namespace HGInetInteroperabilidad.Procesos
 				XmlSerializer serializacion1 = null;
 				AttachedDocumentType obj_attach_serializado = null;
 				Acuse respuesta_adquiriente = null;
-				bool archivo_attach_cumple = true;
-
+				
 				try
 				{
 					// convierte el objeto de acuerdo con el tipo de documento
@@ -934,8 +929,6 @@ namespace HGInetInteroperabilidad.Procesos
 
 					if (obj_attach_serializado.Attachment == null)
 					{
-						archivo_attach_cumple = false;
-
 						try
 						{
 							List<string> mensajes = new List<string>();
@@ -953,33 +946,65 @@ namespace HGInetInteroperabilidad.Procesos
 				}
 				catch (Exception ex)
 				{
+					//Si pasa algo envio notificacion a tic para validar por que no se proceso
+					List<string> mensajes = new List<string>();
+					mensajes.Add(string.Format("Error al procesar Archivos, Ruta archivo: {0}", ruta_archivo));
+					mensajes.Add(ex.Message);
+					if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
+						mensajes.Add(ex.InnerException.Message);
 					try
 					{
-						// convierte el objeto de acuerdo con el tipo de documento
-						serializacion1 = new XmlSerializer(typeof(ApplicationResponseType));
-
-						ApplicationResponseType conversion = (ApplicationResponseType)serializacion1.Deserialize(xml_reader_serializacion);
-
-						respuesta_adquiriente = AcuseReciboXMLv2_1.Convertir(conversion).FirstOrDefault();
-
-						tipo_doc_proceso = 1;
+						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+						email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
 					}
-					catch (Exception excepcion)
+					catch (Exception)
+					{ }
+
+					ruta_archivo = string.Format("{0}\\Archivo_errores.json", ruta_archivo);
+
+					// almacena el objeto en archivo json
+					File.WriteAllText(ruta_archivo, JsonConvert.SerializeObject(mensajes));
+
+					try
 					{
-						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-						if (archivo_attach_cumple == true)
-							throw new ApplicationException(string.Format("Error al serializar el archivo en la ruta {0} Detalle: {1}", ruta_xml, excepcion.Message));
-						else
-							throw new ApplicationException(string.Format("Error al serializar el archivo en la ruta {0} Detalle: {1}", ruta_xml, ex.Message));
+						mensajes = new List<string>();
+						mensajes.Add(string.Format("El archivo {0} no se pudo procesar por la siguiente inconsistencia: {1} - {2}", Path.GetFileName(ruta_xml), ex.Message, ex.InnerException.Message));
+
+						ReEnviarCorreoErro(ruta_archi_mail, mensajes);
+
 					}
+					catch (Exception e)
+					{
+					}
+
+					throw new ApplicationException(string.Format("Error al serializar el archivo en la ruta {0} Detalle: {1}", ruta_xml, ex.Message));
+
+					//try
+					//{
+					//	// convierte el objeto de acuerdo con el tipo de documento
+					//	serializacion1 = new XmlSerializer(typeof(ApplicationResponseType));
+
+					//	ApplicationResponseType conversion = (ApplicationResponseType)serializacion1.Deserialize(xml_reader_serializacion);
+
+					//	respuesta_adquiriente = AcuseReciboXMLv2_1.Convertir(conversion).FirstOrDefault();
+
+					//	tipo_doc_proceso = 1;
+					//}
+					//catch (Exception excepcion)
+					//{
+					//	RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, "No se pudo procesar archivo tampoco como attach document de application response");
+					//}
 
 				}
 
 				//Cierro la lectura
 				xml_reader_serializacion.Close();
 
+				// 0 - AttachDocument, 1 - ApplicationResponse(Acuse Cliente)
+				//int tipo_doc_proceso = 0;
+
 				//Se valida si no es un acuse de un cliente
-				if (tipo_doc_proceso == 0)
+				if (!obj_attach_serializado.Attachment.ExternalReference.Description.FirstOrDefault().Value.Contains("ApplicationResponse"))
 				{
 					respuesta = ProcesarAttach(obj_attach_serializado, ruta_archivo, ruta_archi_mail);
 				}
@@ -1004,6 +1029,29 @@ namespace HGInetInteroperabilidad.Procesos
 			try
 			{
 				UniqueId id_mensaje = new UniqueId(Convert.ToUInt16(Fecha.GetFecha().Day));
+
+				if (!Archivo.ValidarExistencia(ruta_archivo_mail))
+				{
+					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+					string ruta_archivos = string.Format(@"{0}\{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion);
+
+					string ruta_mail_noprocesado = ruta_archivos.Replace("recepcion\\", "no procesados\\Archivos");
+
+					string nombre_archivo_mail = string.Format("Mail - {0}", Path.GetFileName(ruta_archivo_mail));
+
+					ruta_mail_noprocesado = string.Format(@"{0}\{1}", ruta_mail_noprocesado, nombre_archivo_mail);
+
+					if (Archivo.ValidarExistencia(ruta_mail_noprocesado))
+					{
+						ruta_archivo_mail = ruta_mail_noprocesado;
+					}
+					else
+					{
+						RegistroLog.EscribirLog(null, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, "inconsistencia validando ruta del correo original");
+						throw new ApplicationException("inconsistencia validando ruta del correo original");
+					}
+				}
 
 				MimeMessage mail_original = MimeMessage.Load(ruta_archivo_mail);
 
