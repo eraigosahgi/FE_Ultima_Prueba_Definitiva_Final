@@ -1733,16 +1733,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			else
 			{
-				tbl_empresa.IntObligado = tbl_empresa.IntObligado == false ? true : tbl_empresa.IntObligado;
-
-				if (!tbl_empresa.StrMailAdmin.Equals(empresa.EmailAdmin))
-				{
-					tbl_empresa.StrMailAdmin = empresa.EmailAdmin;
-					ListaEmailRegistro.Add(new ObjVerificacionEmail { email = empresa.EmailAdmin });
-				}
+				tbl_empresa.IntObligado = (tbl_empresa.IntObligado == false) ? true : tbl_empresa.IntObligado;
 
 				if (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost"))
 				{
+					if (!tbl_empresa.StrMailAdmin.Equals(empresa.EmailAdmin))
+					{
+						tbl_empresa.StrMailAdmin = empresa.EmailAdmin;
+						ListaEmailRegistro.Add(new ObjVerificacionEmail { email = empresa.EmailAdmin });
+					}
+
 					bool crear_plan = false;
 
 					if (empresa.NominaE == true && (tbl_empresa.IntHabilitacionNomina == null || tbl_empresa.IntHabilitacionNomina == Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode())))
@@ -1786,6 +1786,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, "Error Creando el Plan de documentos actualizando la empresa para las pruebas");
 						}
 					}
+				}
+				else
+				{
+					tbl_empresa.IntHabilitacion = (empresa.FacturaE == true && (tbl_empresa.IntHabilitacion == null || tbl_empresa.IntHabilitacion == Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode()))) ? Convert.ToByte(Habilitacion.Produccion.GetHashCode()) : tbl_empresa.IntHabilitacion;
+					tbl_empresa.IntHabilitacionNomina = (empresa.NominaE == true && (tbl_empresa.IntHabilitacionNomina == null || tbl_empresa.IntHabilitacionNomina == Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode()))) ? Convert.ToByte(Habilitacion.Produccion.GetHashCode()) : tbl_empresa.IntHabilitacionNomina;
+
+					ListaEmailRegistro.Add(new ObjVerificacionEmail { email = tbl_empresa.StrMailAdmin });
+
+					tbl_empresa = Editar(tbl_empresa, true, ListaEmailRegistro);
 				}
 
 			}
