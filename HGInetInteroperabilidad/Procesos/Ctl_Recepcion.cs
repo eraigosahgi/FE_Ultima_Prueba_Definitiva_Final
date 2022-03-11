@@ -898,7 +898,7 @@ namespace HGInetInteroperabilidad.Procesos
 						mensajes = new List<string>();
 						mensajes.Add(string.Format("No se encontró un archivo con extension de {0} de tipo Attached Document para procesar", Path.GetFileName(ruta_xml)));
 
-						ReEnviarCorreoErro(ruta_archi_mail, mensajes);
+						ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
 					}
 					catch (Exception e)
@@ -934,7 +934,7 @@ namespace HGInetInteroperabilidad.Procesos
 							List<string> mensajes = new List<string>();
 							mensajes.Add(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico", Path.GetFileName(ruta_xml)));
 
-							ReEnviarCorreoErro(ruta_archi_mail, mensajes);
+							ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
 						}
 						catch (Exception e)
@@ -970,7 +970,7 @@ namespace HGInetInteroperabilidad.Procesos
 						mensajes = new List<string>();
 						mensajes.Add(string.Format("El archivo {0} no se pudo procesar por la siguiente inconsistencia: {1} - {2}", Path.GetFileName(ruta_xml), ex.Message, ex.InnerException.Message));
 
-						ReEnviarCorreoErro(ruta_archi_mail, mensajes);
+						ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
 					}
 					catch (Exception e)
@@ -1024,12 +1024,10 @@ namespace HGInetInteroperabilidad.Procesos
 
 		}
 
-		public static void ReEnviarCorreoErro(string ruta_archivo_mail, List<string> mensajes_inconsistencias)
+		public static void ReEnviarCorreoError(string ruta_archivo_mail, List<string> mensajes_inconsistencias)
 		{
 			try
 			{
-				UniqueId id_mensaje = new UniqueId(Convert.ToUInt16(Fecha.GetFecha().Day));
-
 				if (!Archivo.ValidarExistencia(ruta_archivo_mail))
 				{
 					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
@@ -1055,7 +1053,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 				MimeMessage mail_original = MimeMessage.Load(ruta_archivo_mail);
 
-				Ctl_MailRecepcion.EnviarAlerta(id_mensaje, mail_original, mensajes_inconsistencias);
+				Ctl_MailRecepcion.EnviarAlerta(mail_original, mensajes_inconsistencias);
 			}
 			catch (Exception excepcion)
 			{
@@ -1287,7 +1285,7 @@ namespace HGInetInteroperabilidad.Procesos
 					List<string> mensajes = new List<string>();
 					mensajes.Add(string.Format("Error validando el Facturador receptor Detalle: {0}", excepcion.Message));
 
-					ReEnviarCorreoErro(ruta_archivo_mail, mensajes);
+					ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 					throw new ApplicationException(string.Format("Error validando el Facturador receptor Detalle: {0}", excepcion.Message));
 				}
 				

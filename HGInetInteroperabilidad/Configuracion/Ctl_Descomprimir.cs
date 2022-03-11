@@ -172,8 +172,10 @@ namespace HGInetInteroperabilidad.Configuracion
 
 									ruta_dir_facturador_borrar = string.Empty;
 								}
-								catch (Exception ex)
-								{}
+								catch (Exception excepcion)
+								{
+									RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.eliminacion, ruta_dir_facturador_borrar);
+								}
 							}
 						}
 						catch (Exception)
@@ -198,8 +200,10 @@ namespace HGInetInteroperabilidad.Configuracion
 
 										ruta_dir_archivos_borrar = string.Empty;
 									}
-									catch (Exception)
-									{}
+									catch (Exception excepcion)
+									{
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.eliminacion, ruta_dir_archivos_borrar);
+									}
 								}
 							}
 							catch (Exception)
@@ -218,8 +222,10 @@ namespace HGInetInteroperabilidad.Configuracion
 
 											ruta_dir_archivos_borrar = string.Empty;
 										}
-										catch (Exception)
-										{}
+										catch (Exception excepcion)
+										{
+											RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.eliminacion, ruta_dir_archivos_borrar);
+										}
 									}
 								}
 								catch (Exception)
@@ -247,23 +253,27 @@ namespace HGInetInteroperabilidad.Configuracion
 									}
 									catch (Exception ex)
 									{
-										string ruta_dir = string.Format(@"{0}\\Archivos", ruta_archivos.Replace("recepcion", "no procesados"));
+										string ruta_dir = string.Format(@"{0}\Archivos", ruta_archivos.Replace("recepcion", "no procesados"));
 										Directorio.CrearDirectorio(ruta_dir);
 										string nom_dir = Path.GetFileName(directorios_archivos[i]);
 										try
 										{
-											Directorio.MoverDirectorio(item, string.Format(@"{0}\\{1}", ruta_dir, nom_dir));
+											Directorio.MoverDirectorio(item, string.Format(@"{0}\{1}", ruta_dir, nom_dir));
 										}
-										catch (Exception)
-										{}
-										if (Archivo.ValidarExistencia(string.Format(@"{0}\\{1}.mail", directorio,Path.GetFileName(directorios_archivos[i]))))
+										catch (Exception excepcion)
+										{
+											RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.exportar, excepcion.Message);
+										}
+										if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}.mail", directorio,Path.GetFileName(directorios_archivos[i]))))
 										{
 											try
 											{
-												Archivo.Mover(string.Format(@"{0}\\{1}.mail", directorio, Path.GetFileName(directorios_archivos[i])), ruta_dir, string.Format("Mail - {0}.mail", Path.GetFileName(directorios_archivos[i])));
+												Archivo.Mover(string.Format(@"{0}\{1}.mail", directorio, Path.GetFileName(directorios_archivos[i])), ruta_dir, string.Format("Mail - {0}.mail", Path.GetFileName(directorios_archivos[i])));
 											}
-											catch (Exception)
-											{}
+											catch (Exception excepcion)
+											{
+												RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.exportar, excepcion.Message);
+											}
 										}
 											
 									}
@@ -286,8 +296,10 @@ namespace HGInetInteroperabilidad.Configuracion
 
 								ruta_dir_archivos_borrar = string.Empty;
 							}
-							catch (Exception)
-							{ }
+							catch (Exception excepcion)
+							{
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.eliminacion, ruta_dir_archivos_borrar);
+							}
 						}
 						else
 						{
@@ -307,8 +319,10 @@ namespace HGInetInteroperabilidad.Configuracion
 
 								ruta_dir_facturador_borrar = string.Empty;
 							}
-							catch (Exception)
-							{}
+							catch (Exception excepcion)
+							{
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.eliminacion, ruta_dir_facturador_borrar);
+							}
 						}
 					}
 					catch (Exception)
@@ -432,6 +446,7 @@ namespace HGInetInteroperabilidad.Configuracion
 			}
 			catch (Exception exec)
 			{
+				RegistroLog.EscribirLog(exec, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, "Error eliminando directorios y Archivos");
 				throw new ApplicationException(exec.Message);
 			}
 		}

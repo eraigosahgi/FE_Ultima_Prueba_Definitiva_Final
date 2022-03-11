@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using HGInetMiFacturaElectonicaController;
 
 namespace HGInetInteroperabilidad.Procesos
 {
@@ -227,7 +228,8 @@ namespace HGInetInteroperabilidad.Procesos
 									try
 									{
 										mensajes.Add("Correo cumple con parametros establecidos por la DIAN, los archivos pasan al proceso de importar a plataforma");
-										RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
+										//RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
+										EnviarAlerta(mensaje, mensajes, true);
 									}
 									catch (Exception)
 									{
@@ -271,7 +273,8 @@ namespace HGInetInteroperabilidad.Procesos
 									//Se notifica al correo emisor que no se procesa el correo y la razon 
 									try
 									{
-										RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
+										//RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
+										EnviarAlerta(mensaje, mensajes);
 									}
 									catch (Exception ex)
 									{}
@@ -379,7 +382,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 			try
 			{
-				BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
+				BodyBuilder contenido = NotificacionInconsistencias(mensajes);
 				cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_re, correos_destino, contenido, true);
 			}
 			catch (Exception ex)
@@ -395,7 +398,7 @@ namespace HGInetInteroperabilidad.Procesos
 		/// <param name="empresa">adquiriente</param>
 		/// <param name="mensajes">mensajes de inconsistencias</param>
 		/// <returns></returns>
-		public static BodyBuilder NotificacionInconsistencias(TblEmpresas empresa, List<string> mensajes)
+		public static BodyBuilder NotificacionInconsistencias(List<string> mensajes, bool procesado = false)
 		{
 			try
 			{
@@ -403,7 +406,7 @@ namespace HGInetInteroperabilidad.Procesos
 				//	throw new ApplicationException("No se encontró información de la empresa.");
 					
 				BodyBuilder contenido = new BodyBuilder();
-				
+
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				string fileName = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), Constantes.RutaPlantillaHtmlNotifInconsistencias);
@@ -416,31 +419,21 @@ namespace HGInetInteroperabilidad.Procesos
 
 					if (file != null)
 					{
-						// Datos del Tercero
-						if (empresa == null)
-						{
-							mensaje = mensaje.Replace("{TipoPersona}", "");
-							mensaje = mensaje.Replace("{NombreTercero}", "");
-							mensaje = mensaje.Replace("{NitTercero} -", "");
-							mensaje = mensaje.Replace("{Digitov}", "");
-							mensaje = mensaje.Replace("Nit.", "");
-						}
-						else
-						{
-							if (empresa.StrTipoIdentificacion.Equals("31"))
-								mensaje = mensaje.Replace("{TipoPersona}", "Señores");
-							else
-								mensaje = mensaje.Replace("{TipoPersona}", "Señor (a)");
+						mensaje = mensaje.Replace("{TipoPersona}", "");
+						mensaje = mensaje.Replace("{NombreTercero}", "");
+						mensaje = mensaje.Replace("{NitTercero} -", "");
+						mensaje = mensaje.Replace("{Digitov}", "");
+						mensaje = mensaje.Replace("Nit.", "");
 
-							mensaje = mensaje.Replace("{NombreTercero}", empresa.StrRazonSocial);
-							mensaje = mensaje.Replace("{NitTercero}", empresa.StrIdentificacion);
-							mensaje = mensaje.Replace("{Digitov}", empresa.IntIdentificacionDv.ToString());
-						}
+						if (procesado == true)
+							mensaje = mensaje.Replace("Lista de inconsistencias", "Resultado");
 
 						string detalle = string.Empty;
 
 						foreach (string item in mensajes)
-						{	detalle += string.Format("<tr><td class='tg - yzt1'>{0}</td></tr>", item);
+						{
+							detalle += string.Format("<tr><td class='tg - yzt1'>{0}</td></tr>", item);
+							//detalle += string.Format("<tr><td>{0}</td></tr>", item);
 						}
 
 						mensaje = mensaje.Replace("{TablaHtml}", detalle);
@@ -582,25 +575,11 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 		}
 
-		public static void EnviarAlerta(UniqueId id_mensaje, MimeMessage mensaje, List<string> mensajes)
+		public static void EnviarAlerta(MimeMessage mensaje, List<string> mensajes, bool procesado = false)
 		{
 			try
 			{
-				MailServer configuracion_server = HgiConfiguracion.GetConfiguration().MailServer;
-
-				// notificar por correo electrónico
-				// -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
-				Cl_MailCliente cliente_smtp = new Cl_MailCliente()
-				{
-					Servidor = configuracion_server.Servidor,
-					Puerto = configuracion_server.Puerto,
-					Habilitar_ssl = configuracion_server.HabilitaSsl,
-					TimeOut = 120000,
-					Usuario = configuracion_server.Usuario,
-					Clave = configuracion_server.Clave,
-				};
-
-				List<MailboxAddress> correos_destino = new List<MailboxAddress>();
+				List<HGInetMiFacturaElectonicaData.ModeloServicio.General.DestinatarioEmail> correos_destino = new List<HGInetMiFacturaElectonicaData.ModeloServicio.General.DestinatarioEmail>();
 
 				MailboxAddress remitente_re = new MailboxAddress(Constantes.NombreRemitenteEmail, Constantes.EmailRemitente);
 
@@ -609,61 +588,259 @@ namespace HGInetInteroperabilidad.Procesos
 				if (remitente_reply.Address.Equals(Constantes.EmailRemitente))
 					remitente_reply.Address = Constantes.EmailCopiaOculta;
 
+				HGInetMiFacturaElectonicaData.ModeloServicio.General.DestinatarioEmail destino = new HGInetMiFacturaElectonicaData.ModeloServicio.General.DestinatarioEmail();
+
+				destino.Nombre = remitente_reply.Name;
+				destino.Email = remitente_reply.Address;
+
+				correos_destino.Add(destino);
+
 				// obtiene el asunto del correo electrónico
 				string asunto = mensaje.Subject;
-
-				List<string> asunto_params = asunto.Split(';').ToList();
-
-				// validar y obtener la empresa
-				Ctl_Empresa _empresa = new Ctl_Empresa();
-
-				Match numero_idebtificacion = Regex.Match(asunto_params[0], "\\d+");
-
-				TblEmpresas empresa = _empresa.Obtener(numero_idebtificacion.Value);
-
-				correos_destino.Add(new MailboxAddress(remitente_reply.Name, remitente_reply.Address));
-
-				if (empresa != null)
-					correos_destino.Add(new MailboxAddress(empresa.StrRazonSocial, empresa.StrMailAdmin));
-
+			   
 				//Se envia una copia del correo a Tic para saber que correo no se proceso
-				correos_destino.Add(new MailboxAddress(Constantes.NombreRemitenteEmail, Constantes.EmailCopiaOculta));
+				destino = new HGInetMiFacturaElectonicaData.ModeloServicio.General.DestinatarioEmail();
+				destino.Nombre = Constantes.NombreRemitenteEmail;
+				destino.Email = Constantes.EmailCopiaOculta;
+
+				correos_destino.Add(destino);
 
 				try
 				{
 					MailboxAddress reply_to = mensaje.ReplyTo.OfType<MailboxAddress>().Single();
 
 					if (!remitente_reply.Address.Equals(reply_to.Address))
-						correos_destino.Add(new MailboxAddress(reply_to.Name, reply_to.Address));
+					{
+						destino = new HGInetMiFacturaElectonicaData.ModeloServicio.General.DestinatarioEmail();
+						destino.Nombre = reply_to.Name;
+						destino.Email = reply_to.Address;
+
+						correos_destino.Add(destino);
+					}
 				}
 				catch (Exception)
 				{
 				}
 
-				// obtener los parámetros de configuración para la lectura POP
-				string servidor = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.servidor");
-				int puerto = Convert.ToInt32(Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.puerto"));
-				string usuario = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.usuario");
-				string clave = Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.clave");
-				bool habilitar_ssl = Convert.ToBoolean(Cl_InfoConfiguracionServer.ObtenerAppSettings("imap.ssl"));
+				List<MailboxAddress> correos_destino_conver = new List<MailboxAddress>();
+				correos_destino_conver.Add(new MailboxAddress(remitente_reply.Name, remitente_reply.Address));
 
-				Cl_MailImap cliente_imap = new Cl_MailImap(servidor, puerto, usuario, clave, habilitar_ssl);
+				//Se envia una copia del correo a Tic para saber que correo no se proceso
+				correos_destino_conver.Add(new MailboxAddress(Constantes.NombreRemitenteEmail, Constantes.EmailCopiaOculta));
 
-				BodyBuilder contenido = NotificacionInconsistencias(empresa, mensajes);
-				try
+				HGInetMiFacturaElectonicaData.ModeloServicio.General.DestinatarioEmail remitente = new HGInetMiFacturaElectonicaData.ModeloServicio.General.DestinatarioEmail();
+				remitente.Email = Constantes.EmailRemitente;
+				remitente.Nombre = Constantes.NombreRemitenteEmail;
+
+				BodyBuilder contenido_adicional = NotificacionInconsistencias(mensajes, procesado);
+
+				if (procesado == false)
 				{
-					cliente_imap.Reenviar(id_mensaje, mensaje, cliente_smtp, remitente_re, correos_destino, contenido, true);
+					MimeMessage contenido = convertir_reenviar(mensaje, remitente_re, correos_destino_conver, contenido_adicional);
+
+					List<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Adjunto> adjuntos_originales = null;
+
+					List<MimeEntity> adjuntos_correo = mensaje.BodyParts.ToList();
+
+					if (adjuntos_correo != null && adjuntos_correo.Count > 0)
+					{
+						adjuntos_originales = new List<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Adjunto>();
+						try
+						{
+							foreach (var attachment in mensaje.Attachments)
+							{
+
+								LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Adjunto adj = new LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Adjunto();
+
+								var part = (MimePart)attachment;
+								adj.Nombre = part.FileName;
+
+								using (var memory = new MemoryStream())
+								{
+									//if (attachment is MimePart)
+									//	((MimePart)attachment).Content.DecodeTo(memory);
+									//else
+									//	((MessagePart)attachment).Message.WriteTo(memory);
+
+									part.Content.DecodeTo(memory);
+
+									var bytes = memory.ToArray();
+
+									adj.ContenidoB64 = Convert.ToBase64String(bytes);
+								}
+
+								adjuntos_originales.Add(adj);
+
+							}
+						}
+						catch (Exception ex)
+						{
+
+						}
+
+						if (adjuntos_originales != null && adjuntos_originales.Count == 0)
+							adjuntos_originales = null;
+
+					}
+
+					try
+					{
+						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+
+						clase_email.EnviarEmail("ADMINISTRACIÓN", false, contenido.HtmlBody, "FWD: " + asunto, true, remitente, correos_destino, null, null, "", "", adjuntos_originales);
+					}
+					catch (ExcepcionHgi excepcion)
+					{
+						RegistroLog.EscribirLog(excepcion.Excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.envio, "inconsistencia en libreria de envio del correo original al remitente");
+					}
 				}
-				catch (ExcepcionHgi excepcion)
+				else
 				{
-					RegistroLog.EscribirLog(excepcion.Excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.envio, "inconsistencia en libreria de envio del correo original al remitente");
+					try
+					{
+						Ctl_EnvioCorreos clase_email = new Ctl_EnvioCorreos();
+
+						clase_email.EnviarEmail("ADMINISTRACIÓN", false, contenido_adicional.HtmlBody, "FWD: " + asunto, true, remitente, correos_destino, null, null, "", "");
+					}
+					catch (ExcepcionHgi excepcion)
+					{
+						RegistroLog.EscribirLog(excepcion.Excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.envio, "inconsistencia en libreria de envio del correo original al remitente");
+					}
 				}
+
+				
 			}
 			catch (Exception excepcion)
 			{
 				RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.envio, "inconsistencia enviando el correo original al remitente");
 			}
 			
+		}
+
+		public static MimeMessage convertir_reenviar(MimeMessage mensaje_original, MailboxAddress correo_remitente, List<MailboxAddress> correos_destino, BodyBuilder contenido_adicional)
+		{
+			MimeMessage mensaje = new MimeMessage();
+
+			try
+			{
+				mensaje.From.Add(correo_remitente);
+				mensaje.To.AddRange(correos_destino);
+				mensaje.Subject = "FWD: " + mensaje_original.Subject;
+
+				BodyBuilder contenido = new BodyBuilder();
+				contenido.HtmlBody = mensaje_original.HtmlBody ?? string.Empty;
+				contenido.TextBody = mensaje_original.TextBody ?? string.Empty;
+
+				//List<MimeEntity> adjuntos = ObtenerAdjuntos(mensaje_original);
+				//foreach (MimeEntity adjunto in adjuntos)
+				//{
+				//	if (adjunto.IsAttachment)
+				//	{
+				//		contenido.Attachments.Add(adjunto);
+				//	}
+				//}
+
+				var envia = mensaje_original.From.Mailboxes.FirstOrDefault() ?? mensaje_original.Sender;
+
+				var destinatarios = mensaje_original.To.Mailboxes;
+				string enviado_a = string.Empty;
+				foreach (var item in destinatarios)
+				{
+					enviado_a = string.Format("{0} <{1}>, ", item.Name, item.Address);
+				}
+
+				if (!string.IsNullOrEmpty(mensaje_original.HtmlBody))
+				{
+					var contenido_cabecera = new StringWriter();
+					contenido_cabecera.WriteLine("<br /><br /><br />");
+					contenido_cabecera.WriteLine("<b>---------- Mensaje reenviado ---------</b><br />");
+					contenido_cabecera.WriteLine("De: {0} <{1}><br />", envia.Name, envia.Address);
+					contenido_cabecera.WriteLine("Fecha: {0}<br />", mensaje_original.Date);
+					contenido_cabecera.WriteLine("Asunto: {0}<br />", mensaje_original.Subject);
+					contenido_cabecera.WriteLine("Para: {0}<br />", enviado_a);
+					contenido_cabecera.WriteLine("<br /><br />");
+
+					using (var writer = new StringWriter())
+					{
+						if (contenido_adicional != null && !string.IsNullOrEmpty(contenido_adicional.HtmlBody))
+							writer.WriteLine(contenido_adicional.HtmlBody);
+
+						writer.WriteLine(contenido_cabecera);
+
+						using (var reader = new StringReader(mensaje_original.HtmlBody))
+						{
+							string line;
+
+							while ((line = reader.ReadLine()) != null)
+							{
+								writer.WriteLine(line);
+							}
+						}
+						contenido.HtmlBody = writer.ToString();
+					}
+				}
+
+				if (!string.IsNullOrEmpty(mensaje_original.TextBody))
+				{
+					var contenido_cabecera = new StringWriter();
+					contenido_cabecera.WriteLine("\n\n");
+					contenido_cabecera.WriteLine("---------- Mensaje reenviado ---------\n");
+					contenido_cabecera.WriteLine("De: {0} <{1}>\n", envia.Name, envia.Address);
+					contenido_cabecera.WriteLine("Fecha: {0}\n", mensaje_original.Date);
+					contenido_cabecera.WriteLine("Asunto: {0}\n", mensaje_original.Subject);
+					contenido_cabecera.WriteLine("Para: {0}\n", enviado_a);
+					contenido_cabecera.WriteLine("\n\n");
+
+					using (var writer = new StringWriter())
+					{
+						if (contenido_adicional != null && !string.IsNullOrEmpty(contenido_adicional.TextBody))
+							writer.WriteLine(contenido_adicional.TextBody + "\n\n");
+
+						writer.WriteLine(contenido_cabecera);
+
+						using (var reader = new StringReader(mensaje_original.TextBody))
+						{
+							string line;
+
+							while ((line = reader.ReadLine()) != null)
+							{
+								writer.Write("> ");
+								writer.WriteLine(line);
+							}
+						}
+						contenido.TextBody = writer.ToString();
+					}
+				}
+				mensaje.Body = contenido.ToMessageBody();
+
+				
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Convertir, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.lectura, "Error convirtiendo correo original para reenvio");
+			}
+
+			return mensaje;
+		}
+
+		/// <summary>
+		/// Obtiene los archivos de un mensaje
+		/// </summary>
+		/// <param name="mensaje">datos de mensaje</param>
+		/// <returns></returns>
+		public static List<MimeEntity> ObtenerAdjuntos(MimeMessage mensaje)
+		{
+			try
+			{
+				List<MimeEntity> adjuntos = mensaje.BodyParts.ToList();
+
+				return adjuntos;
+			}
+			catch (Exception excepcion)
+			{
+				string msg = string.Format("Error al obtener los adjuntos del mensaje con id:'{0}'", mensaje.MessageId);
+				throw new ExcepcionHgi(excepcion, HGICtrlUtilidades.NotificacionCodigo.ERROR_EN_SERVIDOR, msg);
+			}
 		}
 
 
