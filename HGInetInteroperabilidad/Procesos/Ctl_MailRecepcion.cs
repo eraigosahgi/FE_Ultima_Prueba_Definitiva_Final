@@ -426,7 +426,10 @@ namespace HGInetInteroperabilidad.Procesos
 						mensaje = mensaje.Replace("Nit.", "");
 
 						if (procesado == true)
+						{
 							mensaje = mensaje.Replace("Lista de inconsistencias", "Resultado");
+							mensaje = mensaje.Replace("Adjunto encontrará el correo electrónico original.", "");
+						}
 
 						string detalle = string.Empty;
 
