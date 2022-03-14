@@ -101,6 +101,7 @@
           <Property Name="StrLineaNegocio" Type="varchar" MaxLength="50" />
           <Property Name="IntProcesadoERP" Type="bit" Nullable="false" />
           <Property Name="IntValorPagar" Type="numeric" Precision="17" Scale="2" Nullable="false" />
+          <Property Name="IntFormaPago" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
@@ -1324,6 +1325,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="IntValorPagar" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblDocumentos_TblPlanesTransacciones" FromRole="TblDocumentos" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblEventosRadian" Relationship="Modelo.FK_TblEventosRadian_TblDocumentos" FromRole="TblDocumentos" ToRole="TblEventosRadian" />
+          <Property Name="IntFormaPago" Type="Int16" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Type="Modelo.TblConfiguracionInteroperabilidad" Role="TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
@@ -2014,6 +2016,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
+                <ScalarProperty Name="IntFormaPago" ColumnName="IntFormaPago" />
                 <ScalarProperty Name="IntValorPagar" ColumnName="IntValorPagar" />
                 <ScalarProperty Name="IntProcesadoERP" ColumnName="IntProcesadoERP" />
                 <ScalarProperty Name="StrLineaNegocio" ColumnName="StrLineaNegocio" />

@@ -1,0 +1,4 @@
+
+ALTER TABLE TblDocumentos ADD
+IntFormaPago smallint NOT NULL Default(1)
+GO

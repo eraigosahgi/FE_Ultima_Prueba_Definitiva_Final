@@ -370,6 +370,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso643003", "Caso643003", "{CC2F66C0-8863-4A23-896C-CBE914C3D0B5}"
 	ProjectSection(SolutionItems) = preProject
 		Documentacion\Liberaciones\Caso643003\IntRadian - TblEmpresas.txt = Documentacion\Liberaciones\Caso643003\IntRadian - TblEmpresas.txt
+		Documentacion\Liberaciones\Caso643003\TblDocumentos.txt = Documentacion\Liberaciones\Caso643003\TblDocumentos.txt
 		Documentacion\Liberaciones\Caso643003\TblEventosRadian.txt = Documentacion\Liberaciones\Caso643003\TblEventosRadian.txt
 	EndProjectSection
 EndProject
