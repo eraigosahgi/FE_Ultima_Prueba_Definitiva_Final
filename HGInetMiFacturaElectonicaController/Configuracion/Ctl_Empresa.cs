@@ -1734,7 +1734,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			else
 			{
 				tbl_empresa.IntObligado = (tbl_empresa.IntObligado == false) ? true : tbl_empresa.IntObligado;
-
+				tbl_empresa.IntVersionDian = 2;
+				
 				if (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost"))
 				{
 					if (!tbl_empresa.StrMailAdmin.Equals(empresa.EmailAdmin))
