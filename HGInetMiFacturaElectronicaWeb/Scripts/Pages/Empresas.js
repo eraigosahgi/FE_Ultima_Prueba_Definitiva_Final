@@ -369,6 +369,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		});
 
 
+		$("#EnvioNominaMail").dxCheckBox({
+			name: "EnvioNominaMail",
+			onValueChanged: function (data) {
+				Datos_EnvioNominaMail = (data.value == true) ? 1 : 0;
+			}
+		});
+
+
 
 		$("#txtMailEnvio").dxTextBox({
 			onValueChanged: function (data) {
@@ -839,13 +847,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				readOnly: true,
 				onValueChanged: function (data) {
 					Datos_EmailRecepcion = data.value;
-				}
-			});
-
-			$("#EnvioNominaMail").dxCheckBox({
-				name: "EnvioNominaMail",
-				onValueChanged: function (data) {
-					Datos_EnvioNominaMail = (data.value == true) ? 1 : 0;
 				}
 			});
 
@@ -1778,6 +1779,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#PermiteConsultarTodosLosDocumentos ").dxCheckBox({ value: true });
 				}
 
+				try {
+					if (Datos_EnvioNominaMail == 1) {
+						$("#EnvioNominaMail").dxCheckBox({ value: true });
+					}
+				} catch (e) { }
+
 				if (Datos_Serial != null) {
 					$("#txtSerial").dxTextBox({ value: Datos_Serial });
 					$("#txtSerial").dxTextBox({ readOnly: true });
@@ -1829,12 +1836,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					} else {
 						$("#EmailRecepcion").dxCheckBox({ value: false });
 					}
-
-					try {
-						if (Datos_EnvioNominaMail == 1) {
-							$("#EnvioNominaMail").dxCheckBox({ value: true });
-						}
-					} catch (e) { }
 
 					$("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
 

@@ -483,7 +483,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntIdEstado = empresa.IntIdEstado;
 					EmpresaActualiza.IntCobroPostPago = empresa.IntCobroPostPago;
 					EmpresaActualiza.IntEnvioMailRecepcion = empresa.IntEnvioMailRecepcion;
-					EmpresaActualiza.IntEnvioNominaMail = empresa.IntEnvioNominaMail;
 					EmpresaActualiza.IntVersionDian = empresa.IntVersionDian;
 					EmpresaActualiza.IntTimeout = empresa.IntTimeout;
 
@@ -530,6 +529,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				}
 
 				EmpresaActualiza.IntAcuseTacito = empresa.IntAcuseTacito;
+				EmpresaActualiza.IntEnvioNominaMail = empresa.IntEnvioNominaMail;
 
 				if (string.IsNullOrEmpty(empresa.StrMailAdmin))
 					throw new ApplicationException("El Email Administrativo es obligatorio");
@@ -1558,7 +1558,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			context.Configuration.LazyLoadingEnabled = false;
 
 			var datos = (from item in context.TblEmpresas
-						 where item.IntAcuseTacito >= 72
+						 where item.IntAcuseTacito >= 72 && item.IntRadian == true
 						 select item).ToList();
 
 			return datos;

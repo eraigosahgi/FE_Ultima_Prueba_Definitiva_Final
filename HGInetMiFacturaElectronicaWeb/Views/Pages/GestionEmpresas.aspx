@@ -4,12 +4,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Services/SrvResoluciones.js?vjs20220223"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs20220223"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20220223"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20220223"></script>
-	<script src="../../Scripts/Pages/Empresas.js?vjs20220223"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20220223"></script>
+	<script src="../../Scripts/Services/SrvResoluciones.js?vjs20220315"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs20220315"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20220315"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20220315"></script>
+	<script src="../../Scripts/Pages/Empresas.js?vjs20220315"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20220315"></script>
 
 	<div data-ng-app="EmpresasApp" data-ng-controller="GestionEmpresasController" class="col-md-12">
 		<div data-ng-include="'Partials/ModalResoluciones.html'"></div>
@@ -87,6 +87,14 @@
 										<div id="ModalConfiguracionPagos"></div>
 									</div>
 								</div>
+
+								<div class="col-md-12" style="z-index: 9;">
+										<label style="margin: 0px; margin-left: 0px; margin-top: 16px">Email Nómina:</label>
+										<div class="col-md-12" style="z-index: 9; margin-top: 1%; margin-left: 30px">
+											<div id="EnvioNominaMail"></div>
+											<div id="tooltip_EnvioNomina">Indica si envia la Nómina del empleado al email cuando el documento es procesado correctamente en la DIAN</div>
+										</div>
+									</div>
 
 								<div class="col-md-12 text-left" style="z-index: 8;">
 									<label style="margin-top: 16px; padding-top: 1%;">
@@ -311,7 +319,7 @@
 
 								<div class="col-md-12">
 
-									<div class="col-md-4" style="z-index: 9;">
+									<div class="col-md-6" style="z-index: 9;">
 										<label style="margin: 0px; margin-left: 0px; margin-top: 16px; margin-bottom: 1%">Email Recepcion:</label>
 										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 30px">
 											<div id="EmailRecepcion"></div>
@@ -319,15 +327,7 @@
 										</div>
 									</div>
 
-									<div class="col-md-4" style="z-index: 9;">
-										<label style="margin: 0px; margin-left: 0px; margin-top: 16px; margin-bottom: 1%">Email Nómina:</label>
-										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 30px">
-											<div id="EnvioNominaMail"></div>
-											<div id="tooltip_EnvioNomina">Indica si envia la Nómina del empleado al email cuando el documento es procesado correctamente en la DIAN</div>
-										</div>
-									</div>
-
-									<div class="col-md-4  text-center" style="z-index: 9;">
+									<div class="col-md-6  text-center" style="z-index: 9;">
 										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Post-Pago Auto.:</label>
 										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
 											<div id="postpagoaut"></div>
