@@ -2697,6 +2697,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, resultado.IdSeguridadTercero.ToString());
 			carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaXmlFacturaE);
 
+			Directorio.CrearDirectorio(carpeta_xml.Replace("XmlFacturaE", "XmlAcuse"));
+
 			// nombre del xml
 			string archivo_xml = string.Format(@"{0}.xml", resultado.NombreXml);
 
