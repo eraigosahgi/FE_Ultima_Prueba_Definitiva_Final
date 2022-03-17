@@ -1303,12 +1303,21 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						try
 						{
 							List<Guid> docs = (from datos in context.TblDocumentos.AsNoTracking()
-											   where (datos.IntAdquirienteRecibo.Equals(0) || datos.IntAdquirienteRecibo.Equals(4)) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+											   where (datos.IntAdquirienteRecibo.Equals(0) || datos.IntAdquirienteRecibo.Equals(1)) && datos.IntDocTipo == 1 && datos.IntIdEstado > Enviomail
+													 && datos.IntFormaPago == 2
 													 && datos.StrEmpresaFacturador == item.StrIdentificacion
 													 && (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
 															  && item.IntAcuseTacito.Value > 0)))
 											   orderby datos.IntNumero descending
 											   select datos.StrIdSeguridad).ToList();
+
+							//List<Guid> docs = (from datos in context.TblDocumentos.AsNoTracking()
+							//				   where (datos.IntAdquirienteRecibo.Equals(0) || datos.IntAdquirienteRecibo.Equals(4)) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+							//						 && datos.StrEmpresaFacturador == item.StrIdentificacion
+							//						 && (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
+							//								  && item.IntAcuseTacito.Value > 0)))
+							//				   orderby datos.IntNumero descending
+							//				   select datos.StrIdSeguridad).ToList();
 
 							if (docs.Count > 0)
 							{
@@ -1316,27 +1325,53 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								{
 									try
 									{
-										if (item.IntRadian == false)
+										Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
+										List<TblEventosRadian> lista_evento_doc = ctl_evento.Obtener(doc);
+										//bool generar_acuse_tacito = true;
+
+										if (lista_evento_doc.Count > 0)
 										{
-											ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty);
+											TblEventosRadian evento_reclamo = lista_evento_doc.Where(x => x.IntEstadoEvento == 2).FirstOrDefault();
+											TblEventosRadian evento_reciboM = lista_evento_doc.Where(x => x.IntEstadoEvento == 4).FirstOrDefault();
+											TblEventosRadian evento_expresa = lista_evento_doc.Where(x => x.IntEstadoEvento == 5).FirstOrDefault();
+
+											//Valido que no tenga eventos que evitene generar el Acuse Tacito
+											if (evento_reciboM != null && evento_reclamo == null && evento_expresa == null)
+											{
+												//Primero consulto que este evento cuente con las 72 horas del acuse de recibo con respecto a la fecha actual
+												TimeSpan horas_acuse_evento = evento_reciboM.DatFechaEvento.Subtract(Fecha.GetFecha());
+
+												if (horas_acuse_evento.TotalHours >= 72)
+												{
+													//Se valida que el plazo para generar de Acuse tacito registrado por el facturador sea igual a superior a la fecha del recibo de mercancia
+													bool cumple_acuse_tacito = horas_acuse_evento.TotalHours >= item.IntAcuseTacito ? true : false;
+
+													if (cumple_acuse_tacito == true)
+													{
+														ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty);
+
+														//Consulto que en la actualidad 
+														//ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty, string.Empty, true);
+														//lista_evento_doc = ctl_evento.Obtener(doc);
+														//evento_reclamo = lista_evento_doc.Where(x => x.IntEstadoEvento == 2).FirstOrDefault();
+														//evento_reciboM = lista_evento_doc.Where(x => x.IntEstadoEvento == 4).FirstOrDefault();
+														//evento_expresa = lista_evento_doc.Where(x => x.IntEstadoEvento == 5).FirstOrDefault();
+
+														//if (evento_reclamo != null || evento_expresa != null)
+														//	generar_acuse_tacito = false;
+													}
+												}
+
+												//if (generar_acuse_tacito == true)
+												//	ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty);
+											}
 										}
 										else
 										{
-											Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
-											List<TblEventosRadian> lista_evento_doc = ctl_evento.Obtener(doc);
-
-											if (lista_evento_doc.Count > 0)
-											{
-												TblEventosRadian evento_reciboM = lista_evento_doc.Where(x => x.IntEstadoEvento == 4).FirstOrDefault();
-
-												if (evento_reciboM != null)
-												{
-													ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty);
-												}
-											}
-
+											//ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty, string.Empty, true);
+											var Tarea1 = SondaConsultareventos(doc.ToString());
 										}
-											
+
 									}
 									catch (Exception excepcion)
 									{
@@ -1359,14 +1394,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					documentos = (from datos in context.TblDocumentos
 								  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
 								  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
-								  where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+								  where datos.IntAdquirienteRecibo.Equals(1) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error && datos.TblEmpresasFacturador.IntRadian == true
 										&& (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
 											 && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual)
 												 && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
 										//********************************************************
 										|| ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo && (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
 											&& (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -HATP, FechaActual))
-											&& datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error)
+											&& datos.IntAdquirienteRecibo.Equals(1) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error && datos.TblEmpresasFacturador.IntRadian == true)
 
 								  orderby datos.IntNumero descending
 								  select datos.StrIdSeguridad).ToList();
@@ -1379,6 +1414,28 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				RegistroLog.EscribirLog(exception, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
 				throw;
 			}
+		}
+
+		public async Task SondaConsultareventos(string List_IdSeguridad)
+		{
+			try
+			{
+				var Tarea = TareaConsultarEventosRadian(List_IdSeguridad);
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+			}
+
+		}
+
+		public async Task TareaConsultarEventosRadian(string List_IdSeguridad)
+		{
+			await Task.Factory.StartNew(() =>
+			{
+				ConsultarEventosRadian(List_IdSeguridad);
+			});
 		}
 
 		#endregion
@@ -1937,20 +1994,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				else
 					facturador = doc.TblEmpresasFacturador;
 
-				//Si el facturador esta habilitado para el RADIAN y no tiene Acuse Tacito, se le asigna 72 horas que es por ley
-				try
-				{
-					if (facturador.IntRadian == true && facturador.IntAcuseTacito == 0)
-					{
-						facturador.IntAcuseTacito = 72;
-						ctl_empresa.Actualizar(facturador);
-					}
-				}
-				catch (Exception)
-				{
-				   
-				}
-
 				// obtiene los datos del adquiriente
 				TblEmpresas adquiriente = null;
 				ctl_empresa = new Ctl_Empresa();
@@ -1963,6 +2006,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				ctl_empresa = new Ctl_Empresa();
 				TblEmpresas proveedor_emisor = ctl_empresa.Obtener(doc.StrProveedorEmisor, false);
 
+				//Si el adquiriente es de HGI es por que es Facturador, esta habilitado y se puede generar eventos basicos en la DIAN
+				bool adquiriente_hgi = (adquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() && adquiriente.IntObligado == true && adquiriente.IntAdquiriente == true && adquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode()) ? true : false;
+
+
 				//Se valida si va a generar los eventos siendo adquiriente o los quiere consultar siendo Facturador
 				if (consulta_evento == false)
 				{
@@ -1974,7 +2021,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					TblEventosRadian recibo = null;
 
-					if (adquiriente.IntRadian == true && adquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode())
+					if (adquiriente_hgi == true)
 					{
 						list_evento = evento.Obtener(doc.StrIdSeguridad);
 
@@ -1987,11 +2034,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								continuar_proceso = false;
 						}
 					}
+					else if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode())
+					{
+						continuar_proceso = false;
+					}
 
 
 					if (continuar_proceso == true)
 					{
-						if (!estado.Equals(CodigoResponseV2.AprobadoTacito.GetHashCode()) && facturador.IntRadian == false)
+						if (!estado.Equals(CodigoResponseV2.AprobadoTacito.GetHashCode()))
 						{
 							doc.IntAdquirienteRecibo = estado;
 							if (estado.Equals(CodigoResponseV2.Rechazado.GetHashCode()) || string.IsNullOrWhiteSpace(motivo_rechazo))
@@ -2002,14 +2053,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						}
 
 						//Valida si son pruebas para habilitarse en RADIAN para que sea Automatico
-						bool habilitacion_radian = (facturador.StrIdentificacion.Equals(adquiriente.StrIdentificacion) && adquiriente.IntHabilitacion != Habilitacion.Produccion.GetHashCode()) ? true : false;
+						bool habilitacion_radian = (facturador.StrIdentificacion.Equals(adquiriente.StrIdentificacion) && adquiriente.IntHabilitacion != Habilitacion.Produccion.GetHashCode() && !facturador.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo)) ? true : false;
 
 						//Crea el XML del Acuse
 						if (acuse == null && estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
 							resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
 
 						//Se valida si el adquiriente se esta habilitando en RADIAN o si va a registrar los eventos de Acuse en la DIAN
-						if (adquiriente.IntRadian == true && adquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode() && estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
+						if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
 						{
 
 							if ((list_evento == null || list_evento.Count == 0) && estado == CodigoResponseV2.Recibido.GetHashCode())
@@ -2125,6 +2176,21 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							}
 						}
+						else if (estado == CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
+						{
+							TblEventosRadian tacito = null;
+							//Crea el XML del Acuse
+							resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), motivo_rechazo);
+							if (facturador.IntRadian == true)
+							{
+								tacito = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode());
+								if (tacito == null)
+								{
+									throw new ArgumentException("No fue posible registrar el evento Aprobado Tacito");
+								}
+							}
+								
+						}
 						else if (habilitacion_radian == true)
 						{
 
@@ -2135,7 +2201,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						try
 						{
 							// envía el correo del acuse de recibo al facturador electrónico
-							if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && estado != CodigoResponseV2.Recibido.GetHashCode())
+							if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && estado != CodigoResponseV2.Recibido.GetHashCode() && adquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() &&adquiriente.IntObligado == true)
 							{
 								//********el adjunto debe ser un attach document con la aceptacion expresa o con el rechazo y la respuesta de la DIAN
 								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
@@ -2147,7 +2213,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						}
 						catch (Exception) { }
 
-						if (resultado != null && (estado == CodigoResponseV2.Expresa.GetHashCode() || estado == CodigoResponseV2.Inscripcion.GetHashCode() || estado == CodigoResponseV2.Rechazado.GetHashCode()))
+						if (resultado != null )//&& (estado == CodigoResponseV2.Recibido.GetHashCode() || estado == CodigoResponseV2.AprobadoTacito.GetHashCode() || estado == CodigoResponseV2.Expresa.GetHashCode() || estado == CodigoResponseV2.Inscripcion.GetHashCode() || estado == CodigoResponseV2.Rechazado.GetHashCode()))
 						{
 							doc.DatFechaActualizaEstado = Fecha.GetFecha();
 							doc.StrUrlAcuseUbl = resultado.RutaArchivosProceso;
@@ -2208,6 +2274,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							if (objeto_acuse != null)
 							{
 								bool evento_expresa = false;
+								bool evento_reclamo = false;
 								TblEventosRadian recibo_mercancia = null;
 
 								foreach (Acuse item in objeto_acuse)
@@ -2221,14 +2288,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									{
 										recibo_mercancia = eventobd;
 									}
-										
 
 									if (cod_acuse == CodigoResponseV2.Expresa)
 										evento_expresa = true;
+
+									if (cod_acuse == CodigoResponseV2.Rechazado)
+										evento_reclamo = true;
 								}
 
 								//no debe tener expresa pero si recibo del bien ademas este ultimo debe sobre pasar las 72 horas por ley para generar el Acuse Tacito
-								if (evento_expresa == false && recibo_mercancia != null)
+								if (evento_expresa == false && evento_reclamo == false && recibo_mercancia != null)
 								{
 									TimeSpan horas_acuse_evento = recibo_mercancia.DatFechaEvento.Subtract(Fecha.GetFecha());
 									
@@ -2441,16 +2510,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					habilitar_set = false;
 				}
 
+				acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
 
 				if (habilitar_set == true && !adquiriente.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
 				{
-					acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
+					//acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
 
 					Ctl_Documentos.Consultar(doc, facturador, ref resp, acuse.KeyV2);
-				}
-				else
-				{
-					acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
 				}
 
 				if (resp.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
@@ -2654,8 +2720,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			TblEmpresas empresa_firma = new TblEmpresas();
 
+			//Si el adquiriente es de HGI es por que es Facturador, esta habilitado y tiene la forma de firmar sea certificado propio o nuestro
+			bool adquiriente_hgi = (adquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() && adquiriente.IntObligado == true && adquiriente.IntAdquiriente == true && adquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode()) ? true : false;
+
+
 			//Valida si el adquiriente del documento tiene certificado con nosotros para firmar el acuse con ese certificado
-			if (adquiriente.IntCertFirma > 0 || adquiriente.IntObligado == true)
+			if ((adquiriente.IntCertFirma > 0 || adquiriente_hgi == true))
 			{
 				empresa_firma = adquiriente;
 				respuesta = Ctl_Documentos.UblFirmar(empresa_firma, doc, ref respuesta, ref resultado);
@@ -2734,6 +2804,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						tbl_documento.DatFechaVencDocumento = documento_obj.FechaVence;
 						//Validacion: Si < 0 el valor es 0, si es = 0 es el valor del documento, si es > 0 es el valor a pagar que envian
 						tbl_documento.IntValorPagar = (documento_obj.ValorPagar < 0) ? 0 : (documento_obj.ValorPagar == 0) ? documento_obj.Total : (documento_obj.ValorPagar > 0) ? documento_obj.ValorPagar : 0;
+						tbl_documento.IntFormaPago = (documento_obj.FormaPago == 0) ? 1 : Convert.ToInt16(documento_obj.FormaPago);
 					}
 
 					tbl_documento.DatFechaDocumento = Convert.ToDateTime(documento_obj.Fecha.ToString(Fecha.formato_fecha_hginet));

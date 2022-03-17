@@ -247,6 +247,10 @@
 									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
 										<div id="Interoperabilidad" style="margin-top: 1%"></div>
 										<div id="tooltip_Interoper">Indica si la empresa procesa documentos de un proveedor diferente a HGI</div>
+									<br />
+									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
+										<div id="Radian" style="margin-top: 1%"></div>
+										<div id="tooltip_Radian">Indica si la empresa genera eventos de las facturas en la DIAN</div>
 								</div>
 
 								<%--<div class="col-md-12  text-center" style="z-index: 9;">

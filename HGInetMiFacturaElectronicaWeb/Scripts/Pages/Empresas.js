@@ -36,6 +36,7 @@ Datos_estado = "",
 Datos_postpago = 0,
 Datos_debug = 0,
 Datos_InterOp = 0,
+Datos_Radian = 0,
 Datos_Email_Recepcion = "",
 Datos_Email_Acuse = "",
 Datos_Email_Envio = "",
@@ -670,6 +671,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				text: "Recepción",
 				onValueChanged: function (data) {
 					Datos_InterOp = (data.value == true) ? 1 : 0;
+				}
+			});
+
+			$("#Radian").dxCheckBox({
+				name: "Radian",
+				text: "Radian",
+				onValueChanged: function (data) {
+					Datos_Radian = (data.value == true) ? 1 : 0;
 				}
 			});
 
@@ -1442,6 +1451,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			title: "Detalle:"
 		});
 
+		$("#tooltip_Radian").dxPopover({
+			target: "#Radian",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
 
 		$("#tooltip_EmpresaAsociada").dxPopover({
 			target: "#EmpresaAsociada",
@@ -1726,6 +1748,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Serial_Cloud = response.data[0].SerialCloudServices;
 				Datos_debug = response.data[0].Debug;
 				Datos_InterOp = response.data[0].InterOp;
+				Datos_Radian = response.data[0].Radian;
 				//Comercio
 				Datos_ComercioConfigId = response.data[0].ComercioConfigId;
 				Datos_ComercioConfigDescrip = response.data[0].ComercioConfigDescrip;
@@ -1863,6 +1886,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					try {
 						if (Datos_InterOp == 1) {
 							$("#Interoperabilidad").dxCheckBox({ value: true });
+						}
+					} catch (e) { }
+
+					try {
+						if (Datos_Radian == 1) {
+							$("#Radian").dxCheckBox({ value: true });
 						}
 					} catch (e) { }
 
@@ -2029,6 +2058,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				StrSerialCloudServices: Datos_Serial_Cloud,
 				IntDebug: Datos_debug,
 				IntInteroperabilidad: Datos_InterOp,
+				IntRadian : Datos_Radian,
 				IntEnvioNominaMail: Datos_EnvioNominaMail,
 			});
 			var tipo = Datos_Tipo;

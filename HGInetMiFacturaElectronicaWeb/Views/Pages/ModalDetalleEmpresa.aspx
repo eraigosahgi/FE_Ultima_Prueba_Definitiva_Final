@@ -256,7 +256,10 @@
 																							</tr>
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Envio Nómina Email:</td>
-																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{EnvioNominaMail}}</td>
+																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{EnvioNominaMail}}</td>
+
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Radian:</td>
+																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{Radian}}</td>
 																							</tr>
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">versión:</td>

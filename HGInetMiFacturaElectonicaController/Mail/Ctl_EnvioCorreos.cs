@@ -860,6 +860,8 @@ namespace HGInetMiFacturaElectonicaController
 
 					string mensaje = file.OpenText().ReadToEnd();
 
+					//Si el adquiriente es de HGI es por que es Facturador, esta habilitado y se puede generar eventos basicos en la DIAN
+					bool adquiriente_hgi = (empresa_adquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() && empresa_adquiriente.IntObligado == true && empresa_adquiriente.IntAdquiriente == true && empresa_adquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode()) ? true : false;
 
 					if (file != null)
 					{
@@ -918,7 +920,8 @@ namespace HGInetMiFacturaElectonicaController
 
 						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
-						if (tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste)
+						//Si el adquiriente no es cliente de HGI no se permite hacer acuse por medio del correo puesto que lo debe hacer por medio del proveedor que tenga
+						if (tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste && adquiriente_hgi == true)
 						{
 
 							mensaje = mensaje.Replace("{RutaUrl}", ruta_acuse);
@@ -927,6 +930,16 @@ namespace HGInetMiFacturaElectonicaController
 							string boton_acuse = "<td style='border:2px solid #b0afaf;border-radius:3px;color:#ffffff;cursor:auto;padding:10px 25px;' align='center' valign='middle' bgcolor='#040461'><a href='" + ruta_acuse + "' style='text-decoration:none;background:#040461;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:17px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;' target='_blank'>Acuse de Recibo</a></td>";
 
 							mensaje = mensaje.Replace("{Acuse}", boton_acuse);
+						}
+						else if (adquiriente_hgi == false)
+						{
+							mensaje = mensaje.Replace("Para continuar con el proceso debes realizar el acuse de recibo {PSETexto}:", "");
+
+							mensaje = mensaje.Replace("Si el enlace anterior no funciona, copie y pegue la siguiente URL en su navegador web:", "");
+
+							mensaje = mensaje.Replace("{RutaUrl}", "");
+
+							mensaje = mensaje.Replace("{Acuse}", "");
 						}
 
 						bool IdPago = false;
@@ -1258,8 +1271,8 @@ namespace HGInetMiFacturaElectonicaController
 									//Actualizo tabla de correos
 									correo_doc = proceso_correo.Actualizar(correo_doc);
 
-									//Se hace el registro del evento de recepcion del documento siempre y cuando el correo no presente bloqueo
-									if (correo_doc.IntEnvioMail == true && empresa_adquiriente.IntRadian == true)
+									//Se hace el registro del evento de recepcion del documento siempre y cuando el correo no presente bloqueo y el adquiriente sea cliente de HGI
+									if (correo_doc.IntEnvioMail == true && adquiriente_hgi == true)
 									{
 										Ctl_EventosRadian evento = new Ctl_EventosRadian();
 										Task envio_acuse = evento.ProcesoCrearAcuseRecibo(correo_doc.StrIdMensaje, documento.StrIdSeguridad);

@@ -24,6 +24,7 @@ ModalDetalleEmpresasApp.controller('EmpresasModalController', function EmpresasM
 			$scope.Habilitacion = BuscarDescripcion(EnumHabilitacion, response.data[0].Habilitacion);
 			$scope.HabilitacionNom = BuscarDescripcion(EnumHabilitacion, response.data[0].Habilitacion_NominaE);
 			$scope.EnvioNominaMail = response.data[0].IntEnvioNominaMail ? "SI" : "NO";
+			$scope.Radian = response.data[0].Radian ? "SI" : "NO";
 			$scope.IdSeguridad = response.data[0].IdSeguridad;
 			$scope.Estado = (response.data[0].Estado==1)?"ACTIVO": (response.data[0].Estado==2)? "INACTIVO":(response.data[0].Estado==3)? "EN PROCESO DE REGISTRO":"";
 			$scope.Email = response.data[0].Email;

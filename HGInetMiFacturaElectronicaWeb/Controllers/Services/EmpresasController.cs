@@ -288,6 +288,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				d.IntManejaPagoE,
 				d.IntPagoEParcial,
 				IntEmailRecepcion = d.IntEnvioMailRecepcion,
+				Radian = d.IntRadian,
 				IntAcuseTacito = d.IntAcuseTacito,
 				StrEmpresaDescuenta = ctl_empresa.ObtenerRazonSocial(d.StrEmpresaDescuento),
 				Estado = d.IntIdEstado,
@@ -398,6 +399,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.StrSerialCloudServices = ObjEmpresa.StrSerialCloudServices;
 				Empresa.IntDebug = ObjEmpresa.IntDebug;
 				Empresa.IntInteroperabilidad = ObjEmpresa.IntInteroperabilidad;
+				Empresa.IntRadian = ObjEmpresa.IntRadian;
 
 				#region Certificado
 				Empresa.IntCertFirma = ObjEmpresa.IntCertFirma;
@@ -409,7 +411,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				#endregion
 
 				Empresa.StrMailAdmin = ObjEmpresa.StrMailAdmin;
-				Empresa.IntAcuseTacito = ObjEmpresa.IntAcuseTacito;
+				Empresa.IntAcuseTacito = (ObjEmpresa.IntRadian == true && ObjEmpresa.IntAcuseTacito < 72) ? 72 : ObjEmpresa.IntAcuseTacito;
 				Empresa.StrMailAcuse = ObjEmpresa.StrMailAcuse;
 				Empresa.StrMailEnvio = ObjEmpresa.StrMailEnvio;
 				Empresa.StrMailRecepcion = ObjEmpresa.StrMailRecepcion;

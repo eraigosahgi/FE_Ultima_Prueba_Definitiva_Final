@@ -119,48 +119,49 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 					datos_retorno = email.ConsultarCorreo(Convert.ToInt64(StrIdMensaje));
 
+					TblDocumentos doc = documento.ObtenerPorIdSeguridad(StrIdSeguridadDoc, true).FirstOrDefault();
+
+					if (doc.TblEmpresasAdquiriente == null)
+					{
+						Ctl_Empresa ctlempresa = new Ctl_Empresa();
+						TblEmpresas adquiriente = ctlempresa.Obtener(doc.StrEmpresaAdquiriente);
+						doc.TblEmpresasAdquiriente = adquiriente;
+					}
+
+					bool reenviar_notificacion = false;
+
 					if (datos_retorno != null && !string.IsNullOrEmpty(datos_retorno.Estado))
 					{
 
 						if (MensajeIdResultado.NoEntregado.GetHashCode().Equals(datos_retorno.IdResultado))
 						{
-
-							TblDocumentos doc = documento.ObtenerPorIdSeguridad(StrIdSeguridadDoc, true).FirstOrDefault();
-
-							if (doc.TblEmpresasAdquiriente == null)
-							{
-								Ctl_Empresa ctlempresa = new Ctl_Empresa();
-								TblEmpresas adquiriente = ctlempresa.Obtener(doc.StrEmpresaAdquiriente);
-								doc.TblEmpresasAdquiriente = adquiriente;
-							}
-
-							email = new Ctl_EnvioCorreos();
-							List<MensajeEnvio> notificacion = new List<MensajeEnvio>();
-							try
-							{
-								notificacion = email.NotificacionDocumento(doc, doc.TblEmpresasAdquiriente.StrTelefono, doc.TblEmpresasAdquiriente.StrMailAdmin, doc.StrIdSeguridad.ToString());
-							}
-							catch (Exception excepcion)
-							{
-								//Si se presenta un error en el envio se notifica al facturador para que valide
-								email.NotificacionCorreofacturador(doc, doc.TblEmpresasAdquiriente.StrTelefono, doc.TblEmpresasAdquiriente.StrMailAdmin, "Error enviando Correo", doc.StrIdSeguridad.ToString());
-
-								throw excepcion;
-							}
+							reenviar_notificacion = true;
 						}
-
-					
 					}
 					else
 					{
+						reenviar_notificacion = true;
+					}
 
+					if (reenviar_notificacion == true)
+					{
+						email = new Ctl_EnvioCorreos();
+						List<MensajeEnvio> notificacion = new List<MensajeEnvio>();
+						try
+						{
+							notificacion = email.NotificacionDocumento(doc, doc.TblEmpresasAdquiriente.StrTelefono, doc.TblEmpresasAdquiriente.StrMailAdmin, doc.StrIdSeguridad.ToString());
+						}
+						catch (Exception excepcion)
+						{
+							//Si se presenta un error en el envio se notifica al facturador para que valide
+							email.NotificacionCorreofacturador(doc, doc.TblEmpresasAdquiriente.StrTelefono, doc.TblEmpresasAdquiriente.StrMailAdmin, "Error enviando Correo", doc.StrIdSeguridad.ToString());
+
+							throw excepcion;
+						}
 					}
 				}
 
 				List<TblDocumentos> datos = documento.ActualizarRespuestaAcuse(StrIdSeguridadDoc, (short)CodigoResponseV2.Recibido.GetHashCode(), Enumeracion.GetDescription(CodigoResponseV2.Recibido));
-
-
-
 
 			}
 			catch (Exception excepcion)

@@ -489,6 +489,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntDebug = empresa.IntDebug;
 					EmpresaActualiza.IntInteroperabilidad = empresa.IntInteroperabilidad;
 					EmpresaActualiza.StrSerialCloudServices = empresa.StrSerialCloudServices;
+					EmpresaActualiza.IntRadian = empresa.IntRadian;
 
 					#region Certificado
 					EmpresaActualiza.IntCertFirma = empresa.IntCertFirma;
@@ -528,7 +529,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				}
 
-				EmpresaActualiza.IntAcuseTacito = empresa.IntAcuseTacito;
+				EmpresaActualiza.IntAcuseTacito = (empresa.IntRadian == true && EmpresaActualiza.IntAcuseTacito < 72) ? empresa.IntAcuseTacito : EmpresaActualiza.IntAcuseTacito; //empresa.IntAcuseTacito;
 				EmpresaActualiza.IntEnvioNominaMail = empresa.IntEnvioNominaMail;
 
 				if (string.IsNullOrEmpty(empresa.StrMailAdmin))

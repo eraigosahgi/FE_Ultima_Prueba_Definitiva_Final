@@ -497,6 +497,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				ctl_documento = new Ctl_Documento();
 				TblDocumentos documento = new TblDocumentos();
 				documento = datos.FirstOrDefault();
+
+				bool cliente_hgi = (documento.TblEmpresasAdquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() && documento.TblEmpresasAdquiriente.IntObligado == true && documento.TblEmpresasAdquiriente.IntAdquiriente == true && documento.TblEmpresasAdquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode()) ? true : false;
+
 				if (((documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode()) || (documento.IntAdquirienteRecibo >= (short)CodigoResponseV2.Aceptado.GetHashCode())))
 				{
 					if ((documento.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode()))
@@ -508,7 +511,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					}
 				}
 
-				if (documento.TblEmpresasAdquiriente.IntRadian == true && documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode())
+				if (cliente_hgi == true && documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode())
 				{
 					Ctl_EventosRadian evento = new Ctl_EventosRadian();
 					Task envio_acuse = evento.ProcesoCrearAcuseRecibo(string.Empty, documento.StrIdSeguridad);
@@ -535,7 +538,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
 					RespuestaVisible = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? false : true,
-					CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? true : false,
+					CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? ((cliente_hgi == false) ? false : true) : false,
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					Estatus = Pago.VerificarSaldo(id_seguridad),
 					XmlAcuse = d.StrUrlAcuseUbl,

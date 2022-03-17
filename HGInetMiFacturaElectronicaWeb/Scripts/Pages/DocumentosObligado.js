@@ -11,6 +11,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 	var now = new Date();
 	var Estado;
 	var ResolucionesPrefijo;
+	var Radian = false;
 
 	var codigo_facturador = "",
            numero_documento = "",
@@ -229,6 +230,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
 		$http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&resolucion=' + resolucion + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
 			$('#wait').hide();
+			Radian = response.data[0].Radian;
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
 				keyExpr: "StrIdSeguridad",
@@ -322,8 +324,6 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
                     		var permite_envio = "class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:5%; font-size:19px'";
 
-                    		var consultar_eventos = "style='pointer-events:auto;cursor: not-allowed;'";
-
                     		if (options.data.Pdf)
                     			visible_pdf = "href='" + options.data.Pdf + "' style='pointer-events:auto;cursor: pointer;'";
                     		else
@@ -370,13 +370,13 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 						alignment: "center",
 						width: "10%",
 						//dataField: "NumeroDocumento",
-						visible: response.data.Radian,
+						visible: Radian,
 						//disable: ((response.data.IntAdquirienteRecibo > 5) && (response.data.EstadoFactura > 7)) ? true : false,
 						cellTemplate: function (container, options) {
 							if (options.data.tipodoc != 'Nota Crédito') {
 								$('<div id="chkdoc_evento_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
 									name: "chkdoc_evento_" + options.data.StrIdSeguridad,
-									disabled: ((options.data.IntAdquirienteRecibo > 5) || (options.data.EstadoFactura < 8)) ? true : false,
+									disabled: ((options.data.IntAdquirienteRecibo > 5) || (options.data.EstadoFactura < 8)) ? true :  (Radian == false) ? true : false,
 									onValueChanged: function (data) {
 										validarSeleccion();
 									}
@@ -466,6 +466,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					   	caption: "Radian",
 					   	dataField: "TituloValor",
 					   	cssClass: "hidden-xs col-md-1",
+					   	visible: Radian,
 					   	//lookup: {
 					   	//	dataSource: AdquirienteRecibo,
 					   	//	displayExpr: "Name",
