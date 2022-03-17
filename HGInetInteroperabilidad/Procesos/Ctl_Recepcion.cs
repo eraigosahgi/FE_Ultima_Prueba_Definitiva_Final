@@ -977,6 +977,9 @@ namespace HGInetInteroperabilidad.Procesos
 					{
 					}
 
+					//Cierro la lectura
+					xml_reader_serializacion.Close();
+
 					throw new ApplicationException(string.Format("Error al serializar el archivo en la ruta {0} Detalle: {1}", ruta_xml, ex.Message));
 
 					//try
