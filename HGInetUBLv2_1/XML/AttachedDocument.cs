@@ -124,17 +124,9 @@ namespace HGInetUBLv2_1
 					contenido_xml = Archivo.ObtenerContenido(url_evento);
 				}
 
-				if (contenido_xml.Contains("&lt;") || contenido_xml.Contains("&gt;"))
-				{
-					if (documentoBd.IntDocTipo != TipoDocumento.NotaCredito.GetHashCode() && !documentoBd.StrEmpresaFacturador.Equals("890924431") && !documentoBd.StrEmpresaAdquiriente.Equals("860072134"))
-					{
-						contenido_xml = contenido_xml.Replace("&lt;", "<");
-						contenido_xml = contenido_xml.Replace("&gt;", ">");
-					}
-				}
-
 				DescriptionType Description = new DescriptionType();
-				Description.Value = string.Format("<![CDATA[{0}]]>", contenido_xml);
+				//Description.Value = string.Format("<![CDATA[{0}]]>", contenido_xml);
+				Description.Value = "contenido_xml";
 
 				ExternalReference.Description[0] = Description;
 				attached.Attachment.ExternalReference = ExternalReference;
@@ -194,7 +186,8 @@ namespace HGInetUBLv2_1
 				}
 
 				Description = new DescriptionType();
-				Description.Value = string.Format("<![CDATA[{0}]]>", contenido_xml_app);
+				//Description.Value = string.Format("<![CDATA[{0}]]>", contenido_xml_app);
+				Description.Value = "contenido_ApplicationResponse";
 
 				ExternalReferenceApp.Description[0] = Description;
 				LineReference.DocumentReference.Attachment = new AttachmentType();
@@ -277,6 +270,10 @@ namespace HGInetUBLv2_1
 					texto_xml = texto_xml.Replace("&lt;", "<");
 					texto_xml = texto_xml.Replace("&gt;", ">");
 				}
+
+				texto_xml = texto_xml.Replace("contenido_xml", string.Format("<![CDATA[{0}]]>", contenido_xml));
+				texto_xml = texto_xml.Replace("contenido_ApplicationResponse", string.Format("<![CDATA[{0}]]>", contenido_xml_app));
+
 				txt_xml = new StringBuilder(texto_xml);
 
 				FacturaE_Documento xml_sin_firma = new FacturaE_Documento();
