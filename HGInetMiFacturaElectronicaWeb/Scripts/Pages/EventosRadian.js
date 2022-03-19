@@ -1,10 +1,10 @@
 ﻿
-
-
+var id_seguridad;
+var numero_documento;
+var obligado;
 
 App.controller('EventosRadianController', function EventosRadianController($scope, $http, $location, $rootScope) {
 
-	var id_seguridad;
 	$rootScope.ConsultarEventosRadian = function (IdSeguridad, NumeroDocumento, Obligado) {
 		$scope.IdSeguridad = IdSeguridad;
 		$("#IdSeguridad").text(IdSeguridad);
@@ -75,7 +75,8 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 				visible:false,
 				onClick: function () {
 					$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-						alert(response.data);
+						//alert(response.data);
+						$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
 					});
 				}
 			});

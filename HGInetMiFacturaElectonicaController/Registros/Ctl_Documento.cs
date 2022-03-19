@@ -2034,7 +2034,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								continuar_proceso = false;
 						}
 					}
-					else if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode())
+					else if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && estado != CodigoResponseV2.Inscripcion.GetHashCode())
 					{
 						continuar_proceso = false;
 					}
@@ -2105,6 +2105,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								recibo = list_evento.Where(x => x.IntEstadoEvento == 4).FirstOrDefault();
 
+								TblEventosRadian expresa = list_evento.Where(x => x.IntEstadoEvento == 5).FirstOrDefault();
+
+								TblEventosRadian rechazo = list_evento.Where(x => x.IntEstadoEvento == 2).FirstOrDefault();
+
 								if (acuse == null && estado != CodigoResponseV2.Recibido.GetHashCode())
 								{
 									acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode());
@@ -2118,58 +2122,24 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode());
 								}
 
-								if (acuse != null && recibo != null && estado == CodigoResponseV2.Expresa.GetHashCode())
+								if (expresa == null && rechazo == null && estado != CodigoResponseV2.Recibido.GetHashCode())
 								{
-									TblEventosRadian expresa = list_evento.Where(x => x.IntEstadoEvento == 5).FirstOrDefault();
+									//Crea el XML del Acuse
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
 
-									if (acuse != null && recibo != null && expresa == null)
-									{
-										//Crea el XML del Acuse
-										resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
-										EnviarAcuse(resultado, adquiriente, facturador, doc, estado);
-									}
-									else if (expresa != null)
-									{
-										//Crea el XML del Acuse
-										Acuse objeto_acuse = null;
-										try
-										{
-											// lee el archivo XML en UBL desde la ruta pública
-											string contenido_xml = Archivo.ObtenerContenido(expresa.StrUrlEvento);
+									if  (estado == CodigoResponseV2.Expresa.GetHashCode())
+										expresa = EnviarAcuse(resultado, adquiriente, facturador, doc, estado);
 
-											// valida el contenido del archivo
-											if (string.IsNullOrWhiteSpace(contenido_xml))
-												throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
+									if (estado == CodigoResponseV2.Rechazado.GetHashCode())
+										rechazo = EnviarAcuse(resultado, adquiriente, facturador, doc, estado);
 
-											// convierte el contenido de texto a xml
-											XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+								}
 
-											// convierte el objeto de acuerdo con el tipo de documento
-											XmlSerializer serializacion1 = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
-
-											HGInetUBLv2_1.ApplicationResponseType conversion = (HGInetUBLv2_1.ApplicationResponseType)serializacion1.Deserialize(xml_reader);
-
-											objeto_acuse = HGInetUBLv2_1.AcuseReciboXMLv2_1.Convertir(conversion).FirstOrDefault();
-										}
-										catch (Exception ex)
-										{
-
-										}
-
-										if (objeto_acuse == null)
-										{
-											resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
-										}
-										else
-										{
-											resultado.Documento = objeto_acuse;
-											resultado.CUFE = objeto_acuse.CufeDocumento;
-											resultado.DocumentoTipo = TipoDocumento.AcuseRecibo;
-											resultado.NombreXml = Path.GetFileNameWithoutExtension(expresa.StrUrlEvento);
-										}
-
-										EnviarAcuse(resultado, adquiriente, facturador, doc, estado);
-									}
+								if (estado == CodigoResponseV2.Inscripcion.GetHashCode() && rechazo == null)
+								{
+									//Crea el XML del Acuse
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Inscripcion.GetHashCode(), motivo_rechazo);
+									TblEventosRadian inscripcion_titulo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Inscripcion.GetHashCode());
 								}
 
 
@@ -2201,7 +2171,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						try
 						{
 							// envía el correo del acuse de recibo al facturador electrónico
-							if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && estado != CodigoResponseV2.Recibido.GetHashCode() && adquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() &&adquiriente.IntObligado == true)
+							if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && estado != CodigoResponseV2.Recibido.GetHashCode() && estado != CodigoResponseV2.Inscripcion.GetHashCode() && adquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() &&adquiriente.IntObligado == true)
 							{
 								//********el adjunto debe ser un attach document con la aceptacion expresa o con el rechazo y la respuesta de la DIAN
 								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
