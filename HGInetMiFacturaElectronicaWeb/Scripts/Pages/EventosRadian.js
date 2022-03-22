@@ -13,7 +13,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 
 		$http.get('/api/ObtenerEventosRadian?id_seguridad=' + IdSeguridad).then(function (response) {
 
-			
+
 
 			$("#GridEventosRadianDocumento").dxDataGrid({
 				dataSource: response.data,
@@ -27,7 +27,12 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 					showInfo: true
 				},
 				onContentReady: function (e) {
-					$("#cmdenviar").dxButton({ visible: response.data[0].Inscribir_Documento });
+					try {
+						$("#cmdenviar").dxButton({ visible: response.data[0].Inscribir_Documento });
+					}
+					catch (err) {
+						$("#cmdenviar").dxButton({ visible: false });
+					}
 				},
 				columns: [
 				    {
@@ -65,14 +70,14 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 
 			});
 
-			
 
-			
-			
+
+
+
 			$("#cmdenviar").dxButton({
 				text: "Enviar evento Titulo Valor",
 				type: "default",
-				visible:false,
+				visible: false,
 				onClick: function () {
 					$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
 						//alert(response.data);
