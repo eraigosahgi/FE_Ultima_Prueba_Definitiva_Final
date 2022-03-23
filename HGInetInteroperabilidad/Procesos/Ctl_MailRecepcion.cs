@@ -225,16 +225,16 @@ namespace HGInetInteroperabilidad.Procesos
 									}
 
 									//se notifica al correo emisor y del facturador(Adquiriente) que recibio
-									try
-									{
-										mensajes.Add("Correo cumple con parametros establecidos por la DIAN, los archivos pasan al proceso de importar a plataforma");
-										//RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
-										EnviarAlerta(mensaje, mensajes, true);
-									}
-									catch (Exception)
-									{
+									//try
+									//{
+									//	mensajes.Add("Correo cumple con parametros establecidos por la DIAN, los archivos pasan al proceso de importar a plataforma");
+									//	//RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
+									//	EnviarAlerta(mensaje, mensajes, true);
+									//}
+									//catch (Exception)
+									//{
 
-									}
+									//}
 								}
 								else
 								{
@@ -242,14 +242,22 @@ namespace HGInetInteroperabilidad.Procesos
 									string ruta_archivos = string.Format("{0}\\{1}Mail\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion.Replace("recepcion", "no procesados"));
 									ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
 
-									string ruta_directorio_mail = string.Format("{0}\\{1}\\", ruta_archivos, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0,10), identificador_mail));
+									string ruta_directorio_mail = string.Format(@"{0}{1}\", ruta_archivos, string.Format("{0}-{1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0,10), identificador_mail));
 									ruta_directorio_mail = Directorio.CrearDirectorio(ruta_directorio_mail);
 
 									// almacena el correo electrónico temporalmente
 									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_directorio_mail, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0, 10), identificador_mail));
 
 									// almacena los adjuntos del correo electrónico temporalmente
-									List<string> rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_directorio_mail);
+									List<string> rutas_archivos = new List<string>();
+									try
+									{
+										rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_directorio_mail);
+									}
+									catch (Exception)
+									{
+										rutas_archivos.Add(ruta_directorio_mail);
+									}
 
 									// descomprime el zip adjunto
 									string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
