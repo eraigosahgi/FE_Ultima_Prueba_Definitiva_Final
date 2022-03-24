@@ -851,7 +851,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
-				List<TblDocumentos> datos = null;
+				List<TblDocumentos> datos = new List<TblDocumentos>();
 
 				TblDocumentos doc = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo, (!string.IsNullOrEmpty(usuario)) ? usuario : "");
 

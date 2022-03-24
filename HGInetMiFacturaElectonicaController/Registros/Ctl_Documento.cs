@@ -2045,7 +2045,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					if (!estado.Equals(CodigoResponseV2.AprobadoTacito.GetHashCode()))
 					{
 						doc.IntAdquirienteRecibo = estado;
-						if (estado.Equals(CodigoResponseV2.Rechazado.GetHashCode()) || string.IsNullOrWhiteSpace(motivo_rechazo))
+						if (estado.Equals(CodigoResponseV2.Rechazado.GetHashCode()) || !string.IsNullOrWhiteSpace(motivo_rechazo))
 							doc.StrAdquirienteMvoRechazo = motivo_rechazo;
 						doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
 						if (doc.IntIdEstado > (short)ProcesoEstado.EnvioZip.GetHashCode() && estado != CodigoResponseV2.Recibido.GetHashCode())
@@ -2128,9 +2128,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								//Crea el XML del Acuse
 								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo);
 								recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode());
+								evento_procesado_DIAN = true;
 							}
 
-							if (expresa == null && rechazo == null && estado != CodigoResponseV2.Recibido.GetHashCode())
+							if (expresa == null && rechazo == null && estado != CodigoResponseV2.Aceptado.GetHashCode())
 							{
 								//Crea el XML del Acuse
 								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
