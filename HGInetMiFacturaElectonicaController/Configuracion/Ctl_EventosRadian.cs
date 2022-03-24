@@ -161,7 +161,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 				}
 
-				List<TblDocumentos> datos = documento.ActualizarRespuestaAcuse(StrIdSeguridadDoc, (short)CodigoResponseV2.Recibido.GetHashCode(), Enumeracion.GetDescription(CodigoResponseV2.Recibido));
+				documento.ActualizarRespuestaAcuse(StrIdSeguridadDoc, (short)CodigoResponseV2.Recibido.GetHashCode(), Enumeracion.GetDescription(CodigoResponseV2.Recibido));
 
 			}
 			catch (Exception excepcion)

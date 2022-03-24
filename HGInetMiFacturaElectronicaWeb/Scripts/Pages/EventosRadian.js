@@ -55,6 +55,11 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 				   	dataField: "StrUrlEvento",
 				   	visible: false
 				   },
+				    {
+				    	caption: "respuesta_evento",
+				    	dataField: "respuesta_evento",
+				    	visible: false
+				    },
 				   {
 				   	caption: "Archivo",
 				   	cssClass: "col-md-1",
@@ -63,6 +68,17 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 				   		$("<div>")
 							.append(
 							   $("<a style='margin-left:5%;margin-right:5%;' target='_blank'  " + visible_xml + ">"))
+							.appendTo(container);
+				   	}
+				   },
+				   {
+				   	caption: "Respuesta",
+				   	cssClass: "col-md-1",
+				   	cellTemplate: function (container, options) {
+				   		var visible_xml_resp = "href='" + options.data.respuesta_evento + "' class='icon-file-xml' style='pointer-events:auto;cursor: pointer;'";
+				   		$("<div>")
+							.append(
+							   $("<a style='margin-left:5%;margin-right:5%;' target='_blank'  " + visible_xml_resp + ">"))
 							.appendTo(container);
 				   	}
 				   },

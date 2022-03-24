@@ -262,6 +262,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return NotFound();
 				}
 
+				List<string> doc_consulta_evento = datos.Where(x => x.tipodoc == 1 && x.IntAdquirienteRecibo != 5 && x.IntAdquirienteRecibo != 3 && x.IntAdquirienteRecibo < 6 && x.FormaPago == 2 && x.EstadoCategoria == 300 && x.Radian == true).Select(x => x.StrIdSeguridad.ToString()).ToList();
+
+				if (doc_consulta_evento != null)
+				{
+					string docs_consulta = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(doc_consulta_evento, ",");
+					var Tarea1 = ctl_documento.SondaConsultareventos(false, docs_consulta);
+				}
+
 				var retorno = datos.Select(d => new
 				{
 					d.IdFacturador,
@@ -296,7 +304,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					MensajeEnvio = d.MensajeEnvio,// DescripcionMensajeEmail(Convert.ToInt16(d.MensajeEnvio)),
 					d.EnvioMail,
 					d.Radian,
-					TituloValor = (d.IntAdquirienteRecibo > 5) ? "Titulo Valor" : "Documento Electrónico"
+					TituloValor = (d.IntAdquirienteRecibo > 5) ? "Titulo Valor" : (d.IntAdquirienteRecibo == 5) || (d.IntAdquirienteRecibo == 3) ? "Aceptado" : "Documento Electrónico"
 				});
 
 				return Ok(retorno);
@@ -774,8 +782,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				List<DocumentosJSON> ListadeDocumentos = new JavaScriptSerializer().Deserialize<List<DocumentosJSON>>(ListaDoc);
 
-				List<TblDocumentos> ListaDocumentos = new List<TblDocumentos>();
-
 				List<System.Guid> List_id_seguridad = new List<Guid>();
 
 				foreach (var item in ListadeDocumentos)
@@ -787,14 +793,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var lista = documento.ProcesarDocumentosSinLazy(List_id_seguridad);
 
-				List<TblDocumentos> datos = new List<TblDocumentos>();
-
 				foreach (var item in lista)
 				{
 					try
 					{
 						documento = new Ctl_Documento();
-						datos = documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
+						documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
 
 					}
 					catch (Exception ex)
@@ -847,12 +851,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
-				List<TblDocumentos> datos = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo, (!string.IsNullOrEmpty(usuario)) ? usuario : "");
+				List<TblDocumentos> datos = null;
 
-				if (datos == null)
+				TblDocumentos doc = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo, (!string.IsNullOrEmpty(usuario)) ? usuario : "");
+
+				if (doc == null)
 				{
 					return NotFound();
 				}
+
+				datos.Add(doc);
 
 				var retorno = datos.Select(d => new
 				{
@@ -2378,6 +2386,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			return resultado;
 		}
 
+
 		[HttpGet]
 		[Route("Api/ConsultarEventosRadian")]
 
@@ -2387,7 +2396,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Ctl_Documento Controlador = new Ctl_Documento();
 
-				Controlador.ConsultarEventosRadian(List_IdSeguridad);
+				Controlador.ConsultarEventosRadian(false ,List_IdSeguridad);
 
 				return Ok();
 				//}

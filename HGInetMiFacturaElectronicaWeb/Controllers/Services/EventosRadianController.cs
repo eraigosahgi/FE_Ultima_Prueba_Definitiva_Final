@@ -5,6 +5,7 @@ using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -57,7 +58,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.IntEstadoEvento,
 					EstadoEvento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CodigoResponseV2>(d.IntEstadoEvento)),
 					d.IntNumeroEvento,
-					d.StrUrlEvento,
+					StrUrlEvento = d.StrUrlEvento.Replace(string.Format("-{0}.xml", d.IntEstadoEvento), ".xml"),
+					respuesta_evento = d.StrUrlEvento,
 				}).OrderBy(x => x.DatFechaEvento);
 
 				return Ok(retorno);

@@ -1927,6 +1927,7 @@
     <Content Include="Scripts\Pages\Autenticacion.js" />
     <Content Include="Scripts\Pages\Alertas.js" />
     <Content Include="Scripts\Pages\AutenticacionPagos.js" />
+    <Content Include="Scripts\Pages\CompraPlanes.js" />
     <Content Include="Scripts\Pages\ConfigurarFechaRecepcionDian.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
     <Content Include="Scripts\Pages\ConsultaAcuseTacito.js" />
@@ -2833,6 +2834,7 @@
     <Content Include="Views\Pages\ConsultarPlanesDocumentos.aspx" />
     <Content Include="Views\Pages\ConsultaUsuarios.aspx" />
     <Content Include="Views\Pages\DocumentosAdmin.aspx" />
+    <Content Include="Views\Pages\GestionCompraPlan.aspx" />
     <Content Include="Views\Pages\GestionProveedores.aspx" />
     <Content Include="Views\Pages\GestionReportes.aspx" />
     <Content Include="Views\Pages\GestionUsuariosPagos.aspx" />
@@ -2863,6 +2865,7 @@
     <Content Include="Views\Pages\SondaAuditoria.aspx" />
     <Content Include="Views\Pages\SondaCampoSubtotal.aspx" />
     <Content Include="Views\Pages\SondaConciliaPlanes.aspx" />
+    <Content Include="Views\Pages\SondaConsultaEventos.aspx" />
     <Content Include="Views\Pages\SondaCrearPlanes.aspx" />
     <Content Include="Views\Pages\SondadeNotificaciones.aspx" />
     <Content Include="Views\Pages\SondaDescargarCorreos.aspx" />
@@ -3199,6 +3202,13 @@
     <Compile Include="Views\Pages\DocumentosAdmin.aspx.designer.cs">
       <DependentUpon>DocumentosAdmin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\GestionCompraPlan.aspx.cs">
+      <DependentUpon>GestionCompraPlan.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\GestionCompraPlan.aspx.designer.cs">
+      <DependentUpon>GestionCompraPlan.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\GestionProveedores.aspx.cs">
       <DependentUpon>GestionProveedores.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3366,6 +3376,13 @@
     </Compile>
     <Compile Include="Views\Pages\SondaConciliaPlanes.aspx.designer.cs">
       <DependentUpon>SondaConciliaPlanes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\SondaConsultaEventos.aspx.cs">
+      <DependentUpon>SondaConsultaEventos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondaConsultaEventos.aspx.designer.cs">
+      <DependentUpon>SondaConsultaEventos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\SondaCrearPlanes.aspx.cs">
       <DependentUpon>SondaCrearPlanes.aspx</DependentUpon>
@@ -3592,7 +3609,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61436/</IISUrl>
+          <IISUrl>http://localhost:61428/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

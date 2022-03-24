@@ -379,28 +379,28 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 							.appendTo(container);
 					}
 				},
-				{
-					caption: "Consulta Radian",
-					//cssClass: "col-xs-3 col-md-1",
-					alignment: "center",
-					//width: "10%",
-					//dataField: "NumeroDocumento",
-					visible: Radian,
-					//disable: ((response.data.IntAdquirienteRecibo > 5) && (response.data.EstadoFactura > 7)) ? true : false,
-					cellTemplate: function (container, options) {
-						if (options.data.tipodoc != 'Nota Crédito') {
-							$('<div id="chkdoc_evento_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
-								name: "chkdoc_evento_" + options.data.StrIdSeguridad,
-								disabled: ((options.data.IntAdquirienteRecibo > 5) || (options.data.EstadoFactura < 8)) ? true : (Radian == false) ? true : false,
-								onValueChanged: function (data) {
-									validarSeleccion();
-								}
-							})
-							.appendTo(container);
-						}
-					}
+				//{
+				//	caption: "Consulta Radian",
+				//	//cssClass: "col-xs-3 col-md-1",
+				//	alignment: "center",
+				//	//width: "10%",
+				//	//dataField: "NumeroDocumento",
+				//	visible: Radian,
+				//	//disable: ((response.data.IntAdquirienteRecibo > 5) && (response.data.EstadoFactura > 7)) ? true : false,
+				//	cellTemplate: function (container, options) {
+				//		if (options.data.tipodoc != 'Nota Crédito') {
+				//			$('<div id="chkdoc_evento_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
+				//				name: "chkdoc_evento_" + options.data.StrIdSeguridad,
+				//				disabled: ((options.data.IntAdquirienteRecibo > 5) || (options.data.EstadoFactura < 8)) ? true : (Radian == false) ? true : false,
+				//				onValueChanged: function (data) {
+				//					validarSeleccion();
+				//				}
+				//			})
+				//			.appendTo(container);
+				//		}
+				//	}
 
-				},
+				//},
 				{
 					caption: "Documento",
 					//cssClass: "col-xs-3 col-md-1",
@@ -488,9 +488,10 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				   	//	valueExpr: "ID"
 				   	//},
 				   	cellTemplate: function (container, options) {
-				   		var estado = (options.data.IntAdquirienteRecibo > 5) ? 0 : 1;
-				   		$("<div>")
-							.append($(ColocarColorRadian(estado, options.data.TituloValor)))
+				   		//(d.IntAdquirienteRecibo > 5) ? "Titulo Valor" : (d.IntAdquirienteRecibo == 5) || (d.IntAdquirienteRecibo == 3) ? "Aceptado" : "Documento Electrónico"
+				   		var estado = (options.data.IntAdquirienteRecibo > 5) ? 0 : (options.data.IntAdquirienteRecibo == 5) || (options.data.IntAdquirienteRecibo == 3) ? 1 : 2;
+				   		$("<a>")
+							.append($(ColocarColorRadian(estado, options.data.TituloValor, options.data.StrIdSeguridad, options.data.NumeroDocumento, codigo_facturador)))
 							.appendTo(container);
 				   	}
 				   },
@@ -506,8 +507,8 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				   	},
 				   	cellTemplate: function (container, options) {
 
-				   		$("<a>")
-							.append($(ColocarEstadoAcuseObligado(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse, options.data.StrIdSeguridad, options.data.NumeroDocumento, codigo_facturador)))
+				   		$("<div>")
+							.append($(ColocarEstadoAcuseObligado(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse)))
 							.appendTo(container);
 				   	}
 				   },
