@@ -37,30 +37,30 @@ namespace HGInetUBLv2_1
 				{
 					Acuse doc_acuse = new Acuse();
 
-					Match numero_doc = Regex.Match(acuse_ubl.DocumentResponse[i].DocumentReference[i].ID.Value, "\\d+");
+					Match numero_doc = Regex.Match(acuse_ubl.DocumentResponse[i].DocumentReference[0].ID.Value, "\\d+");
 
 					doc_acuse.Documento = Convert.ToInt64(numero_doc.Value);
 
-					doc_acuse.Prefijo = acuse_ubl.DocumentResponse[i].DocumentReference[i].ID.Value.Substring(0, acuse_ubl.DocumentResponse[i].DocumentReference[i].ID.Value.Length - doc_acuse.Documento.ToString().Length);
+					doc_acuse.Prefijo = acuse_ubl.DocumentResponse[i].DocumentReference[0].ID.Value.Substring(0, acuse_ubl.DocumentResponse[i].DocumentReference[0].ID.Value.Length - doc_acuse.Documento.ToString().Length);
 
-					doc_acuse.CufeDocumento = acuse_ubl.DocumentResponse[i].DocumentReference[i].UUID.Value;
+					doc_acuse.CufeDocumento = acuse_ubl.DocumentResponse[i].DocumentReference[0].UUID.Value;
 
 					doc_acuse.IdAcuse = acuse_ubl.ID.Value;
 					//doc_acuse.IdSeguridad = acuse.DocumentResponse[0].DocumentReference.UUID.Value;
-					if (acuse_ubl.DocumentResponse[i].DocumentReference[i].DocumentType != null && !string.IsNullOrEmpty(acuse_ubl.DocumentResponse[i].DocumentReference[i].DocumentType.Value))
+					if (acuse_ubl.DocumentResponse[i].DocumentReference[0].DocumentType != null && !string.IsNullOrEmpty(acuse_ubl.DocumentResponse[i].DocumentReference[0].DocumentType.Value))
 						doc_acuse.TipoDocumento = acuse_ubl.DocumentResponse[i].DocumentReference[i].DocumentType.Value;
 
 					doc_acuse.CodigoRespuesta = acuse_ubl.DocumentResponse[i].Response.ResponseCode.Value;
-					doc_acuse.MvoRespuesta = acuse_ubl.DocumentResponse[i].Response.Description[i].Value;
+					doc_acuse.MvoRespuesta = acuse_ubl.DocumentResponse[i].Response.Description[0].Value;
 
 					Tercero adquiriente = new Tercero();
-					adquiriente.Identificacion = acuse_ubl.SenderParty.PartyTaxScheme[i].CompanyID.Value;
-					adquiriente.RazonSocial = acuse_ubl.SenderParty.PartyTaxScheme[i].RegistrationName.Value;
+					adquiriente.Identificacion = acuse_ubl.SenderParty.PartyTaxScheme[0].CompanyID.Value;
+					adquiriente.RazonSocial = acuse_ubl.SenderParty.PartyTaxScheme[0].RegistrationName.Value;
 					doc_acuse.DatosAdquiriente = adquiriente;
 
 					Tercero obligado = new Tercero();
-					obligado.Identificacion = acuse_ubl.ReceiverParty.PartyTaxScheme[i].CompanyID.Value;
-					obligado.RazonSocial = acuse_ubl.ReceiverParty.PartyTaxScheme[i].RegistrationName.Value;
+					obligado.Identificacion = acuse_ubl.ReceiverParty.PartyTaxScheme[0].CompanyID.Value;
+					obligado.RazonSocial = acuse_ubl.ReceiverParty.PartyTaxScheme[0].RegistrationName.Value;
 					doc_acuse.DatosObligado = obligado;
 
 					DateTime fecha = acuse_ubl.IssueDate.Value;

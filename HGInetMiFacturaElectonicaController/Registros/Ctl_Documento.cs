@@ -2895,6 +2895,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										doc.IntAdquirienteRecibo = Convert.ToInt16(cod_acuse.GetHashCode());
 										doc.DatAdquirienteFechaRecibo = item_acuse.Fecha;
 									}
+									else if (doc.IntAdquirienteRecibo != cod_acuse.GetHashCode())
+									{
+										doc.IntAdquirienteRecibo = Convert.ToInt16(cod_acuse.GetHashCode());
+										doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
+									}
 								}
 							}
 						}
