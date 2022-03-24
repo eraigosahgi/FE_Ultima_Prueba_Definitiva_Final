@@ -3,9 +3,11 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectronicaWeb.Properties;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +53,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var retorno = datos.Select(d => new
 				{
-					Empresa = d.TblUsuarios.TblEmpresas.StrRazonSocial,
+					Empresa = d.TblUsuarios != null ? d.TblUsuarios.TblEmpresas.StrRazonSocial: "HGI",
 					Usuario = d.StrUsuario,
 					Valor = d.IntValor,
 					TCompra = d.IntNumTransaccCompra,
@@ -503,6 +505,45 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 
 				return Ok(Planes);
+			}
+			catch (Exception)
+			{
+				return Ok();
+			}
+
+		}
+
+
+
+
+		public class ObjListaPlanes
+		{
+			public int plan { get; set; }
+			public int desde { get; set; }
+			public int hasta { get; set; }
+			public int cantidad { get; set; }
+			public decimal valor { get; set; }
+		}
+
+
+		[HttpGet]
+		[Route("api/ObtenerPlanesCompra")]
+		public IHttpActionResult ObtenerPlanesCompra()
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				string ruta_json = string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.nombre_json_Planes);
+
+				List<ObjListaPlanes> objeto_planes = new List<ObjListaPlanes>();
+				string objeto = System.IO.File.ReadAllText(ruta_json).ToString();
+				objeto_planes = JsonConvert.DeserializeObject<List<ObjListaPlanes>>(objeto);
+
+
+				return Ok(objeto_planes);
 			}
 			catch (Exception)
 			{
