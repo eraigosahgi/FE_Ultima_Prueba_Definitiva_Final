@@ -399,6 +399,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							alert = false;
 						}
 
+						if (tipo_doc == TipoDocumento.AcuseRecibo && resultado_doc.Mensaje.Contains("EL CUFE o Factura consultada no tiene a la fecha eventos asociados"))
+							alert = false;
+
 						//Si la respuesta es de V2 y llego con errores alerto para validar
 						if ((list_errormsg != null) && (alert == true)) 
 						{

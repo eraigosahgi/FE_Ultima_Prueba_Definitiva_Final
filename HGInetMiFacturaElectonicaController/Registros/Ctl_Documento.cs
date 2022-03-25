@@ -2045,7 +2045,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					if (!estado.Equals(CodigoResponseV2.AprobadoTacito.GetHashCode()))
 					{
 						doc.IntAdquirienteRecibo = estado;
-						if (estado.Equals(CodigoResponseV2.Rechazado.GetHashCode()) || !string.IsNullOrWhiteSpace(motivo_rechazo))
+						if (estado == CodigoResponseV2.Rechazado.GetHashCode() && !string.IsNullOrEmpty(doc.StrAdquirienteMvoRechazo))
 							doc.StrAdquirienteMvoRechazo = motivo_rechazo;
 						doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
 						if (doc.IntIdEstado > (short)ProcesoEstado.EnvioZip.GetHashCode() && estado != CodigoResponseV2.Recibido.GetHashCode())
@@ -2426,7 +2426,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					Ctl_Documentos.Consultar(doc, facturador, ref resp, acuse.KeyV2);
 				}
 
-				if (resp.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
+				if (resp.EstadoDian != null &&  resp.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 				{
 					var acuse_obj = (dynamic)null;
 					acuse_obj = resultado.Documento;
@@ -2569,7 +2569,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			string NitProveedor = data_dian.NitProveedor;
 
 			// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-			if (ambiente_dian.Equals("2") && facturador.StrIdentificacion.Equals(data_dian_habilitacion.NitProveedor))
+			if (ambiente_dian.Equals("2") && (facturador.StrIdentificacion.Equals(data_dian_habilitacion.NitProveedor) || facturador.IntRadian == true))
 			{
 				IdSoftware = data_dian_habilitacion.IdSoftware;
 				PinSoftware = data_dian_habilitacion.Pin;
@@ -2816,7 +2816,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (doc.IntAdquirienteRecibo == 4 && ultima_consulta.TotalHours >= 3 && sonda == true)
 					consulta_dian = false;
 
-				if (sonda == false && ultima_consulta.TotalMinutes <= 1 && consulta_dian == true)
+				if (sonda == false && ultima_consulta.TotalMinutes <= 1 && consulta_dian == true && tiempo_transcurrido.TotalMinutes >= 10)
 					consulta_dian = false;
 
 				if (consulta_dian == true)
@@ -2835,7 +2835,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					try
 					{
 						// valida si la Respuesta de la DIAN es correcta, siginifica que tiene eventos
-						if (resp.EstadoDian.EstadoDocumento == 2)
+						if (resp.EstadoDian != null && resp.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 						{
 							FacturaE_Documento resultado = null;
 
@@ -2905,10 +2905,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						}
 						else
 						{
-							if (doc.IntAdquirienteRecibo > 0)
-							{
-								doc.IntAdquirienteRecibo = 0;
-							}
+							//if (doc.IntAdquirienteRecibo > 0)
+							//{
+							//	doc.IntAdquirienteRecibo = 0;
+							//}
 							doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
 						}
 
