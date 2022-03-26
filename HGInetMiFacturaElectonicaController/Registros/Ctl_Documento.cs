@@ -2447,7 +2447,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					string ruta_respuestaDian = resultado.RutaArchivosProceso.Replace(resultado.NombreXml, string.Format("{0}-{1}", resultado.NombreXml, estado));
 					eventobd.StrUrlEvento = ruta_respuestaDian;
 					evento.Crear(eventobd);
-					RegistroLog.EscribirLog(new ApplicationException("El facturador no tiene habilitado el proceso de interoperabilidad"), MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, "El facturador no tiene habilitado el proceso de interoperabilidad");
+					//RegistroLog.EscribirLog(new ApplicationException("Creacion del Evento"), MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.envio, string.Format("Codigo Estado Doc {0} - Codigo respuesta DIAN {1} - descripcion {2}", resp.EstadoDian.EstadoDocumento, resp.EstadoDian.CodigoRespuesta, resp.EstadoDian.Descripcion));
 				}
 
 				resp.Documento = estado;
@@ -2903,6 +2903,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									if (crear_evento == true)
 									{
 										evento.Crear(eventobd);
+										//RegistroLog.EscribirLog(new ApplicationException("Creacion del Evento"), MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Codigo Estado Doc {0} - Codigo respuesta DIAN {1} - descripcion {2}", resp.EstadoDian.EstadoDocumento, resp.EstadoDian.CodigoRespuesta, resp.EstadoDian.Descripcion));
 										doc.IntAdquirienteRecibo = Convert.ToInt16(cod_acuse.GetHashCode());
 										doc.DatAdquirienteFechaRecibo = item_acuse.Fecha;
 									}
