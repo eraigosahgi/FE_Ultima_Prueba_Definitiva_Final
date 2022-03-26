@@ -238,7 +238,15 @@ namespace HGInetUBLv2_1
 						acuse.Note = notas.ToArray();
 
 					// Información del emisor del evento
-					acuse.SenderParty = ObtenerTercero(documento.DatosAdquiriente, receptor, participacion_endoso, mandato);
+					if (tipo_acuse.Equals(CodigoResponseV2.Inscripcion))
+					{
+						acuse.SenderParty = ObtenerTercero(documento.DatosObligado, receptor, participacion_endoso, mandato);
+					}
+					else
+					{
+						acuse.SenderParty = ObtenerTercero(documento.DatosAdquiriente, receptor, participacion_endoso, mandato);
+					}
+					
 					if (tipo_acuse.Equals(CodigoResponseV2.Aval) || tipo_acuse.Equals(CodigoResponseV2.PagoFvTV))
 					{
 						participacion_endoso = 0;

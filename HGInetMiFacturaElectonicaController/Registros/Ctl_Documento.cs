@@ -2409,17 +2409,27 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				}
 
-				//Se valida si esta haciendo pruebas para el Radian y si no enviarlo por el metodo de produccion
+				//Se hace envio del evento a la DIAN
+				acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
+
+				//Se valida si esta haciendo pruebas para el Radian para consultar el resultado del envio
 				bool habilitar_set = true;
 
-				if (adquiriente.IntHabilitacion == Habilitacion.Produccion.GetHashCode() || adquiriente.IntHabilitacion == Habilitacion.PruebasDian.GetHashCode())
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				if (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost"))
+				{
+					if (facturador.IntRadian == true && !adquiriente.StrIdentificacion.Equals(facturador.StrIdentificacion) && !adquiriente.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+					{
+						habilitar_set = false;
+					}
+				}
+				else
 				{
 					habilitar_set = false;
 				}
 
-				acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
-
-				if (habilitar_set == true && !adquiriente.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+				if (habilitar_set == true)
 				{
 					//acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
 
@@ -2437,6 +2447,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					string ruta_respuestaDian = resultado.RutaArchivosProceso.Replace(resultado.NombreXml, string.Format("{0}-{1}", resultado.NombreXml, estado));
 					eventobd.StrUrlEvento = ruta_respuestaDian;
 					evento.Crear(eventobd);
+					RegistroLog.EscribirLog(new ApplicationException("El facturador no tiene habilitado el proceso de interoperabilidad"), MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, "El facturador no tiene habilitado el proceso de interoperabilidad");
 				}
 
 				resp.Documento = estado;
