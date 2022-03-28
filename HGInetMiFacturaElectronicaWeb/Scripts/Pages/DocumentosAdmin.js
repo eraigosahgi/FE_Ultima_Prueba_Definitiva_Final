@@ -199,46 +199,65 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-			consultar();
+			consultar2();
 		}
 	};
 
+
+	consultar();
 	function consultar() {
-		$('#Total').text("");
-		if (fecha_inicio == "")
-			fecha_inicio = now.toISOString();
 
-		if (fecha_fin == "")
-			fecha_fin = now.toISOString();
-
-
-		var documentoFacturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
-		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
-		SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha, Desde, Hasta).then(function (data) {
-			$('#waitRegistros').show();
-			Documentos = [];
-			AlmacenDocumentos = new DevExpress.data.ArrayStore({
-				key: "StrIdSeguridad",
-				data: Documentos
-			});
-
-			cargarDocumentos(data);
-
-			$("#gridDocumentos").dxDataGrid({
-				dataSource: {
-					store: AlmacenDocumentos,
-					reshapeOnPush: true
-				},
-				keyExpr: "StrIdSeguridad",
-				paging: {
-					pageSize: 20
-				},
-				pager: {
-					showPageSizeSelector: true,
-					allowedPageSizes: [5, 10, 20],
-					showInfo: true
-				}
-				//Formatos personalizados a las columnas en este caso para el monto
+		$("#gridDocumentos").dxDataGrid({
+			dataSource: {
+				store: AlmacenDocumentos,
+				reshapeOnPush: true
+			},
+			onToolbarPreparing: function (e) {
+				e.toolbarOptions.items.unshift(
+				{
+					location: "after",
+					widget: "dxButton",
+					options: {
+						icon: "clear", elementAttr: { title: "Reordenar Columnas" },
+						onClick: function () {
+							localStorage.removeItem('storageConsultarDocumentosAdmin');
+							consultar();
+						}
+					}
+				})
+			},
+			scrolling: {
+				columnRenderingMode: "virtual",
+				mode: "virtual",
+				preloadEnabled: true,
+				renderAsync: undefined,
+				rowRenderingMode: "virtual",
+				scrollByContent: true,
+				scrollByThumb: true,
+				showScrollbar: "always",
+				useNative: "auto"
+			}
+		,
+			stateStoring: {
+				enabled: true,
+				type: 'localStorage',
+				storageKey: 'storageConsultarDocumentosAdmin',
+			},
+			onInitialized(e) {
+				e.component.option("stateStoring.ignoreColumnOptionNames", ["filterValues"]);
+			},
+			//*********************
+		
+			keyExpr: "StrIdSeguridad",
+			paging: {
+				pageSize: 20
+			},
+			pager: {
+				showPageSizeSelector: true,
+				allowedPageSizes: [5, 10, 20],
+				showInfo: true
+			}
+			//Formatos personalizados a las columnas en este caso para el monto
 				, onCellPrepared: function (options) {
 					var fieldData = options.value,
 						fieldHtml = "";
@@ -267,10 +286,10 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					mode: "select",
 					title: "Selector de Columnas"
 				},
-				groupPanel: {
-					allowColumnDragging: true,
-					visible: true
-				}
+			groupPanel: {
+				allowColumnDragging: true,
+				visible: true
+			}
 				, columns: [
 					{
 						caption: "Archivos",
@@ -465,101 +484,136 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					}
 				],
 
-				masterDetail: {
-					enabled: true,
-					template: function (container, options) {
-						container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdFacturador, options.data.NumeroDocumento));
-					}
-				},
-
-				summary: {
-					groupItems: [{
-						column: "IntVlrTotal",
-						summaryType: "sum",
-						displayFormat: " {0} Total ",
-						valueFormat: "currency"
-					}, {
-						column: "IntSubTotal",
-						summaryType: "sum",
-						displayFormat: " {0} Neto ",
-						valueFormat: "currency"
-					}, {
-						column: "IntNeto",
-						summaryType: "sum",
-						displayFormat: " {0} Neto ",
-						valueFormat: "currency"
-					}]
-                    , totalItems: [{
-                    	name: "Suma",
-                    	showInColumn: "IntVlrTotal",
-                    	displayFormat: "{0}",
-                    	valueFormat: "currency",
-                    	summaryType: "custom"
-
-                    },
-					{
-						name: "SumaSubTotal",
-						showInColumn: "IntSubTotal",
-						displayFormat: "{0}",
-						valueFormat: "currency",
-						summaryType: "custom"
-
-					},
-					{
-						name: "SumaNeto",
-						showInColumn: "IntNeto",
-						displayFormat: "{0}",
-						valueFormat: "currency",
-						summaryType: "custom"
-
-					},
-                    {
-                    	showInColumn: "DatFechaVencDocumento",
-                    	displayFormat: "Total : ",
-                    	alignment: "right"
-                    }
-                    ],
-					calculateCustomSummary: function (options) {
-						if (options.name === "Suma") {
-							if (options.summaryProcess === "start") {
-								options.totalValue = 0;
-								$('#Total').text("");
-							}
-							if (options.summaryProcess === "calculate") {
-								options.totalValue = options.totalValue + options.value.IntVlrTotal;
-								$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
-							}
-						}
-
-						if (options.name === "SumaSubTotal") {
-							if (options.summaryProcess === "start") {
-								options.totalValue = 0;
-								$('#SubTotal').text("");
-							}
-							if (options.summaryProcess === "calculate") {
-								options.totalValue = options.totalValue + options.value.IntSubTotal;
-								$('#SubTotal').text("SubTotal: " + fNumber.go(options.totalValue).replace("$-", "-$"));
-							}
-						}
-
-
-						if (options.name === "SumaNeto") {
-							if (options.summaryProcess === "start") {
-								options.totalValue = 0;
-								$('#Neto').text("");
-							}
-							if (options.summaryProcess === "calculate") {
-								options.totalValue = options.totalValue + options.value.IntNeto;
-								$('#Neto').text("Neto: " + fNumber.go(options.totalValue).replace("$-", "-$"));
-							}
-						}
-					}
-				},
-				filterRow: {
-					visible: true
+			masterDetail: {
+				enabled: true,
+				template: function (container, options) {
+					container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdFacturador, options.data.NumeroDocumento));
 				}
+			},
 
+			summary: {
+				groupItems: [{
+					column: "IntVlrTotal",
+					summaryType: "sum",
+					displayFormat: " {0} Total ",
+					valueFormat: "currency"
+				}, {
+					column: "IntSubTotal",
+					summaryType: "sum",
+					displayFormat: " {0} Neto ",
+					valueFormat: "currency"
+				}, {
+					column: "IntNeto",
+					summaryType: "sum",
+					displayFormat: " {0} Neto ",
+					valueFormat: "currency"
+				}]
+				, totalItems: [{
+					name: "Suma",
+					showInColumn: "IntVlrTotal",
+					displayFormat: "{0}",
+					valueFormat: "currency",
+					summaryType: "custom"
+
+				},
+				{
+					name: "SumaSubTotal",
+					showInColumn: "IntSubTotal",
+					displayFormat: "{0}",
+					valueFormat: "currency",
+					summaryType: "custom"
+
+				},
+				{
+					name: "SumaNeto",
+					showInColumn: "IntNeto",
+					displayFormat: "{0}",
+					valueFormat: "currency",
+					summaryType: "custom"
+
+				},
+				{
+					showInColumn: "DatFechaVencDocumento",
+					displayFormat: "Total : ",
+					alignment: "right"
+				}
+				],
+				calculateCustomSummary: function (options) {
+					if (options.name === "Suma") {
+						if (options.summaryProcess === "start") {
+							options.totalValue = 0;
+							$('#Total').text("");
+						}
+						if (options.summaryProcess === "calculate") {
+							options.totalValue = options.totalValue + options.value.IntVlrTotal;
+							$('#Total').text("Total: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+						}
+					}
+
+					if (options.name === "SumaSubTotal") {
+						if (options.summaryProcess === "start") {
+							options.totalValue = 0;
+							$('#SubTotal').text("");
+						}
+						if (options.summaryProcess === "calculate") {
+							options.totalValue = options.totalValue + options.value.IntSubTotal;
+							$('#SubTotal').text("SubTotal: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+						}
+					}
+
+
+					if (options.name === "SumaNeto") {
+						if (options.summaryProcess === "start") {
+							options.totalValue = 0;
+							$('#Neto').text("");
+						}
+						if (options.summaryProcess === "calculate") {
+							options.totalValue = options.totalValue + options.value.IntNeto;
+							$('#Neto').text("Neto: " + fNumber.go(options.totalValue).replace("$-", "-$"));
+						}
+					}
+				}
+			},
+			filterRow: {
+				visible: true
+			}
+
+		});
+	
+	}
+
+
+
+
+
+	function consultar2() {
+		$('#Total').text("");
+		if (fecha_inicio == "")
+			fecha_inicio = now.toISOString();
+
+		if (fecha_fin == "")
+			fecha_fin = now.toISOString();
+
+
+		var documentoFacturador = (txt_hgi_Facturador == undefined || txt_hgi_Facturador == '') ? '' : txt_hgi_Facturador;
+		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
+		SrvDocumento.ObtenerDocumentosAdmin(documentoFacturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Datos_Tipo, tipo_filtro_fecha, Desde, Hasta).then(function (data) {
+			$('#waitRegistros').show();
+			Documentos = [];
+			AlmacenDocumentos = new DevExpress.data.ArrayStore({
+				key: "StrIdSeguridad",
+				data: Documentos
 			});
+
+			cargarDocumentos(data);
+
+			$("#gridDocumentos").dxDataGrid({
+				dataSource: {
+					store: AlmacenDocumentos,
+					reshapeOnPush: true
+				}
+			});
+			//*******
 
 			//*************************************************************************				
 			CantRegCargados = AlmacenDocumentos._array.length;

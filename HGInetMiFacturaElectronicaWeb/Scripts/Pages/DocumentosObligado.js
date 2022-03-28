@@ -245,13 +245,24 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			},
 			columnAutoWidth: true,
 			scrolling: {
-				columnRenderingMode: 'virtual',
+				columnRenderingMode: "virtual",
+				mode: "virtual",
+				preloadEnabled: true,
+				renderAsync: undefined,
+				rowRenderingMode: "virtual",
+				scrollByContent: true,
+				scrollByThumb: true,
+				showScrollbar: "always",
+				useNative: "auto"
 			}
-			,
+	,
 			stateStoring: {
 				enabled: true,
 				type: 'localStorage',
 				storageKey: 'storageObligado',
+			},
+			onInitialized(e) {
+				e.component.option("stateStoring.ignoreColumnOptionNames", ["filterValues"]);
 			}
 			//Formatos personalizados a las columnas en este caso para el monto
 			, onCellPrepared: function (options) {
@@ -305,7 +316,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 							location: "after",
 							widget: "dxButton",
 							options: {
-								icon: "clear", elementAttr: { title: "Limpiar Filtros " },
+								icon: "clear", elementAttr: { title: "Reordenar Columnas" },
 								onClick: function () {
 									localStorage.removeItem('storageObligado');
 									consultar();

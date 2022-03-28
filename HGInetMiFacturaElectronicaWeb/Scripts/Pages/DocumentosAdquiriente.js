@@ -161,7 +161,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-			consultar();
+			consultar2();
 		}
 	};
 
@@ -189,6 +189,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 
 
 	//Consultar DOcumentos
+	
 	function consultar() {
 		$('#Total').text("");
 		if (fecha_inicio == "")
@@ -206,6 +207,42 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		$http.get('/api/ObtenerDocumentosAdquirientes?codigo_facturador=' + codigo_facturador + '&codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
 			$('#wait').hide();
 			$("#gridDocumentos").dxDataGrid({
+				onToolbarPreparing: function (e) {
+					e.toolbarOptions.items.unshift(
+					//**********************************************							
+					{
+						location: "after",
+						widget: "dxButton",
+						options: {
+							icon: "clear", elementAttr: { title: "Reordenar Columnas" },
+							onClick: function () {
+								localStorage.removeItem('storageConsultarDocumentosAdquirientes');
+								consultar();
+							}
+						}
+					})
+				},
+				scrolling: {
+					columnRenderingMode: "virtual",
+					mode: "virtual",
+					preloadEnabled: true,
+					renderAsync: undefined,
+					rowRenderingMode: "virtual",
+					scrollByContent: true,
+					scrollByThumb: true,
+					showScrollbar: "always",
+					useNative: "auto"
+				}
+		,
+				stateStoring: {
+					enabled: true,
+					type: 'localStorage',
+					storageKey: 'storageConsultarDocumentosAdquirientes',
+				},
+				onInitialized(e) {
+					e.component.option("stateStoring.ignoreColumnOptionNames", ["filterValues"]);
+				},
+				//*********************
 				dataSource: response.data,
 				paging: {
 					enabled: true
@@ -246,6 +283,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 					allowColumnDragging: true,
 					visible: true
 				}
+
                 , columns: [
 				{
 					caption: "Seleccionar",
@@ -694,7 +732,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 					try {
 
 						valor_seleccionado = $("#txtSaldo_" + data[i].StrIdSeguridad).dxNumberBox("instance").option().value;
-						lista += (lista) ? ',' : '';						
+						lista += (lista) ? ',' : '';
 						lista += "{Documento: '" + data[i].StrIdSeguridad + "',Valor: '" + valor_seleccionado.toString().replace(",", ".") + "'}";
 						total_a_pagar += valor_seleccionado;
 					} catch (e) {
@@ -736,7 +774,8 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		$rootScope.ConsultarPago(IdSeguridad, Monto, PagosParciales, poseeIdComercioPSE, poseeIdComercioTC);
 	};
 
-
+	txt_hgi_Facturador = "";
+	consultar();
 });
 
 
