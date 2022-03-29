@@ -30,7 +30,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 	var estado = "";
 
 	//Se comenta indicadores  por problemas de rendimiento de la plataforma 2020-09-21
-	//CargarIndicadores(); 
+	CargarIndicadores(); 
 
 	//Botón de consulta de indicadores
 	$("#BtnFiltroIndicadores").dxButton({
