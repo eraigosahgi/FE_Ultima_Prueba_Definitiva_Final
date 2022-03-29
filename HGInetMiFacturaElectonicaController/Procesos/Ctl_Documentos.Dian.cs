@@ -810,8 +810,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			try
 			{
-				string IdSoftware = null;
-				string PinSoftware = null;
+				//string IdSoftware = null;
+				//string PinSoftware = null;
 				string url_ws_consulta = null;
 
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
@@ -853,19 +853,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				// obtiene los datos del proveedor tecnológico de la DIAN para Validación Previa
 				DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
 
-				IdSoftware = data_dian.IdSoftware;
-				PinSoftware = data_dian.Pin;
-				//clave = data_dian.ClaveAmbiente;
 				url_ws_consulta = data_dian.UrlWSConsultaTransacciones;
-
-				if (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
-				{
-					// obtiene los datos de prueba del proveedor tecnológico de la DIAN
-					DianProveedorTest data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorTest;
-
-					IdSoftware = data_dian_habilitacion.IdSoftware;
-					PinSoftware = data_dian_habilitacion.Pin;
-				}
 
 				ConsultaDocumento resultado_doc = null;
 

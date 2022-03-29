@@ -2569,18 +2569,18 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			else
 				ambiente_dian = "2";
 
-			// obtiene los datos del proveedor tecnológico de la DIAN
+			// para el ambiente de habilitacion se toma la informacion de aqui
 			DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
 
-			//Para el ambiente de habilitacion a nombre de HGI se cambia informacion del pin e id del SW
+			//Para el ambiente de produccion se toma la informacion de aqui y se cambia informacion del pin e id del SW
 			DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
 
 			string IdSoftware = data_dian.IdSoftware;
 			string PinSoftware = data_dian.Pin;
 			string NitProveedor = data_dian.NitProveedor;
 
-			// sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-			if (ambiente_dian.Equals("2") && (facturador.StrIdentificacion.Equals(data_dian_habilitacion.NitProveedor) || facturador.IntRadian == true))
+			//sobre escribe los datos de la resolución si se encuentra en estado de habilitación
+			if (ambiente_dian.Equals("1"))
 			{
 				IdSoftware = data_dian_habilitacion.IdSoftware;
 				PinSoftware = data_dian_habilitacion.Pin;
@@ -2760,6 +2760,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				TblEventosRadian tacito = null;
 
+				TblEventosRadian inscripcion = null;
+
 				bool consulta_dian = true;
 
 				list_evento = evento.Obtener(doc.StrIdSeguridad);
@@ -2775,9 +2777,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					rechazo = list_evento.Where(x => x.IntEstadoEvento == 2).FirstOrDefault();
 
-					tacito = list_evento.Where(x => x.IntEstadoEvento == 2).FirstOrDefault();
+					tacito = list_evento.Where(x => x.IntEstadoEvento == 3).FirstOrDefault();
 
-					if (expresa != null || rechazo != null || tacito != null)
+					inscripcion = list_evento.Where(x => x.IntEstadoEvento == 6).FirstOrDefault();
+
+					if (rechazo != null || inscripcion != null)
+					{
+						consulta_dian = false;
+					}
+
+					if ((expresa != null || tacito != null) && sonda == true)
 					{
 						consulta_dian = false;
 					}
@@ -2895,6 +2904,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										}
 
 										if (rechazo != null && cod_acuse == CodigoResponseV2.Rechazado)
+										{
+											crear_evento = false;
+										}
+
+										if (inscripcion != null && cod_acuse == CodigoResponseV2.Inscripcion)
 										{
 											crear_evento = false;
 										}
