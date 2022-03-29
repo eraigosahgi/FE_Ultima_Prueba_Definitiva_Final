@@ -70,7 +70,9 @@ namespace HGInetUBLv2_1
 
 					doc_acuse.Fecha = Convert.ToDateTime(fecha_hora);
 
-					Objeto_acuse.Add(doc_acuse);
+					//Si en el documento viene repetido el evento no lo agrega.
+					if (!Objeto_acuse.Any(x => x.CodigoRespuesta.Equals(doc_acuse.CodigoRespuesta)))
+						Objeto_acuse.Add(doc_acuse);
 				}
 
 				return Objeto_acuse;
