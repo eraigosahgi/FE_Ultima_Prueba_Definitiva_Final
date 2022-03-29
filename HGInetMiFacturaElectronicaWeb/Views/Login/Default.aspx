@@ -112,7 +112,7 @@
 
 
 									<div class="text-center">
-										<img src="/../Scripts/Images/LogoHGIFeCertificados.png" id="img_cliente" style="align-content: center; width: 350px" class="img-responsive center-block" />
+										<img src="/../Scripts/Images/LogoPlataforma.png" id="img_cliente" style="align-content: center; width: 350px" class="img-responsive center-block" />
 										<br />
 										<%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
 										<h5 class="content-group-lg"><small class="display-block">Ingrese los datos de autenticación</small></h5>
@@ -148,7 +148,7 @@
 
 								<span class="help-block text-center no-margin">
 									<br />
-									Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S.</a>
+									Copyright © 2022 <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S.</a>
 									<br />
 								</span>
 

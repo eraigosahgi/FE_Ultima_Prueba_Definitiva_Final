@@ -131,7 +131,7 @@
 
 							<!-- Pie de Página -->
 							<div class="footer text-muted text-center" style="font-size: 13px">
-								Copyright &copy; 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: #166dba;">HGI S.A.S - HGI Facturación Electrónica</a>
+								Copyright &copy; 2022 <a href="http://www.hgi.com.co" target="_blank" style="color: #166dba;">HGI S.A.S - HGI Facturación Electrónica</a>
 							</div>
 							<!-- /Pie de Página -->
 

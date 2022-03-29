@@ -80,7 +80,7 @@
 
 							<div class="panel panel-body login-form widget-container" id="divcontenido">
 								<div class="text-center">
-									<img src="../../Scripts/Images/LogoHGICertificados.png" class="img-responsive" />
+									<img src="../../Scripts/Images/LogoPlataforma.png" class="img-responsive" />
 									<h5 class="content-group-lg">Restablecimiento de Contraseña</h5>
 								</div>
 
@@ -131,7 +131,7 @@
 
 							<!-- Pie de Página -->
 							<div class="footer text-muted text-center" style="font-size: 13px">
-								Copyright &copy; 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: #166dba;">HGI S.A.S - HGI Facturación Electrónica</a>
+								Copyright &copy; 2022 <a href="http://www.hgi.com.co" target="_blank" style="color: #166dba;">HGI S.A.S - HGI Facturación Electrónica</a>
 							</div>
 							<!-- /Pie de Página -->
 

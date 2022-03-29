@@ -157,7 +157,7 @@
 
 								<span class="help-block text-center no-margin">
 									<br />
-									Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S.</a>
+									Copyright © 2022 <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S.</a>
 									<br />
 								</span>
 
