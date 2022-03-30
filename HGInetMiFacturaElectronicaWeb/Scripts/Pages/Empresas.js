@@ -377,7 +377,13 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			}
 		});
 
-
+		$("#Radian").dxCheckBox({
+			name: "Radian",
+			//text: "Radian",
+			onValueChanged: function (data) {
+				Datos_Radian = (data.value == true) ? 1 : 0;
+			}
+		});
 
 		$("#txtMailEnvio").dxTextBox({
 			onValueChanged: function (data) {
@@ -671,14 +677,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				text: "Recepción",
 				onValueChanged: function (data) {
 					Datos_InterOp = (data.value == true) ? 1 : 0;
-				}
-			});
-
-			$("#Radian").dxCheckBox({
-				name: "Radian",
-				text: "Radian",
-				onValueChanged: function (data) {
-					Datos_Radian = (data.value == true) ? 1 : 0;
 				}
 			});
 
@@ -1813,6 +1811,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#txtSerial").dxTextBox({ readOnly: true });
 				}
 
+				try {
+					if (Datos_Radian == 1) {
+						$("#Radian").dxCheckBox({ value: true });
+					}
+				} catch (e) { }
+
 				//Proceso de validación de Correo****************************
 				//Si la Empresa esta activa, no hago validaciones de ningún tipo
 
@@ -1886,12 +1890,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					try {
 						if (Datos_InterOp == 1) {
 							$("#Interoperabilidad").dxCheckBox({ value: true });
-						}
-					} catch (e) { }
-
-					try {
-						if (Datos_Radian == 1) {
-							$("#Radian").dxCheckBox({ value: true });
 						}
 					} catch (e) { }
 
