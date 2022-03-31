@@ -607,7 +607,7 @@
 
 												<!-- Manual Facturador -->
 												<div class="media-left media-middle">
-													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://app.mifacturaenlinea.com.co/ManualUsuarioFacturador.pdf');"><i class="icon-user-tie"></i>Manual Facturador</label>
+													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://portal.hgidocs.co/ManualUsuarioFacturador.pdf');"><i class="icon-user-tie"></i>Manual Facturador</label>
 												</div>
 												<div class="media-left">
 													<label id="Label7" class="text-default text-semibold" style="font-size: medium"></label>
@@ -617,7 +617,7 @@
 
 												<!-- Manual Adquiriente -->
 												<div class="media-left media-middle">
-													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://app.mifacturaenlinea.com.co/ManualUsuarioAdquiriente.pdf');"><i class="icon-reading"></i>Manual Adquiriente</label>
+													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://portal.hgidocs.co/ManualUsuarioAdquiriente.pdf');"><i class="icon-reading"></i>Manual Adquiriente</label>
 												</div>
 												<br />
 												<!-- / Manual Adquiriente -->
