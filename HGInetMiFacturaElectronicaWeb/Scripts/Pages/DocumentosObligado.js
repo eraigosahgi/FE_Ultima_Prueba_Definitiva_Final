@@ -231,7 +231,8 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		$("#gridDocumentos").dxDataGrid({
 			keyExpr: "StrIdSeguridad",
 			paging: {
-				pageSize: 20
+				pageSize: 20,
+				enabled: true
 			}
 			, focusedRowEnabled: true
 			, hoverStateEnabled: true
@@ -246,7 +247,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			columnAutoWidth: true,
 			scrolling: {
 				columnRenderingMode: "virtual",
-				mode: "virtual",
+				//mode: "virtual",
 				preloadEnabled: true,
 				renderAsync: undefined,
 				rowRenderingMode: "virtual",

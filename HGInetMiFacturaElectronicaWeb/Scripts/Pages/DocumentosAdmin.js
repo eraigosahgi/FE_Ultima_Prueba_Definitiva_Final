@@ -226,9 +226,10 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					}
 				})
 			},
+			columnAutoWidth: true,
 			scrolling: {
 				columnRenderingMode: "virtual",
-				mode: "virtual",
+				//mode: "infinite",
 				preloadEnabled: true,
 				renderAsync: undefined,
 				rowRenderingMode: "virtual",
@@ -236,8 +237,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				scrollByThumb: true,
 				showScrollbar: "always",
 				useNative: "auto"
-			}
-		,
+			},
 			stateStoring: {
 				enabled: true,
 				type: 'localStorage',
@@ -250,7 +250,8 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		
 			keyExpr: "StrIdSeguridad",
 			paging: {
-				pageSize: 20
+				pageSize: 20,
+				enabled: true
 			},
 			pager: {
 				showPageSizeSelector: true,

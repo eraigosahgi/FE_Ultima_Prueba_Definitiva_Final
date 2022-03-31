@@ -224,7 +224,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 				},
 				scrolling: {
 					columnRenderingMode: "virtual",
-					mode: "virtual",
+					//mode: "virtual",
 					preloadEnabled: true,
 					renderAsync: undefined,
 					rowRenderingMode: "virtual",
@@ -232,8 +232,8 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 					scrollByThumb: true,
 					showScrollbar: "always",
 					useNative: "auto"
-				}
-		,
+				},
+				columnAutoWidth: true,
 				stateStoring: {
 					enabled: true,
 					type: 'localStorage',

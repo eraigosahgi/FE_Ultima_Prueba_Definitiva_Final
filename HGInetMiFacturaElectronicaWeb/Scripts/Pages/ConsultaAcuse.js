@@ -131,7 +131,8 @@ App.controller('AcuseConsultaController', function AcuseConsultaController($scop
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
 				paging: {
-					pageSize: 20
+					pageSize: 20,
+					enabled: true
 				},
 				keyExpr: "StrIdSeguridad",
 				pager: {
@@ -167,9 +168,10 @@ App.controller('AcuseConsultaController', function AcuseConsultaController($scop
 						}
 					})
 				},
+				columnAutoWidth: true,
 				scrolling: {
 					columnRenderingMode: "virtual",
-					mode: "virtual",
+					//mode: "virtual",
 					preloadEnabled: true,
 					renderAsync: undefined,
 					rowRenderingMode: "virtual",
