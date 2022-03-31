@@ -181,7 +181,11 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		$http.get('/api/ObtenerDocumentosAdquirientes?codigo_facturador=' + codigo_facturador + '&codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
 			$('#wait').hide();
 			$("#gridDocumentos").dxDataGrid({
-				dataSource: response.data
+				dataSource: response.data,
+				paging: {
+					pageSize: 20,
+					enabled: true
+				}
 			});
 		});
 	}

@@ -110,7 +110,11 @@ App.controller('AcuseConsultaController', function AcuseConsultaController($scop
 		$http.get('/api/Documentos?codigo_facturador=' + codigo_facturador + '&codigo_adquiriente=' + codigo_adquiriente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_acuse + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_fecha=' + Filtro_fecha).then(function (response) {
 			$('#wait').hide();
 			$("#gridDocumentos").dxDataGrid({
-				dataSource: response.data
+				dataSource: response.data,
+				paging: {
+					pageSize: 20,
+					enabled: true
+				}
 			});
 		});
 	}

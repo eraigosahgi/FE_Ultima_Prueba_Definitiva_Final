@@ -612,6 +612,10 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				dataSource: {
 					store: AlmacenDocumentos,
 					reshapeOnPush: true
+				},
+				paging: {
+					pageSize: 20,
+					enabled: true
 				}
 			});
 			//*******

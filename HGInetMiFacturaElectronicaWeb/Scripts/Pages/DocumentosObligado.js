@@ -668,7 +668,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 
 
-		
+
 
 		function validarSeleccion() {
 			var data = $("#gridDocumentos").dxDataGrid("instance").option().dataSource;
@@ -829,7 +829,11 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			$('#wait').hide();
 			Radian = response.data[0].Radian;
 			$("#gridDocumentos").dxDataGrid({
-				dataSource: response.data
+				dataSource: response.data,
+				paging: {
+					pageSize: 20,
+					enabled: true
+				}
 			});
 
 		}, function errorCallback(response) {
