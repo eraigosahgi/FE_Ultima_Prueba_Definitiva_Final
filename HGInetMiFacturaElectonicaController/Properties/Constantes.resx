@@ -139,7 +139,7 @@
     <comment>email para copias ocultas (auditorías)</comment>
   </data>
   <data name="EmailRemitente" xml:space="preserve">
-    <value>notificaciones@hgidocs.co</value>
+    <value>notificaciones@mifacturaenlinea.com.co</value>
     <comment>email del remitente</comment>
   </data>
   <data name="HorasAcuseTacitoInteroperabilidad" xml:space="preserve">

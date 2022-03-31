@@ -169,7 +169,7 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a notificaciones@hgidocs.co.
+        ///   Busca una cadena traducida similar a notificaciones@mifacturaenlinea.com.co.
         /// </summary>
         public static string EmailRemitente {
             get {
