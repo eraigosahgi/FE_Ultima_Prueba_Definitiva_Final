@@ -337,11 +337,11 @@
     <comment>Objeto Factura en fomato json</comment>
   </data>
   <data name="RutaPlataformaHgi" xml:space="preserve">
-    <value>https://hgi#.mifacturaenlinea.com.co/</value>
+    <value>https://hgi#.hgidocs.co/</value>
     <comment>Ruta para enviar peticiones de los clientes de HGI</comment>
   </data>
   <data name="RutaPlataformaIntegrador" xml:space="preserve">
-    <value>https://Serv#.mifacturaenlinea.com.co/</value>
+    <value>https://Serv#.hgidocs.co/</value>
     <comment>Ruta para enviar peticiones de los integradores de HGI</comment>
   </data>
 </root>

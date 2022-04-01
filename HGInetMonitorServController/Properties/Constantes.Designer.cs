@@ -90,7 +90,7 @@ namespace HGInetMonitorServController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a https://hgi#.mifacturaenlinea.com.co/.
+        ///   Busca una cadena traducida similar a https://hgi#.hgidocs.co/.
         /// </summary>
         internal static string RutaPlataformaHgi {
             get {
@@ -99,7 +99,7 @@ namespace HGInetMonitorServController.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a https://Serv#.mifacturaenlinea.com.co/.
+        ///   Busca una cadena traducida similar a https://Serv#.hgidocs.co/.
         /// </summary>
         internal static string RutaPlataformaIntegrador {
             get {
