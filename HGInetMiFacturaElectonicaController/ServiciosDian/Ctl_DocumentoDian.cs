@@ -252,6 +252,48 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
 								respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
 
+								//Se agrega proceso de Validacion por intermitencias en la DIAN y problemas a procesar las nominas emitidas el 1 de abril de 2022
+								//La respuesta del servicio de la DIAN es codigo 66, no valido pero en el base 64 que esta la respuesta de la DIAN dice que pasa correcto
+								if (respuesta_dian.FirstOrDefault().StatusCode.Equals(66) && documento.DocumentoTipo.GetHashCode() >= TipoDocumento.Nomina.GetHashCode())
+								{
+									string url_respuesta = string.Format(@"{0}\{1}.xml", documento.RutaArchivosProceso.Replace("XmlFacturaE", "FacturaEConsultaDian"), documento.NombreXml);
+
+									string contenido_xml = Archivo.ObtenerContenido(url_respuesta);
+
+									// valida el contenido del archivo
+									if (string.IsNullOrWhiteSpace(contenido_xml))
+										throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
+
+									// convierte el contenido de texto a xml
+									System.Xml.XmlReader xml_reader = System.Xml.XmlReader.Create(new System.IO.StringReader(contenido_xml));
+
+									// convierte el objeto de acuerdo con el tipo de documento
+									System.Xml.Serialization.XmlSerializer serializacion1 = new System.Xml.Serialization.XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
+
+									HGInetUBLv2_1.ApplicationResponseType conversion = (HGInetUBLv2_1.ApplicationResponseType)serializacion1.Deserialize(xml_reader);
+
+									List<Acuse> objeto_acuse = HGInetUBLv2_1.AcuseReciboXMLv2_1.Convertir(conversion);
+
+									if (objeto_acuse != null)
+									{
+										foreach (Acuse item_acuse in objeto_acuse)
+										{
+											if (item_acuse.CodigoRespuesta.Equals("02"))
+											{
+												respuesta.Cufe = item_acuse.CufeDocumento;
+												respuesta_dian.FirstOrDefault().StatusCode = "00";
+												respuesta_dian.FirstOrDefault().StatusDescription = "Procesado Correctamente.";
+												respuesta_dian.FirstOrDefault().StatusMessage = "Procesado Correctamente.";
+												respuesta_dian.FirstOrDefault().IsValid = true;
+												respuesta_dian.FirstOrDefault().ErrorMessage = new string[0];
+												acuse.Response = 201;
+												acuse.Comments = "Documento Electrónico recibido exitosamente";
+
+										}
+										}
+									}
+								}
+
 								//Se procesa la respuesta entregada
 								ConsultaDocumento consulta_doc = Ctl_ConsultaTransacciones.ValidarTransaccionV2(respuesta_dian);
 

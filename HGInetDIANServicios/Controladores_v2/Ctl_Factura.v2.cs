@@ -244,7 +244,9 @@ namespace HGInetDIANServicios
 						{
 							if (respuesta.ErrorMessage != null)
 							{
-								if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())) && cufe_doc.Equals(respuesta.XmlDocumentKey))
+								bool consultar_nuevamente = (cufe_doc.Equals(respuesta.XmlDocumentKey) && tipo_doc != TipoDocumento.AcuseRecibo.GetHashCode()) ? true : (tipo_doc == TipoDocumento.AcuseRecibo.GetHashCode()) ? true : false; 
+			
+								if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())) && consultar_nuevamente == true)
 								{
 									if (respuesta.ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento"))
 									{
@@ -300,7 +302,7 @@ namespace HGInetDIANServicios
 						respuesta_dian.Add(respuesta);
 
 						log_accion = MensajeAccion.creacion;
-						if (respuesta.StatusCode.Equals("0") || respuesta.StatusCode.Equals("00") || respuesta.StatusCode.Equals("99"))
+						if (respuesta.StatusCode.Equals("0") || respuesta.StatusCode.Equals("00") || respuesta.StatusCode.Equals("99") || (respuesta.StatusCode.Equals("66") && respuesta.XmlBase64Bytes != null && tipo_doc.GetHashCode() >= TipoDocumento.Nomina.GetHashCode()))
 						{
 							if (respuesta.XmlBase64Bytes != null)
 							{
