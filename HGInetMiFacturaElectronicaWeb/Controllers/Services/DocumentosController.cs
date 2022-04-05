@@ -519,11 +519,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					}
 				}
 
-				if (cliente_hgi == true && documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode())
-				{
-					Ctl_EventosRadian evento = new Ctl_EventosRadian();
-					Task envio_acuse = evento.ProcesoCrearAcuseRecibo(string.Empty, documento.StrIdSeguridad);
-				}
+				//if (cliente_hgi == true && documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode())
+				//{
+				//	Ctl_EventosRadian evento = new Ctl_EventosRadian();
+				//	Task envio_acuse = evento.ProcesoCrearAcuseRecibo(string.Empty, documento.StrIdSeguridad);
+				//}
 
 
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();

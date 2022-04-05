@@ -2564,28 +2564,28 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 			string ambiente_dian = string.Empty;
 
-			if (facturador.IntHabilitacion.Equals(Habilitacion.Produccion.GetHashCode()))
+			if (!plataforma_datos.RutaPublica.Contains("habilitacion"))
 				ambiente_dian = "1";
 			else
 				ambiente_dian = "2";
 
 			// para el ambiente de habilitacion se toma la informacion de aqui
-			DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+			//DianProveedorV2 data_dian__habilitacion = HgiConfiguracion.GetConfiguration().DianProveedorV2;
 
-			//Para el ambiente de produccion se toma la informacion de aqui y se cambia informacion del pin e id del SW
-			DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
+			//Para el RADIAN se toma la informacion de aqui
+			DianProveedor data_dian = HgiConfiguracion.GetConfiguration().DianProveedor;
 
 			string IdSoftware = data_dian.IdSoftware;
 			string PinSoftware = data_dian.Pin;
 			string NitProveedor = data_dian.NitProveedor;
 
 			//sobre escribe los datos de la resolución si se encuentra en estado de habilitación
-			if (ambiente_dian.Equals("1"))
-			{
-				IdSoftware = data_dian_habilitacion.IdSoftware;
-				PinSoftware = data_dian_habilitacion.Pin;
-				NitProveedor = data_dian_habilitacion.NitProveedor;
-			}
+			//if (!plataforma_datos.RutaPublica.Contains("habilitacion"))
+			//{
+			//	IdSoftware = data_dian_habilitacion.IdSoftware;
+			//	PinSoftware = data_dian_habilitacion.Pin;
+			//	NitProveedor = data_dian_habilitacion.NitProveedor;
+			//}
 
 			// resolución del documento
 			HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian extension_documento = new HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian();
