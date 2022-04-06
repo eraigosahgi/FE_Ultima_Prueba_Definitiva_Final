@@ -2057,7 +2057,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					//Crea el XML del Acuse
 					if (acuse == null && estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
-						resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
+						resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Recibido.GetHashCode(), motivo_rechazo);
 
 					//Se valida si el adquiriente se esta habilitando en RADIAN o si va a registrar los eventos de Acuse en la DIAN
 					if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)

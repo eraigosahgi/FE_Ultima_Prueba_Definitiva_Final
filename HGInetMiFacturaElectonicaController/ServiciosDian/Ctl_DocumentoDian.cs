@@ -254,7 +254,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 
 								//Se agrega proceso de Validacion por intermitencias en la DIAN y problemas a procesar las nominas emitidas el 1 de abril de 2022
 								//La respuesta del servicio de la DIAN es codigo 66, no valido pero en el base 64 que esta la respuesta de la DIAN dice que pasa correcto
-								if (respuesta_dian.FirstOrDefault().StatusCode.Equals(66) && documento.DocumentoTipo.GetHashCode() >= TipoDocumento.Nomina.GetHashCode())
+								if (respuesta_dian.FirstOrDefault().StatusCode.Equals("66") && documentoBd.IntDocTipo >= TipoDocumento.Nomina.GetHashCode())
 								{
 									string url_respuesta = string.Format(@"{0}\{1}.xml", documento.RutaArchivosProceso.Replace("XmlFacturaE", "FacturaEConsultaDian"), documento.NombreXml);
 
