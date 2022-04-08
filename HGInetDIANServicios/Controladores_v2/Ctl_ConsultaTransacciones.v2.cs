@@ -52,6 +52,17 @@ namespace HGInetDIANServicios
 				if (!string.IsNullOrEmpty(TrackId))
 				{
 					resultado = webServiceHab.GetStatusZip(TrackId).ToList();
+					if (resultado != null && resultado.Count > 0 && string.IsNullOrEmpty(resultado[0].StatusCode))
+					{
+						if (resultado[0].IsValid == false)
+						{
+							resultado[0].StatusCode = "99";
+						}
+						else
+						{
+							resultado[0].StatusCode = "00";
+						}
+					}
 				}
 				else
 				{
