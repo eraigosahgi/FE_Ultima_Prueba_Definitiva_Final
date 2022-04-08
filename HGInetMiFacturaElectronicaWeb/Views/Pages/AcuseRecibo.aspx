@@ -118,7 +118,7 @@
 				<div class="panel panel-flat form-horizontal">
 
 
-					<img class="img-responsive" alt="" title="" src="http://tz37.mjt.lu/tplimg/tz37/b/6572/x8s6k.png" style="float: right;" />
+					<img class="img-responsive" alt="" title="" src="https://tz37.mjt.lu/tplimg/tz37/b/1k4nu/v7gni.png" style="float: right;" />
 					<br />
 					<br />
 					<br />
@@ -272,7 +272,7 @@
 
 					</div>
 					<div class="footer text-muted" style="font-size: 14px; text-align: center;">
-						Copyright © 2018 <a href="http://www.hgi.com.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGI Facturación Electrónica</a>
+						Copyright © 2022 <a href="https://www.hgidocs.co" target="_blank" style="color: rgb(22, 109, 186);">HGI S.A.S - HGI Facturación Electrónica</a>
 					</div>
 
 				</div>
