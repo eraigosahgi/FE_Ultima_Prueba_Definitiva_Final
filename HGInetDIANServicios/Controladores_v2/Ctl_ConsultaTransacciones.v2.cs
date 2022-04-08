@@ -78,13 +78,13 @@ namespace HGInetDIANServicios
 
 						if (consulta != null && string.IsNullOrEmpty(consulta.StatusCode))
 						{
-							if (resultado[0].IsValid == false)
+							if (consulta.IsValid == false)
 							{
-								resultado[0].StatusCode = "99";
+								consulta.StatusCode = "99";
 							}
 							else
 							{
-								resultado[0].StatusCode = "00";
+								consulta.StatusCode = "00";
 							}
 						}
 
