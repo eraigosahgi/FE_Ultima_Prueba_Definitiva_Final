@@ -282,7 +282,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						if ((respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode()))
 						{
-							respuesta = Consultar(documento, empresa, ref respuesta);
+							string zipkey = string.Empty;
+
+							if (empresa.IntHabilitacion < 99)
+								zipkey = documento.StrIdRadicadoDian.ToString();
+
+							respuesta = Consultar(documento, empresa, ref respuesta, zipkey);
+
 
 							//Si no hay respuesta de la DIAN del documento enviado se procede a enviar de nuevo
 							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
