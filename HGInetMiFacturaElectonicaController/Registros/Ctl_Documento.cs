@@ -3870,7 +3870,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						documento_result.IdSeguridadDocumento = Guid.Parse(documento.StrIdSeguridad.ToString());
 						documento_result.IdSeguridadTercero = documento.TblEmpresasFacturador.StrIdSeguridad;
 						documento_result.DocumentoTipo = Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo);
-						documento_result.NombreXml = HGInetUBL.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
+						documento_result.NombreXml = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, Enumeracion.ParseToEnum<TipoDocumento>(documento.IntDocTipo), documento.StrPrefijo);
 						documento_result.NombrePdf = documento_result.NombreXml;
 
 						XmlSerializer serializacion = null;
@@ -3971,6 +3971,23 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								documento_obj = HGInetUBLv2_1.NominaXML.Convertir(conversion, documento);
 
+								if (!documento.StrCufe.Equals(documento_obj.Cune))
+								{
+
+									string texto_xml = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
+									
+									texto_xml = texto_xml.Replace(documento_obj.Cune, documento.StrCufe);
+									documento_result.DocumentoXml = new StringBuilder(texto_xml);
+
+									documento_obj.Cune = documento.StrCufe;
+
+									xml_reader.Close();
+
+									// almacena el archivo xml
+									string ruta_save = Xml.Guardar(documento_result.DocumentoXml, carpeta_xml, string.Format("{0}.xml", documento_result.NombreXml));
+
+								}
+
 							}
 							else if (documento.IntDocTipo == TipoDocumento.NominaAjuste.GetHashCode())
 							{
@@ -3980,6 +3997,23 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								documento_obj = HGInetUBLv2_1.NominaAjusteXML.Convertir(conversion, documento);
 
+								if (!documento.StrCufe.Equals(documento_obj.Cune))
+								{
+
+									string texto_xml = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
+
+									texto_xml = texto_xml.Replace(documento_obj.Cune, documento.StrCufe);
+									documento_result.DocumentoXml = new StringBuilder(texto_xml);
+
+									documento_obj.Cune = documento.StrCufe;
+
+									xml_reader.Close();
+
+									// almacena el archivo xml
+									string ruta_save = Xml.Guardar(documento_result.DocumentoXml, carpeta_xml, string.Format("{0}.xml", documento_result.NombreXml));
+
+								}
+
 							}
 
 							//if (!string.IsNullOrEmpty(documento.StrFormato))
@@ -3987,7 +4021,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							//	documento_obj.DocumentoFormato = JsonConvert.DeserializeObject<Formato>(documento.StrFormato);
 							//}
 
-							string contenido_formato = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
+							string contenido_formato = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl.Replace("FacturaEDian", "XmlFacturaE").Replace("xml","json"));
 
 							if (documento_obj.DocumentoFormato == null && !string.IsNullOrEmpty(contenido_formato))
 							{

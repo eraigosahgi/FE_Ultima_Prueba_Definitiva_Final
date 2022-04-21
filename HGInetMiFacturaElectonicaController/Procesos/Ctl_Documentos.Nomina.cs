@@ -369,6 +369,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 					else
 					{
+						//Se agrega validacion para que devuelva el mismo codigo de registro que tiene el documento en la BD del cliente de HGI
+						if (item.VersionAplicativo.Contains("Ver. 202") && item.Prefijo.Equals("NP"))
+						{
+							item_respuesta.CodigoRegistro = item.CodigoRegistro;
+							numero_documento.StrObligadoIdRegistro = item.CodigoRegistro;
+							try
+							{
+								numero_documento = num_doc.Actualizar(numero_documento);
+							}
+							catch (Exception ex)
+							{}
+
+						}
+
 						mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Empleador '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
 						throw new ApplicationException(mensaje);
 					}
