@@ -921,26 +921,22 @@ namespace HGInetMiFacturaElectonicaController
 						mensaje = mensaje.Replace("{RutaAcceso}", plataforma.RutaPublica);
 
 						//Si el adquiriente no es cliente de HGI no se permite hacer acuse por medio del correo puesto que lo debe hacer por medio del proveedor que tenga
-						if (tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste && adquiriente_hgi == true)
+						if (tipo_documento != TipoDocumento.Nomina && tipo_documento != TipoDocumento.NominaAjuste)
 						{
 
 							mensaje = mensaje.Replace("{RutaUrl}", ruta_acuse);
-							//string otro_boton = "<td style='border:2px solid #b0afaf;border-radius:3px;color:#ffffff;cursor:auto;padding:10px 25px;' align='center' valign='middle' bgcolor='#040461'><a href='" + ruta_acuse + "' style='text-decoration:none;background:#040461;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:17px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;' target='_blank'>Pagar</a></td>";
 
-							string boton_acuse = "<td style='border:2px solid #b0afaf;border-radius:3px;color:#ffffff;cursor:auto;padding:10px 25px;' align='center' valign='middle' bgcolor='#040461'><a href='" + ruta_acuse + "' style='text-decoration:none;background:#040461;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:17px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;' target='_blank'>Acuse de Recibo</a></td>";
+							if (adquiriente_hgi == false)
+							{
+								mensaje = mensaje.Replace("Para continuar con el proceso debes realizar el acuse de recibo {PSETexto}:", "");
+							}
+								  
+							string boton_acuse = "<td style='border:2px solid #b0afaf;border-radius:3px;color:#ffffff;cursor:auto;padding:10px 25px;' align='center' valign='middle' bgcolor='#040461'><a href='" + ruta_acuse + "' style='text-decoration:none;background:#040461;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:17px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;' target='_blank'>Ver Documentos</a></td>";
 
 							mensaje = mensaje.Replace("{Acuse}", boton_acuse);
+
 						}
-						else if (adquiriente_hgi == false)
-						{
-							mensaje = mensaje.Replace("Para continuar con el proceso debes realizar el acuse de recibo {PSETexto}:", "");
-
-							mensaje = mensaje.Replace("Si el enlace anterior no funciona, copie y pegue la siguiente URL en su navegador web:", "");
-
-							mensaje = mensaje.Replace("{RutaUrl}", "");
-
-							mensaje = mensaje.Replace("{Acuse}", "");
-						}
+						
 
 						bool IdPago = false;
 
@@ -1237,7 +1233,7 @@ namespace HGInetMiFacturaElectonicaController
 
 								MensajeEnvio error_mail = respuesta_email.Where(x => x.Error != null).FirstOrDefault();
 
-								//*******agregar logica cuando el correo esta bloqueado para informar al facturador
+								//logica cuando el correo esta bloqueado para informar al facturador
 								if (error_mail == null)
 								{
 									//Valida que el registro sea nuevo para que lo haga solo en el proceso principal
@@ -1277,6 +1273,79 @@ namespace HGInetMiFacturaElectonicaController
 									//	Ctl_EventosRadian evento = new Ctl_EventosRadian();
 									//	Task envio_acuse = evento.ProcesoCrearAcuseRecibo(correo_doc.StrIdMensaje, documento.StrIdSeguridad);
 									//}
+								}
+								else if (reenvio_documento == false)
+								{
+									//Valida que el registro sea nuevo para que lo haga solo en el proceso principal
+									if (correo_doc.IntEnvioMail == false)
+									{
+										correo_doc.IntEnvioMail = true;
+									}
+
+									bool correo_en_mailjet = false;
+
+									foreach (MensajeEnvioItem item in respuesta_email.FirstOrDefault().Data)
+									{
+										//Si no trae ID es por que esta en la lista de bloqueados y no se envio a Mailjet, ya se tiene en lista de bloqueados
+										//Se gestiona y se informa al Facturador
+										if (item.MessageID == 0)
+										{
+											try
+											{
+												
+												string estado_correo = Enumeracion.GetDescription(LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked);
+												List<MensajeEnvio> notificacion = NotificacionCorreofacturador(documento, empresa_adquiriente.StrTelefono, item.Email, estado_correo, documento.StrIdSeguridad.ToString());
+												
+											}
+											catch (Exception excepcion)
+											{
+												Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error actualizando el documento cuando el correo esta bloqueado");
+											}
+
+											correo_doc.IntValidadoMail = true;
+											correo_doc.DatFechaValidado = Fecha.GetFecha();
+
+										}
+										else
+										{
+											try
+											{
+												correo_doc.StrIdMensaje = item.MessageID.ToString();
+												correo_en_mailjet = true;
+											}
+											catch (Exception excepcion)
+											{
+												Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error asiganando el MessageID y Email");
+												correo_doc.IntEnvioMail = false;
+											}
+										}
+
+										correo_doc.StrMailEnviado = item.Email;
+
+									}
+
+									if (correo_en_mailjet == true)
+									{
+										documento.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
+										documento.IntMensajeEnvio = (short)LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Sent.GetHashCode();
+										documento.DatFechaActualizaEstado = Fecha.GetFecha();
+									}
+									else
+									{
+										documento.IntEstadoEnvio = (short)EstadoEnvio.NoEntregado.GetHashCode();
+										documento.IntMensajeEnvio = (short)LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked.GetHashCode();
+										string estado_correo = Enumeracion.GetDescription(LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked);
+										documento.DatFechaActualizaEstado = Fecha.GetFecha();
+									}
+
+									//Actualizo tabla de correos
+									correo_doc = proceso_correo.Actualizar(correo_doc);
+
+									//Actualiza tabla de documentos con el estado
+									Ctl_Documento _doc = new Ctl_Documento();
+									_doc.Actualizar(documento);
+
+
 								}
 								
 							}
@@ -3018,78 +3087,119 @@ namespace HGInetMiFacturaElectonicaController
 
 						List<Adjunto> archivos = new List<Adjunto>();
 
-						if (string.IsNullOrEmpty(documento.StrUrlArchivoPdf))
-							throw new ApplicationException("No se encontró ruta de archivo pdf");
+						//if (string.IsNullOrEmpty(documento.StrUrlArchivoPdf))
+						//	throw new ApplicationException("No se encontró ruta de archivo pdf");
 
 
-						byte[] bytes_pdf = Archivo.ObtenerWeb(documento.StrUrlArchivoPdf);
-						string ruta_fisica_pdf = Convert.ToBase64String(bytes_pdf);
-						string nombre_pdf = Path.GetFileName(documento.StrUrlArchivoPdf);
+						//byte[] bytes_pdf = Archivo.ObtenerWeb(documento.StrUrlArchivoPdf);
+						//string ruta_fisica_pdf = Convert.ToBase64String(bytes_pdf);
+						//string nombre_pdf = Path.GetFileName(documento.StrUrlArchivoPdf);
 
 
-						if (!string.IsNullOrEmpty(ruta_fisica_pdf))
+						//if (!string.IsNullOrEmpty(ruta_fisica_pdf))
+						//{
+						//	Adjunto adjunto = new Adjunto();
+						//	adjunto.ContenidoB64 = ruta_fisica_pdf;
+						//	adjunto.Nombre = nombre_pdf;
+						//	archivos.Add(adjunto);
+						//}
+
+
+						//if (string.IsNullOrEmpty(documento.StrUrlArchivoUbl))
+						//	throw new ApplicationException("No se encontró ruta de archivo xml");
+
+						//byte[] bytes_xml = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl);
+						//string ruta_fisica_xml = Convert.ToBase64String(bytes_xml);
+						//string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
+
+						//if (!string.IsNullOrEmpty(ruta_fisica_xml))
+						//{
+						//	Adjunto adjunto = new Adjunto();
+						//	adjunto.ContenidoB64 = ruta_fisica_xml;
+						//	adjunto.Nombre = nombre_xml;
+						//	archivos.Add(adjunto);
+						//}
+
+
+						byte[] bytes_applications = null;
+
+						string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
+						carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+
+						string nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, TipoDocumento.Attached, documento.StrPrefijo);//nombre_xml.Replace("face", "attach");
+
+						// ruta del zip
+						string ruta_zip = string.Format(@"{0}\{1}.zip", carpeta_xml, nombre_archivo);
+
+
+						if (!string.IsNullOrEmpty(documento.StrUrlArchivoZip))
 						{
-							Adjunto adjunto = new Adjunto();
-							adjunto.ContenidoB64 = ruta_fisica_pdf;
-							adjunto.Nombre = nombre_pdf;
-							archivos.Add(adjunto);
-						}
-
-
-						if (string.IsNullOrEmpty(documento.StrUrlArchivoUbl))
-							throw new ApplicationException("No se encontró ruta de archivo xml");
-
-						byte[] bytes_xml = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl);
-						string ruta_fisica_xml = Convert.ToBase64String(bytes_xml);
-						string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
-
-						if (!string.IsNullOrEmpty(ruta_fisica_xml))
-						{
-							Adjunto adjunto = new Adjunto();
-							adjunto.ContenidoB64 = ruta_fisica_xml;
-							adjunto.Nombre = nombre_xml;
-							archivos.Add(adjunto);
-						}
-
-						//Proceso para los anexos
-						if (documento.StrUrlAnexo != null)
-						{
-							if (!string.IsNullOrEmpty(documento.StrUrlAnexo))
-							{
-								mensaje = mensaje.Replace("{Anexos}", "Anexos");
-								mensaje = mensaje.Replace("{ObservacionAnexos}", documento.StrObservacionAnexo);
-								mensaje = mensaje.Replace("{UrlAnexos}", documento.StrUrlAnexo);
-
-								if (documento.IntPesoAnexo > 0)
-								{
-
-									byte[] bytes_anexo = Archivo.ObtenerWeb(documento.StrUrlAnexo);
-									string ruta_fisica_anexo = Convert.ToBase64String(bytes_anexo);
-									string nombre_anexo = Path.GetFileName(documento.StrUrlAnexo);
-
-									if (!string.IsNullOrEmpty(ruta_fisica_anexo))
-									{
-										Adjunto adjunto = new Adjunto();
-										adjunto.ContenidoB64 = ruta_fisica_anexo;
-										adjunto.Nombre = nombre_anexo;
-										archivos.Add(adjunto);
-									}
-								}
-
-							}
-							else
-							{
-								mensaje = mensaje.Replace("{Anexos}", "");
-								mensaje = mensaje.Replace("{ObservacionAnexos}", "");
-								mensaje = mensaje.Replace("{UrlAnexos}", "");
-							}
+							string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoZip);
+							bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
 						}
 						else
 						{
-							mensaje = mensaje.Replace("{Anexos}", "");
-							mensaje = mensaje.Replace("{ObservacionAnexos}", "");
-							mensaje = mensaje.Replace("{UrlAnexos}", "");
+							bytes_applications = Archivo.ObtenerBytes(ruta_zip);
 						}
+
+						string ruta_fisica_appl = Convert.ToBase64String(bytes_applications);
+
+						string nombre_xml_app = string.Format("{0}.zip", nombre_archivo);
+
+						if (!string.IsNullOrEmpty(ruta_fisica_appl))
+						{
+							Adjunto adjunto = new Adjunto();
+							adjunto.ContenidoB64 = ruta_fisica_appl;
+							adjunto.Nombre = nombre_xml_app;
+							archivos.Add(adjunto);
+
+						}
+
+						mensaje = mensaje.Replace("{Anexos}", "");
+						mensaje = mensaje.Replace("{ObservacionAnexos}", "");
+						mensaje = mensaje.Replace("{UrlAnexos}", "");
+
+						//Proceso para los anexos
+						//if (documento.StrUrlAnexo != null)
+						//{
+						//	if (!string.IsNullOrEmpty(documento.StrUrlAnexo))
+						//	{
+						//		mensaje = mensaje.Replace("{Anexos}", "Anexos");
+						//		mensaje = mensaje.Replace("{ObservacionAnexos}", documento.StrObservacionAnexo);
+						//		mensaje = mensaje.Replace("{UrlAnexos}", documento.StrUrlAnexo);
+
+						//		if (documento.IntPesoAnexo > 0)
+						//		{
+
+						//			byte[] bytes_anexo = Archivo.ObtenerWeb(documento.StrUrlAnexo);
+						//			string ruta_fisica_anexo = Convert.ToBase64String(bytes_anexo);
+						//			string nombre_anexo = Path.GetFileName(documento.StrUrlAnexo);
+
+						//			if (!string.IsNullOrEmpty(ruta_fisica_anexo))
+						//			{
+						//				Adjunto adjunto = new Adjunto();
+						//				adjunto.ContenidoB64 = ruta_fisica_anexo;
+						//				adjunto.Nombre = nombre_anexo;
+						//				archivos.Add(adjunto);
+						//			}
+						//		}
+
+						//	}
+						//	else
+						//	{
+						//		mensaje = mensaje.Replace("{Anexos}", "");
+						//		mensaje = mensaje.Replace("{ObservacionAnexos}", "");
+						//		mensaje = mensaje.Replace("{UrlAnexos}", "");
+						//	}
+						//}
+						//else
+						//{
+						//	mensaje = mensaje.Replace("{Anexos}", "");
+						//	mensaje = mensaje.Replace("{ObservacionAnexos}", "");
+						//	mensaje = mensaje.Replace("{UrlAnexos}", "");
+						//}
+
+
 						// envía el correo electrónico
 						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
 					}

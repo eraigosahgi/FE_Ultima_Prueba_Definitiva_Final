@@ -72,6 +72,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else if (documentoBd.IntDocTipo == TipoDocumento.Nomina.GetHashCode() || (documentoBd.IntDocTipo == TipoDocumento.NominaAjuste.GetHashCode() && documento_obj.TipoNota.Equals(1)))
 				{
 					mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosEmpleador.Telefono, documento_obj.DatosTrabajador.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, obligado.StrRazonSocial);
+					documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
 				}
 				
 				//Actualiza la respuesta del envio del correo en TblDocumentos
@@ -79,7 +80,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
 				respuesta.DescripcionEstadoEnvioMail = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoEnvio>(respuesta.IdEstadoEnvioMail));
 				documentoBd.IntEnvioMail = true;
-				documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
+				//documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 			}
 			catch (Exception excepcion)
