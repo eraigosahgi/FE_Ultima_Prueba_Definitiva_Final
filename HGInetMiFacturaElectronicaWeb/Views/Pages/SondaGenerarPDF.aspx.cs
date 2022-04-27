@@ -17,9 +17,15 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			try
 			{
 
-			string list_Idseguridad = Request.QueryString["Documentos"];
+				bool ValidacionDian = false;
 
-			Procesar(list_Idseguridad);
+				//Si llega true solo se agrega al pdf existente la fecha de validacion que tiene el documento en la DIAN
+				if (Request.QueryString["ValidacionDian"] != null)
+					Boolean.TryParse(Request.QueryString["ValidacionDian"], out ValidacionDian);
+
+				string list_Idseguridad = Request.QueryString["Documentos"];
+
+				Procesar(list_Idseguridad, ValidacionDian);
 
 			}
 			catch (Exception ex)
@@ -30,11 +36,11 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 
 		}
 
-		public void Procesar(string list_Idseguridad)
+		public void Procesar(string list_Idseguridad, bool validacion_dian)
 		{
 			Ctl_Documento ctl_documento = new Ctl_Documento();
 
-			var Tarea1 = ctl_documento.SondaGenerarPDF(list_Idseguridad);
+			var Tarea1 = ctl_documento.SondaGenerarPDF(list_Idseguridad, validacion_dian);
 			lblResultado.Text = string.Format("Termino");
 		}
 	}
