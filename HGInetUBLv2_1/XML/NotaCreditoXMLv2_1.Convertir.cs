@@ -306,7 +306,7 @@ namespace HGInetUBLv2_1
 						if (nota_credito_ubl.CreditNoteLine[i].FreeOfChargeIndicator != null)
 						{
 							detalle.ProductoGratis = nota_credito_ubl.CreditNoteLine[i].FreeOfChargeIndicator.Value;
-							if (detalle.ProductoGratis == true)
+							if (detalle.ProductoGratis == true && nota_credito_ubl.CreditNoteLine[i].PricingReference.AlternativeConditionPrice.FirstOrDefault().PriceTypeCode != null)
 								detalle.ProductoGratisPrecioRef = nota_credito_ubl.CreditNoteLine[i].PricingReference.AlternativeConditionPrice.FirstOrDefault().PriceTypeCode.Value;
 						}
 

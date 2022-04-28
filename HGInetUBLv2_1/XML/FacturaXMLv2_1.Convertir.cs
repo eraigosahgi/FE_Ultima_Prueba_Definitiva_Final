@@ -405,7 +405,8 @@ namespace HGInetUBLv2_1
 								if (factura_ubl.InvoiceLine[i].LineExtensionAmount != null && factura_ubl.InvoiceLine[i].LineExtensionAmount.Value == 0)
 								{
 									detalle.ProductoGratis = factura_ubl.InvoiceLine[i].FreeOfChargeIndicator.Value;
-									detalle.ProductoGratisPrecioRef = factura_ubl.InvoiceLine[i].PricingReference.AlternativeConditionPrice.FirstOrDefault().PriceTypeCode.Value;
+									if (factura_ubl.InvoiceLine[i].PricingReference.AlternativeConditionPrice.FirstOrDefault().PriceTypeCode != null)
+										detalle.ProductoGratisPrecioRef = factura_ubl.InvoiceLine[i].PricingReference.AlternativeConditionPrice.FirstOrDefault().PriceTypeCode.Value;
 								}
 							}	
 						}
