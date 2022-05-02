@@ -1238,11 +1238,11 @@ namespace HGInetMiFacturaElectonicaController
 									correo_doc = proceso_correo.Actualizar(correo_doc);
 
 									//Se hace el registro del evento de recepcion del documento siempre y cuando el correo no presente bloqueo y el adquiriente sea cliente de HGI
-									//if (correo_doc.IntEnvioMail == true && adquiriente_hgi == true)
-									//{
-									//	Ctl_EventosRadian evento = new Ctl_EventosRadian();
-									//	Task envio_acuse = evento.ProcesoCrearAcuseRecibo(correo_doc.StrIdMensaje, documento.StrIdSeguridad);
-									//}
+									if ((plataforma.RutaPublica.Contains("habilitacion") || plataforma.RutaPublica.Contains("localhost")) && correo_doc.IntEnvioMail == true && adquiriente_hgi == true && empresa_obligado.IntRadian == true && empresa_obligado.StrIdentificacion.Equals(empresa_adquiriente.StrIdentificacion))
+									{
+										Ctl_EventosRadian evento = new Ctl_EventosRadian();
+										Task envio_acuse = evento.ProcesoCrearAcuseRecibo(correo_doc.StrIdMensaje, documento.StrIdSeguridad);
+									}
 								}
 								else if (reenvio_documento == false)
 								{

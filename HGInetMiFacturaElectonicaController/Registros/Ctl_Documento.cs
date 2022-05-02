@@ -2564,7 +2564,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 			string ambiente_dian = string.Empty;
 
-			if (!plataforma_datos.RutaPublica.Contains("habilitacion"))
+			if (!plataforma_datos.RutaPublica.Contains("habilitacion") && !plataforma_datos.RutaPublica.Contains("localhost"))
 				ambiente_dian = "1";
 			else
 				ambiente_dian = "2";

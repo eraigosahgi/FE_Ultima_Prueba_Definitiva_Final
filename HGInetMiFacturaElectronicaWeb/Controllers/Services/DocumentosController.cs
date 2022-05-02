@@ -519,11 +519,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					}
 				}
 
-				//if (cliente_hgi == true && documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode())
-				//{
-				//	Ctl_EventosRadian evento = new Ctl_EventosRadian();
-				//	Task envio_acuse = evento.ProcesoCrearAcuseRecibo(string.Empty, documento.StrIdSeguridad);
-				//}
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				if (cliente_hgi == true && documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode() && (plataforma.RutaPublica.Contains("habilitacion") || plataforma.RutaPublica.Contains("localhost")) && documento.TblEmpresasFacturador.IntRadian == true)
+				{
+					Ctl_EventosRadian evento = new Ctl_EventosRadian();
+					Task envio_acuse = evento.ProcesoCrearAcuseRecibo(string.Empty, documento.StrIdSeguridad);
+				}
 
 
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
