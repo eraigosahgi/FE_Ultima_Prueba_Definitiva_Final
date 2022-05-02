@@ -112,7 +112,7 @@
 
 
 									<div class="text-center">
-										<img src="/../Scripts/Images/LogoPlataforma.png" id="img_cliente" style="align-content: center; width: 350px" class="img-responsive center-block" />
+										<img src="/../Scripts/Images/LogoPlataforma.png" id="img_cliente" style="align-content: center; width: 250px;max-width: 250px;" class="img-responsive center-block" />
 										<br />
 										<%--<div class="icon-object border-primary-800 text-primary-800"><i class="icon-user"></i></div>--%>
 										<h5 class="content-group-lg"><small class="display-block">Ingrese los datos de autenticación</small></h5>

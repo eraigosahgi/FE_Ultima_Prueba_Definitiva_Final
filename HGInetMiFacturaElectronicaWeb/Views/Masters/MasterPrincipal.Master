@@ -451,7 +451,7 @@
 						<div class="sidebar-user-material">
 							<div class="category-content-custom">
 								<div class="sidebar-user-material-content">
-									<img onclick="inicio();" style="pointer-events: auto; cursor: pointer;" src="../../Scripts/Images/LogoPlataforma.png" class="img-responsive" />
+									<img onclick="inicio();" style="pointer-events: auto; cursor: pointer;max-width: 200px;padding: 20px;" src="../../Scripts/Images/LogoPlataforma.png" class="img-responsive" />
 								</div>
 							</div>
 
