@@ -18,7 +18,7 @@ namespace HGInetUBLv2_1
 	public partial class AcuseReciboXMLv2_1
 	{
 
-		public static FacturaE_Documento CrearDocumento(Acuse documento, string ambiente, string pin_sw, string cufe_docreferenciado, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TblDocumentos documento_factura, CodigoResponseV2 tipo_acuse)
+		public static FacturaE_Documento CrearDocumento(Acuse documento, string ambiente, string pin_sw, string cufe_docreferenciado, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TblDocumentos documento_factura, CodigoResponseV2 tipo_acuse, TblEventosRadian evento_anterior = null)
         {
 
 			try
@@ -314,10 +314,23 @@ namespace HGInetUBLv2_1
 				}
 				else if (tipo_acuse.Equals(CodigoResponseV2.CancelacionEG))
 				{
-					//Se debe obtener el evento de endoso en garantia que se va a cancelar
-					documento.Documento = 9900012898;
+					string contenido_xml = Archivo.ObtenerContenido(evento_anterior.StrUrlEvento.Replace(string.Format("-{0}.xml",evento_anterior.IntEstadoEvento),".xml"));
+
+					// valida el contenido del archivo
+					if (string.IsNullOrWhiteSpace(contenido_xml))
+						throw new ArgumentException("El archivo XML UBL se encuentra vacío, para obtener el CUDE del evento de Endoso");
+
+					// convierte el contenido de texto a xml
+					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+
+					// convierte el objeto de acuerdo con el tipo de documento
+					XmlSerializer serializacion1 = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
+
+					HGInetUBLv2_1.ApplicationResponseType conversion = (HGInetUBLv2_1.ApplicationResponseType)serializacion1.Deserialize(xml_reader);
+					//Se debe obtener el evento de endoso que se va a cancelar
+					documento.Documento = evento_anterior.IntNumeroEvento;
 					documento.Prefijo = string.Empty;
-					cufe_docreferenciado = "dd7cca62c2c6f0ec21f72383642bb9ddafe5b4942433c3f34f9606945f1a956b42d5a60b8ee675fcd586c5e6696e05dc";
+					cufe_docreferenciado = conversion.UUID.Value; //"b7a2ecc13581a9f82a491c95f5607e8762de3a8f1dce64669ac723bd2baeb9d017abf3e15e8666f01c4df8af592bc2ed";
 					documento.TipoDocumento = "96";
 				}
 				else if (tipo_acuse.Equals(CodigoResponseV2.MandatoG))
@@ -334,10 +347,23 @@ namespace HGInetUBLv2_1
 				}
 				else if (tipo_acuse.Equals(CodigoResponseV2.TerminacionMandatoG))
 				{
+					string contenido_xml = Archivo.ObtenerContenido(evento_anterior.StrUrlEvento.Replace(string.Format("-{0}.xml", evento_anterior.IntEstadoEvento), ".xml"));
+
+					// valida el contenido del archivo
+					if (string.IsNullOrWhiteSpace(contenido_xml))
+						throw new ArgumentException("El archivo XML UBL se encuentra vacío, para obtener el CUDE del evento de Mandato");
+
+					// convierte el contenido de texto a xml
+					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+
+					// convierte el objeto de acuerdo con el tipo de documento
+					XmlSerializer serializacion1 = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
+
+					HGInetUBLv2_1.ApplicationResponseType conversion = (HGInetUBLv2_1.ApplicationResponseType)serializacion1.Deserialize(xml_reader);
 					//Se debe obtener el evento de Mandato que se va a cancelar
-					documento.Documento = 99000128920;
+					documento.Documento = evento_anterior.IntNumeroEvento;
 					documento.Prefijo = string.Empty;
-					cufe_docreferenciado = "cf6eb19f4728dcc76eeebfdd5377bd235e605ba04dc988118f5ab9d171e3c658b1d612ddac9c2c25480f30a6dca50011";
+					cufe_docreferenciado = conversion.UUID.Value; //"cf6eb19f4728dcc76eeebfdd5377bd235e605ba04dc988118f5ab9d171e3c658b1d612ddac9c2c25480f30a6dca50011";
 					documento.TipoDocumento = "96";
 					//Fecha desde cuando puede actuar el Mandatario
 					response.EffectiveDate = new EffectiveDateType();
@@ -345,7 +371,7 @@ namespace HGInetUBLv2_1
 				}
 				else if (tipo_acuse.Equals(CodigoResponseV2.Aval))
 				{
-					//Se debe obtener el evento de endoso en garantia que se va a cancelar
+					//Se debe obtener la factura al que se la va a dar Aval
 					documento.Documento = 990003013;
 					documento.Prefijo = "SETP";
 					cufe_docreferenciado = "f6100f110157d2a5bf21bcc4f9c8a808875cc1e549c8c9830c6833592b53c1233b8bc7857a63a03531cbe92d2ff8638d";
@@ -509,6 +535,26 @@ namespace HGInetUBLv2_1
 				{
 					ApplicationResponseType acuse_temp = new ApplicationResponseType();
 					acuse_temp.ReceiverParty = ObtenerTercero(documento.DatosAdquiriente, false);
+
+					string contenido_xml = Archivo.ObtenerContenido(documento_factura.StrUrlArchivoUbl);
+
+					// valida el contenido del archivo
+					if (string.IsNullOrWhiteSpace(contenido_xml))
+						throw new ArgumentException("El archivo XML UBL se encuentra vacío, para obtener el nombre del adquiriente de la Factura en el Endoso");
+
+					// convierte el contenido de texto a xml
+					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+
+					// convierte el objeto de acuerdo con el tipo de documento
+					XmlSerializer serializacion1 = new XmlSerializer(typeof(InvoiceType));
+
+					InvoiceType conversion = (InvoiceType)serializacion1.Deserialize(xml_reader);
+
+					if (!acuse_temp.ReceiverParty.PartyTaxScheme[0].RegistrationName.Value.Equals(conversion.AccountingCustomerParty.Party.PartyLegalEntity[0].RegistrationName.Value))
+					{
+						acuse_temp.ReceiverParty.PartyTaxScheme[0].RegistrationName.Value = conversion.AccountingCustomerParty.Party.PartyLegalEntity[0].RegistrationName.Value;
+					}
+
 					DocumentReference.IssuerParty = new PartyType();
 					DocumentReference.IssuerParty.PartyTaxScheme = new PartyTaxSchemeType[1];
 					DocumentReference.IssuerParty.PartyTaxScheme = acuse_temp.ReceiverParty.PartyTaxScheme;

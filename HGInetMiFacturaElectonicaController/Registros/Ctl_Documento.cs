@@ -1341,7 +1341,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 											if (evento_reciboM != null && evento_reclamo == null && evento_expresa == null)
 											{
 												//Primero consulto que este evento cuente con las 72 horas del acuse de recibo con respecto a la fecha actual
-												TimeSpan horas_acuse_evento = evento_reciboM.DatFechaEvento.Subtract(Fecha.GetFecha());
+												TimeSpan horas_acuse_evento = Fecha.GetFecha().Subtract(evento_reciboM.DatFechaEvento);
 
 												if (horas_acuse_evento.TotalHours >= 72)
 												{
@@ -2045,7 +2045,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					if (!estado.Equals(CodigoResponseV2.AprobadoTacito.GetHashCode()))
 					{
 						doc.IntAdquirienteRecibo = estado;
-						if (estado == CodigoResponseV2.Rechazado.GetHashCode() && !string.IsNullOrEmpty(doc.StrAdquirienteMvoRechazo))
+						if (estado == CodigoResponseV2.Rechazado.GetHashCode() && !string.IsNullOrEmpty(motivo_rechazo))
 							doc.StrAdquirienteMvoRechazo = motivo_rechazo;
 						doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
 						if (doc.IntIdEstado > (short)ProcesoEstado.EnvioZip.GetHashCode() && estado != CodigoResponseV2.Recibido.GetHashCode())
@@ -2089,6 +2089,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								{
 									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo);
 									recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode());
+									if (recibo != null)
+										evento_procesado_DIAN = true;
 								}
 
 							}
@@ -2117,6 +2119,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							TblEventosRadian rechazo = list_evento.Where(x => x.IntEstadoEvento == 2).FirstOrDefault();
 
+							TblEventosRadian tacito = list_evento.Where(x => x.IntEstadoEvento == 3).FirstOrDefault();
+
 							if (acuse == null && estado != CodigoResponseV2.Recibido.GetHashCode())
 							{
 								acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode());
@@ -2131,7 +2135,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								evento_procesado_DIAN = true;
 							}
 
-							if (expresa == null && rechazo == null && estado != CodigoResponseV2.Aceptado.GetHashCode())
+							if (expresa == null && rechazo == null && tacito == null && estado != CodigoResponseV2.Aceptado.GetHashCode())
 							{
 								//Crea el XML del Acuse
 								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
@@ -2154,7 +2158,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							}
 
-							if (estado == CodigoResponseV2.Inscripcion.GetHashCode() && rechazo == null && expresa != null)
+							if (estado == CodigoResponseV2.Inscripcion.GetHashCode() && rechazo == null && (expresa != null || tacito != null))
 							{
 								//Crea el XML del Acuse
 								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Inscripcion.GetHashCode(), motivo_rechazo);
@@ -2180,6 +2184,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							else
 							{
 								evento_procesado_DIAN = true;
+								doc.IntAdquirienteRecibo = (short)CodigoResponseV2.AprobadoTacito.GetHashCode();
 							}
 						}
 
@@ -2598,13 +2603,48 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				PinSoftware = PinSoftware
 			};
 
+			TblEventosRadian evento_anterior = null;
+			if (estado == CodigoResponseV2.CancelacionEG.GetHashCode())
+			{
+				Ctl_EventosRadian ctl = new Ctl_EventosRadian();
+				List<TblEventosRadian> list_event = ctl.Obtener(doc.StrIdSeguridad);
+				TblEventosRadian evento_endosoG = list_event.Where(x => x.IntEstadoEvento == CodigoResponseV2.EndosoG.GetHashCode()).FirstOrDefault();
+				TblEventosRadian evento_endosoPc = list_event.Where(x => x.IntEstadoEvento == CodigoResponseV2.EndosoPc.GetHashCode()).FirstOrDefault();
+				TblEventosRadian evento_endosoPP = list_event.Where(x => x.IntEstadoEvento == CodigoResponseV2.EndosoPp.GetHashCode()).FirstOrDefault();
+
+				if (evento_endosoG != null && evento_endosoPc == null && evento_endosoPP == null)
+				{
+					evento_anterior = evento_endosoG;
+				}
+				else if (evento_endosoG == null && evento_endosoPc != null && evento_endosoPP == null)
+				{
+					evento_anterior = evento_endosoPc;
+				}
+				else if (evento_endosoG == null && evento_endosoPc == null && evento_endosoPP != null)
+				{
+					evento_anterior = evento_endosoPP;
+				}
+			}
+
+			if (estado == CodigoResponseV2.TerminacionMandatoG.GetHashCode())
+			{
+				Ctl_EventosRadian ctl = new Ctl_EventosRadian();
+				List<TblEventosRadian> list_event = ctl.Obtener(doc.StrIdSeguridad);
+				TblEventosRadian evento_mandato = list_event.Where(x => x.IntEstadoEvento == CodigoResponseV2.MandatoG.GetHashCode()).FirstOrDefault();
+
+				if (evento_mandato != null)
+				{
+					evento_anterior = evento_mandato;
+				}
+			}
+
 			//Convierte el objeto en archivo XML-UBL
-			FacturaE_Documento resultado = HGInetUBLv2_1.AcuseReciboXMLv2_1.CrearDocumento(doc_acuse, ambiente_dian, PinSoftware, doc.StrCufe, extension_documento, doc, cod_acuse);
+			FacturaE_Documento resultado = HGInetUBLv2_1.AcuseReciboXMLv2_1.CrearDocumento(doc_acuse, ambiente_dian, PinSoftware, doc.StrCufe, extension_documento, doc, cod_acuse, evento_anterior);
 			resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
 			resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
 			resultado.IdSeguridadPeticion = Guid.NewGuid();
 			resultado.DocumentoTipo = TipoDocumento.AcuseRecibo;
-			resultado.VersionDian = facturador.IntVersionDian;
+			resultado.VersionDian = 2;
 			resultado.NombreZip = resultado.NombreXml;
 
 			// valida el nodo de ExtensionContent
