@@ -2278,7 +2278,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			TblEventosRadian expresa = null;
 
-			//TblEventosRadian inscripcion = null;
+			TblEventosRadian inscripcion = null;
 
 			if (list_evento != null && list_evento.Count > 0)
 			{
@@ -2289,7 +2289,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				expresa = list_evento.Where(x => x.IntEstadoEvento == 5).FirstOrDefault();
 
-				//inscripcion = list_evento.Where(x => x.IntEstadoEvento == 6).FirstOrDefault();
+				inscripcion = list_evento.Where(x => x.IntEstadoEvento == 6).FirstOrDefault();
 
 			}
 
@@ -2346,38 +2346,38 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Expresa.GetHashCode();
 			}
-			
-			//if (inscripcion == null)
+
+			if (inscripcion == null)
+			{
+				try
+				{
+					//Crea el XML del Acuse
+					resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Inscripcion.GetHashCode(), string.Empty);
+					EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Inscripcion.GetHashCode());
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error procesando o enviando Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.Inscripcion.GetHashCode()))));
+
+					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+				}
+
+				doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Inscripcion.GetHashCode();
+			}
+
+
+			//try
 			//{
-			//	try
-			//	{
-			//		//Crea el XML del Acuse
-			//		resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Inscripcion.GetHashCode(), string.Empty);
-			//		EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Inscripcion.GetHashCode());
-			//	}
-			//	catch (Exception excepcion)
-			//	{
-			//		RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error procesando o enviando Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.Inscripcion.GetHashCode()))));
-
-			//		throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			//	}
-
-			//	doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Inscripcion.GetHashCode();
+			//	//Crea el XML del Acuse
+			//	resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.EndosoPp.GetHashCode(), string.Empty);
+			//	EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.EndosoPp.GetHashCode());
 			//}
-			
+			//catch (Exception excepcion)
+			//{
+			//	RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error procesando o enviando Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.EndosoPp.GetHashCode()))));
 
-			try
-			{
-				//Crea el XML del Acuse
-				resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.EndosoPp.GetHashCode(), string.Empty);
-				EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.EndosoPp.GetHashCode());
-			}
-			catch (Exception excepcion)
-			{
-				RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error procesando o enviando Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.EndosoPp.GetHashCode()))));
-
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
+			//	throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			//}
 
 		}
 
