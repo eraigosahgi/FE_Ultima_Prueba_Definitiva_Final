@@ -2289,7 +2289,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				expresa = list_evento.Where(x => x.IntEstadoEvento == 5).FirstOrDefault();
 
-				inscripcion = list_evento.Where(x => x.IntEstadoEvento == 6).FirstOrDefault();
+				//inscripcion = list_evento.Where(x => x.IntEstadoEvento == 6).FirstOrDefault();
 
 			}
 
