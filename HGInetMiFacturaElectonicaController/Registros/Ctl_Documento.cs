@@ -1998,6 +1998,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				else
 					facturador = doc.TblEmpresasFacturador;
 
+				facturador.IntVersionDian = 2;
+
 				// obtiene los datos del adquiriente
 				TblEmpresas adquiriente = null;
 				ctl_empresa = new Ctl_Empresa();
@@ -2005,6 +2007,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					adquiriente = ctl_empresa.Obtener(doc.StrEmpresaAdquiriente, false);
 				else
 					adquiriente = doc.TblEmpresasAdquiriente;
+
+				adquiriente.IntVersionDian = 2;
 
 				//obtiene los datos del proveedor del facturador
 				ctl_empresa = new Ctl_Empresa();
@@ -2274,7 +2278,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			TblEventosRadian expresa = null;
 
-			TblEventosRadian inscripcion = null;
+			//TblEventosRadian inscripcion = null;
 
 			if (list_evento != null && list_evento.Count > 0)
 			{
@@ -2343,23 +2347,23 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Expresa.GetHashCode();
 			}
 			
-			if (inscripcion == null)
-			{
-				try
-				{
-					//Crea el XML del Acuse
-					resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Inscripcion.GetHashCode(), string.Empty);
-					EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Inscripcion.GetHashCode());
-				}
-				catch (Exception excepcion)
-				{
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error procesando o enviando Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.Inscripcion.GetHashCode()))));
+			//if (inscripcion == null)
+			//{
+			//	try
+			//	{
+			//		//Crea el XML del Acuse
+			//		resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Inscripcion.GetHashCode(), string.Empty);
+			//		EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Inscripcion.GetHashCode());
+			//	}
+			//	catch (Exception excepcion)
+			//	{
+			//		RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error procesando o enviando Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.Inscripcion.GetHashCode()))));
 
-					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-				}
+			//		throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			//	}
 
-				doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Inscripcion.GetHashCode();
-			}
+			//	doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Inscripcion.GetHashCode();
+			//}
 			
 
 			try
@@ -2437,6 +2441,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (habilitar_set == true)
 				{
 					//acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
+					resp.DocumentoTipo = TipoDocumento.AcuseRecibo.GetHashCode();
 
 					Ctl_Documentos.Consultar(doc, facturador, ref resp, acuse.KeyV2);
 				}
