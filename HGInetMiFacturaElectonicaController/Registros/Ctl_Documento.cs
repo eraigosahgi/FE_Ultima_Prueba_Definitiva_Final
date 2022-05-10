@@ -2443,6 +2443,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					//acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
 					resp.DocumentoTipo = TipoDocumento.AcuseRecibo.GetHashCode();
 
+					//Se da una pausa en proceso para que el servicio de la DIAN termine la validacion del documento
+					System.Threading.Thread.Sleep(5000);
+
 					Ctl_Documentos.Consultar(doc, facturador, ref resp, acuse.KeyV2);
 				}
 
