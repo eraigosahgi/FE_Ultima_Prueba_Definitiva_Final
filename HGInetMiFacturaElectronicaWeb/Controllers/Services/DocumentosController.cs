@@ -875,8 +875,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					MotivoRechazo = d.StrAdquirienteMvoRechazo,
 					Xml = d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
-					RespuestaVisible = (d.IntAdquirienteRecibo == 1 || d.IntAdquirienteRecibo == 2) ? true : false,
-					CamposVisibles = (d.IntAdquirienteRecibo == 0 || d.IntAdquirienteRecibo == 4) ? true : false
+					//RespuestaVisible = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? false : true,
+					//CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? ((cliente_hgi == false) ? false : true) : false,
+					RespuestaVisible = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? true : false,
+					CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? true : false
 				});
 				return Ok(retorno);
 

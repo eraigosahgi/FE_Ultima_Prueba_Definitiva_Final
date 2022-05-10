@@ -2438,7 +2438,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					habilitar_set = false;
 				}
 
-				if (habilitar_set == true)
+				if (habilitar_set == true && !string.IsNullOrEmpty(acuse.KeyV2))
 				{
 					//acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
 					resp.DocumentoTipo = TipoDocumento.AcuseRecibo.GetHashCode();
@@ -2570,6 +2570,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 			
 			doc_acuse.DatosObligado = Ctl_Empresa.Convertir(facturador);
+			if (doc_acuse.DatosObligado.TipoIdentificacion != 31)
+			{
+				doc_acuse.DatosObligado.TipoIdentificacion = 31;
+				doc_acuse.DatosObligado.IdentificacionDv = LibreriaGlobalHGInet.HgiNet.FuncionesIdentificacion.Dv(adquiriente.StrIdentificacion);
+			}
 
 			//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 			string ambiente_dian = string.Empty;
