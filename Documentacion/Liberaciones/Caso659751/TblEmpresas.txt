@@ -1,0 +1,7 @@
+ALTER TABLE TblEmpresas ADD
+IntTipoPlan smallint NOT NULL Default(0)
+GO
+
+ALTER TABLE TblEmpresas ADD
+IntCompraPlan bit NOT NULL Default(1)
+GO
