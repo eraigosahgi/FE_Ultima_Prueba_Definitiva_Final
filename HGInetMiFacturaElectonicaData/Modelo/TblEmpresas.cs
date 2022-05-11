@@ -85,6 +85,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool IntInteroperabilidad { get; set; }
         public bool IntRadian { get; set; }
         public bool IntEnvioNominaMail { get; set; }
+        public short IntTipoPlan { get; set; }
+        public bool IntCompraPlan { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }

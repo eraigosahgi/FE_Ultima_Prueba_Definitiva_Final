@@ -164,6 +164,8 @@
           <Property Name="IntInteroperabilidad" Type="bit" Nullable="false" />
           <Property Name="IntRadian" Type="bit" Nullable="false" />
           <Property Name="IntEnvioNominaMail" Type="bit" Nullable="false" />
+          <Property Name="IntTipoPlan" Type="smallint" Nullable="false" />
+          <Property Name="IntCompraPlan" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -1421,6 +1423,8 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblPlanesTransacciones_TblEmpresas" FromRole="TblEmpresas" ToRole="TblPlanesTransacciones" />
           <Property Name="IntRadian" Type="Boolean" Nullable="false" />
           <Property Name="IntEnvioNominaMail" Type="Boolean" Nullable="false" />
+          <Property Name="IntTipoPlan" Type="Int16" Nullable="false" />
+          <Property Name="IntCompraPlan" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -2066,6 +2070,8 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntCompraPlan" ColumnName="IntCompraPlan" />
+                <ScalarProperty Name="IntTipoPlan" ColumnName="IntTipoPlan" />
                 <ScalarProperty Name="IntEnvioNominaMail" ColumnName="IntEnvioNominaMail" />
                 <ScalarProperty Name="IntRadian" ColumnName="IntRadian" />
                 <ScalarProperty Name="IntInteroperabilidad" ColumnName="IntInteroperabilidad" />
