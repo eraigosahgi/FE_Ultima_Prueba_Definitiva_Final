@@ -2028,7 +2028,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (adquiriente_hgi == true)
 				{
 					list_evento = evento.Obtener(doc.StrIdSeguridad);
-
+				   
 					if (list_evento != null && list_evento.Count > 0)
 					{
 
@@ -2048,7 +2048,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					if (!estado.Equals(CodigoResponseV2.AprobadoTacito.GetHashCode()))
 					{
-						doc.IntAdquirienteRecibo = estado;
 						if (estado == CodigoResponseV2.Rechazado.GetHashCode() && !string.IsNullOrEmpty(motivo_rechazo))
 							doc.StrAdquirienteMvoRechazo = motivo_rechazo;
 						doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
@@ -2138,6 +2137,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode());
 								evento_procesado_DIAN = true;
 							}
+							else if (recibo != null && !doc.IntAdquirienteRecibo.Equals(estado))
+							{
+								doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Recibido.GetHashCode();
+							}
 
 							if (expresa == null && rechazo == null && tacito == null && estado != CodigoResponseV2.Aceptado.GetHashCode())
 							{
@@ -2159,6 +2162,39 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										evento_procesado_DIAN = true;
 								}
 
+
+							}
+
+							//Si el documento ya tiene eventos y por algun proceso no se actualizo en el documento, aqui se hace.
+							if (evento_procesado_DIAN == false && (expresa != null || rechazo != null || tacito != null))
+							{
+								
+								if (expresa != null && !doc.IntAdquirienteRecibo.Equals(estado))
+								{
+									doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Expresa.GetHashCode();
+								}
+
+								if (rechazo != null && !doc.IntAdquirienteRecibo.Equals(estado))
+								{
+									doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Rechazado.GetHashCode();
+								}
+
+								if (tacito != null && !doc.IntAdquirienteRecibo.Equals(estado))
+								{
+									doc.IntAdquirienteRecibo = (short)CodigoResponseV2.AprobadoTacito.GetHashCode();
+								}
+
+								TblEventosRadian inscripcion_titulo = list_evento.Where(x => x.IntEstadoEvento == 6).FirstOrDefault();
+
+								if (inscripcion_titulo != null && !doc.IntAdquirienteRecibo.Equals((short)CodigoResponseV2.Inscripcion.GetHashCode()))
+								{
+									doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Inscripcion.GetHashCode();
+								}
+
+								doc.DatFechaActualizaEstado = Fecha.GetFecha();
+
+								Ctl_Documento actualizar_doc = new Ctl_Documento();
+								doc = actualizar_doc.Actualizar(doc);
 
 							}
 
