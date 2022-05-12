@@ -193,7 +193,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 
 
 	//Consultar DOcumentos
-	
+
 	function consultar() {
 		$('#Total').text("");
 		if (fecha_inicio == "")
@@ -375,32 +375,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
                     		message: "El campo Fecha es obligatorio."
                     	}]
                     },
-                    {
-                    	caption: "Valor Total",
-                    	dataField: "IntVlrTotal",
-                    	cssClass: "col-md-1 col-xs-1",
-                    	width: '12%',
-                    	Type: Number,
-                    }
-                    ,
-					{
-						caption: "SubTotal",
-						dataField: "IntSubTotal",
-						cssClass: "col-md-1 col-xs-1",
-						width: '12%',
-						Type: Number,
-						visible: false
-					}
-                    ,
-					{
-						caption: "Neto",
-						dataField: "IntNeto",
-						cssClass: "col-md-1 col-xs-1",
-						width: '12%',
-						Type: Number,
-						visible: false
-					}
-                    ,
+
                      {
                      	caption: "Identificación Facturador",
                      	cssClass: "hidden-xs col-md-1",
@@ -466,8 +441,8 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 					   {
 					   	caption: "Saldo",
 					   	dataField: "Saldo",
-					   	visible: false,
-					   	cssClass: "col-md-1 col-xs-3",
+					   	//visible: false,
+					   	//cssClass: "col-md-1 col-xs-3",
 					   	//disabled: !data.habilitar_documento,
 					   	cellTemplate: function (container, options) {
 
@@ -507,10 +482,37 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 					   	},
 
 
+
 					   },
+					     {
+					     	caption: "Valor Total",
+					     	dataField: "IntVlrTotal",
+					     	//cssClass: "col-md-1 col-xs-1",
+					     	//width: '12%',
+					     	Type: Number,
+					     }
+                    ,
+					{
+						caption: "SubTotal",
+						dataField: "IntSubTotal",
+						//cssClass: "col-md-1 col-xs-1",
+						//width: '12%',
+						Type: Number,
+						visible: false
+					}
+                    ,
+					{
+						caption: "Neto",
+						dataField: "IntNeto",
+						//cssClass: "col-md-1 col-xs-1",
+						//width: '12%',
+						Type: Number,
+						visible: false
+					}
+                    ,
                 {
                 	///Opción de pago
-                	cssClass: "col-md-1 ",
+                	//cssClass: "col-md-1 ",
                 	caption: "Pago",
                 	width: "120px",
                 	alignment: "center",
