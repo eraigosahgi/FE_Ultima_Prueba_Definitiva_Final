@@ -183,6 +183,16 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string TipoIngresoMandato { get; set; }
 
+		/// <summary>
+		/// Codigo por el que se quiera agrupar el detalle en la representacion grafica
+		/// </summary>
+		public string AgrupacionCod { get; set; }
+
+		/// <summary>
+		/// Descripcion por el que se quiera agrupar el detalle en la representacion grafica
+		/// </summary>
+		public string AgrupacionDesc { get; set; }
+
 		#endregion
 
 
