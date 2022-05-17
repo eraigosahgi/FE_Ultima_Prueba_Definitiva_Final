@@ -1947,6 +1947,7 @@
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ModalAsignarFormato.js" />
     <Content Include="Scripts\Pages\ModalAuditoria.js" />
+    <Content Include="Scripts\Pages\ModalCompraPlan.js" />
     <Content Include="Scripts\Pages\ModalConsultaProveedores.js" />
     <Content Include="Scripts\Pages\ModalDetalleEmpresa.js" />
     <Content Include="Scripts\Pages\ModalPagos.js" />
@@ -2840,6 +2841,7 @@
     <Content Include="Views\Pages\GestionUsuariosPagos.aspx" />
     <Content Include="Views\Pages\HGIpayConsultaDocumentos.aspx" />
     <Content Include="Views\Pages\ModalAsignarFormato.aspx" />
+    <Content Include="Views\Pages\ModalComprarPlan.aspx" />
     <Content Include="Views\Pages\ModalDetalleEmpresa.aspx" />
     <Content Include="Views\Pages\ModalDetallePago.aspx" />
     <Content Include="Views\Pages\ModalDetallePlan.html" />
@@ -3244,6 +3246,13 @@
     <Compile Include="Views\Pages\ModalAsignarFormato.aspx.designer.cs">
       <DependentUpon>ModalAsignarFormato.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\ModalComprarPlan.aspx.cs">
+      <DependentUpon>ModalComprarPlan.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ModalComprarPlan.aspx.designer.cs">
+      <DependentUpon>ModalComprarPlan.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Pages\ModalDetalleEmpresa.aspx.cs">
       <DependentUpon>ModalDetalleEmpresa.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3587,6 +3596,7 @@
     <EmbeddedResource Include="Properties\Constantes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Constantes.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\OpcionesPermisos.resx">
       <Generator>ResXFileCodeGenerator</Generator>

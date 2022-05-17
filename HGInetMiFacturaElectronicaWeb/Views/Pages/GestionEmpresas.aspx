@@ -4,12 +4,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
-	<script src="../../Scripts/Services/SrvResoluciones.js?vjs20220317"></script>
-	<script src="../../Scripts/Services/SrvEmpresa.js?vjs20220317"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20220317"></script>
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20220317"></script>
-	<script src="../../Scripts/Pages/Empresas.js?vjs20220317"></script>
-	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20220317"></script>
+	<script src="../../Scripts/Services/SrvResoluciones.js?vjs20220511"></script>
+	<script src="../../Scripts/Services/SrvEmpresa.js?vjs20220511"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20220511"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20220511"></script>
+	<script src="../../Scripts/Pages/Empresas.js?vjs20220511"></script>
+	<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20220511"></script>
 
 	<div data-ng-app="EmpresasApp" data-ng-controller="GestionEmpresasController" class="col-md-12">
 		<div data-ng-include="'Partials/ModalResoluciones.html'"></div>
@@ -274,6 +274,12 @@
 									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%; z-index: 9;">Estado:<strom style="color: red;">*</strom></label>
 									<div id="cboestado"></div>
 									<div id="tooltip_cboestado">Indica si la empresa esta Activa o Inactiva</div>
+								</div>
+
+								<div class="col-md-12" style="z-index: 9;">
+									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%; z-index: 9;">Tipo Plan:</label>
+									<div id="cboTipoPlan"></div>
+									<div id="tooltip_cboTipoPlan">Indica si la empresa activa Planes por la plataforma o es por medio de una suscripción</div>
 								</div>
 
 

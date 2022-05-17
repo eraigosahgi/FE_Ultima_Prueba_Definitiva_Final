@@ -61,11 +61,11 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a CompraPlanes.js.
+        ///   Busca una cadena traducida similar a CompraPlanes.json.
         /// </summary>
-        internal static string nombre_json_Planes {
+        internal static string nombre_json_planes {
             get {
-                return ResourceManager.GetString("nombre_json_Planes", resourceCulture);
+                return ResourceManager.GetString("nombre_json_planes", resourceCulture);
             }
         }
         

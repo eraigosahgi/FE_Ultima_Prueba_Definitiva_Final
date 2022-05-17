@@ -139,6 +139,15 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblPorcentaje;
         
         /// <summary>
+        /// Control btnActivaPlan.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnActivaPlan;
+        
+        /// <summary>
         /// Control LblCodigoUsuario.
         /// </summary>
         /// <remarks>

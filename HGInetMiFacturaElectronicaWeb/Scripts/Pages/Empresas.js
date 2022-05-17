@@ -52,7 +52,8 @@ Datos_ClaveCert = "",
 Datos_Serial = "",
 Datos_Serial_Cloud = "",
 Datos_EnvioNominaMail = 0,
-Datos_proveedores = "";
+Datos_proveedores = "",
+Datos_TipoPlan = 0;
 //Desde hasta en la consulta de la grid
 var Desde = 0;
 var Hasta = 20;
@@ -709,6 +710,20 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				}]
 			});
 
+			$("#cboTipoPlan").dxSelectBox({
+				placeholder: "TipoPlan",
+				displayExpr: "Texto",
+				dataSource: TipoPlan,
+				onValueChanged: function (data) {
+					Datos_TipoPlan = data.value.ID;
+				}
+			}).dxValidator({
+				validationRules: [{
+					type: "required",
+					message: "Debe indicar un tipo de Plan"
+				}]
+			});
+
 			$("#txtobservaciones").dxTextArea({
 				height: "100px",
 				onValueChanged: function (data) {
@@ -1260,6 +1275,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			title: "Detalle:"
 		});
 
+		$("#tooltip_cboTipoPlan").dxPopover({
+			target: "#cboTipoPlan",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
 		$("#tooltip_txtobservaciones").dxPopover({
 			target: "#txtobservaciones",
 			showEvent: {
@@ -1742,6 +1770,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Email_Pagos = response.data[0].StrMailPagos;
 				Datos_telefono = response.data[0].telefono;
 				Datos_VersionDIAN = response.data[0].VersionDIAN;
+				Datos_TipoPlan = response.data[0].IntTipoPlan
 
 				Datos_Serial_Cloud = response.data[0].SerialCloudServices;
 				Datos_debug = response.data[0].Debug;
@@ -1867,6 +1896,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#cboestado").dxSelectBox({ value: TiposEstado[BuscarID(TiposEstado, Datos_estado)] });
 
 					$("#cboVersionDIAM").dxSelectBox({ value: VersionDIAN[BuscarID(VersionDIAN, Datos_VersionDIAN)] });
+
+					$("#cboTipoPlan").dxSelectBox({ value: TipoPlan[BuscarID(TipoPlan, Datos_TipoPlan)] });
 
 
 					if (Datos_postpago == 1) {
@@ -2042,6 +2073,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				StrMailPagos: Datos_Email_Pagos,
 				StrTelefono: Datos_telefono,
 				IntVersionDian: Datos_VersionDIAN,
+				IntTipoPlan: Datos_TipoPlan,
 				IntMailAdminVerificado: Proc_Email,
 				IntMailEnvioVerificado: Proc_MailEnvio,
 				IntMailRecepcionVerificado: Proc_MailRecepcion,
@@ -2487,4 +2519,10 @@ var items_TipoTercero =
 	{ ID: "2", Texto: 'TODOS' },
 	{ ID: "0", Texto: 'FACTURADOR' },
 	{ ID: "1", Texto: 'ADQUIRIENTE' }
+];
+
+var TipoPlan =
+[
+	{ ID: "0", Texto: 'APLICACIÓN' },
+	{ ID: "1", Texto: 'SUSCRIPCIÓN' }
 ];

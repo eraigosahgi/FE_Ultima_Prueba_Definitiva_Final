@@ -757,6 +757,13 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                      	caption: "Saldo",
                      	dataField: "Saldo"
                      }
+					 ,
+                     {
+
+                     	caption: "DocRef",
+                     	dataField: "DocRef"
+                     }
+
 					 //, {
                      //	caption: "Porcentaje %",
                      //	width: 100,
@@ -881,6 +888,14 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 					nivelPlanes(porcentaje, $scope.Tipo);
 					$('.Hgi_plan').dxBullet(CrearGrafico(porcentaje, 'Consumo Actual ', ' %', nivelPlanes(porcentaje, $scope.Tipo)));
 					$('#hgi_porcentaje_plan').html(Number(porcentaje).toFixed(2) + "%");
+				}
+
+				if (response.data[0].DocRef == "-1")
+				{
+					$scope.Facturado = "NO";
+				}
+				else {
+					$scope.Facturado = "SI";
 				}
 
 				///////////////////////////////////////////////////////////////////////

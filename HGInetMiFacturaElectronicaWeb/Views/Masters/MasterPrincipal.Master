@@ -179,6 +179,11 @@
 			window.location.assign("/Views/Pages/Inicio.aspx");
 		}
 
+		function IrActivarPlan() {
+			window.location.assign("/Views/Pages/GestionCompraPlan.aspx");
+		}
+
+
 
 		function popup(ruta_archivo) {
 			window.open(ruta_archivo, "ventana1", "width=700,height=850,scrollbars=NO")
@@ -221,6 +226,9 @@
 							$('#lblProcesados').text("");
 							$('#lblDisponibles').text("");
 							$('#lblPorcentaje').text("");
+
+							$("#btnActivaPlan").hide();
+
 						}
 					}
 				} else {
@@ -385,6 +393,21 @@
 														<label id="lblDisponibles"></label>
 													</div>
 												</div>
+												<br />
+												<div class="col-md-12">
+													<div class="col-md-3">
+													</div>
+													<div class="col-md-7">
+														<div class="media-left">
+															<button id="btnActivaPlan" runat="server" onclick="IrActivarPlan();" type="button" class="btn btn-secondary btn-labeled btn-labeled-left rounded-pill"><b><i class="icon-cart"></i></b>Activar</button>
+														</div>
+													</div>
+													<div class="col-md-2">
+													</div>
+												</div>
+
+
+
 											</div>
 										</div>
 									</li>
@@ -451,7 +474,7 @@
 						<div class="sidebar-user-material">
 							<div class="category-content-custom">
 								<div class="sidebar-user-material-content">
-									<img onclick="inicio();" style="pointer-events: auto; cursor: pointer;max-width: 200px;padding: 20px;" src="../../Scripts/Images/LogoPlataforma.png" class="img-responsive" />
+									<img onclick="inicio();" style="pointer-events: auto; cursor: pointer; max-width: 200px; padding: 20px;" src="../../Scripts/Images/LogoPlataforma.png" class="img-responsive" />
 								</div>
 							</div>
 

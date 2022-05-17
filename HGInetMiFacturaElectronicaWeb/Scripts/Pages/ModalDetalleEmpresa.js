@@ -45,7 +45,8 @@ ModalDetalleEmpresasApp.controller('EmpresasModalController', function EmpresasM
 			$scope.IntNumUsuarios = response.data[0].IntNumUsuarios;
 			$scope.IntAcuseTacito = response.data[0].IntAcuseTacito;
 			$scope.IntEmailRecepcion = (response.data[0].IntEmailRecepcion)?"SI":"NO";
-			$scope.Version =(response.data[0].VersionDIAN==2)?'VERSIÓN VALIDACIÓN PREVIA':'VERSIÓN 1';
+			$scope.Version = (response.data[0].VersionDIAN == 2) ? 'VERSIÓN VALIDACIÓN PREVIA' : 'VERSIÓN 1';
+			$scope.IntTipoPlan = (response.data[0].IntTipoPlan == 0) ? 'Aplicación' : 'Suscripción';
 			$scope.Firma = (response.data[0].IntCertFirma == 0) ? 'HGI SAS' : 'FACTURADOR';
 			
 

@@ -47,9 +47,11 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 						LblNombreUsuarioDet.InnerText = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
 						lblEmailUsuario.InnerText = datos_usuario.StrMail;
 						LblNombreUsuario.InnerText = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
-
-
-
+						
+						if (datos_empresa.IntTipoPlan == 1)
+						{
+							btnActivaPlan.Visible = false;
+						}	
 
 						//  if (PermisoActual != null)
 						//{

@@ -6,8 +6,8 @@
 <head runat="server">
 	<title></title>
 
-	<script src="../../Scripts/config.js?vjs20220317"></script>
-	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs20220317"></script>
+	<script src="../../Scripts/config.js?vjs20220511"></script>
+	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs20220511"></script>
 
 	<style type="text/css">
 		#outlook a {
@@ -264,6 +264,10 @@
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">versión:</td>
 																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{Version}}</td>
+																							</tr>
+																							<tr>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">TipoPlan:</td>
+																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{IntTipoPlan}}</td>
 																							</tr>
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Firma:</td>

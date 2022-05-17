@@ -79,6 +79,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 138.
+        /// </summary>
+        internal static string ActivarPlan {
+            get {
+                return ResourceManager.GetString("ActivarPlan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1362.
         /// </summary>
         internal static string AcusePendienteRecepcion {

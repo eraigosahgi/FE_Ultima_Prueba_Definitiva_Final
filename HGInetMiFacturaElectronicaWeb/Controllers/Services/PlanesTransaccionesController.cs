@@ -69,7 +69,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Facturador = d.StrEmpresaFacturador,
 					CodCompra = d.IntTipoProceso,
 					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0,
-					TipoDoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocPlanes>(d.IntTipoDocumento))
+					TipoDoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocPlanes>(d.IntTipoDocumento)),
+					DocRef = (d.DocumentoRef == "" || d.DocumentoRef == null) ? "0" : d.DocumentoRef
 				});
 
 				return Ok(retorno);
@@ -518,13 +519,18 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		public class ObjListaPlanes
 		{
-			public int plan { get; set; }
+			public List<ObjPlan> Plan { get; set; }
+
+		}
+
+		public class ObjPlan
+		{
+			public int Idplan { get; set; }
 			public int desde { get; set; }
 			public int hasta { get; set; }
 			public int cantidad { get; set; }
 			public decimal valor { get; set; }
 		}
-
 
 		[HttpGet]
 		[Route("api/ObtenerPlanesCompra")]
@@ -536,18 +542,84 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-				string ruta_json = string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.nombre_json_Planes);
+				string ruta_json = string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.nombre_json_planes);
+				//string objeto = Constantes.obj_json_Planes;
 
-				List<ObjListaPlanes> objeto_planes = new List<ObjListaPlanes>();
+				//List<ObjListaPlanes> objeto_planes = new List<ObjListaPlanes>();
 				string objeto = System.IO.File.ReadAllText(ruta_json).ToString();
-				objeto_planes = JsonConvert.DeserializeObject<List<ObjListaPlanes>>(objeto);
+				ObjListaPlanes objeto_planes = JsonConvert.DeserializeObject<ObjListaPlanes>(objeto);
+
+				var datos_retorno = objeto_planes.Plan.Select(d => new
+				{
+					ClavePrimaria = string.Format("{0}-{1}", d.Idplan, Sesion.DatosEmpresa.StrIdentificacion),
+					d.Idplan,
+					Titulo = string.Format("Plan {0}", d.Idplan),
+					Valorund = d.valor,
+					Estado = 1,
+					Desde = d.desde,
+					Hasta = d.hasta,
+					TipoDescDoc = "Documento",
+					NitEmpresa = Sesion.DatosEmpresa.StrIdentificacion,
+					RazonSocial = Sesion.DatosEmpresa.StrRazonSocial,
+					Administrador = (Sesion.DatosEmpresa.IntAdministrador) ? true : false,
+					
+					IdSeguridad = "",//d.StrIdSeguridad,
+				});
+
+				return Ok(datos_retorno);
 
 
-				return Ok(objeto_planes);
+				//return Ok(objeto_planes);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				return Ok();
+			}
+
+		}
+
+		[HttpPost]
+		[Route("api/ComprarPlan")]
+		public IHttpActionResult ComprarPlan(int cantidad, decimal valor_unit, decimal valor_total, int tipo_doc)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				string Facturador = Sesion.DatosEmpresa.StrIdentificacion;
+
+				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
+
+				TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
+				ObjPlanTransacciones.IntTipoProceso = Convert.ToByte(TipoCompra.Compra.GetHashCode());
+				ObjPlanTransacciones.StrEmpresaUsuario = Sesion.DatosEmpresa.StrIdentificacion;
+				ObjPlanTransacciones.StrUsuario = Sesion.DatosUsuario.StrUsuario;
+				ObjPlanTransacciones.IntNumTransaccCompra = cantidad;
+				ObjPlanTransacciones.IntNumTransaccProcesadas = 0;
+				ObjPlanTransacciones.IntValor = valor_total;
+				ObjPlanTransacciones.IntEstado = EstadoPlan.Habilitado.GetHashCode();
+				ObjPlanTransacciones.StrObservaciones = "Pendiente por Facturar";
+				ObjPlanTransacciones.StrEmpresaFacturador = Sesion.DatosEmpresa.StrIdentificacion;
+				ObjPlanTransacciones.DocumentoRef = "-1";
+				ObjPlanTransacciones.IntMesesVence = 12;
+				ObjPlanTransacciones.IntTipoDocumento = tipo_doc;
+
+				if (tipo_doc > 0)
+				{
+					Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+					List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.ObtenerPlanesMixto(ObjPlanTransacciones.StrEmpresaFacturador);
+
+					if (datos != null && datos.Count > 0)
+						return Ok("El Facturador Electrónico tiene registrado otro plan como Mixto, realice el ajuste de ese plan y a continuacion genere este nuevo plan");
+				}
+
+				clase_planes.Crear(ObjPlanTransacciones, false);
+
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return Ok(ex.Message);
 			}
 
 		}

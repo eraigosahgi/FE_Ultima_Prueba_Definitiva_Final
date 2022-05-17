@@ -490,6 +490,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntInteroperabilidad = empresa.IntInteroperabilidad;
 					EmpresaActualiza.StrSerialCloudServices = empresa.StrSerialCloudServices;
 					EmpresaActualiza.IntRadian = empresa.IntRadian;
+					EmpresaActualiza.IntTipoPlan = empresa.IntTipoPlan;
+					EmpresaActualiza.IntCompraPlan = empresa.IntTipoPlan == 0 ? true : false;
 
 					#region Certificado
 					EmpresaActualiza.IntCertFirma = empresa.IntCertFirma;

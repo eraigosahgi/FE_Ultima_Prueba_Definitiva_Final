@@ -300,6 +300,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Admin = d.IntAdministrador,
 				telefono = d.StrTelefono,
 				VersionDIAN = d.IntVersionDian,
+				d.IntTipoPlan,
 				Proc_Email = d.IntMailAdminVerificado,
 				Proc_MailEnvio = d.IntMailEnvioVerificado,
 				Proc_MailRecepcion = d.IntMailRecepcionVerificado,
@@ -400,6 +401,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntDebug = ObjEmpresa.IntDebug;
 				Empresa.IntInteroperabilidad = ObjEmpresa.IntInteroperabilidad;
 				Empresa.IntRadian = ObjEmpresa.IntRadian;
+				Empresa.IntTipoPlan = ObjEmpresa.IntTipoPlan;
+				Empresa.IntCompraPlan = ObjEmpresa.IntTipoPlan == 0 ? true : false; 
 
 				#region Certificado
 				Empresa.IntCertFirma = ObjEmpresa.IntCertFirma;
