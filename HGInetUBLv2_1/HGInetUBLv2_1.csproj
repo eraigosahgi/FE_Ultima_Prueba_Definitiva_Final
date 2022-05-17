@@ -1572,7 +1572,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Nomina\Scheme\CCTS_CCT_SchemaModule-2.1.xsd">
       <SubType>Designer</SubType>
     </None>
