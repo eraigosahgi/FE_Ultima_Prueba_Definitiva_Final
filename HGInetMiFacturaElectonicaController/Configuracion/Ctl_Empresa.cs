@@ -1702,6 +1702,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				{
 					tbl_empresa.IntHabilitacion = empresa.FacturaE == true ? Convert.ToByte(Habilitacion.Pruebas.GetHashCode()) : Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode());
 					tbl_empresa.IntHabilitacionNomina = empresa.NominaE == true ? Convert.ToByte(Habilitacion.Pruebas.GetHashCode()) : tbl_empresa.IntHabilitacionNomina;
+					tbl_empresa.IntTipoPlan = 1;
+					tbl_empresa.IntCompraPlan = false;
 					
 				}
 
