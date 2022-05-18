@@ -25,7 +25,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsdl:import namespace="HGInetFacturaElectronica.ServiciosWcf" location="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc?wsdl=wsdl0" />
+  <wsdl:import namespace="HGInetFacturaElectronica.ServiciosWcf" location="https://habilitacion.hgidocs.co/wcf/factura.svc?wsdl=wsdl0" />
   <wsdl:types />
   <wsdl:binding name="soap" type="i0:ServicioFactura">
     <wsp:PolicyReference URI="#soap_policy" />
@@ -90,7 +90,7 @@
   </wsdl:binding>
   <wsdl:service name="factura">
     <wsdl:port name="soap" binding="tns:soap">
-      <soap:address location="https://habilitacion.mifacturaenlinea.com.co/wcf/factura.svc" />
+      <soap:address location="https://habilitacion.hgidocs.co/wcf/factura.svc" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

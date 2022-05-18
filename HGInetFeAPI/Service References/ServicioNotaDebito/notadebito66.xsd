@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" />
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/notadebito.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+  <xs:import schemaLocation="https://habilitacion.hgidocs.co/wcf/notadebito.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" />
+  <xs:import schemaLocation="https://habilitacion.hgidocs.co/wcf/notadebito.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="https://habilitacion.hgidocs.co/wcf/notadebito.svc?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="https://habilitacion.hgidocs.co/wcf/notadebito.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
   <xs:complexType name="ArrayOfNotaDebito">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="NotaDebito" nillable="true" type="tns:NotaDebito" />
@@ -140,6 +140,8 @@
   <xs:element name="ArrayOfDocumentoDetalle" nillable="true" type="tns:ArrayOfDocumentoDetalle" />
   <xs:complexType name="DocumentoDetalle">
     <xs:sequence>
+      <xs:element minOccurs="0" name="AgrupacionCod" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="AgrupacionDesc" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Aiu" type="xs:int" />
       <xs:element minOccurs="0" name="BaseImpuestoIva" type="xs:decimal" />
       <xs:element minOccurs="0" name="Bodega" nillable="true" type="xs:string" />

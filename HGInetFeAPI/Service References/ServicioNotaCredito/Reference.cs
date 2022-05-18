@@ -2004,6 +2004,12 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AgrupacionCodField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string AgrupacionDescField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int AiuField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -2103,6 +2109,32 @@ namespace HGInetFeAPI.ServicioNotaCredito {
             }
             set {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string AgrupacionCod {
+            get {
+                return this.AgrupacionCodField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AgrupacionCodField, value) != true)) {
+                    this.AgrupacionCodField = value;
+                    this.RaisePropertyChanged("AgrupacionCod");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string AgrupacionDesc {
+            get {
+                return this.AgrupacionDescField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AgrupacionDescField, value) != true)) {
+                    this.AgrupacionDescField = value;
+                    this.RaisePropertyChanged("AgrupacionDesc");
+                }
             }
         }
         

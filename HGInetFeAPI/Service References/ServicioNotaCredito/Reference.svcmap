@@ -21,18 +21,18 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://habilitacion.hgidocs.co/wcf/notacredito.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="notacredito.disco" MetadataType="Disco" ID="11da5960-8adf-4a8f-8262-60bdd3295d8d" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?disco" />
-    <MetadataFile FileName="notacredito.wsdl" MetadataType="Wsdl" ID="5edcfd3f-a81d-402d-8a5e-107a6ed1a15b" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?wsdl" />
-    <MetadataFile FileName="notacredito.xsd" MetadataType="Schema" ID="1270439d-52c3-42d3-ad54-becaa7ad5825" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd4" />
-    <MetadataFile FileName="notacredito1.xsd" MetadataType="Schema" ID="085e70a8-1ae8-4570-a0c5-eaa5451ddb9a" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd3" />
-    <MetadataFile FileName="notacredito2.xsd" MetadataType="Schema" ID="1aaef658-5729-45cc-80f5-a62d73f6596a" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd5" />
-    <MetadataFile FileName="notacredito1.wsdl" MetadataType="Wsdl" ID="3d3d732a-632e-45f2-a8a4-d8f88a524812" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?wsdl=wsdl0" />
-    <MetadataFile FileName="notacredito3.xsd" MetadataType="Schema" ID="61261c4b-85ef-40a2-bff4-6c3819bc6f08" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd0" />
-    <MetadataFile FileName="notacredito4.xsd" MetadataType="Schema" ID="bd7aa1b4-6e95-4cfa-abce-717b72f3e359" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd1" />
-    <MetadataFile FileName="notacredito5.xsd" MetadataType="Schema" ID="ae11640e-ae3c-4cd5-967a-dec03dfd5666" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/notacredito.svc?xsd=xsd2" />
+    <MetadataFile FileName="notacredito66.xsd" MetadataType="Schema" ID="fba5cc92-c4a7-4c0e-bcbf-9b42576196bc" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/notacredito.svc?xsd=xsd1" />
+    <MetadataFile FileName="notacredito22.wsdl" MetadataType="Wsdl" ID="2e69e888-dbe5-46c4-9b3b-e837af25b89b" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/notacredito.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="notacredito23.wsdl" MetadataType="Wsdl" ID="85c3091a-ebea-40b9-bd55-42403c83bf7a" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/notacredito.svc?wsdl" />
+    <MetadataFile FileName="notacredito67.xsd" MetadataType="Schema" ID="04969467-3950-493d-be4b-75fe22d8d5fc" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/notacredito.svc?xsd=xsd4" />
+    <MetadataFile FileName="notacredito11.disco" MetadataType="Disco" ID="271e9561-d12d-42f5-9682-77cb98132ffd" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/notacredito.svc?disco" />
+    <MetadataFile FileName="notacredito68.xsd" MetadataType="Schema" ID="1a2cd572-973f-4134-b4ca-9721f8ac9d7d" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/notacredito.svc?xsd=xsd2" />
+    <MetadataFile FileName="notacredito69.xsd" MetadataType="Schema" ID="0884d513-3d46-4122-8f3c-d87ad750c53f" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/notacredito.svc?xsd=xsd0" />
+    <MetadataFile FileName="notacredito610.xsd" MetadataType="Schema" ID="2c7835be-903c-4e62-ad6f-a5162e23c9cc" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/notacredito.svc?xsd=xsd5" />
+    <MetadataFile FileName="notacredito611.xsd" MetadataType="Schema" ID="eb3ef8b3-84ed-42d2-be38-02148dec90a6" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/notacredito.svc?xsd=xsd3" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
