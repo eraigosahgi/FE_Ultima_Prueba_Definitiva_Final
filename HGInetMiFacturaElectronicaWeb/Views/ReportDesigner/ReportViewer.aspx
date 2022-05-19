@@ -8,7 +8,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-	<title>HGIDocs</title>
+	<title>HGIDocs: Facturación Electrónica</title>
 </head>
 <body>
 
