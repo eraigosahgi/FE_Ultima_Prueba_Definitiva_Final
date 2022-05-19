@@ -36,7 +36,7 @@
 								<img src="../../Scripts/Images/FormatoXML.png" class="img-responsive" style="width: 40%; display: block; margin-left: auto; margin-right: auto;" />
 							</div>
 							<div style="margin-top: 13%">
-								<label class="no-margin text-size-large text-semibold">Valor Und: </label>
+								<label class="no-margin text-size-large text-semibold">Valor Und: $</label>
 								<label class="no-margin text-size-large">{{datos.Valorund}}</label><br />
 							</div>
 						</div>
