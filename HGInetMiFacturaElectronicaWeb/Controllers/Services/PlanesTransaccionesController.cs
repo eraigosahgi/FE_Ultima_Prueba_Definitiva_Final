@@ -592,7 +592,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
 
-				if (Sesion.DatosEmpresa.IntCompraPlan == true)
+				TblPlanesTransacciones postpago = clase_planes.Obtener(Sesion.DatosEmpresa.StrIdentificacion).FirstOrDefault(x => x.IntEstado == 0 && x.IntTipoProceso == 3);
+
+				if (Sesion.DatosEmpresa.IntCompraPlan == true && postpago == null)
 				{
 					TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
 					ObjPlanTransacciones.IntTipoProceso = Convert.ToByte(TipoCompra.Compra.GetHashCode());
@@ -620,6 +622,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					clase_planes.Crear(ObjPlanTransacciones, false);
 
 					return Ok();
+				}
+				else if(postpago != null)
+				{
+					return Ok("El Facturador Electrónico tiene registrado un plan Postpago que no le permite activar uno nuevo. Cualquier duda comunicarse con nuestra area de Soporte");
 				}
 				else
 				{
