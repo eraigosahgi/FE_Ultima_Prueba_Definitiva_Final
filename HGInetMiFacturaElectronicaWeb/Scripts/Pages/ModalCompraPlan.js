@@ -5,7 +5,7 @@
 GestionCompraPlanesApp.controller('ModalComprarPlanController', function ModalComprarPlanController($scope, $http, $rootScope) {
 
 	$("#BtnComprar").dxButton({
-		text: "Comprar",
+		text: "Activar",
 		type: "default",
 		useSubmitBehavior: true
 	});
@@ -18,7 +18,6 @@ GestionCompraPlanesApp.controller('ModalComprarPlanController', function ModalCo
 
 	function GuardarCompra() {
 		
-		//AlmacenarFormatoPdf(string identificacion_empresa, bool estado, bool categoria, string observaciones, int formato_base, string empresa_base)
 		$http.post('/api/ComprarPlan?cantidad=' + $scope.cantidad + '&valor_unit=' + $scope.Valor_Unit + '&valor_total=' + $scope.Valor_Total + '&tipo_doc=' + $scope.tipo_documento).then(function (response) {
 			$("#wait").hide();
 			try {

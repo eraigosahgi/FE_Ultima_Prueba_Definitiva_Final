@@ -7,7 +7,7 @@
     <title></title>
 </head>
 <body>    
-	<%--<script src="../../Scripts/Pages/ModalCompraPlan.js?vjs20220401"></script>--%>
+	<script src="../../Scripts/Pages/ModalCompraPlan.js?vjs20220401"></script>
 	<form id="FormularioCompraPlan">
 		<div id="modal_comprar_plan" class="modal fade" style="display: none;">
 			<div class="modal-dialog">

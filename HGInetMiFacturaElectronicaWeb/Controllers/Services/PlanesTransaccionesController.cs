@@ -584,38 +584,48 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			try
 			{
+				//RegistroLog.EscribirLog(new ApplicationException("Llega a la API"), MensajeCategoria.Servicio, MensajeTipo.Exito, MensajeAccion.lectura, "Llega a la API");
+
 				Sesion.ValidarSesion();
 
 				string Facturador = Sesion.DatosEmpresa.StrIdentificacion;
 
 				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
 
-				TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
-				ObjPlanTransacciones.IntTipoProceso = Convert.ToByte(TipoCompra.Compra.GetHashCode());
-				ObjPlanTransacciones.StrEmpresaUsuario = Sesion.DatosEmpresa.StrIdentificacion;
-				ObjPlanTransacciones.StrUsuario = Sesion.DatosUsuario.StrUsuario;
-				ObjPlanTransacciones.IntNumTransaccCompra = cantidad;
-				ObjPlanTransacciones.IntNumTransaccProcesadas = 0;
-				ObjPlanTransacciones.IntValor = valor_total;
-				ObjPlanTransacciones.IntEstado = EstadoPlan.Habilitado.GetHashCode();
-				ObjPlanTransacciones.StrObservaciones = "Pendiente por Facturar";
-				ObjPlanTransacciones.StrEmpresaFacturador = Sesion.DatosEmpresa.StrIdentificacion;
-				ObjPlanTransacciones.DocumentoRef = "-1";
-				ObjPlanTransacciones.IntMesesVence = 12;
-				ObjPlanTransacciones.IntTipoDocumento = tipo_doc;
-
-				if (tipo_doc > 0)
+				if (Sesion.DatosEmpresa.IntCompraPlan == true)
 				{
-					Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
-					List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.ObtenerPlanesMixto(ObjPlanTransacciones.StrEmpresaFacturador);
+					TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
+					ObjPlanTransacciones.IntTipoProceso = Convert.ToByte(TipoCompra.Compra.GetHashCode());
+					ObjPlanTransacciones.StrEmpresaUsuario = Sesion.DatosEmpresa.StrIdentificacion;
+					ObjPlanTransacciones.StrUsuario = Sesion.DatosUsuario.StrUsuario;
+					ObjPlanTransacciones.IntNumTransaccCompra = cantidad;
+					ObjPlanTransacciones.IntNumTransaccProcesadas = 0;
+					ObjPlanTransacciones.IntValor = valor_total;
+					ObjPlanTransacciones.IntEstado = EstadoPlan.Habilitado.GetHashCode();
+					ObjPlanTransacciones.StrObservaciones = "Pendiente por Facturar";
+					ObjPlanTransacciones.StrEmpresaFacturador = Sesion.DatosEmpresa.StrIdentificacion;
+					ObjPlanTransacciones.DocumentoRef = "-1";
+					ObjPlanTransacciones.IntMesesVence = 12;
+					ObjPlanTransacciones.IntTipoDocumento = tipo_doc;
 
-					if (datos != null && datos.Count > 0)
-						return Ok("El Facturador Electrónico tiene registrado otro plan como Mixto, realice el ajuste de ese plan y a continuacion genere este nuevo plan");
+					if (tipo_doc > 0)
+					{
+						Ctl_PlanesTransacciones ctl_PlanesTransacciones = new Ctl_PlanesTransacciones();
+						List<TblPlanesTransacciones> datos = ctl_PlanesTransacciones.ObtenerPlanesMixto(ObjPlanTransacciones.StrEmpresaFacturador);
+
+						if (datos != null && datos.Count > 0)
+							return Ok("El Facturador Electrónico tiene registrado otro plan como Mixto, realice el ajuste de ese plan y a continuacion genere este nuevo plan");
+					}
+
+					clase_planes.Crear(ObjPlanTransacciones, false);
+
+					return Ok();
+				}
+				else
+				{
+					return Ok("El Facturador Electrónico tiene registrado un tipo de plan que no le permite activar uno nuevo. Cualquier duda comunicarse con nuestra area de Soporte");
 				}
 
-				clase_planes.Crear(ObjPlanTransacciones, false);
-
-				return Ok();
 			}
 			catch (Exception ex)
 			{

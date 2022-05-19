@@ -1902,6 +1902,7 @@
     <Content Include="Scripts\Images\Autenticacion4.jpg" />
     <Content Include="Scripts\Images\Autenticacion5.jpg" />
     <Content Include="Scripts\Images\FormatoPDF.png" />
+    <Content Include="Scripts\Images\FormatoXML.png" />
     <Content Include="Scripts\Images\GANA.png" />
     <Content Include="Scripts\Images\ImgIndexLogos.png" />
     <Content Include="Scripts\Images\LogoHGI.png" />
