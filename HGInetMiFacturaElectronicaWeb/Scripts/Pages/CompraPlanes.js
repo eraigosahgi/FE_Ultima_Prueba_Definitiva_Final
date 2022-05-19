@@ -95,11 +95,13 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 		});
 
 		$("#txtValUni").dxNumberBox({
+			format: "$ #,##0",
 			value: Valor_Unit,
 			readOnly: true
 		});
 
 		$("#txtTotal").dxNumberBox({
+			format: "$ #,##0",
 			value: Desde * Valor_Unit,
 			readOnly: true
 		});
@@ -144,8 +146,8 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 	var TiposDocumento =
 		[
 			{ ID: "0", Texto: 'Mixto' },
-			{ ID: "1", Texto: 'Documento' },
-			{ ID: "2", Texto: 'Nomina' }
+			{ ID: "1", Texto: 'Factura Electrónica' },
+			{ ID: "2", Texto: 'Nomina Electrónica' }
 		];
 
 });
