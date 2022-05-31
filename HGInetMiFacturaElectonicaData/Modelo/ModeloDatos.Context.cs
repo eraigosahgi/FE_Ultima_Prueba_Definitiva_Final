@@ -48,5 +48,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public virtual DbSet<QryEmpleados> QryEmpleados { get; set; }
         public virtual DbSet<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
         public virtual DbSet<TblEventosRadian> TblEventosRadian { get; set; }
+        public virtual DbSet<TblAlmacenamientoDocs> TblAlmacenamientoDocs { get; set; }
     }
 }

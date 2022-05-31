@@ -22,6 +22,18 @@
           <Property Name="IntSms" Type="bit" Nullable="false" />
           <Property Name="IntUsuario" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="TblAlmacenamientoDocs">
+          <Key>
+            <PropertyRef Name="StrIdSeguridadDoc" />
+            <PropertyRef Name="IntConsecutivo" />
+          </Key>
+          <Property Name="StrIdSeguridadDoc" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IntConsecutivo" Type="int" Nullable="false" />
+          <Property Name="StrUrlAnterior" Type="varchar" MaxLength="400" Nullable="false" />
+          <Property Name="StrUrlActual" Type="varchar" MaxLength="400" Nullable="false" />
+          <Property Name="DatFechaRegistroDoc" Type="datetime" Nullable="false" />
+          <Property Name="DatFechaSincronizacion" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="TblConfiguracionInteroperabilidad">
           <Key>
             <PropertyRef Name="StrIdentificacion" />
@@ -492,6 +504,18 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="StrEmpresaAdquiriente" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrRazonSocial" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
+        <Association Name="FK_TblAlmacenamientoDocs_TblDocumentos">
+          <End Role="TblDocumentos" Type="Self.TblDocumentos" Multiplicity="1" />
+          <End Role="TblAlmacenamientoDocs" Type="Self.TblAlmacenamientoDocs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblDocumentos">
+              <PropertyRef Name="StrIdSeguridad" />
+            </Principal>
+            <Dependent Role="TblAlmacenamientoDocs">
+              <PropertyRef Name="StrIdSeguridadDoc" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Role="TblConfiguracionInteroperabilidad" Type="Self.TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
           <End Role="TblDocumentos" Type="Self.TblDocumentos" Multiplicity="*" />
@@ -766,6 +790,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
         </Association>
         <EntityContainer Name="ModeloStoreContainer">
           <EntitySet Name="TblAlertas" EntityType="Self.TblAlertas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblAlmacenamientoDocs" EntityType="Self.TblAlmacenamientoDocs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblConfiguracionInteroperabilidad" EntityType="Self.TblConfiguracionInteroperabilidad" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblCorreosRecepcion" EntityType="Self.TblCorreosRecepcion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblDocumentos" EntityType="Self.TblDocumentos" Schema="dbo" store:Type="Tables" />
@@ -822,6 +847,10 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
     [QryEmpleados].[StrRazonSocial] AS [StrRazonSocial]
     FROM [dbo].[QryEmpleados] AS [QryEmpleados]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_TblAlmacenamientoDocs_TblDocumentos" Association="Self.FK_TblAlmacenamientoDocs_TblDocumentos">
+            <End Role="TblDocumentos" EntitySet="TblDocumentos" />
+            <End Role="TblAlmacenamientoDocs" EntitySet="TblAlmacenamientoDocs" />
+          </AssociationSet>
           <AssociationSet Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor" Association="Self.FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
             <End Role="TblConfiguracionInteroperabilidad" EntitySet="TblConfiguracionInteroperabilidad" />
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
@@ -1026,6 +1055,11 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <AssociationSet Name="FK_TblEventosRadian_TblDocumentos" Association="Modelo.FK_TblEventosRadian_TblDocumentos">
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
             <End Role="TblEventosRadian" EntitySet="TblEventosRadian" />
+          </AssociationSet>
+          <EntitySet Name="TblAlmacenamientoDocs" EntityType="Modelo.TblAlmacenamientoDocs" />
+          <AssociationSet Name="FK_TblAlmacenamientoDocs_TblDocumentos" Association="Modelo.FK_TblAlmacenamientoDocs_TblDocumentos">
+            <End Role="TblDocumentos" EntitySet="TblDocumentos" />
+            <End Role="TblAlmacenamientoDocs" EntitySet="TblAlmacenamientoDocs" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
@@ -1328,6 +1362,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <NavigationProperty Name="TblPlanesTransacciones" Relationship="Modelo.FK_TblDocumentos_TblPlanesTransacciones" FromRole="TblDocumentos" ToRole="TblPlanesTransacciones" />
           <NavigationProperty Name="TblEventosRadian" Relationship="Modelo.FK_TblEventosRadian_TblDocumentos" FromRole="TblDocumentos" ToRole="TblEventosRadian" />
           <Property Name="IntFormaPago" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="TblAlmacenamientoDocs" Relationship="Modelo.FK_TblAlmacenamientoDocs_TblDocumentos" FromRole="TblDocumentos" ToRole="TblAlmacenamientoDocs" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Type="Modelo.TblConfiguracionInteroperabilidad" Role="TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
@@ -1825,6 +1860,31 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TblAlmacenamientoDocs">
+          <Key>
+            <PropertyRef Name="StrIdSeguridadDoc" />
+            <PropertyRef Name="IntConsecutivo" />
+          </Key>
+          <Property Name="StrIdSeguridadDoc" Type="Guid" Nullable="false" />
+          <Property Name="IntConsecutivo" Type="Int32" Nullable="false" />
+          <Property Name="StrUrlAnterior" Type="String" Nullable="false" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="StrUrlActual" Type="String" Nullable="false" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="DatFechaRegistroDoc" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DatFechaSincronizacion" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblAlmacenamientoDocs_TblDocumentos" FromRole="TblAlmacenamientoDocs" ToRole="TblDocumentos" />
+        </EntityType>
+        <Association Name="FK_TblAlmacenamientoDocs_TblDocumentos">
+          <End Type="Modelo.TblDocumentos" Role="TblDocumentos" Multiplicity="1" />
+          <End Type="Modelo.TblAlmacenamientoDocs" Role="TblAlmacenamientoDocs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblDocumentos">
+              <PropertyRef Name="StrIdSeguridad" />
+            </Principal>
+            <Dependent Role="TblAlmacenamientoDocs">
+              <PropertyRef Name="StrIdSeguridadDoc" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2303,6 +2363,18 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
                 <ScalarProperty Name="DatFechaEvento" ColumnName="DatFechaEvento" />
                 <ScalarProperty Name="IntEstadoEvento" ColumnName="IntEstadoEvento" />
                 <ScalarProperty Name="IntNumeroEvento" ColumnName="IntNumeroEvento" />
+                <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblAlmacenamientoDocs">
+            <EntityTypeMapping TypeName="Modelo.TblAlmacenamientoDocs">
+              <MappingFragment StoreEntitySet="TblAlmacenamientoDocs">
+                <ScalarProperty Name="DatFechaSincronizacion" ColumnName="DatFechaSincronizacion" />
+                <ScalarProperty Name="DatFechaRegistroDoc" ColumnName="DatFechaRegistroDoc" />
+                <ScalarProperty Name="StrUrlActual" ColumnName="StrUrlActual" />
+                <ScalarProperty Name="StrUrlAnterior" ColumnName="StrUrlAnterior" />
+                <ScalarProperty Name="IntConsecutivo" ColumnName="IntConsecutivo" />
                 <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
               </MappingFragment>
             </EntityTypeMapping>

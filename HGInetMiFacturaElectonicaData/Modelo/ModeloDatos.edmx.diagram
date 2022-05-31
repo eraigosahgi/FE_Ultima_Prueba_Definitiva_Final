@@ -51,6 +51,8 @@
         <AssociationConnector Association="Modelo.FK_TblPlanesTransacciones_TblUsuarios" />
         <EntityTypeShape EntityType="Modelo.TblEventosRadian" Width="1.5" PointX="16.75" PointY="21.875" />
         <AssociationConnector Association="Modelo.FK_TblEventosRadian_TblDocumentos" />
+        <EntityTypeShape EntityType="Modelo.TblAlmacenamientoDocs" Width="1.5" PointX="17" PointY="7" />
+        <AssociationConnector Association="Modelo.FK_TblAlmacenamientoDocs_TblDocumentos" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

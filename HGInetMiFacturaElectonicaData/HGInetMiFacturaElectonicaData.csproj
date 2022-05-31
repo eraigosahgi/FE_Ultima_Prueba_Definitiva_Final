@@ -212,6 +212,9 @@
     <Compile Include="Modelo\TblAlertas.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\TblAlmacenamientoDocs.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblConfiguracionInteroperabilidad.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
