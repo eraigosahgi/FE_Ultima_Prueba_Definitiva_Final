@@ -130,5 +130,17 @@ namespace HGInetMiFacturaElectonicaData
             }
 
         }
-    }
+
+		[ConfigurationProperty("AzureStorage")]
+		public AzureStorage AzureStorage
+		{
+			get
+			{
+				AzureStorage azureStorage_tmp = this["AzureStorage"] as AzureStorage;
+
+				return azureStorage_tmp;
+			}
+
+		}
+	}
 }

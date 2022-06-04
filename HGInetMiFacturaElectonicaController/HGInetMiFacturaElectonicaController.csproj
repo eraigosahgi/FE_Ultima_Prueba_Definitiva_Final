@@ -112,6 +112,7 @@
     <Compile Include="Auditorias\MigracionAuditoria\Ctl_AuditoriaFormatos.cs" />
     <Compile Include="Auditorias\MigracionAuditoria\Ctl_AuditoriaNotificaciones.cs" />
     <Compile Include="Configuracion\Ctl_Alertas.cs" />
+    <Compile Include="Configuracion\Ctl_AlmacenamientoDocs.cs" />
     <Compile Include="Configuracion\Ctl_ConfiguracionInteroperabilidad.cs" />
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />
     <Compile Include="Configuracion\Ctl_EventosRadian.cs" />

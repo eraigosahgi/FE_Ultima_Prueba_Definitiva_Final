@@ -109,6 +109,7 @@
     <Compile Include="Enumerables\PeriodoNomina.cs" />
     <Compile Include="Enumerables\ProcesoEstado.cs" />
     <Compile Include="Enumerables\TipoAlerta.cs" />
+    <Compile Include="Enumerables\TipoArchivoStorage.cs" />
     <Compile Include="Enumerables\TipoCompra.cs" />
     <Compile Include="Enumerables\TipoDocPlanes.cs" />
     <Compile Include="Enumerables\TipoHoraNomina.cs" />
@@ -275,6 +276,7 @@
     <Compile Include="Objetos\ObjDocumentos.cs" />
     <Compile Include="Objetos\ObjEmpresa.cs" />
     <Compile Include="Objetos\ObjUsuario.cs" />
+    <Compile Include="Parametros\AzureStorage.cs" />
     <Compile Include="Parametros\CertificadoDigital.cs" />
     <Compile Include="Parametros\DataBaseServer.cs" />
     <Compile Include="Parametros\DataBaseAuditoria.cs" />

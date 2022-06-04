@@ -44,18 +44,22 @@ namespace HGInetUtilidadAzure.Almacenamiento
 		/// <param name="conexion_azure">string de conexión</param>
 		/// <param name="contenedor">nombre del contenedor</param>
 		/// <param name="timeout_minutos">indica el tiempo en minutos para el timeout</param>
-		public BlobController(string conexion_azure, string contenedor, int timeout_minutos)
+		public BlobController(string conexion_azure, string contenedor)
 		{
+			// Enable TLS 1.2 before connecting to Azure Storage
+			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
 			this.DatosCuenta = CloudStorageAccount.Parse(conexion_azure);
 			
 			this.ClienteBlob = this.DatosCuenta.CreateCloudBlobClient();
 
-			this.ContenedorBlob = this.ClienteBlob.GetContainerReference(contenedor);
+			if (!string.IsNullOrEmpty(contenedor))
+				this.ContenedorBlob = this.ClienteBlob.GetContainerReference(contenedor);
 
-			this.OpcionesBlob = new BlobRequestOptions()
-			{
-				ServerTimeout = TimeSpan.FromMinutes(timeout_minutos),	
-			};
+			//this.OpcionesBlob = new BlobRequestOptions()
+			//{
+			//	ServerTimeout = TimeSpan.FromMinutes(timeout_minutos),	
+			//};
 		}
 
 
@@ -121,6 +125,18 @@ namespace HGInetUtilidadAzure.Almacenamiento
 			// validar existencia del contenedor
 			if (!this.ContenedorBlob.Exists())
 			{
+				// asigna la metadata al contenedor
+				if (metadata != null)
+				{
+					foreach (var meta in metadata)
+					{
+						this.ContenedorBlob.Metadata.Add(meta.Key, meta.Value);
+					}
+				}
+
+				// crea el contenedor
+				this.ContenedorBlob.Create();
+
 				BlobContainerPublicAccessType tipo_permiso = BlobContainerPublicAccessType.Unknown;
 
 				if (acceso == TipoAccesoEnum.Blob)
@@ -132,16 +148,9 @@ namespace HGInetUtilidadAzure.Almacenamiento
 
 				// asigna el permiso de lectura al contenedor
 				this.ContenedorBlob.SetPermissions(new BlobContainerPermissions()
-				{	PublicAccess = tipo_permiso
+				{
+					PublicAccess = tipo_permiso
 				});
-
-				// asigna la metadata al contenedor
-				foreach (var meta in metadata)
-				{	this.ContenedorBlob.Metadata.Add(meta.Key, meta.Value);
-				}
-
-				// crea el contenedor
-				this.ContenedorBlob.Create(this.OpcionesBlob);
 
 				creo = true;
 			}
@@ -171,12 +180,16 @@ namespace HGInetUtilidadAzure.Almacenamiento
 			// obtiene la referencia al archivo
 			CloudBlockBlob blockBlobReference = this.ContenedorBlob.GetBlockBlobReference(string.Format("{0}{1}", (object)nombre, (object)extension));
 
-			// asignar propiedades al blob
-			this.SetBlobPropiedades(blockBlobReference, extension, metadata);
+			if (!blockBlobReference.Exists())
+			{
+				// asignar propiedades al blob
+				this.SetBlobPropiedades(blockBlobReference, extension, metadata);
 
-			// carga el archivo con la información en el contenedor del blob
-			blockBlobReference.UploadFromStream(source, (AccessCondition)null, (BlobRequestOptions)null, (OperationContext)null);
-			
+				// carga el archivo con la información en el contenedor del blob
+				blockBlobReference.UploadFromStream(source);
+				blockBlobReference.SetStandardBlobTierAsync(StandardBlobTier.Cool);
+			}
+
 			// retorna la url del archivo
 			return blockBlobReference.Uri.ToString();
 		}
@@ -226,17 +239,21 @@ namespace HGInetUtilidadAzure.Almacenamiento
 			// obtiene la referencia al archivo
 			CloudBlockBlob blockBlobReference = this.ContenedorBlob.GetBlockBlobReference(string.Format("{0}{1}", (object)nombre, (object)extension));
 
-			// asignar propiedades al blob
-			this.SetBlobPropiedades(blockBlobReference, extension, metadata);
+			if (!blockBlobReference.Exists())
+			{
+				// asignar propiedades al blob
+				this.SetBlobPropiedades(blockBlobReference, extension, metadata);
 
-			byte[] buffer = source;
-			
-			int length = source.Length;
+				byte[] buffer = source;
 
-			int index = 0;
-			
-			// carga el archivo con la información en el contenedor del blob
-			blockBlobReference.UploadFromByteArray(buffer, index, length, (AccessCondition)null, (BlobRequestOptions)null, (OperationContext)null);
+				int length = source.Length;
+
+				int index = 0;
+
+				// carga el archivo con la información en el contenedor del blob
+				blockBlobReference.UploadFromByteArray(buffer, index, length, (AccessCondition)null, (BlobRequestOptions)null, (OperationContext)null);
+				blockBlobReference.SetStandardBlobTierAsync(StandardBlobTier.Cool);
+			}
 			
 			// retorna la url del archivo
 			return blockBlobReference.Uri.ToString();
@@ -263,13 +280,17 @@ namespace HGInetUtilidadAzure.Almacenamiento
 			// obtiene la referencia al archivo
 			CloudBlockBlob blockBlobReference = this.ContenedorBlob.GetBlockBlobReference(string.Format("{0}{1}", nombre, extension));
 
-			// asignar propiedades al blob
-			this.SetBlobPropiedades(blockBlobReference, extension, metadata);
+			if (!blockBlobReference.Exists())
+			{
+				// asignar propiedades al blob
+				this.SetBlobPropiedades(blockBlobReference, extension, metadata);
 
-			string path = archivo_local;
+				string path = archivo_local;
 
-			// carga el archivo con la información en el contenedor del blob
-			blockBlobReference.UploadFromFile(path, (AccessCondition)null, (BlobRequestOptions)null, (OperationContext)null);
+				// carga el archivo con la información en el contenedor del blob
+				blockBlobReference.UploadFromFile(path, (AccessCondition)null, (BlobRequestOptions)null, (OperationContext)null);
+				blockBlobReference.SetStandardBlobTierAsync(StandardBlobTier.Cool);
+			}
 
 			// retorna la url del archivo
 			return blockBlobReference.Uri.ToString();

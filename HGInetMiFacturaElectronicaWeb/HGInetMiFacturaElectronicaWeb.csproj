@@ -2873,6 +2873,7 @@
     <Content Include="Views\Pages\SondadeNotificaciones.aspx" />
     <Content Include="Views\Pages\SondaDescargarCorreos.aspx" />
     <Content Include="Views\Pages\SondaDocumentosRechazados.aspx" />
+    <Content Include="Views\Pages\SondaGeneraProcesoStorage.aspx" />
     <Content Include="Views\Pages\SondaGenerarPDF.aspx" />
     <Content Include="Views\Pages\SondaObtenerCorreosDian.aspx" />
     <Content Include="Views\Pages\SondaProcesarCorreo.aspx" />
@@ -3421,6 +3422,13 @@
     </Compile>
     <Compile Include="Views\Pages\SondaDocumentosRechazados.aspx.designer.cs">
       <DependentUpon>SondaDocumentosRechazados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\SondaGeneraProcesoStorage.aspx.cs">
+      <DependentUpon>SondaGeneraProcesoStorage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\SondaGeneraProcesoStorage.aspx.designer.cs">
+      <DependentUpon>SondaGeneraProcesoStorage.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\SondaGenerarPDF.aspx.cs">
       <DependentUpon>SondaGenerarPDF.aspx</DependentUpon>
