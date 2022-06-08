@@ -5579,7 +5579,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					for (int j = 0; j <= 12; j++)
 					{
 						if  (j == 0)
+						{
 							j = mes;
+						}
+
+						fecha_inicio = new DateTime(anyo, j, 1);
 
 						DateTime fecha_fin = new DateTime(anyo, j, 1).AddMonths(1).AddDays(-1);
 
