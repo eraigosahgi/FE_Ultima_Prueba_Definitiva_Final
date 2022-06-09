@@ -239,7 +239,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 				},
 				columnAutoWidth: true,
 				stateStoring: {
-					enabled: true,
+					enabled: false,
 					type: 'localStorage',
 					storageKey: 'storageConsultarDocumentosAdquirientes',
 				},

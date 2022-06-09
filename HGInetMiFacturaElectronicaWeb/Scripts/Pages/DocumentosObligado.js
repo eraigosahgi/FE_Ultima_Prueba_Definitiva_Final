@@ -258,7 +258,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			}
 	,
 			stateStoring: {
-				enabled: true,
+				enabled: false,
 				type: 'localStorage',
 				storageKey: 'storageObligado',
 			},

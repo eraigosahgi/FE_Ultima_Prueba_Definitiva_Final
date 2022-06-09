@@ -186,7 +186,7 @@ App.controller('AcuseConsultaController', function AcuseConsultaController($scop
 				}
 	,
 				stateStoring: {
-					enabled: true,
+					enabled: false,
 					type: 'localStorage',
 					storageKey: 'storageConsultarAcuse',
 				},

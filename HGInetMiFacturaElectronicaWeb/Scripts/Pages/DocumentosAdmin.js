@@ -239,7 +239,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				useNative: "auto"
 			},
 			stateStoring: {
-				enabled: true,
+				enabled: false,
 				type: 'localStorage',
 				storageKey: 'storageConsultarDocumentosAdmin',
 			},
