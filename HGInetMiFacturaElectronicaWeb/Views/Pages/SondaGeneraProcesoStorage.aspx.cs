@@ -19,7 +19,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			if (Request.QueryString["Anyo"] != null)
 				Int32.TryParse(Request.QueryString["Anyo"], out anyo);
 			else
-				anyo = 2021;
+				anyo = 2018;
 
 			//int mes = 0;
 

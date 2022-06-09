@@ -5838,8 +5838,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									}
 
 									//Se actualiza el documento en bd con los cambios en url
-									//if (actualizarbd_doc == true)
-									//Actualizar(item);
+									if (actualizarbd_doc == true)
+										Actualizar(item);
 
 
 									Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
@@ -5883,8 +5883,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 													var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, url_evento, ruta_blob_acuse);
 												}
 
-												//if (actualizarbd_eve == true)
-												//	ctl_evento.Actualizar(item_eve);
+												if (actualizarbd_eve == true)
+													ctl_evento.Actualizar(item_eve);
 
 											}
 
@@ -5904,7 +5904,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					//Se envia notificacion a tic para indicar que termino de importar el rango especificado
 					List<string> mensajes = new List<string>();
-					mensajes.Add(string.Format("Termino de subir Archivos a Azure: Año {0} - Mes {1}", anyo, mes));
+					mensajes.Add(string.Format("Termino de subir Archivos a Azure: Año: {0} - Fecha terminacion: {1}", anyo, Fecha.GetFecha()));
 					try
 					{
 						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
