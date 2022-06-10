@@ -5571,7 +5571,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					if (ultimo_registro != null)
 					{
-						mes = ultimo_registro.DatFechaRegistroDoc.Month;
+						if (ultimo_registro.DatFechaRegistroDoc.Year == anyo)
+							mes = ultimo_registro.DatFechaRegistroDoc.Month;
 					}
 
 					DateTime fecha_inicio = new DateTime(anyo, 1, 1);
@@ -5845,7 +5846,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									}
 									catch (Exception excepcion)
 									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Actualizando documento en BD");
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Actualizando documento en BD, Facturador:{0} - Prefijo:{1} - Doc:{2} ", item.StrEmpresaFacturador,item.StrPrefijo, item.IntNumero));
 									}
 
 
@@ -5897,7 +5898,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 												}
 												catch (Exception excepcion)
 												{
-													RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Actualizando Evento del documento en BD");
+													RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Actualizando Evento del documento en BD, IdSegDoc:{0} - NumEven:{1}", item_eve.StrIdSeguridadDoc, item_eve.IntNumeroEvento));
 												}
 
 											}

@@ -489,7 +489,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntDebug = empresa.IntDebug;
 					EmpresaActualiza.IntInteroperabilidad = empresa.IntInteroperabilidad;
 					EmpresaActualiza.StrSerialCloudServices = empresa.StrSerialCloudServices;
-					EmpresaActualiza.IntRadian = empresa.IntRadian;
 					EmpresaActualiza.IntTipoPlan = empresa.IntTipoPlan;
 					EmpresaActualiza.IntCompraPlan = empresa.IntTipoPlan == 0 ? true : false;
 
@@ -531,6 +530,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				}
 
+				EmpresaActualiza.IntRadian = empresa.IntRadian;
 				EmpresaActualiza.IntAcuseTacito = (empresa.IntRadian == true && EmpresaActualiza.IntAcuseTacito < 72) ? empresa.IntAcuseTacito : EmpresaActualiza.IntAcuseTacito; //empresa.IntAcuseTacito;
 				EmpresaActualiza.IntEnvioNominaMail = empresa.IntEnvioNominaMail;
 
@@ -1762,30 +1762,27 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					tbl_empresa = Editar(tbl_empresa, true, ListaEmailRegistro);
 
-					if (crear_plan == true)
+					Ctl_PlanesTransacciones ctl_plan = new Ctl_PlanesTransacciones();
+					List<TblPlanesTransacciones> list_plan = ctl_plan.Obtener(empresa.Identificacion, TipoCompra.Cortesia.GetHashCode().ToString(), EstadoPlan.Habilitado.GetHashCode().ToString(), 1, Fecha.GetFecha().AddYears(-1), Fecha.GetFecha().AddDays(1));
+
+					TblPlanesTransacciones plan_prueba_activo = list_plan.Where(x => x.IntEstado == 0 && x.DatFechaVencimiento >= Fecha.GetFecha().AddMonths(1)).FirstOrDefault();
+
+					if (crear_plan == true || plan_prueba_activo == null)
 					{
 						try
 						{
-							Ctl_PlanesTransacciones ctl_plan = new Ctl_PlanesTransacciones();
-							List<TblPlanesTransacciones> list_plan = ctl_plan.Obtener(empresa.Identificacion, TipoCompra.Cortesia.GetHashCode().ToString(), EstadoPlan.Habilitado.GetHashCode().ToString(), 1, Fecha.GetFecha().AddYears(-1), Fecha.GetFecha().AddDays(1));
+							TblPlanesTransacciones plan_pruebas = new TblPlanesTransacciones();
 
-							TblPlanesTransacciones plan_prueba_activo = list_plan.Where(x => x.IntEstado == 0 && x.DatFechaVencimiento >= Fecha.GetFecha().AddMonths(1)).FirstOrDefault();
+							plan_pruebas.IntMesesVence = 12;
+							plan_pruebas.IntEstado = EstadoPlan.Habilitado.GetHashCode();
+							plan_pruebas.IntNumTransaccCompra = 100;
+							plan_pruebas.IntTipoDocumento = TipoDocPlanes.Mixto.GetHashCode();
+							plan_pruebas.IntTipoProceso = Convert.ToByte(TipoCompra.Cortesia.GetHashCode());
+							plan_pruebas.StrEmpresaFacturador = tbl_empresa.StrIdentificacion;
+							plan_pruebas.StrUsuario = empresa.Identificacion_EmpresaEmisor;
+							plan_pruebas.StrEmpresaUsuario = empresa.Identificacion_EmpresaEmisor;
 
-							if (plan_prueba_activo == null)
-							{
-								TblPlanesTransacciones plan_pruebas = new TblPlanesTransacciones();
-								
-								plan_pruebas.IntMesesVence = 12;
-								plan_pruebas.IntEstado = EstadoPlan.Habilitado.GetHashCode();
-								plan_pruebas.IntNumTransaccCompra = 100;
-								plan_pruebas.IntTipoDocumento = TipoDocPlanes.Mixto.GetHashCode();
-								plan_pruebas.IntTipoProceso = Convert.ToByte(TipoCompra.Cortesia.GetHashCode());
-								plan_pruebas.StrEmpresaFacturador = tbl_empresa.StrIdentificacion;
-								plan_pruebas.StrUsuario = empresa.Identificacion_EmpresaEmisor;
-								plan_pruebas.StrEmpresaUsuario = empresa.Identificacion_EmpresaEmisor;
-
-								ctl_plan.Crear(plan_pruebas, true);
-							}
+							ctl_plan.Crear(plan_pruebas, true);
 						}
 						catch (Exception excepcion)
 						{
