@@ -5838,8 +5838,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									}
 
 									//Se actualiza el documento en bd con los cambios en url
-									if (actualizarbd_doc == true)
-										Actualizar(item);
+									try
+									{
+										if (actualizarbd_doc == true)
+											Actualizar(item);
+									}
+									catch (Exception excepcion)
+									{
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Actualizando documento en BD");
+									}
 
 
 									Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
@@ -5883,8 +5890,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 													var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, url_evento, ruta_blob_acuse);
 												}
 
-												if (actualizarbd_eve == true)
-													ctl_evento.Actualizar(item_eve);
+												try
+												{
+													if (actualizarbd_eve == true)
+														ctl_evento.Actualizar(item_eve);
+												}
+												catch (Exception excepcion)
+												{
+													RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Actualizando Evento del documento en BD");
+												}
 
 											}
 
@@ -5918,7 +5932,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				catch (Exception excepcion)
 				{
-					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Sonda para importando Archivos del documento");
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Sonda para importar Archivos del documento");
 				}
 
 			});
