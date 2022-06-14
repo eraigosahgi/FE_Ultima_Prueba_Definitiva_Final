@@ -5630,7 +5630,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								if (datos != null && datos.Count > 0)
 								{
-									GenerarAlmacenamientoStorage(datos, anyo);
+									GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
 								}
 							}
 						}
@@ -5647,7 +5647,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								if (datos != null && datos.Count > 0)
 								{
-									GenerarAlmacenamientoStorage(datos, anyo);
+									GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
 								}
 							}
 						}
@@ -5682,7 +5682,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// </summary>
 		/// <param name="datos">lista de documentos por hacer la gestion de almacenamiento</param>
 		/// <param name="anyo">Año del proceso para tema de creacion del contenedor en Azure si no lo esta</param>
-		public void GenerarAlmacenamientoStorage(List<TblDocumentos> datos , int anyo)
+		public void GenerarAlmacenamientoStorage(List<TblDocumentos> datos , int anyo, bool buscar_faltantes)
 		{
 			Ctl_AlmacenamientoDocs almacenamiento = new Ctl_AlmacenamientoDocs();
 
@@ -5726,7 +5726,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (!string.IsNullOrEmpty(archivo_memoria))
 						{
 							ruta_blob_ubl = contenedor.Enviar(archivo_memoria, Path.GetExtension(item.StrUrlArchivoUbl), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoUbl));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XML.GetHashCode(), item.StrUrlArchivoUbl, ruta_blob_ubl);
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XML.GetHashCode(), item.StrUrlArchivoUbl, ruta_blob_ubl, buscar_faltantes);
 							url_resp_dian_original = item.StrUrlArchivoUbl;
 							item.StrUrlArchivoUbl = ruta_blob_ubl;
 							actualizarbd_doc = true;
@@ -5753,7 +5753,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (!string.IsNullOrEmpty(archivo_memoria))
 						{
 							ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(item.StrUrlAcuseUbl), metadata_acuse, Path.GetFileNameWithoutExtension(item.StrUrlAcuseUbl));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLACUSE.GetHashCode(), item.StrUrlAcuseUbl, ruta_blob_acuse);
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLACUSE.GetHashCode(), item.StrUrlAcuseUbl, ruta_blob_acuse, buscar_faltantes);
 							item.StrUrlAcuseUbl = ruta_blob_acuse;
 							actualizarbd_doc = true;
 						}
@@ -5774,7 +5774,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (!string.IsNullOrEmpty(archivo_memoria))
 						{
 							ruta_blob_resp_dian = contenedor.Enviar(archivo_memoria, Path.GetExtension(ruta_resp_dian), metadata_acuse, Path.GetFileNameWithoutExtension(ruta_resp_dian));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLRESPDIAN.GetHashCode(), ruta_resp_dian, ruta_blob_resp_dian);
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLRESPDIAN.GetHashCode(), ruta_resp_dian, ruta_blob_resp_dian, buscar_faltantes);
 						}
 					}
 				}
@@ -5795,7 +5795,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (archivo != null)
 						{
 							ruta_blob_pdf = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlArchivoPdf), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoPdf));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.PDF.GetHashCode(), item.StrUrlArchivoPdf, ruta_blob_pdf);
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.PDF.GetHashCode(), item.StrUrlArchivoPdf, ruta_blob_pdf, buscar_faltantes);
 							item.StrUrlArchivoPdf = ruta_blob_pdf;
 							actualizarbd_doc = true;
 						}
@@ -5817,7 +5817,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (archivo != null)
 						{
 							ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlArchivoZip), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoZip));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlArchivoZip, ruta_blob_zip);
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlArchivoZip, ruta_blob_zip, buscar_faltantes);
 							item.StrUrlArchivoZip = ruta_blob_zip;
 							actualizarbd_doc = true;
 						}
@@ -5843,7 +5843,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (archivo != null)
 						{
 							ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(url_zip_original.Replace(nombre_zip, nombre_archivo)), metadata, Path.GetFileNameWithoutExtension(nombre_archivo));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIPAttached.GetHashCode(), url_zip_original.Replace(nombre_zip, nombre_archivo), ruta_blob_zip);
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIPAttached.GetHashCode(), url_zip_original.Replace(nombre_zip, nombre_archivo), ruta_blob_zip, buscar_faltantes);
 						}
 					}
 				}
@@ -5862,7 +5862,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (archivo != null)
 						{
 							ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlAnexo), metadata, Path.GetFileNameWithoutExtension(item.StrUrlAnexo));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlAnexo, ruta_blob_zip);
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlAnexo, ruta_blob_zip, buscar_faltantes);
 							item.StrUrlAnexo = ruta_blob_zip;
 							actualizarbd_doc = true;
 						}
@@ -5908,7 +5908,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								metadata_acuse.Add(string.Format("Evento{0}", item_eve.IntEstadoEvento), TipoDocumento.AcuseRecibo.GetHashCode().ToString());
 								ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(item_eve.StrUrlEvento), metadata_acuse, Path.GetFileNameWithoutExtension(item_eve.StrUrlEvento));
 								cont_consecutivo += item_eve.IntEstadoEvento;
-								var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, item_eve.StrUrlEvento, ruta_blob_acuse);
+								var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, item_eve.StrUrlEvento, ruta_blob_acuse, buscar_faltantes);
 								item_eve.StrUrlEvento = ruta_blob_acuse;
 								actualizarbd_eve = true;
 							}
@@ -5923,7 +5923,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							{
 								ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(url_evento), metadata_acuse, Path.GetFileNameWithoutExtension(url_evento));
 								cont_consecutivo += 10;
-								var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, url_evento, ruta_blob_acuse);
+								var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, url_evento, ruta_blob_acuse, buscar_faltantes);
 							}
 
 							try
@@ -5958,11 +5958,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="ruta_anterior"></param>
 		/// <param name="ruta_actual"></param>
 		/// <returns></returns>
-		public async Task RegistroArchivoStorage(Guid doc_StrIdSeguridad, DateTime fecha_ingreso_doc, int tipo_archivo, string ruta_anterior, string ruta_actual)
+		public async Task RegistroArchivoStorage(Guid doc_StrIdSeguridad, DateTime fecha_ingreso_doc, int tipo_archivo, string ruta_anterior, string ruta_actual, bool buscar_faltantes)
 		{
 			try
 			{
-				var Tarea = TareaRegistroArchivoStorage(doc_StrIdSeguridad, fecha_ingreso_doc, tipo_archivo, ruta_anterior, ruta_actual);
+				var Tarea = TareaRegistroArchivoStorage(doc_StrIdSeguridad, fecha_ingreso_doc, tipo_archivo, ruta_anterior, ruta_actual, buscar_faltantes);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -5973,13 +5973,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 
-		public async Task TareaRegistroArchivoStorage(Guid doc_StrIdSeguridad, DateTime fecha_ingreso_doc, int tipo_archivo, string ruta_anterior, string ruta_actual)
+		public async Task TareaRegistroArchivoStorage(Guid doc_StrIdSeguridad, DateTime fecha_ingreso_doc, int tipo_archivo, string ruta_anterior, string ruta_actual, bool buscar_faltantes)
 		{
 			await Task.Factory.StartNew(() =>
 			{
 
 				Ctl_AlmacenamientoDocs ctl_almacenamiento = new Ctl_AlmacenamientoDocs();
-				TblAlmacenamientoDocs almacenamiento = ctl_almacenamiento.Convertir(doc_StrIdSeguridad, fecha_ingreso_doc, tipo_archivo, ruta_anterior, ruta_actual);
+				TblAlmacenamientoDocs almacenamiento = ctl_almacenamiento.Convertir(doc_StrIdSeguridad, fecha_ingreso_doc, tipo_archivo, ruta_anterior, ruta_actual, buscar_faltantes);
 
 				ctl_almacenamiento.Crear(almacenamiento);
 

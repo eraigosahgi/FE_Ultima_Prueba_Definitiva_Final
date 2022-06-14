@@ -71,13 +71,13 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="ruta_anterior"></param>
 		/// <param name="ruta_actual"></param>
 		/// <returns></returns>
-		public TblAlmacenamientoDocs Convertir(Guid doc_StrIdSeguridad, DateTime fecha_ingreso_doc, int tipo_archivo, string ruta_anterior, string ruta_actual)
+		public TblAlmacenamientoDocs Convertir(Guid doc_StrIdSeguridad, DateTime fecha_ingreso_doc, int tipo_archivo, string ruta_anterior, string ruta_actual, bool buscar_faltantes)
 		{
 			TblAlmacenamientoDocs archivo = new TblAlmacenamientoDocs();
 
 			archivo.StrIdSeguridadDoc = doc_StrIdSeguridad;
 			archivo.DatFechaRegistroDoc = fecha_ingreso_doc;
-			archivo.DatFechaSincronizacion = Fecha.GetFecha();
+			archivo.DatFechaSincronizacion = buscar_faltantes == false ? Fecha.GetFecha() : Fecha.GetFecha().AddSeconds(-2);
 			archivo.IntConsecutivo = tipo_archivo;
 			archivo.StrUrlAnterior = ruta_anterior;
 			archivo.StrUrlActual = ruta_actual;
