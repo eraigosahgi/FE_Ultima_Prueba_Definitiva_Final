@@ -5542,11 +5542,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Sonda para importar los archivos de los documentos a Azure y actualizarlo en la BD
 		/// </summary>
 		/// <returns></returns>
-		public async Task SondaProcesoStorage(int anyo)
+		public async Task SondaProcesoStorage(int anyo, bool buscar_faltantes)
 		{
 			try
 			{
-				var Tarea = TareaProcesoStorage(anyo);
+				var Tarea = TareaProcesoStorage(anyo, buscar_faltantes);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -5557,22 +5557,32 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 
-		public async Task TareaProcesoStorage(int anyo)
+		public async Task TareaProcesoStorage(int anyo, bool buscar_faltantes)
 		{
 			await Task.Factory.StartNew(() =>
 			{
 
 				try
 				{
+
 					int mes = 1;
+					int dia = 1;
 
+					//se obtiene el ultimo registro sincronizado a Azure segun año que se este procesando
 					Ctl_AlmacenamientoDocs almacenamiento = new Ctl_AlmacenamientoDocs();
-					TblAlmacenamientoDocs ultimo_registro = almacenamiento.Obtener().OrderByDescending(x => x.DatFechaSincronizacion).Take(1).FirstOrDefault();
+					TblAlmacenamientoDocs ultimo_registro = almacenamiento.Obtener().Where(y => y.DatFechaRegistroDoc.Year.Equals(anyo)).OrderByDescending(x => x.DatFechaSincronizacion).Take(1).FirstOrDefault();
 
-					if (ultimo_registro != null)
+					if (buscar_faltantes == false)
 					{
-						if (ultimo_registro.DatFechaRegistroDoc.Year == anyo)
-							mes = ultimo_registro.DatFechaRegistroDoc.Month;
+						if (ultimo_registro != null && buscar_faltantes == false)
+						{
+							if (ultimo_registro.DatFechaRegistroDoc.Year == anyo)
+							{
+								mes = ultimo_registro.DatFechaRegistroDoc.Month;
+								dia = ultimo_registro.DatFechaRegistroDoc.Day;
+							}
+
+						}
 					}
 
 					DateTime fecha_inicio = new DateTime(anyo, 1, 1);
@@ -5584,351 +5594,79 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							j = mes;
 						}
 
-						fecha_inicio = new DateTime(anyo, j, 1);
-
 						DateTime fecha_fin = new DateTime(anyo, j, 1).AddMonths(1).AddDays(-1);
 
 						DateTime fecha_actual = Fecha.GetFecha();
-						//DateTime fecha_3mes_atras = fecha_actual.AddMonths(-3);
 
 						TimeSpan Diff_dates = fecha_actual.Subtract(fecha_fin);
 
 						if (Diff_dates.TotalDays < 91)
 							throw new ApplicationException("No se puede sincronizar los archivos a azure");
 
-						int diasmes = DateTime.DaysInMonth(anyo, j);
-
-						//Recorre el mes para importar por dia
-						for (int i = 0; i <= diasmes; i++)
+						//Se valida si es para procesar algun documento anterior del año que por alguna razon no se pudo sincronizar a Azure
+						if (buscar_faltantes == false)
 						{
-							DateTime fecha_proceso = fecha_inicio;
-							if (i > 0 && i < diasmes)
-								fecha_proceso = fecha_inicio.AddDays(i);
+							int diasmes = DateTime.DaysInMonth(anyo, j);
 
-							if (i == diasmes)
-								fecha_proceso = fecha_fin;
+							if (ultimo_registro.DatFechaRegistroDoc.Month == j)
+								fecha_inicio = new DateTime(anyo, j, dia);
+							else
+								fecha_inicio = new DateTime(anyo, j, 1);
 
-							List<TblDocumentos> datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_proceso, fecha_proceso, 0, 2, 1, 30000).OrderBy(x => x.DatFechaIngreso).ToList();
-
-							//try
-							//{
-							//	List<TblAlmacenamientoDocs> list_almacenados = almacenamiento.Obtener();
-
-							//	List<string> doc_alma = list_almacenados.Select(x => x.StrIdSeguridadDoc.ToString()).Distinct().ToList<string>();
-
-							//	List<string> doc_cons = datos.Select(x => x.StrIdSeguridad.ToString()).Distinct().ToList<string>();
-
-							//	List<string> doc_resultante = doc_cons.Except(doc_alma, StringComparer.OrdinalIgnoreCase).ToList();
-
-							//	if ((doc_resultante == null || doc_resultante.Count == 0) && fecha_proceso.Equals(fecha_fin))
-							//	{
-							//		//Se envia notificacion a tic para indicar que termino de importar el rango especificado
-							//		List<string> mensajes = new List<string>();
-							//		mensajes.Add(string.Format("Termino de subir Archivos a Azure: Año {0} - Mes {1}", anyo, mes));
-							//		try
-							//		{
-							//			Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-							//			email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
-							//		}
-							//		catch (Exception)
-							//		{ }
-
-							//		//List<Guid> doc_faltante = doc_resultante.ConvertAll(Guid.Parse);
-
-							//		//foreach (Guid item in doc_faltante)
-							//		//{
-							//		//	TblDocumentos doc = ObtenerDocumento(item);
-
-							//		//	datos.Add(doc);
-							//		//}
-							//	}
-							//}
-							//catch (Exception excepcion)
-							//{
-							//	RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Obteniendo los documentos faltantes");
-							//}
-
-
-							if (datos != null && datos.Count > 0)
+							//Recorre el mes para importar por dia
+							for (int i = 0; i <= diasmes; i++)
 							{
-								AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+								DateTime fecha_proceso = fecha_inicio;
+								if (i > 0 && i < diasmes)
+									fecha_proceso = fecha_inicio.AddDays(i);
 
-								foreach (TblDocumentos item in datos)
+								if (i == diasmes || fecha_proceso.Day == diasmes)
 								{
-									
-									List<TblAlmacenamientoDocs> list_alm = almacenamiento.Obtener(item.StrIdSeguridad);
+									fecha_proceso = fecha_fin;
+									i = diasmes;
+								}
 
-									string nombre_contenedor = string.Format("files-hgidocs-{0}", anyo);
+								List<TblDocumentos> datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_proceso, fecha_proceso, 0, 2, 1, 30000).OrderBy(x => x.DatFechaIngreso).ToList();
 
-									BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+								if (datos != null && datos.Count > 0)
+								{
+									GenerarAlmacenamientoStorage(datos, anyo);
+								}
+							}
+						}
+						else
+						{
+							//Se valida que solo se pueda revisar los documentos en los meses que ya se han sincronizado
+							if (j <= ultimo_registro.DatFechaRegistroDoc.Month)
+							{
+								fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
 
-									contenedor.CrearContenedor(nombre_contenedor, HGInetUtilidadAzure.TipoAccesoEnum.Blob, null);
+								List<TblDocumentos> datos = (from doc in context.TblDocumentos
+															 where (doc.StrUrlArchivoUbl.Contains("files") && doc.DatFechaIngreso >= fecha_inicio && doc.DatFechaIngreso <= fecha_fin)
+															 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
 
-									Dictionary<string, string> metadata = new Dictionary<string, string>();
-
-									// Add metadata to the dictionary by calling the Add method
-									metadata.Add("Facturador", item.StrEmpresaFacturador);
-									metadata.Add("IdSeguridadDoc", item.StrIdSeguridad.ToString());
-									metadata.Add("TipoDoc", item.IntDocTipo.ToString());
-
-									string ruta_blob_ubl = string.Empty;
-									string ruta_blob_pdf = string.Empty;
-									string ruta_blob_zip = string.Empty;
-									string ruta_blob_acuse = string.Empty;
-									string ruta_blob_resp_dian = string.Empty;
-									string archivo_memoria = string.Empty;
-									bool actualizarbd_doc = false;
-									string url_zip_original = item.StrUrlArchivoZip;
-									string url_resp_dian_original = string.Empty;
-
-									//Se valida que el archivo XML del documento no este sincronizado y que no este guardado en BD
-									try
-									{
-										if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.XML.GetHashCode())).FirstOrDefault() == null)
-										{
-											archivo_memoria = Archivo.ObtenerContenido(item.StrUrlArchivoUbl);
-
-											if (!string.IsNullOrEmpty(archivo_memoria))
-											{
-												ruta_blob_ubl = contenedor.Enviar(archivo_memoria, Path.GetExtension(item.StrUrlArchivoUbl), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoUbl));
-												var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XML.GetHashCode(), item.StrUrlArchivoUbl, ruta_blob_ubl);
-												url_resp_dian_original = item.StrUrlArchivoUbl;
-												item.StrUrlArchivoUbl = ruta_blob_ubl;
-												actualizarbd_doc = true;
-											}
-										}
-									}
-									catch (Exception excepcion)
-									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando XML del documento");
-									}
-
-									Dictionary<string, string> metadata_acuse = new Dictionary<string, string>();
-									metadata_acuse.Add("Facturador", item.StrEmpresaFacturador);
-									metadata_acuse.Add("IdSeguridadDoc", item.StrIdSeguridad.ToString());
-									metadata_acuse.Add("TipoDoc", TipoDocumento.AcuseRecibo.GetHashCode().ToString());
-
-									//Se valida que el archivo XML-ACUSE del documento no este sincronizado y que no este guardado en BD
-									try
-									{
-										if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.XMLACUSE.GetHashCode())).FirstOrDefault() == null)
-										{
-											archivo_memoria = Archivo.ObtenerContenido(item.StrUrlAcuseUbl);
-
-											if (!string.IsNullOrEmpty(archivo_memoria))
-											{
-												ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(item.StrUrlAcuseUbl), metadata_acuse, Path.GetFileNameWithoutExtension(item.StrUrlAcuseUbl));
-												var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLACUSE.GetHashCode(), item.StrUrlAcuseUbl, ruta_blob_acuse);
-												item.StrUrlAcuseUbl = ruta_blob_acuse;
-												actualizarbd_doc = true;
-											}
-										}
-									}
-									catch (Exception excepcion)
-									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando XML Acuse del documento");
-									}
-
-									//Se valida que el archivo XML- Respuesta Dian del documento no este sincronizado y que no este guardado en BD
-									try
-									{
-										if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.XMLRESPDIAN.GetHashCode())).FirstOrDefault() == null)
-										{
-											string ruta_resp_dian = url_resp_dian_original.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
-											archivo_memoria = Archivo.ObtenerContenido(ruta_resp_dian);
-											if (!string.IsNullOrEmpty(archivo_memoria))
-											{
-												ruta_blob_resp_dian = contenedor.Enviar(archivo_memoria, Path.GetExtension(ruta_resp_dian), metadata_acuse, Path.GetFileNameWithoutExtension(ruta_resp_dian));
-												var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLRESPDIAN.GetHashCode(), ruta_resp_dian, ruta_blob_resp_dian);
-											}
-										}
-									}
-									catch (Exception excepcion)
-									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando XML Respuesta Dian del documento");
-									}
-
-									byte[] archivo = null;
-
-									//Se valida que el archivo PDF del documento no este sincronizado y que no este guardado en BD
-									try
-									{
-										if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.PDF.GetHashCode())).FirstOrDefault() == null)
-										{
-											archivo = Archivo.ObtenerWeb(item.StrUrlArchivoPdf);
-
-											if (archivo != null)
-											{
-												ruta_blob_pdf = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlArchivoPdf), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoPdf));
-												var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.PDF.GetHashCode(), item.StrUrlArchivoPdf, ruta_blob_pdf);
-												item.StrUrlArchivoPdf = ruta_blob_pdf;
-												actualizarbd_doc = true;
-											}
-										}
-									}
-									catch (Exception excepcion)
-									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando PDF del documento");
-									}
-
-
-									//Se valida que el archivo ZIP del documento no este sincronizado y que no este guardado en BD
-									try
-									{
-										if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIP.GetHashCode())).FirstOrDefault() == null)
-										{
-											archivo = Archivo.ObtenerWeb(item.StrUrlArchivoZip);
-
-											if (archivo != null)
-											{
-												ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlArchivoZip), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoZip));
-												var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlArchivoZip, ruta_blob_zip);
-												item.StrUrlArchivoZip = ruta_blob_zip;
-												actualizarbd_doc = true;
-											}
-										}
-									}
-									catch (Exception excepcion)
-									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando ZIP del documento");
-									}
-
-
-									//Se valida que el archivo ZIP del attach y pdf del documento no este sincronizado y que no este guardado en BD
-									try
-									{
-										if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIPAttached.GetHashCode())).FirstOrDefault() == null)
-										{
-											string nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(item.IntNumero.ToString(), item.StrEmpresaFacturador, TipoDocumento.Attached, item.StrPrefijo);
-
-											string nombre_zip = Path.GetFileNameWithoutExtension(url_zip_original);
-
-											archivo = Archivo.ObtenerWeb(url_zip_original.Replace(nombre_zip, nombre_archivo));
-
-											if (archivo != null)
-											{
-												ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(url_zip_original.Replace(nombre_zip, nombre_archivo)), metadata, Path.GetFileNameWithoutExtension(nombre_archivo));
-												var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIPAttached.GetHashCode(), url_zip_original.Replace(nombre_zip, nombre_archivo), ruta_blob_zip);
-											}
-										}
-									}
-									catch (Exception excepcion)
-									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando ZIP Attach-PDF del documento");
-									}
-
-									//Se valida que el archivo ZIP del documento no este sincronizado y que no este guardado en BD
-									try
-									{
-										if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIPAnexo.GetHashCode())).FirstOrDefault() == null)
-										{
-											archivo = Archivo.ObtenerWeb(item.StrUrlAnexo);
-
-											if (archivo != null)
-											{
-												ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlAnexo), metadata, Path.GetFileNameWithoutExtension(item.StrUrlAnexo));
-												var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlAnexo, ruta_blob_zip);
-												item.StrUrlAnexo = ruta_blob_zip;
-												actualizarbd_doc = true;
-											}
-										}
-									}
-									catch (Exception excepcion)
-									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando ZIPAnexos del documento");
-									}
-
-									//Se actualiza el documento en bd con los cambios en url
-									try
-									{
-										if (actualizarbd_doc == true)
-											Actualizar(item);
-									}
-									catch (Exception excepcion)
-									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Actualizando documento en BD, Facturador:{0} - Prefijo:{1} - Doc:{2} ", item.StrEmpresaFacturador,item.StrPrefijo, item.IntNumero));
-									}
-
-
-									Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
-									List<TblEventosRadian> list_event = ctl_evento.Obtener(item.StrIdSeguridad);
-
-									try
-									{
-										if (list_event != null && list_event.Count > 0)
-										{
-
-											bool actualizarbd_eve = false;
-
-											foreach (var item_eve in list_event)
-											{
-												int cont_consecutivo = 10;
-
-												//Evento de Respuesta de la DIAN
-												string url_evento_ini = item_eve.StrUrlEvento;
-												archivo_memoria = Archivo.ObtenerContenido(item_eve.StrUrlEvento);
-
-												if (!string.IsNullOrEmpty(archivo_memoria))
-												{
-													metadata_acuse.Add(string.Format("Evento{0}", item_eve.IntEstadoEvento), TipoDocumento.AcuseRecibo.GetHashCode().ToString());
-													ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(item_eve.StrUrlEvento), metadata_acuse, Path.GetFileNameWithoutExtension(item_eve.StrUrlEvento));
-													cont_consecutivo += item_eve.IntEstadoEvento;
-													var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, item_eve.StrUrlEvento, ruta_blob_acuse);
-													item_eve.StrUrlEvento = ruta_blob_acuse;
-													actualizarbd_eve = true;
-												}
-
-												//Evento enviado la DIAN
-
-												string url_evento = url_evento_ini.Replace(string.Format("-{0}", item_eve.IntEstadoEvento), "");
-
-												archivo_memoria = Archivo.ObtenerContenido(url_evento);
-
-												if (!string.IsNullOrEmpty(archivo_memoria))
-												{
-													ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(url_evento), metadata_acuse, Path.GetFileNameWithoutExtension(url_evento));
-													cont_consecutivo += 10;
-													var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, url_evento, ruta_blob_acuse);
-												}
-
-												try
-												{
-													if (actualizarbd_eve == true)
-														ctl_evento.Actualizar(item_eve);
-												}
-												catch (Exception excepcion)
-												{
-													RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Actualizando Evento del documento en BD, IdSegDoc:{0} - NumEven:{1}", item_eve.StrIdSeguridadDoc, item_eve.IntNumeroEvento));
-												}
-
-											}
-
-										}
-									}
-									catch (Exception excepcion)
-									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando Eventos Radian del documento");
-									}
-
-
+								if (datos != null && datos.Count > 0)
+								{
+									GenerarAlmacenamientoStorage(datos, anyo);
 								}
 							}
 						}
 
 					}
 
-					//Se envia notificacion a tic para indicar que termino de importar el rango especificado
-					List<string> mensajes = new List<string>();
-					mensajes.Add(string.Format("Termino de subir Archivos a Azure: Año: {0} - Fecha terminacion: {1}", anyo, Fecha.GetFecha()));
-					try
+					if (buscar_faltantes == false)
 					{
-						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-						email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
+						//Se envia notificacion a tic para indicar que termino de importar el rango especificado
+						List<string> mensajes = new List<string>();
+						mensajes.Add(string.Format("Termino de subir Archivos a Azure: Año: {0} - Fecha terminacion: {1}", anyo, Fecha.GetFecha()));
+						try
+						{
+							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+							email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
+						}
+						catch (Exception)
+						{ }
 					}
-					catch (Exception)
-					{ }
-
-
 
 				}
 				catch (Exception excepcion)
@@ -5937,6 +5675,278 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 
 			});
+		}
+
+		/// <summary>
+		/// Proceso que genera el almacenamiento en Azure y actualiza informacion en la base de datos
+		/// </summary>
+		/// <param name="datos">lista de documentos por hacer la gestion de almacenamiento</param>
+		/// <param name="anyo">Año del proceso para tema de creacion del contenedor en Azure si no lo esta</param>
+		public void GenerarAlmacenamientoStorage(List<TblDocumentos> datos , int anyo)
+		{
+			Ctl_AlmacenamientoDocs almacenamiento = new Ctl_AlmacenamientoDocs();
+
+			AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+
+			foreach (TblDocumentos item in datos)
+			{
+
+				List<TblAlmacenamientoDocs> list_alm = almacenamiento.Obtener(item.StrIdSeguridad);
+
+				string nombre_contenedor = string.Format("files-hgidocs-{0}", anyo);
+
+				BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+
+				contenedor.CrearContenedor(nombre_contenedor, HGInetUtilidadAzure.TipoAccesoEnum.Blob, null);
+
+				Dictionary<string, string> metadata = new Dictionary<string, string>();
+
+				// Add metadata to the dictionary by calling the Add method
+				metadata.Add("Facturador", item.StrEmpresaFacturador);
+				metadata.Add("IdSeguridadDoc", item.StrIdSeguridad.ToString());
+				metadata.Add("TipoDoc", item.IntDocTipo.ToString());
+
+				string ruta_blob_ubl = string.Empty;
+				string ruta_blob_pdf = string.Empty;
+				string ruta_blob_zip = string.Empty;
+				string ruta_blob_acuse = string.Empty;
+				string ruta_blob_resp_dian = string.Empty;
+				string archivo_memoria = string.Empty;
+				bool actualizarbd_doc = false;
+				string url_zip_original = item.StrUrlArchivoZip;
+				string url_resp_dian_original = string.Empty;
+
+				//Se valida que el archivo XML del documento no este sincronizado y que no este guardado en BD
+				try
+				{
+					if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.XML.GetHashCode())).FirstOrDefault() == null)
+					{
+						archivo_memoria = Archivo.ObtenerContenido(item.StrUrlArchivoUbl);
+
+						if (!string.IsNullOrEmpty(archivo_memoria))
+						{
+							ruta_blob_ubl = contenedor.Enviar(archivo_memoria, Path.GetExtension(item.StrUrlArchivoUbl), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoUbl));
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XML.GetHashCode(), item.StrUrlArchivoUbl, ruta_blob_ubl);
+							url_resp_dian_original = item.StrUrlArchivoUbl;
+							item.StrUrlArchivoUbl = ruta_blob_ubl;
+							actualizarbd_doc = true;
+						}
+					}
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando XML del documento");
+				}
+
+				Dictionary<string, string> metadata_acuse = new Dictionary<string, string>();
+				metadata_acuse.Add("Facturador", item.StrEmpresaFacturador);
+				metadata_acuse.Add("IdSeguridadDoc", item.StrIdSeguridad.ToString());
+				metadata_acuse.Add("TipoDoc", TipoDocumento.AcuseRecibo.GetHashCode().ToString());
+
+				//Se valida que el archivo XML-ACUSE del documento no este sincronizado y que no este guardado en BD
+				try
+				{
+					if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.XMLACUSE.GetHashCode())).FirstOrDefault() == null)
+					{
+						archivo_memoria = Archivo.ObtenerContenido(item.StrUrlAcuseUbl);
+
+						if (!string.IsNullOrEmpty(archivo_memoria))
+						{
+							ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(item.StrUrlAcuseUbl), metadata_acuse, Path.GetFileNameWithoutExtension(item.StrUrlAcuseUbl));
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLACUSE.GetHashCode(), item.StrUrlAcuseUbl, ruta_blob_acuse);
+							item.StrUrlAcuseUbl = ruta_blob_acuse;
+							actualizarbd_doc = true;
+						}
+					}
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando XML Acuse del documento");
+				}
+
+				//Se valida que el archivo XML- Respuesta Dian del documento no este sincronizado y que no este guardado en BD
+				try
+				{
+					if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.XMLRESPDIAN.GetHashCode())).FirstOrDefault() == null)
+					{
+						string ruta_resp_dian = url_resp_dian_original.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
+						archivo_memoria = Archivo.ObtenerContenido(ruta_resp_dian);
+						if (!string.IsNullOrEmpty(archivo_memoria))
+						{
+							ruta_blob_resp_dian = contenedor.Enviar(archivo_memoria, Path.GetExtension(ruta_resp_dian), metadata_acuse, Path.GetFileNameWithoutExtension(ruta_resp_dian));
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLRESPDIAN.GetHashCode(), ruta_resp_dian, ruta_blob_resp_dian);
+						}
+					}
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando XML Respuesta Dian del documento");
+				}
+
+				byte[] archivo = null;
+
+				//Se valida que el archivo PDF del documento no este sincronizado y que no este guardado en BD
+				try
+				{
+					if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.PDF.GetHashCode())).FirstOrDefault() == null)
+					{
+						archivo = Archivo.ObtenerWeb(item.StrUrlArchivoPdf);
+
+						if (archivo != null)
+						{
+							ruta_blob_pdf = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlArchivoPdf), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoPdf));
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.PDF.GetHashCode(), item.StrUrlArchivoPdf, ruta_blob_pdf);
+							item.StrUrlArchivoPdf = ruta_blob_pdf;
+							actualizarbd_doc = true;
+						}
+					}
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando PDF del documento");
+				}
+
+
+				//Se valida que el archivo ZIP del documento no este sincronizado y que no este guardado en BD
+				try
+				{
+					if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIP.GetHashCode())).FirstOrDefault() == null)
+					{
+						archivo = Archivo.ObtenerWeb(item.StrUrlArchivoZip);
+
+						if (archivo != null)
+						{
+							ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlArchivoZip), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoZip));
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlArchivoZip, ruta_blob_zip);
+							item.StrUrlArchivoZip = ruta_blob_zip;
+							actualizarbd_doc = true;
+						}
+					}
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando ZIP del documento");
+				}
+
+
+				//Se valida que el archivo ZIP del attach y pdf del documento no este sincronizado y que no este guardado en BD
+				try
+				{
+					if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIPAttached.GetHashCode())).FirstOrDefault() == null)
+					{
+						string nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(item.IntNumero.ToString(), item.StrEmpresaFacturador, TipoDocumento.Attached, item.StrPrefijo);
+
+						string nombre_zip = Path.GetFileNameWithoutExtension(url_zip_original);
+
+						archivo = Archivo.ObtenerWeb(url_zip_original.Replace(nombre_zip, nombre_archivo));
+
+						if (archivo != null)
+						{
+							ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(url_zip_original.Replace(nombre_zip, nombre_archivo)), metadata, Path.GetFileNameWithoutExtension(nombre_archivo));
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIPAttached.GetHashCode(), url_zip_original.Replace(nombre_zip, nombre_archivo), ruta_blob_zip);
+						}
+					}
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando ZIP Attach-PDF del documento");
+				}
+
+				//Se valida que el archivo ZIP del documento no este sincronizado y que no este guardado en BD
+				try
+				{
+					if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIPAnexo.GetHashCode())).FirstOrDefault() == null)
+					{
+						archivo = Archivo.ObtenerWeb(item.StrUrlAnexo);
+
+						if (archivo != null)
+						{
+							ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlAnexo), metadata, Path.GetFileNameWithoutExtension(item.StrUrlAnexo));
+							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlAnexo, ruta_blob_zip);
+							item.StrUrlAnexo = ruta_blob_zip;
+							actualizarbd_doc = true;
+						}
+					}
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando ZIPAnexos del documento");
+				}
+
+				//Se actualiza el documento en bd con los cambios en url
+				try
+				{
+					if (actualizarbd_doc == true)
+						Actualizar(item);
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Actualizando documento en BD, Facturador:{0} - Prefijo:{1} - Doc:{2} ", item.StrEmpresaFacturador, item.StrPrefijo, item.IntNumero));
+				}
+
+
+				Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
+				List<TblEventosRadian> list_event = ctl_evento.Obtener(item.StrIdSeguridad);
+
+				try
+				{
+					if (list_event != null && list_event.Count > 0)
+					{
+
+						bool actualizarbd_eve = false;
+
+						foreach (var item_eve in list_event)
+						{
+							int cont_consecutivo = 10;
+
+							//Evento de Respuesta de la DIAN
+							string url_evento_ini = item_eve.StrUrlEvento;
+							archivo_memoria = Archivo.ObtenerContenido(item_eve.StrUrlEvento);
+
+							if (!string.IsNullOrEmpty(archivo_memoria))
+							{
+								metadata_acuse.Add(string.Format("Evento{0}", item_eve.IntEstadoEvento), TipoDocumento.AcuseRecibo.GetHashCode().ToString());
+								ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(item_eve.StrUrlEvento), metadata_acuse, Path.GetFileNameWithoutExtension(item_eve.StrUrlEvento));
+								cont_consecutivo += item_eve.IntEstadoEvento;
+								var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, item_eve.StrUrlEvento, ruta_blob_acuse);
+								item_eve.StrUrlEvento = ruta_blob_acuse;
+								actualizarbd_eve = true;
+							}
+
+							//Evento enviado la DIAN
+
+							string url_evento = url_evento_ini.Replace(string.Format("-{0}", item_eve.IntEstadoEvento), "");
+
+							archivo_memoria = Archivo.ObtenerContenido(url_evento);
+
+							if (!string.IsNullOrEmpty(archivo_memoria))
+							{
+								ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(url_evento), metadata_acuse, Path.GetFileNameWithoutExtension(url_evento));
+								cont_consecutivo += 10;
+								var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, url_evento, ruta_blob_acuse);
+							}
+
+							try
+							{
+								if (actualizarbd_eve == true)
+									ctl_evento.Actualizar(item_eve);
+							}
+							catch (Exception excepcion)
+							{
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Actualizando Evento del documento en BD, IdSegDoc:{0} - NumEven:{1}", item_eve.StrIdSeguridadDoc, item_eve.IntNumeroEvento));
+							}
+
+						}
+
+					}
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Importando Eventos Radian del documento");
+				}
+
+
+			}
 		}
 
 		/// <summary>
