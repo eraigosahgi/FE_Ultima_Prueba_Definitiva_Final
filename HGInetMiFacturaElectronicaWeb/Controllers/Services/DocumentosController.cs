@@ -510,13 +510,26 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				if (((documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode()) || (documento.IntAdquirienteRecibo >= (short)CodigoResponseV2.Aceptado.GetHashCode())))
 				{
-					if ((documento.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode()))
+					bool actualizar_doc = false;
+					Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
+					TblEventosRadian evento = ctl_evento.Obtener(documento.StrIdSeguridad).OrderByDescending(x => x.DatFechaEvento).FirstOrDefault();
+					if (documento.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode())
 					{
 						documento.IntEstadoEnvio = (short)EstadoEnvio.Leido.GetHashCode();
 						//documento.IntAdquirienteRecibo = (short)AdquirienteRecibo.Pendiente.GetHashCode();
 						documento.DatFechaActualizaEstado = Fecha.GetFecha();
-						ctl_documento.Actualizar(documento);
+						actualizar_doc = true;
 					}
+
+					if (evento != null && documento.IntAdquirienteRecibo != evento.IntEstadoEvento)
+					{
+						documento.IntAdquirienteRecibo = evento.IntEstadoEvento;
+						documento.DatAdquirienteFechaRecibo = evento.DatFechaEvento;
+						actualizar_doc = true;
+					}
+
+					if (actualizar_doc == true)
+						ctl_documento.Actualizar(documento);
 				}
 
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
