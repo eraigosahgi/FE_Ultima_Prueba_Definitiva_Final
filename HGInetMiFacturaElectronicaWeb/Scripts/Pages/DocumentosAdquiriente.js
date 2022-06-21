@@ -406,13 +406,13 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
                        	dataField: "tipodoc"
                        },
                       {
-                      	caption: "Estado Acuse",
+                      	caption: "Estado Evento",
                       	cssClass: "hidden-xs col-md-1",
                       	dataField: "EstadoAcuse",
                       	cellTemplate: function (container, options) {
 
                       		$("<div>")
-								.append($(ColocarEstadoAcuse(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse)))
+								.append($(ColocarEstadoAcuse(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse, options.data.RutaAcuse)))
 								.appendTo(container);
                       	}
                       },
@@ -421,23 +421,23 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
                       	cssClass: "hidden-xs col-md-1",
                       	dataField: "MotivoRechazo",
                       },
-                      {
-                      	dataField: "",
-                      	caption: "Acuse",
-                      	cssClass: "col-md-1 col-xs-2",
-                      	cellTemplate: function (container, options) {
+                      //{
+                      //	dataField: "",
+                      //	caption: "Acuse",
+                      //	cssClass: "col-md-1 col-xs-2",
+                      //	cellTemplate: function (container, options) {
 
-                      		var Mostrar_Acuse;
-                      		if (options.data.Estado != 400)
-                      			Mostrar_Acuse = "<a target='_blank'  href='" + options.data.RutaAcuse + "'>Acuse</a>";
-                      		else
-                      			Mostrar_Acuse = "";
+                      //		var Mostrar_Acuse;
+                      //		if (options.data.Estado != 400)
+                      //			Mostrar_Acuse = "<a target='_blank'  href='" + options.data.RutaAcuse + "'>Acuse</a>";
+                      //		else
+                      //			Mostrar_Acuse = "";
 
-                      		$("<div>")
-								.append($(Mostrar_Acuse))
-								.appendTo(container);
-                      	}
-                      },
+                      //		$("<div>")
+					  //  		.append($(Mostrar_Acuse))
+					  //  		.appendTo(container);
+                      //	}
+                      //},
 					   {
 					   	caption: "Saldo",
 					   	dataField: "Saldo",

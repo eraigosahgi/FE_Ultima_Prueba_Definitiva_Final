@@ -12,9 +12,9 @@ function ColocarEstado(Estado, Descripcion) {
 	return "<span " + ((Estado == '400') ? " class='badge badge-FallidoDIAN'  title='" + Descripcion + "'" : (Estado == '300') ? " class='badge badge-ValidadoDIAN'  title='" + Descripcion + "'" : (Estado == '200') ? " class='badge badge-envioDian'   title='" + Descripcion + "'" : " class='badge badge-RecibidoPlataforma'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
 }
 
-function ColocarEstadoAcuse(Estado, Descripcion) {
+function ColocarEstadoAcuse(Estado, Descripcion, ruta_acuse) {
 	Descripcion = GetDescripcionEnum(AdquirienteRecibo, Estado);
-	return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : " class='badge badge-Aprobado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
+	return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : " class='badge badge-Aprobado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + "<a target='_blank' style='color: white !important' href='" + ruta_acuse + "'>" + Descripcion + " </a>" + "</span>"
 }
 
 function ColocarEstadoAcuseObligado(Estado, Descripcion) {

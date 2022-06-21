@@ -2277,6 +2277,18 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					}
 
 				}
+				else
+				{
+					 TblEventosRadian ultimo_evento = list_evento.OrderByDescending(x => x.DatFechaEvento).FirstOrDefault();
+
+					if (!doc.IntAdquirienteRecibo.Equals(ultimo_evento.IntEstadoEvento))
+					{
+						doc.IntAdquirienteRecibo = ultimo_evento.IntEstadoEvento;
+						doc.DatAdquirienteFechaRecibo = ultimo_evento.DatFechaEvento;
+						Ctl_Documento actualizar_doc = new Ctl_Documento();
+						doc = actualizar_doc.Actualizar(doc);
+					}
+				}
 
 				//retorno.Add(doc);
 

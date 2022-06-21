@@ -88,13 +88,13 @@
 	<script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
 
 	<!-- JS AcuseRecibo -->
-	<script src="../../Scripts/WebConfig.js?vjs20220317"></script>
-	<script src="../../Scripts/config.js?vjs20220317"></script>
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20220317"></script>
-	<script src="../../Scripts/config.js?vjs20220317"></script>
-	<script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs20220317"></script>
-	<script src="../../Scripts/Pages/AcuseRecibo.js?vjs20220317"></script>
-	<script src="../../Scripts/Pages/ModalPagos.js?vjs20220317"></script>
+	<script src="../../Scripts/WebConfig.js?vjs20220621"></script>
+	<script src="../../Scripts/config.js?vjs20220621"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20220621"></script>
+	<script src="../../Scripts/config.js?vjs20220621"></script>
+	<script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs20220621"></script>
+	<script src="../../Scripts/Pages/AcuseRecibo.js?vjs20220621"></script>
+	<script src="../../Scripts/Pages/ModalPagos.js?vjs20220621"></script>
 
 </head>
 
@@ -199,19 +199,23 @@
 										<br />
 										<div class="col-md-12">
 
-											<label><strong>Recibo del bien o prestación del servicio</strong></label>
 											<input type="radio" style="cursor: pointer" class="w3-radio" value="3" data-ng-model="value" id="rb_acuse" name="group2" ng-change="ValidarEstado(value)" data-ng-show="{{datos.IntAdquirienteRecibo != 4}}"/>
+											<label><strong>Recibo del bien o prestación del servicio</strong></label>
 											 <label class="text-danger" data-ng-show="{{datos.IntAdquirienteRecibo > 3}}">Ejecutado</label>
 										</div>
 										<br />
 										<div class="col-md-12 ">
 
-											<label><strong>Aceptación Expresa:</strong></label>
 											<input type="radio" style="cursor: pointer" class="w3-radio" value="1" data-ng-model="value" id="rb_expresa" name="group1" ng-change="ValidarEstado(value)" />
-
-											<label style="margin-left: 20px;"><strong>Reclamos a la Venta:</strong></label>
-											<input type="radio" style="cursor: pointer" class="w3-radio" value="2" data-ng-model="value" id="rb_rechazo" name="group1" ng-change="ValidarEstado(value)" />
+											<label><strong>Aceptación Expresa:</strong></label>
 										</div>
+										<br />
+										<div class="col-md-12 ">
+
+											<input type="radio" style="cursor: pointer" class="w3-radio" value="2" data-ng-model="value" id="rb_rechazo" name="group1" ng-change="ValidarEstado(value)" />
+											<label><strong>Reclamos a la Venta:</strong></label>
+										</div>
+										<br />
 										<br />
 									</div>
 
