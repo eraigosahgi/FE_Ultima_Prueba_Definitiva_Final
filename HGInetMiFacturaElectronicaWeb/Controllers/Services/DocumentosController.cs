@@ -508,11 +508,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				bool cliente_hgi = (documento.TblEmpresasAdquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() && documento.TblEmpresasAdquiriente.IntObligado == true && documento.TblEmpresasAdquiriente.IntAdquiriente == true && documento.TblEmpresasAdquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode()) ? true : false;
 
-				if (((documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode()) || (documento.IntAdquirienteRecibo >= (short)CodigoResponseV2.Aceptado.GetHashCode())))
+				Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
+				TblEventosRadian evento = ctl_evento.Obtener(documento.StrIdSeguridad).OrderByDescending(x => x.DatFechaEvento).FirstOrDefault();
+
+				if (((documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode()) || (documento.IntAdquirienteRecibo >= (short)CodigoResponseV2.Aceptado.GetHashCode())) || evento != null)
 				{
 					bool actualizar_doc = false;
-					Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
-					TblEventosRadian evento = ctl_evento.Obtener(documento.StrIdSeguridad).OrderByDescending(x => x.DatFechaEvento).FirstOrDefault();
 					if (documento.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode())
 					{
 						documento.IntEstadoEnvio = (short)EstadoEnvio.Leido.GetHashCode();
@@ -536,8 +537,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				if (cliente_hgi == true && documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode() && (plataforma.RutaPublica.Contains("habilitacion") || plataforma.RutaPublica.Contains("localhost")) && documento.TblEmpresasFacturador.IntRadian == true)
 				{
-					Ctl_EventosRadian evento = new Ctl_EventosRadian();
-					Task envio_acuse = evento.ProcesoCrearAcuseRecibo(string.Empty, documento.StrIdSeguridad);
+					//Ctl_EventosRadian evento = new Ctl_EventosRadian();
+					Task envio_acuse = ctl_evento.ProcesoCrearAcuseRecibo(string.Empty, documento.StrIdSeguridad);
 				}
 
 
