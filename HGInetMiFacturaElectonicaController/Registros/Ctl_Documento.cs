@@ -2230,6 +2230,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								{
 									evento_procesado_DIAN = true;
 									doc.IntAdquirienteRecibo = (short)CodigoResponseV2.AprobadoTacito.GetHashCode();
+									doc.DatAdquirienteFechaRecibo = tacito.DatFechaEvento;
 								}
 							}
 						}
