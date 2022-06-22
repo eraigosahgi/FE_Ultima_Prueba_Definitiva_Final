@@ -238,7 +238,7 @@ namespace HGInetUBLv2_1
 						acuse.Note = notas.ToArray();
 
 					// Información del emisor del evento
-					if (tipo_acuse.Equals(CodigoResponseV2.Inscripcion))
+					if (tipo_acuse.Equals(CodigoResponseV2.Inscripcion) || tipo_acuse.Equals(CodigoResponseV2.AprobadoTacito))
 					{
 						acuse.SenderParty = ObtenerTercero(documento.DatosObligado, receptor, participacion_endoso, mandato);
 					}
