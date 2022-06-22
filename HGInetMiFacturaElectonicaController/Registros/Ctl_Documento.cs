@@ -2212,22 +2212,36 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					}
 					else if (estado == CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
 					{
-						TblEventosRadian tacito = null;
-						//Crea el XML del Acuse
-						resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), motivo_rechazo);
-						if (facturador.IntRadian == true)
+
+						TblEventosRadian tacito = list_evento.Where(x => x.IntEstadoEvento == 3).FirstOrDefault();
+
+						if (tacito == null)
 						{
-							tacito = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode());
-							if (tacito == null)
+							//Crea el XML del Acuse
+							resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), motivo_rechazo);
+							if (facturador.IntRadian == true)
 							{
-								throw new ArgumentException("No fue posible registrar el evento Aprobado Tacito");
-							}
-							else
-							{
-								evento_procesado_DIAN = true;
-								doc.IntAdquirienteRecibo = (short)CodigoResponseV2.AprobadoTacito.GetHashCode();
+								tacito = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode());
+								if (tacito == null)
+								{
+									throw new ArgumentException("No fue posible registrar el evento Aprobado Tacito");
+								}
+								else
+								{
+									evento_procesado_DIAN = true;
+									doc.IntAdquirienteRecibo = (short)CodigoResponseV2.AprobadoTacito.GetHashCode();
+								}
 							}
 						}
+
+						if (doc.IntAdquirienteRecibo != (short)CodigoResponseV2.AprobadoTacito.GetHashCode())
+						{
+							doc.IntAdquirienteRecibo = (short)CodigoResponseV2.AprobadoTacito.GetHashCode();
+							doc.DatAdquirienteFechaRecibo = tacito.DatFechaEvento;
+						}
+
+						Ctl_Documento actualizar_doc = new Ctl_Documento();
+						doc = actualizar_doc.Actualizar(doc);
 
 					}
 					else if (habilitacion_radian == true)
