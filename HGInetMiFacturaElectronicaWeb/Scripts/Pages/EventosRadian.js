@@ -91,7 +91,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 
 
 			$("#cmdenviar").dxButton({
-				text: "Enviar evento Titulo Valor",
+				text: "Inscripción TV",
 				type: "default",
 				visible: false,
 				onClick: function () {

@@ -506,13 +506,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				TblDocumentos documento = new TblDocumentos();
 				documento = datos.FirstOrDefault();
 
+				bool actualizar_doc = false;
 				bool cliente_hgi = (documento.TblEmpresasAdquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() && documento.TblEmpresasAdquiriente.IntObligado == true && documento.TblEmpresasAdquiriente.IntAdquiriente == true && documento.TblEmpresasAdquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode()) ? true : false;
 
 				Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
 
 				if (((documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode()) || (documento.IntAdquirienteRecibo >= (short)CodigoResponseV2.Aceptado.GetHashCode())))
 				{
-					bool actualizar_doc = false;
+					
 					if (documento.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode())
 					{
 						documento.IntEstadoEnvio = (short)EstadoEnvio.Leido.GetHashCode();
@@ -520,18 +521,6 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						documento.DatFechaActualizaEstado = Fecha.GetFecha();
 						actualizar_doc = true;
 					}
-
-					TblEventosRadian evento = ctl_evento.Obtener(documento.StrIdSeguridad).OrderByDescending(x => x.DatFechaEvento).FirstOrDefault();
-
-					if (evento != null && documento.IntAdquirienteRecibo != evento.IntEstadoEvento)
-					{
-						documento.IntAdquirienteRecibo = evento.IntEstadoEvento;
-						documento.DatAdquirienteFechaRecibo = evento.DatFechaEvento;
-						actualizar_doc = true;
-					}
-
-					if (actualizar_doc == true)
-						ctl_documento.Actualizar(documento);
 				}
 
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
@@ -540,7 +529,23 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					//Ctl_EventosRadian evento = new Ctl_EventosRadian();
 					Task envio_acuse = ctl_evento.ProcesoCrearAcuseRecibo(string.Empty, documento.StrIdSeguridad);
+					documento.IntAdquirienteRecibo = (short)CodigoResponseV2.Recibido.GetHashCode();
+					documento.DatAdquirienteFechaRecibo = Fecha.GetFecha();
+					actualizar_doc = true;
+
 				}
+
+				TblEventosRadian evento = ctl_evento.Obtener(documento.StrIdSeguridad).OrderByDescending(x => x.DatFechaEvento).FirstOrDefault();
+
+				if (evento != null && documento.IntAdquirienteRecibo != evento.IntEstadoEvento)
+				{
+					documento.IntAdquirienteRecibo = evento.IntEstadoEvento;
+					documento.DatAdquirienteFechaRecibo = evento.DatFechaEvento;
+					actualizar_doc = true;
+				}
+
+				if (actualizar_doc == true)
+					ctl_documento.Actualizar(documento);
 
 
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
