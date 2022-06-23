@@ -2274,7 +2274,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						doc.StrUrlAcuseUbl = resultado.RutaArchivosProceso;
 
 						if (estado != CodigoResponseV2.Rechazado.GetHashCode() && !string.IsNullOrEmpty(doc.StrAdquirienteMvoRechazo))
-							doc.StrAdquirienteMvoRechazo = string.Empty;
+							doc.StrAdquirienteMvoRechazo = string.Empty;					 
 
 						Ctl_Documento actualizar_doc = new Ctl_Documento();
 						doc = actualizar_doc.Actualizar(doc);
@@ -2524,6 +2524,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					string ruta_respuestaDian = resultado.RutaArchivosProceso.Replace(resultado.NombreXml, string.Format("{0}-{1}", resultado.NombreXml, estado));
 					eventobd.StrUrlEvento = ruta_respuestaDian;
 					evento.Crear(eventobd);
+
+					//Se actualiza estado del evento en el documento
+					Ctl_Documento actualizar_doc = new Ctl_Documento();
+
+					doc.IntAdquirienteRecibo = eventobd.IntEstadoEvento;
+					doc.DatAdquirienteFechaRecibo = eventobd.DatFechaEvento;
+
+					doc = actualizar_doc.Actualizar(doc);
 					//RegistroLog.EscribirLog(new ApplicationException("Creacion del Evento"), MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.envio, string.Format("Codigo Estado Doc {0} - Codigo respuesta DIAN {1} - descripcion {2}", resp.EstadoDian.EstadoDocumento, resp.EstadoDian.CodigoRespuesta, resp.EstadoDian.Descripcion));
 				}
 

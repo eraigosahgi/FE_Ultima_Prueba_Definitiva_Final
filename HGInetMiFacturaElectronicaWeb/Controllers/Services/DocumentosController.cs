@@ -529,9 +529,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					//Ctl_EventosRadian evento = new Ctl_EventosRadian();
 					Task envio_acuse = ctl_evento.ProcesoCrearAcuseRecibo(string.Empty, documento.StrIdSeguridad);
-					documento.IntAdquirienteRecibo = (short)CodigoResponseV2.Recibido.GetHashCode();
-					documento.DatAdquirienteFechaRecibo = Fecha.GetFecha();
-					actualizar_doc = true;
+					//documento.IntAdquirienteRecibo = (short)CodigoResponseV2.Recibido.GetHashCode();
+					//documento.DatAdquirienteFechaRecibo = Fecha.GetFecha();
+					//actualizar_doc = true;
 
 				}
 
