@@ -5597,7 +5597,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					//se obtiene el ultimo registro sincronizado a Azure segun año que se este procesando
 					Ctl_AlmacenamientoDocs almacenamiento = new Ctl_AlmacenamientoDocs();
-					TblAlmacenamientoDocs ultimo_registro = almacenamiento.Obtener().Where(y => y.DatFechaRegistroDoc.Year.Equals(anyo)).OrderByDescending(x => x.DatFechaSincronizacion).Take(1).FirstOrDefault();
+					TblAlmacenamientoDocs ultimo_registro = almacenamiento.ObtenerUltimoSincronizado(anyo);
 
 					if (buscar_faltantes == false)
 					{

@@ -48,6 +48,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return datos;
 		}
 
+		public TblAlmacenamientoDocs ObtenerUltimoSincronizado(int anyo, bool LazyLoading = false)
+		{
+			context.Configuration.LazyLoadingEnabled = LazyLoading;
+
+			TblAlmacenamientoDocs datos = (from item in context.TblAlmacenamientoDocs
+										   where item.DatFechaRegistroDoc.Year == anyo
+												 select item).OrderByDescending(x => x.DatFechaSincronizacion).Take(1).FirstOrDefault();
+
+			return datos;
+		}
+
 		public TblAlmacenamientoDocs Crear(TblAlmacenamientoDocs evento)
 		{
 			evento = this.Add(evento);
