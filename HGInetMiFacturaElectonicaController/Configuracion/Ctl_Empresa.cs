@@ -531,6 +531,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				}
 
 				EmpresaActualiza.IntRadian = empresa.IntRadian;
+
+				if (EmpresaActualiza.IntAcuseTacito == null)
+					EmpresaActualiza.IntAcuseTacito = 0;
+
+				//Se ajusta si tiene Radian y no las horas minimas de acuse, le agrega las horas que se ingresan en vista
 				EmpresaActualiza.IntAcuseTacito = (empresa.IntRadian == true && EmpresaActualiza.IntAcuseTacito < 72) ? empresa.IntAcuseTacito : EmpresaActualiza.IntAcuseTacito; //empresa.IntAcuseTacito;
 				EmpresaActualiza.IntEnvioNominaMail = empresa.IntEnvioNominaMail;
 
