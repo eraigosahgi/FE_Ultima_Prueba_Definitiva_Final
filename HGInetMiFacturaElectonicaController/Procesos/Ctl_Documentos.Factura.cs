@@ -274,7 +274,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			}
 
-			if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
+			if (facturador_electronico != null && facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
 			{
 				Ctl_Log.Guardar(new ApplicationException("Retorna respuesta al servicio"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
 			}
