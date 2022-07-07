@@ -1566,7 +1566,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			context.Configuration.LazyLoadingEnabled = false;
 
 			var datos = (from item in context.TblEmpresas
-						 where item.IntAcuseTacito >= 72 && item.IntRadian == true
+						 where item.IntAcuseTacito >= 72 && (item.IntRadian == true || item.IntInteroperabilidad)
 						 select item).ToList();
 
 			return datos;
