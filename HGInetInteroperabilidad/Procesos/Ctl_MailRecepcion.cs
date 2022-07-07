@@ -334,7 +334,7 @@ namespace HGInetInteroperabilidad.Procesos
 					}
 					catch (Exception excepcion)
 					{
-						string msg = string.Format("Error al intentar ejecutar la sonda para procesar los archivos de los correos - detalle: {0} - {1}", excepcion.MensajeAdicional, excepcion.MensajeResultado);
+						string msg = string.Format("Error al intentar ejecutar la sonda para procesar los archivos de los correos - detalle: {0} - {1}", excepcion.Message, excepcion.InnerException.Message);
 						RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.seleccion, msg);
 					}
 				}
