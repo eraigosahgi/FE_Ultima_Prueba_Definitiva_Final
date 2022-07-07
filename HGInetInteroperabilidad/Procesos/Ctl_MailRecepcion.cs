@@ -18,6 +18,7 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using HGInetMiFacturaElectonicaController;
+using System.Net;
 
 namespace HGInetInteroperabilidad.Procesos
 {
@@ -57,6 +58,8 @@ namespace HGInetInteroperabilidad.Procesos
 					RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.lectura, msg);
 					throw new ExcepcionHgi(excepcion, HGICtrlUtilidades.NotificacionCodigo.ERROR_EN_SERVIDOR, msg);
 				}
+
+				bool ejecutar_sonda = false;
 
 				// procesa los correos electrónicos obtenidos
 				foreach (UniqueId id_mensaje in ids_mensajes)
@@ -224,6 +227,8 @@ namespace HGInetInteroperabilidad.Procesos
 									   
 									}
 
+									ejecutar_sonda = true;
+
 									//se notifica al correo emisor y del facturador(Adquiriente) que recibio
 									//try
 									//{
@@ -316,6 +321,21 @@ namespace HGInetInteroperabilidad.Procesos
 					{
 						string msg = string.Format("Error al obtener el correo electrónico: {0}", id_mensaje);
 						RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, msg);
+					}
+				}
+
+				//en el momento que termine de descargar los correos ejecuta la sonda para que los procese de inmediato
+				if (ejecutar_sonda == true)
+				{
+					try
+					{
+						var request = (HttpWebRequest)WebRequest.Create("https://tasks.mifacturaenlinea.com.co/Views/Pages/SondaProcesarCorreo.aspx");
+						request.GetResponse();
+					}
+					catch (Exception excepcion)
+					{
+						string msg = string.Format("Error al intentar ejecutar la sonda para procesar los archivos de los correos - detalle: {0} - {1}", excepcion.MensajeAdicional, excepcion.MensajeResultado);
+						RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.seleccion, msg);
 					}
 				}
 

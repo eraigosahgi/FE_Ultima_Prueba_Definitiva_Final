@@ -253,6 +253,7 @@ namespace HGInetInteroperabilidad.Configuracion
 									}
 									catch (Exception ex)
 									{
+										ruta_dir_archivos_borrar = item;
 										string ruta_dir = string.Format(@"{0}\Archivos", ruta_archivos.Replace("recepcion", "no procesados"));
 										Directorio.CrearDirectorio(ruta_dir);
 										string nom_dir = Path.GetFileName(directorios_archivos[i]);
