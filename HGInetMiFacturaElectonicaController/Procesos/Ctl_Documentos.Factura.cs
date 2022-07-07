@@ -16,12 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using HGInetMiFacturaElectonicaData.ModeloServicio.Documentos;
 using LibreriaGlobalHGInet.Error;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
-using ListaTipoMoneda = HGInetUBLv2_1.DianListas.ListaTipoMoneda;
 using LibreriaGlobalHGInet.RegistroLog;
 using Newtonsoft.Json;
 

@@ -60,6 +60,7 @@ namespace HGInetInteroperabilidad.Procesos
 				}
 
 				bool ejecutar_sonda = false;
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				// procesa los correos electrónicos obtenidos
 				foreach (UniqueId id_mensaje in ids_mensajes)
@@ -196,9 +197,6 @@ namespace HGInetInteroperabilidad.Procesos
 									//throw excepcion;
 								}*/
 
-								// procesar archivo adjunto temporal
-								PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-
 								// id de recepción
 								string identificador_mail = Cl_Fecha.GetFecha().ToString("yyyy-MM-dd-HH-mm-ss");
 
@@ -322,6 +320,18 @@ namespace HGInetInteroperabilidad.Procesos
 						string msg = string.Format("Error al obtener el correo electrónico: {0}", id_mensaje);
 						RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, msg);
 					}
+				}
+
+				//Se valida si se tiene aun archivos por procesar para hacerlo asi no tenga correos nuevos descargados.
+				if (ejecutar_sonda == false)
+				{
+					string ruta_archivos = string.Format("{0}\\{1}{2}\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion);
+
+					string[] directorios_Obligado = Directorio.ObtenerSubdirectoriosDirectorio(ruta_archivos);
+
+					if (directorios_Obligado != null && directorios_Obligado.Length > 0)
+						ejecutar_sonda = true;
+
 				}
 
 				//en el momento que termine de descargar los correos ejecuta la sonda para que los procese de inmediato
