@@ -403,7 +403,7 @@
           <Property Name="DatFechaCorreo" Type="datetime" Nullable="false" />
           <Property Name="StrRemitente" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="StrAsunto" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="IntEstado" Type="bit" Nullable="false" />
+          <Property Name="IntEstado" Type="smallint" Nullable="false" />
           <Property Name="StrObservaciones" Type="varchar" MaxLength="400" />
         </EntityType>
         <EntityType Name="TblUsuarios">
@@ -1908,7 +1908,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="DatFechaCorreo" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="StrRemitente" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="StrAsunto" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="IntEstado" Type="Boolean" Nullable="false" />
+          <Property Name="IntEstado" Type="Int16" Nullable="false" />
           <Property Name="StrObservaciones" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>

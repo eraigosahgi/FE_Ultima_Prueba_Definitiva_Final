@@ -19,7 +19,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public System.DateTime DatFechaCorreo { get; set; }
         public string StrRemitente { get; set; }
         public string StrAsunto { get; set; }
-        public bool IntEstado { get; set; }
+        public short IntEstado { get; set; }
         public string StrObservaciones { get; set; }
     }
 }
