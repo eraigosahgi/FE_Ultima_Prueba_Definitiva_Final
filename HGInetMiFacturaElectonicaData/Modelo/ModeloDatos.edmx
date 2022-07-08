@@ -394,6 +394,18 @@
           <Property Name="DatFechaValidado" Type="datetime" />
           <Property Name="StrMailEnviado" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="TblRegistroRecepcion">
+          <Key>
+            <PropertyRef Name="StrId" />
+          </Key>
+          <Property Name="StrId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DatFechaRegistro" Type="datetime" Nullable="false" />
+          <Property Name="DatFechaCorreo" Type="datetime" Nullable="false" />
+          <Property Name="StrRemitente" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="StrAsunto" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="IntEstado" Type="bit" Nullable="false" />
+          <Property Name="StrObservaciones" Type="varchar" MaxLength="400" />
+        </EntityType>
         <EntityType Name="TblUsuarios">
           <Key>
             <PropertyRef Name="StrEmpresa" />
@@ -808,6 +820,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySet Name="TblPlanes" EntityType="Self.TblPlanes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblPlanesTransacciones" EntityType="Self.TblPlanesTransacciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblProcesoCorreo" EntityType="Self.TblProcesoCorreo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblRegistroRecepcion" EntityType="Self.TblRegistroRecepcion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblUsuarios" EntityType="Self.TblUsuarios" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblUsuariosPagos" EntityType="Self.TblUsuariosPagos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QryAdquirientes" EntityType="Self.QryAdquirientes" store:Type="Views" store:Schema="dbo">
@@ -1061,6 +1074,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
             <End Role="TblAlmacenamientoDocs" EntitySet="TblAlmacenamientoDocs" />
           </AssociationSet>
+          <EntitySet Name="TblRegistroRecepcion" EntityType="Modelo.TblRegistroRecepcion" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1885,6 +1899,18 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TblRegistroRecepcion">
+          <Key>
+            <PropertyRef Name="StrId" />
+          </Key>
+          <Property Name="StrId" Type="Guid" Nullable="false" />
+          <Property Name="DatFechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DatFechaCorreo" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StrRemitente" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="StrAsunto" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IntEstado" Type="Boolean" Nullable="false" />
+          <Property Name="StrObservaciones" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2376,6 +2402,19 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
                 <ScalarProperty Name="StrUrlAnterior" ColumnName="StrUrlAnterior" />
                 <ScalarProperty Name="IntConsecutivo" ColumnName="IntConsecutivo" />
                 <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblRegistroRecepcion">
+            <EntityTypeMapping TypeName="Modelo.TblRegistroRecepcion">
+              <MappingFragment StoreEntitySet="TblRegistroRecepcion">
+                <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+                <ScalarProperty Name="IntEstado" ColumnName="IntEstado" />
+                <ScalarProperty Name="StrAsunto" ColumnName="StrAsunto" />
+                <ScalarProperty Name="StrRemitente" ColumnName="StrRemitente" />
+                <ScalarProperty Name="DatFechaCorreo" ColumnName="DatFechaCorreo" />
+                <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
+                <ScalarProperty Name="StrId" ColumnName="StrId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
