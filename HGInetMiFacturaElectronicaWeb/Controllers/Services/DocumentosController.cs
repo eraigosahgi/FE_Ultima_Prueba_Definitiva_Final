@@ -262,7 +262,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return NotFound();
 				}
 
-				List<string> doc_consulta_evento = datos.Where(x => x.tipodoc == 1 && x.IntAdquirienteRecibo != 3 && x.IntAdquirienteRecibo < 6 && x.FormaPago == 2 && x.EstadoCategoria == 300 && x.Radian == true).Select(x => x.StrIdSeguridad.ToString()).ToList();
+				List<string> doc_consulta_evento = datos.Where(x => x.tipodoc == 1 && ((x.IntAdquirienteRecibo >= 0 && x.IntAdquirienteRecibo < 3) || (x.IntAdquirienteRecibo == 4)) && x.FormaPago == 2 && x.EstadoCategoria == 300).Select(x => x.StrIdSeguridad.ToString()).ToList();
 
 				if (doc_consulta_evento != null)
 				{

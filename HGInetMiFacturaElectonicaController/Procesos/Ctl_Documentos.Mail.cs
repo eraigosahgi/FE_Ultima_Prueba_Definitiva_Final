@@ -211,7 +211,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//Actualiza la respuesta del envio del correo
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();
-				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Pendiente.GetHashCode();
+				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
 				respuesta.DescripcionEstadoEnvioMail = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoEnvio>(respuesta.IdEstadoEnvioMail));
 				documentoBd.IntEnvioMail = false;
 				documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
