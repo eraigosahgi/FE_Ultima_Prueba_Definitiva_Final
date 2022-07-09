@@ -7,7 +7,7 @@
 	<title></title>
 
 	<script src="../../Scripts/config.js?vjs20220511"></script>
-	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs20220511"></script>
+	<script src="../../Scripts/Pages/ModalDetalleEmpresa.js?vjs20220709"></script>
 
 	<style type="text/css">
 		#outlook a {
