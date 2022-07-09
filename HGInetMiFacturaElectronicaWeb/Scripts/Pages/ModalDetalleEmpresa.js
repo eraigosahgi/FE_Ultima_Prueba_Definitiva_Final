@@ -22,6 +22,7 @@ ModalDetalleEmpresasApp.controller('EmpresasModalController', function EmpresasM
 			$scope.adquiriente = (response.data[0].Intadquiriente) ? "SI" : "NO";
 			$scope.obligado = (response.data[0].intObligado) ? "SI" : "NO";
 			$scope.Habilitacion = BuscarDescripcion(EnumHabilitacion, response.data[0].Habilitacion);
+			$scope.InterOp = response.data[0].InterOp ? "SI" : "NO";
 			$scope.HabilitacionNom = BuscarDescripcion(EnumHabilitacion, response.data[0].Habilitacion_NominaE);
 			$scope.EnvioNominaMail = response.data[0].IntEnvioNominaMail ? "SI" : "NO";
 			$scope.Radian = response.data[0].Radian ? "SI" : "NO";

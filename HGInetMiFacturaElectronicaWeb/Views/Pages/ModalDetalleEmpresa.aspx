@@ -255,11 +255,14 @@
 																								<td colspan="7" style="background-color: #ffffff; vertical-align: top">{{HabilitacionNom}}</td>
 																							</tr>
 																							<tr>
-																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Envio Nómina Email:</td>
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Email Nómina:</td>
 																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{EnvioNominaMail}}</td>
 
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Radian:</td>
 																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{Radian}}</td>
+
+																								<td colspan="3" style="background-color: #efefef; vertical-align: top">Recepción Doc-E:</td>
+																								<td colspan="2" style="background-color: #ffffff; vertical-align: top">{{InterOp}}</td>
 																							</tr>
 																							<tr>
 																								<td colspan="3" style="background-color: #efefef; vertical-align: top">versión:</td>
