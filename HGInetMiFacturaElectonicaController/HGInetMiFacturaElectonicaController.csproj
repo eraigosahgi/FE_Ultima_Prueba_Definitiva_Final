@@ -125,6 +125,7 @@
     <Compile Include="Configuracion\Ctl_MestrosEnum.cs" />
     <Compile Include="Configuracion\Ctl_PlanesTransacciones.cs" />
     <Compile Include="Configuracion\Ctl_Planes.cs" />
+    <Compile Include="Configuracion\Ctl_RegistroRecepcion.cs" />
     <Compile Include="Configuracion\Ctl_Usuario.cs" />
     <Compile Include="Configuracion\Ctl_UsuarioPagos.cs" />
     <Compile Include="Indicadores\Ctl_Indicadores.cs" />

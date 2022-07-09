@@ -235,14 +235,23 @@ namespace HGInetInteroperabilidad.Configuracion
 
 								if (archivos_recibidos != null)
 								{
+									string registro = Path.GetFileName(item);
 									try
-									{
+									{ 
 										procesado = Ctl_Recepcion.ProcesarCorreo(item);
 										datos_respuesta = procesado;
 
 										if (procesado == true)
 										{
 											ruta_dir_archivos_borrar = item;
+
+											Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
+											TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(registro));
+											if (tblregistro != null)
+											{
+												tblregistro.IntEstado = 3;
+												tblregistro.StrObservaciones = "Correo Procesado Correctamente y creado en Plataforma";
+											}
 											//Directorio.BorrarArchivos(item);
 											//Directorio.BorrarDirectorio(item);
 										}

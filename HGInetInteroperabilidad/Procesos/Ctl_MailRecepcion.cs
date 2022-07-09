@@ -198,7 +198,7 @@ namespace HGInetInteroperabilidad.Procesos
 								}*/
 
 								// id de recepción
-								string identificador_mail = Cl_Fecha.GetFecha().ToString("yyyy-MM-dd-HH-mm-ss");
+								string identificador_mail = Guid.NewGuid().ToString();//Cl_Fecha.GetFecha().ToString("yyyy-MM-dd-HH-mm-ss");
 
 								if (correo_procesado)
 								{  
@@ -297,6 +297,36 @@ namespace HGInetInteroperabilidad.Procesos
 									//EnviarAlerta(id_mensaje,mensaje,empresa,mensajes,cliente_imap);
 								}
 
+								try
+								{
+									TblRegistroRecepcion registro = new TblRegistroRecepcion();
+
+									registro.StrId = Guid.Parse(identificador_mail);
+									registro.DatFechaCorreo = fecha;
+									registro.DatFechaRegistro = Cl_Fecha.GetFecha();
+									registro.StrRemitente = remitente;
+									registro.StrAsunto = asunto;
+									if (correo_procesado == true)
+									{
+										registro.IntEstado = 2;
+										registro.StrObservaciones = "Correo Recibido, descargado y próximo a validación para procesar";
+									}
+									else
+									{
+										registro.IntEstado = 1;
+										registro.StrObservaciones = JsonConvert.SerializeObject(mensajes);
+									}
+
+
+									Ctl_RegistroRecepcion _ctl = new Ctl_RegistroRecepcion();
+									_ctl.Crear(registro);
+								}
+								catch (Exception excepcion)
+								{
+									string msg = string.Format("Error al guardar registro del correo electrónico: {0} - {1} - {2} - {3}", fecha.ToString(Cl_Fecha.formato_fecha_hora_completa), remitente, asunto, excepcion.Message);
+									RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, msg);
+								}
+
 								/*
 								 -	Notificación al Adquiriente si se incumplen las validaciones anteriores de correo electrónico; reenviando el correo electrónico recibido desde el Facturador.
 
@@ -339,7 +369,8 @@ namespace HGInetInteroperabilidad.Procesos
 				{
 					try
 					{
-						var request = (HttpWebRequest)WebRequest.Create("https://tasks.mifacturaenlinea.com.co/Views/Pages/SondaProcesarCorreo.aspx");
+						string url_sonda = "https://tasks.mifacturaenlinea.com.co/Views/Pages/SondaProcesarCorreo.aspx";
+						var request = (HttpWebRequest)WebRequest.Create(url_sonda);
 						request.GetResponse();
 					}
 					catch (Exception excepcion)
