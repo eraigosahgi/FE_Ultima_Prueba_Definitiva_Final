@@ -245,12 +245,20 @@ namespace HGInetInteroperabilidad.Configuracion
 										{
 											ruta_dir_archivos_borrar = item;
 
-											Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
-											TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(registro));
-											if (tblregistro != null)
+											try
 											{
-												tblregistro.IntEstado = 3;
-												tblregistro.StrObservaciones = "Correo Procesado Correctamente y creado en Plataforma";
+												Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
+												TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(registro));
+												if (tblregistro != null)
+												{
+													tblregistro.IntEstado = 3;
+													tblregistro.StrObservaciones = "Correo Procesado Correctamente y creado en Plataforma";
+													_ctrl_registro.Actualizar(tblregistro);
+												}
+											}
+											catch (Exception excepcion)
+											{
+												RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion, string.Format("No se pudo actualizar tabla de registro - {0}",excepcion.Message));
 											}
 											//Directorio.BorrarArchivos(item);
 											//Directorio.BorrarDirectorio(item);
