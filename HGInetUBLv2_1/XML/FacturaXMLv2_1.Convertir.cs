@@ -148,7 +148,9 @@ namespace HGInetUBLv2_1
 						if (item.ID.Value != null)
 						{
 							adicional.Documento = item.ID.Value;
-							adicional.CodigoReferencia = item.DocumentTypeCode.Value;
+
+							if (item.DocumentTypeCode != null)
+								adicional.CodigoReferencia = item.DocumentTypeCode.Value;
 						}
 						factura_obj.DocumentosReferencia.Add(adicional);
 					}

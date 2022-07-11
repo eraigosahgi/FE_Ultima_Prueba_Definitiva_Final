@@ -114,7 +114,8 @@ namespace HGInetUBLv2_1
 				//Valida si es persona Natural 
 				if (cliente.Party.Person != null)
 				{
-					adquiriente.PrimerNombre = cliente.Party.Person.FirstOrDefault().FirstName.Value;
+					if (cliente.Party.Person.FirstOrDefault().FirstName != null)
+						adquiriente.PrimerNombre = cliente.Party.Person.FirstOrDefault().FirstName.Value;
 					if (cliente.Party.Person.FirstOrDefault().MiddleName != null)
 						adquiriente.SegundoNombre = cliente.Party.Person.FirstOrDefault().MiddleName.Value;
 					if (cliente.Party.Person.FirstOrDefault().FamilyName != null)
