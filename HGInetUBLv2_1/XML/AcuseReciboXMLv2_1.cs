@@ -284,6 +284,31 @@ namespace HGInetUBLv2_1
                 DocumentResponseType DocumentResponse = new DocumentResponseType();
                 ResponseType response = new ResponseType();
 
+				//Se obtiene la informacion del XMl de la Factura para tomar los datos correctos 
+				string contenido_xml_Fe = Archivo.ObtenerContenido(documento_factura.StrUrlArchivoUbl);
+
+				string prefijo = string.Empty;
+				string numero_documento = string.Empty;
+				Factura documento_obj = new Factura();
+
+				// valida el contenido del archivo
+				if (string.IsNullOrWhiteSpace(contenido_xml_Fe))
+				{
+					// convierte el contenido de texto a xml
+					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml_Fe));
+
+					// convierte el objeto de acuerdo con el tipo de documento
+					XmlSerializer serializacion1 = new XmlSerializer(typeof(InvoiceType));
+
+					InvoiceType conversion = (InvoiceType)serializacion1.Deserialize(xml_reader);
+
+					documento_obj = FacturaXMLv2_1.Convertir(conversion, null);
+
+					documento.Prefijo = (documento_obj.Prefijo == documento.Prefijo) ? documento.Prefijo : documento_obj.Prefijo;
+					documento.Documento = (documento_obj.Documento == documento.Documento) ? documento.Documento : documento_obj.Documento;
+
+				}
+
 				if (!tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG) && !tipo_acuse.Equals(CodigoResponseV2.TerminacionMandatoG) && !tipo_acuse.Equals(CodigoResponseV2.InformePago) && !tipo_acuse.Equals(CodigoResponseV2.Aval) && !tipo_acuse.Equals(CodigoResponseV2.PagoFvTV))
 				{
 					response.ReferenceID = new ReferenceIDType();
