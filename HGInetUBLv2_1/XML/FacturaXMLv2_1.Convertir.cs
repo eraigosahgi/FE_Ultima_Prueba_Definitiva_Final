@@ -178,7 +178,14 @@ namespace HGInetUBLv2_1
 					if (string.IsNullOrEmpty(factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value) || factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value.Equals("ZZZ"))
 						factura_obj.TerminoPago = 0;
 					else
-						factura_obj.TerminoPago = Convert.ToInt16(factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value);
+						try
+						{
+							factura_obj.TerminoPago = Convert.ToInt16(factura_ubl.PaymentMeans.FirstOrDefault().PaymentMeansCode.Value);
+						}
+						catch (Exception)
+						{
+						  
+						}
 				}
 
 				if (factura_ubl.PaymentTerms != null)
@@ -221,7 +228,14 @@ namespace HGInetUBLv2_1
 							}
 							if (factura_ubl.PaymentTerms.FirstOrDefault().PaymentMeansID != null)
 							{
-								factura_obj.TerminoPago = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().PaymentMeansID.FirstOrDefault().Value);
+								try
+								{
+									factura_obj.TerminoPago = Convert.ToInt16(factura_ubl.PaymentTerms.FirstOrDefault().PaymentMeansID.FirstOrDefault().Value);
+								}
+								catch (Exception)
+								{
+
+								}
 							}
 						}
 					}
@@ -312,11 +326,18 @@ namespace HGInetUBLv2_1
 
 						if (Texto.ValidarExpresion(TipoExpresion.Numero, factura_ubl.InvoiceLine[i].ID.Value))
 						{
-							detalle.Codigo = Convert.ToInt16(factura_ubl.InvoiceLine[i].ID.Value);
+							try
+							{
+								detalle.Codigo = Convert.ToInt16(factura_ubl.InvoiceLine[i].ID.Value);
+							}
+							catch (Exception)
+							{
+								detalle.Codigo += (i == 0) ? 1 : i;
+							}
 						}
 						else
 						{
-							detalle.Codigo += i;
+							detalle.Codigo += (i == 0) ? 1 : i;
 
 						}
 
