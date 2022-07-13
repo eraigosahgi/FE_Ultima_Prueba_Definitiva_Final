@@ -111,7 +111,7 @@ namespace HGInetUBLv2_1
 				//Valida si tiene documento referencia de factura
 				if (factura_ubl.OrderReference != null)
 				{
-					if (factura_ubl.OrderReference.ID.Value != null)
+					if (factura_ubl.OrderReference.ID != null)
 					{
 						factura_obj.OrderReference.Documento = factura_ubl.OrderReference.ID.Value;
 						factura_obj.DocumentoRef = factura_ubl.OrderReference.ID.Value;
