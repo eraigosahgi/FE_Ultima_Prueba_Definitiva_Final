@@ -105,7 +105,30 @@ namespace HGInetInteroperabilidad.Procesos
 								fecha = mensaje.Date.DateTime;
 
 								// obtiene el tamaño de los adjuntos del correo electrónico
-								Cl_MailAdjuntos adjunto = cliente_imap.ObtenerPropiedadesAdjuntos(mensaje);
+								Cl_MailAdjuntos adjunto = new Cl_MailAdjuntos();
+								try
+								{
+									adjunto = cliente_imap.ObtenerPropiedadesAdjuntos(mensaje);
+								}
+								catch (Exception excepcion)
+								{
+									mensajes.Add("No se pudo obtener archivo adjunto en el correo electrónico, valide mensaje original");
+
+									//Se notifica al correo emisor que no se procesa el correo y la razon 
+									try
+									{
+										//RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
+										EnviarAlerta(mensaje, mensajes);
+									}
+									catch (Exception ex)
+									{ }
+
+									// mueve el mensaje a no procesado de la bandeja de entrada
+									cliente_imap.MoverNoProcesado(id_mensaje);
+
+									RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.lectura, "No se pudo obtener archivo adjunto en el correo electrónico, valide mensaje original");
+									throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+								}
 
 								// 0 Bytes
 								if (adjunto.TamanoTotal == 0)
@@ -245,11 +268,11 @@ namespace HGInetInteroperabilidad.Procesos
 									string ruta_archivos = string.Format("{0}\\{1}Mail\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion.Replace("recepcion", "no procesados"));
 									ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
 
-									string ruta_directorio_mail = string.Format(@"{0}{1}\", ruta_archivos, string.Format("{0}-{1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0,10), identificador_mail));
+									string ruta_directorio_mail = string.Format(@"{0}{1}\", ruta_archivos, string.Format("{0}-{1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0,10).Replace(".","-"), identificador_mail));
 									ruta_directorio_mail = Directorio.CrearDirectorio(ruta_directorio_mail);
 
 									// almacena el correo electrónico temporalmente
-									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_directorio_mail, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0, 10), identificador_mail));
+									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_directorio_mail, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0, 10).Replace(".", "-"), identificador_mail));
 
 									// almacena los adjuntos del correo electrónico temporalmente
 									List<string> rutas_archivos = new List<string>();

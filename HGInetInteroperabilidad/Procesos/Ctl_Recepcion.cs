@@ -1500,6 +1500,35 @@ namespace HGInetInteroperabilidad.Procesos
 					else
 					{
 						//doc_nuevo = false;
+						List<string> mensajes = new List<string>();
+						try
+						{
+							mensajes.Add(string.Format("El Documento Electrónico {0} con prefijo {1} ya existe en nuestra plataforma", documento_bd.IntNumero, documento_bd.StrPrefijo));
+
+							ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+						}
+						catch (Exception)
+						{
+						}
+
+						try
+						{
+							Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
+							TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(Path.GetFileNameWithoutExtension(ruta_archivo_mail)));
+							if (tblregistro != null)
+							{
+								tblregistro.IntEstado = 1;
+								tblregistro.StrObservaciones = JsonConvert.SerializeObject(mensajes);
+
+								_ctrl_registro.Actualizar(tblregistro);
+							}
+						}
+						catch (Exception excepcion)
+						{
+							string msg = string.Format("Error al procesar correo electrónico: {0} - {1}", Path.GetFileNameWithoutExtension(ruta_archivo_mail), excepcion.Message);
+							RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, msg);
+						}
+
 						throw new ArgumentException(string.Format("El Documento Electrónico {0} con prefijo {1} ya existe en nuestra plataforma", documento_bd.IntNumero, documento_bd.StrPrefijo));
 					}
 					
@@ -1560,8 +1589,6 @@ namespace HGInetInteroperabilidad.Procesos
 						if (tblregistro != null)
 						{
 							tblregistro.IntEstado = 1;
-							//if (mensajes == null)
-							//	mensajes.Add(excepcion.Message);
 							tblregistro.StrObservaciones = JsonConvert.SerializeObject(mensajes);
 
 							_ctrl_registro.Actualizar(tblregistro);
