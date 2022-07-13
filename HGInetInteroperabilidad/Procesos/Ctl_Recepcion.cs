@@ -914,12 +914,35 @@ namespace HGInetInteroperabilidad.Procesos
 					throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 				}
 
+				//Se valida que el archivo recibido si sea de tipo Attached Document
+				XmlDocument xDoc = new XmlDocument();
+				xDoc.Load(ruta_xml);
+
+				XmlNodeList xAttach = xDoc.GetElementsByTagName("AttachedDocument");
+
+				if (xAttach.Count == 0)
+				{
+					try
+					{
+						mensajes = new List<string>();
+						mensajes.Add(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico, se esperaba un XML-UBL tipo AttachedDocument", Path.GetFileName(ruta_xml)));
+
+						ReEnviarCorreoError(ruta_archi_mail, mensajes);
+
+					}
+					catch (Exception e)
+					{
+					}
+
+					throw new ApplicationException(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico, se esperaba un XML-UBL tipo AttachedDocument", Path.GetFileName(ruta_xml)));
+				}
+
 				//Se lee XML
 				FileStream xml_reader_serializacion = new FileStream(ruta_xml, FileMode.Open);
 
 				XmlSerializer serializacion1 = null;
 				AttachedDocumentType obj_attach_serializado = null;
-				Acuse respuesta_adquiriente = null;
+				//Acuse respuesta_adquiriente = null;
 				
 				try
 				{
@@ -1343,7 +1366,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 						nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaCredito, documento_obj.Prefijo);
 					}
-					else if (attach_document.DocumentoElectronico.Contains("<cbc:DebitNoteTypeCode"))
+					else if (attach_document.DocumentoElectronico.Contains("xsd:DebitNote-2"))
 					{
 						tipo_doc = TipoDocumento.NotaDebito.GetHashCode();
 						documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaDebito);
