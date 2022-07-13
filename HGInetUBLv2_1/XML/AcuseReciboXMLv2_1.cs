@@ -287,12 +287,12 @@ namespace HGInetUBLv2_1
 				//Se obtiene la informacion del XMl de la Factura para tomar los datos correctos 
 				string contenido_xml_Fe = Archivo.ObtenerContenido(documento_factura.StrUrlArchivoUbl);
 
-				string prefijo = string.Empty;
-				string numero_documento = string.Empty;
+				string doc_prefijo_bd = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
+
 				Factura documento_obj = new Factura();
 
 				// valida el contenido del archivo
-				if (string.IsNullOrWhiteSpace(contenido_xml_Fe))
+				if (!string.IsNullOrWhiteSpace(contenido_xml_Fe))
 				{
 					// convierte el contenido de texto a xml
 					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml_Fe));
@@ -302,17 +302,23 @@ namespace HGInetUBLv2_1
 
 					InvoiceType conversion = (InvoiceType)serializacion1.Deserialize(xml_reader);
 
-					documento_obj = FacturaXMLv2_1.Convertir(conversion, null);
+					//documento_obj = FacturaXMLv2_1.Convertir(conversion, null);
 
-					documento.Prefijo = (documento_obj.Prefijo == documento.Prefijo) ? documento.Prefijo : documento_obj.Prefijo;
-					documento.Documento = (documento_obj.Documento == documento.Documento) ? documento.Documento : documento_obj.Documento;
+					//documento.Prefijo = (documento_obj.Prefijo == documento.Prefijo) ? documento.Prefijo : documento_obj.Prefijo;
+					//documento.Documento = (documento_obj.Documento == documento.Documento) ? documento.Documento : documento_obj.Documento;
+					string doc_prefijo = conversion.ID.Value;
+					
+					if (!doc_prefijo.Equals(doc_prefijo_bd))
+					{
+						doc_prefijo_bd = doc_prefijo;
+					}
 
 				}
 
 				if (!tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG) && !tipo_acuse.Equals(CodigoResponseV2.TerminacionMandatoG) && !tipo_acuse.Equals(CodigoResponseV2.InformePago) && !tipo_acuse.Equals(CodigoResponseV2.Aval) && !tipo_acuse.Equals(CodigoResponseV2.PagoFvTV))
 				{
 					response.ReferenceID = new ReferenceIDType();
-					response.ReferenceID.Value = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
+					response.ReferenceID.Value = doc_prefijo_bd;
 				}
 				
                 response.ResponseCode = new ResponseCodeType();
@@ -420,7 +426,7 @@ namespace HGInetUBLv2_1
                 acuse.DocumentResponse[0].DocumentReference = new DocumentReferenceType[1];
 				DocumentReferenceType DocumentReference = new DocumentReferenceType();
                 DocumentReference.ID = new IDType();
-                DocumentReference.ID.Value = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
+                DocumentReference.ID.Value = doc_prefijo_bd;
 				DocumentReference.UUID = new UUIDType();
                 DocumentReference.UUID.Value = cufe_docreferenciado;
                 if (documento.TipoDocumento.Equals("91") || documento.TipoDocumento.Equals("92") || documento.TipoDocumento.Equals("96"))
@@ -650,11 +656,11 @@ namespace HGInetUBLv2_1
 					{
 						code_response = response.ResponseCode.listID;
 					}
-					CUFE = CufeApplicationV2(pin_sw, acuse.ID.Value, string.Format("{0}{1}", documento.Fecha.ToString(Fecha.formato_fecha_hginet), documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona)), documento.DatosObligado.Identificacion, acuse.ReceiverParty.PartyTaxScheme[0].CompanyID.Value, documento.CodigoRespuesta, string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString()), documento.TipoDocumento, code_response);
+					CUFE = CufeApplicationV2(pin_sw, acuse.ID.Value, string.Format("{0}{1}", documento.Fecha.ToString(Fecha.formato_fecha_hginet), documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona)), documento.DatosObligado.Identificacion, acuse.ReceiverParty.PartyTaxScheme[0].CompanyID.Value, documento.CodigoRespuesta, doc_prefijo_bd, documento.TipoDocumento, code_response);
 				}
 				else
 				{ 
-					CUFE = CufeApplicationV2(pin_sw, acuse.ID.Value, string.Format("{0}{1}", documento.Fecha.ToString(Fecha.formato_fecha_hginet), documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona)), documento.DatosAdquiriente.Identificacion, documento.DatosObligado.Identificacion, documento.CodigoRespuesta, string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString()), documento.TipoDocumento);
+					CUFE = CufeApplicationV2(pin_sw, acuse.ID.Value, string.Format("{0}{1}", documento.Fecha.ToString(Fecha.formato_fecha_hginet), documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona)), documento.DatosAdquiriente.Identificacion, documento.DatosObligado.Identificacion, documento.CodigoRespuesta, doc_prefijo_bd, documento.TipoDocumento);
 				}
 				UUID.Value = CUFE;
 				UUID.schemeName = Recursos.VersionesDIANv2_1.CUDE;
