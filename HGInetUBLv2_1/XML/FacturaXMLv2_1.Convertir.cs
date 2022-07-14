@@ -212,7 +212,7 @@ namespace HGInetUBLv2_1
 							{
 								Cuota cuota = new Cuota();
 								cuota.Codigo = factura_ubl.PaymentTerms[i].ID != null ? Convert.ToInt16(factura_ubl.PaymentTerms[i].ID.Value) : i + 1;
-								cuota.Valor = factura_ubl.PaymentTerms[i].Amount.Value;
+								cuota.Valor = factura_ubl.PaymentTerms[i].Amount != null ? factura_ubl.PaymentTerms[i].Amount.Value : 0;
 								cuota.FechaVence = factura_ubl.PaymentTerms[i].PaymentDueDate != null ? factura_ubl.PaymentTerms[i].PaymentDueDate.Value : factura_obj.FechaVence;
 								cuotas.Add(cuota);
 							}
