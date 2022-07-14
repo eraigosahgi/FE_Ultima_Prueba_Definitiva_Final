@@ -1,6 +1,7 @@
 ﻿using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
+using LibreriaGlobalHGInet.Formato;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,34 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			evento = this.Edit(evento);
 
 			return evento;
+		}
+
+		public List<TblRegistroRecepcion> ObtenerPorFecha(DateTime Fecha_ini, DateTime Fecha_fin, string estado, int Desde, int Hasta)
+		{
+
+			context.Configuration.LazyLoadingEnabled = false;
+
+			List<int> LstEstado = new List<int>();
+			if (string.IsNullOrEmpty(estado))
+			{
+				estado = "*";
+			}
+			else
+			{
+				LstEstado = Coleccion.ConvertirStringInt(estado);
+			}
+
+			Fecha_ini = Fecha_ini.Date;
+
+			Fecha_fin = new DateTime(Fecha_fin.Year, Fecha_fin.Month, Fecha_fin.Day, 23, 59, 59, 999);
+
+			List<TblRegistroRecepcion> datos = (from item in context.TblRegistroRecepcion
+												where item.DatFechaRegistro >= Fecha_ini && item.DatFechaRegistro <= Fecha_fin
+												&& (LstEstado.Contains(item.IntEstado) || estado == "*")
+												select item).OrderByDescending(x => x.DatFechaRegistro).Skip(Desde).Take(Hasta).ToList();
+
+			return datos;
+
 		}
 
 	}

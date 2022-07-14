@@ -34,6 +34,12 @@ function ColocarEstadoEmail(Estado, Descripcion, DescEstado, IdSeguridad) {
 	return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Bloqueado'  title='" + Descripcion + "'" : " class='badge badge-Entregado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;' target='_blank' data-toggle='modal' data-target='#modal_audit_documento' onClick=AuditoriaMail('" + IdSeguridad + "')>" + DescEstado + "</span>"
 }
 
+function ColocarEstadoRecepcion(Estado) {
+	Descripcion = GetDescripcionEnum(EstadoRecepcion, Estado);
+	//return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : " class='badge badge-Aprobado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
+	return "<span " + ((Estado == '1') ? " class='badge badge-Rechazado'  title='" + "Rechazado" + "'" : (Estado == '2') ? " class='badge badge-Leído'  title='" + "Recibido" + "'" : (Estado == '3') ? " class='badge badge-Aprobado'  title='" + "Procesado" + "'" : " class='badge badge-Leído'   title='" + "Validar" + "'" ) + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
+}
+
 //Retorna el código html del diseño del tipo de evento de respuestas de  mailject
 function ControlTipoEventoMail(TipoEvento) {
 	return "<span " +
@@ -649,6 +655,13 @@ var MensajeEstado =
 	{ "ID": 9, "Name": "Rebotado" },
 	{ "ID": 10, "Name": "Rebotado" },
 	{ "ID": 11, "Name": "Diferido" }
+];
+
+var EstadoRecepcion =
+[
+	{ "ID": 1, "Name": "Rechazado" },
+	{ "ID": 2, "Name": "Recibido" },
+	{ "ID": 3, "Name": "Procesado" }
 ];
 
 

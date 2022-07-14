@@ -1929,6 +1929,7 @@
     <Content Include="Scripts\Pages\Alertas.js" />
     <Content Include="Scripts\Pages\AutenticacionPagos.js" />
     <Content Include="Scripts\Pages\CompraPlanes.js" />
+    <Content Include="Scripts\Pages\ConsultaRecepcionDocs.js" />
     <Content Include="Scripts\Pages\ConfigurarFechaRecepcionDian.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
     <Content Include="Scripts\Pages\ConsultaAcuseTacito.js" />
@@ -2815,6 +2816,7 @@
     <Content Include="Views\Pages\ConfirmacionEmail.aspx" />
     <Content Include="Views\Pages\ConfirmacionUsuarioPagos.aspx" />
     <Content Include="Views\Pages\ConsultaAdministracionPagos.aspx" />
+    <Content Include="Views\Pages\ConsultaRecepcionDocumentos.aspx" />
     <Content Include="Views\Pages\ConsultaResoluciones.aspx" />
     <Content Include="Views\Pages\DocumentosEmisor.aspx" />
     <Content Include="Views\Pages\GestionAlertas.aspx" />
@@ -2914,6 +2916,7 @@
     <Compile Include="Controllers\Services\IndicadoresController.cs" />
     <Compile Include="Controllers\Services\InteroperabilidadController.cs" />
     <Compile Include="Controllers\Services\PagosController.cs" />
+    <Compile Include="Controllers\Services\RecepcionDocumentosController.cs" />
     <Compile Include="Controllers\Services\UsuarioPagosController.cs" />
     <Compile Include="Properties\Constantes.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -3065,6 +3068,13 @@
     </Compile>
     <Compile Include="Views\Pages\ConsultaAdministracionPagos.aspx.designer.cs">
       <DependentUpon>ConsultaAdministracionPagos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaRecepcionDocumentos.aspx.cs">
+      <DependentUpon>ConsultaRecepcionDocumentos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaRecepcionDocumentos.aspx.designer.cs">
+      <DependentUpon>ConsultaRecepcionDocumentos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConsultaResoluciones.aspx.cs">
       <DependentUpon>ConsultaResoluciones.aspx</DependentUpon>

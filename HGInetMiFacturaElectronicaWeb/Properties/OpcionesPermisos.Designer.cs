@@ -133,6 +133,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1349.
+        /// </summary>
+        internal static string ConsultaCorreosRecibidos {
+            get {
+                return ResourceManager.GetString("ConsultaCorreosRecibidos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1342.
         /// </summary>
         internal static string ConsultaDocumentoCliente {

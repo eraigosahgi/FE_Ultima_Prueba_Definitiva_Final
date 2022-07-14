@@ -205,4 +205,7 @@
   <data name="ActivarPlan" xml:space="preserve">
     <value>138</value>
   </data>
+  <data name="ConsultaCorreosRecibidos" xml:space="preserve">
+    <value>1349</value>
+  </data>
 </root>
