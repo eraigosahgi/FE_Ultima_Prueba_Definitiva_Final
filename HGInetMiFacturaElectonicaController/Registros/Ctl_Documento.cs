@@ -2566,70 +2566,70 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			switch (cod_acuse)
 			{
 				case CodigoResponseV2.Recibido:
-					doc_acuse.IdAcuse = string.Format("{0}1", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.Rechazado:
-					doc_acuse.IdAcuse = string.Format("{0}2", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}2", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.AprobadoTacito:
-					doc_acuse.IdAcuse = string.Format("{0}3", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}3", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.Aceptado:
-					doc_acuse.IdAcuse = string.Format("{0}4", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}4", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.Expresa:
-					doc_acuse.IdAcuse = string.Format("{0}5", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}5", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.Inscripcion:
-					var randomNumber = new Random().Next(0, 10);
-					doc_acuse.IdAcuse = string.Format("{0}6{1}", doc.IntNumero, randomNumber);
+					//var randomNumber = new Random().Next(0, 10);
+					//doc_acuse.IdAcuse = string.Format("{0}6{1}", doc.IntNumero, randomNumber);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.EndosoPp:
-					doc_acuse.IdAcuse = string.Format("{0}7", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}7", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.EndosoG:
-					doc_acuse.IdAcuse = string.Format("{0}8", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}8", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.CancelacionEG:
-					doc_acuse.IdAcuse = string.Format("{0}9", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}9", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.Aval:
-					doc_acuse.IdAcuse = string.Format("{0}12", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}12", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.EndosoPc:
-					doc_acuse.IdAcuse = string.Format("{0}15", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}15", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.MandatoG:
-					doc_acuse.IdAcuse = string.Format("{0}20", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}20", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.TerminacionMandatoG:
-					doc_acuse.IdAcuse = string.Format("{0}21", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}21", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.PagoFvTV:
-					doc_acuse.IdAcuse = string.Format("{0}22", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}22", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.InformePago:
-					doc_acuse.IdAcuse = string.Format("{0}23", doc.IntNumero);
+					//doc_acuse.IdAcuse = string.Format("{0}23", doc.IntNumero);
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				default:
 					break;
 			}
 
+			doc_acuse.IdAcuse = string.Format("{0}{1}", doc_acuse.CodigoRespuesta, doc.IntNumero);
 			doc_acuse.IdSeguridad = doc.StrIdSeguridad.ToString();
 			doc_acuse.Documento = doc.IntNumero;
 			doc_acuse.Prefijo = doc.StrPrefijo;
