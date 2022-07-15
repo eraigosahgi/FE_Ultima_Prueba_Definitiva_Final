@@ -44,13 +44,13 @@ namespace HGInetUBLv2_1
 					attach_document.Prefijo = attach_ubl.ParentDocumentLineReference[0].DocumentReference.ID.Value.Substring(0, attach_ubl.ParentDocumentLineReference[0].DocumentReference.ID.Value.Length - attach_document.Documento.ToString().Length);
 				}
 
-				attach_document.CufeDocumentoElectronico = (attach_ubl.ParentDocumentLineReference[0].DocumentReference.UUID != null) ? attach_ubl.ParentDocumentLineReference[0].DocumentReference.UUID.Value : string.Empty;
+				attach_document.CufeDocumentoElectronico = (attach_ubl.ParentDocumentLineReference != null) ? (attach_ubl.ParentDocumentLineReference[0].DocumentReference.UUID != null) ? attach_ubl.ParentDocumentLineReference[0].DocumentReference.UUID.Value : string.Empty: string.Empty;
 
 				attach_document.IdentificacionFacturador = attach_ubl.SenderParty.PartyTaxScheme[0].CompanyID.Value;
 
 				attach_document.Identificacionadquiriente = attach_ubl.ReceiverParty.PartyTaxScheme[0].CompanyID.Value;
 
-				attach_document.RespuestaDianXml = attach_ubl.ParentDocumentLineReference[0].DocumentReference.Attachment.ExternalReference.Description[0].Value.Trim();
+				attach_document.RespuestaDianXml = (attach_ubl.ParentDocumentLineReference != null) ? attach_ubl.ParentDocumentLineReference[0].DocumentReference.Attachment.ExternalReference.Description[0].Value.Trim() : string.Empty;
 
 				attach_document.DocumentoElectronico = attach_ubl.Attachment.ExternalReference.Description[0].Value.Trim();
 			}

@@ -1309,6 +1309,9 @@ namespace HGInetInteroperabilidad.Procesos
 				//Convierto XML-UBL en Objeto
 				attach_document = AttachedDocument.Convertir(obj_attach_serializado);
 
+				if (string.IsNullOrEmpty(attach_document.CufeDocumentoElectronico) || string.IsNullOrEmpty(attach_document.RespuestaDianXml))
+					throw new ArgumentException("El Attached Document no cumple con la estructura indicada por la DIAN");
+
 				// representación de datos en objeto
 				var documento_acuse = (dynamic)null;
 
