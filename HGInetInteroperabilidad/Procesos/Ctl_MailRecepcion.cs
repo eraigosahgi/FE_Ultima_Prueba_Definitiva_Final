@@ -99,8 +99,16 @@ namespace HGInetInteroperabilidad.Procesos
 								// obtiene el asunto del correo electrónico
 								asunto = mensaje.Subject;
 
+								if (asunto.Contains("Return receipt"))
+								{
+									// mueve el mensaje a no procesado de la bandeja de entrada
+									cliente_imap.MoverNoProcesado(id_mensaje);
+
+									throw new ApplicationException("El Asunto del correo electrónico no es relacionado a Factura Electronica");
+								}
+
 								//Se valida que el correo no sea emitido por nosotros y no se quede en un ciclo 
-								if (mensaje.TextBody.Contains(Constantes.EmailRemitente))
+								if (mensaje.TextBody != null && mensaje.TextBody.Contains(Constantes.EmailRemitente))
 								{
 									// mueve el mensaje a no procesado de la bandeja de entrada
 									cliente_imap.MoverNoProcesado(id_mensaje);
@@ -167,6 +175,15 @@ namespace HGInetInteroperabilidad.Procesos
 									mensajes.Add("El correo electrónico no cumple con los parámetros del asunto.");
 									correo_procesado = false;
 									validacion_asunto = false;
+								}
+
+								//Se valida si es un evento para que no lo procese
+								if (asunto_params[0].Contains("Evento"))
+								{
+									// mueve el mensaje a no procesado de la bandeja de entrada
+									cliente_imap.MoverNoProcesado(id_mensaje);
+
+									throw new ApplicationException("El Asunto del correo electrónico indica que es un evento");
 								}
 
 								//obtener la empresa emisora o crearla
@@ -704,11 +721,11 @@ namespace HGInetInteroperabilidad.Procesos
 				string asunto = mensaje.Subject;
 			   
 				//Se envia una copia del correo a Tic para saber que correo no se proceso
-				destino = new HGInetMiFacturaElectonicaData.ModeloServicio.General.DestinatarioEmail();
-				destino.Nombre = Constantes.NombreRemitenteEmail;
-				destino.Email = Constantes.EmailCopiaOculta;
+				//destino = new HGInetMiFacturaElectonicaData.ModeloServicio.General.DestinatarioEmail();
+				//destino.Nombre = Constantes.NombreRemitenteEmail;
+				//destino.Email = Constantes.EmailCopiaOculta;
 
-				correos_destino.Add(destino);
+				//correos_destino.Add(destino);
 
 				try
 				{
