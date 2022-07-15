@@ -101,7 +101,13 @@ namespace HGInetInteroperabilidad.Procesos
 
 								//Se valida que el correo no sea emitido por nosotros y no se quede en un ciclo 
 								if (mensaje.TextBody.Contains(Constantes.EmailRemitente))
+								{
+									// mueve el mensaje a no procesado de la bandeja de entrada
+									cliente_imap.MoverNoProcesado(id_mensaje);
+
 									throw new ApplicationException("El correo electrónico fue emitido por la plataforma");
+								}
+									
 
 								// información del remitente
 								remitente = string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Name, mensaje.From.Mailboxes.FirstOrDefault().Address);
