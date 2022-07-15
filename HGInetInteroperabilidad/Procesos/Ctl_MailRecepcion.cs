@@ -99,6 +99,10 @@ namespace HGInetInteroperabilidad.Procesos
 								// obtiene el asunto del correo electrónico
 								asunto = mensaje.Subject;
 
+								//Se valida que el correo no sea emitido por nosotros y no se quede en un ciclo 
+								if (mensaje.TextBody.Contains(Constantes.EmailRemitente))
+									throw new ApplicationException("El correo electrónico fue emitido por la plataforma");
+
 								// información del remitente
 								remitente = string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Name, mensaje.From.Mailboxes.FirstOrDefault().Address);
 
@@ -378,7 +382,7 @@ namespace HGInetInteroperabilidad.Procesos
 				//Se valida si se tiene aun archivos por procesar para hacerlo asi no tenga correos nuevos descargados.
 				if (ejecutar_sonda == false)
 				{
-					string ruta_archivos = string.Format("{0}\\{1}{2}\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion);
+					string ruta_archivos = string.Format(@"{0}\{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion);
 
 					string[] directorios_Obligado = Directorio.ObtenerSubdirectoriosDirectorio(ruta_archivos);
 
