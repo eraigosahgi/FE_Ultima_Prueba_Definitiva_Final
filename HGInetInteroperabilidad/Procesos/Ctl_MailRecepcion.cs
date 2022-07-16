@@ -292,44 +292,44 @@ namespace HGInetInteroperabilidad.Procesos
 								else
 								{
 
-									string ruta_archivos = string.Format("{0}\\{1}Mail\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion.Replace("recepcion", "no procesados"));
-									ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
+									//string ruta_archivos = string.Format("{0}\\{1}Mail\\", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion.Replace("recepcion", "no procesados"));
+									//ruta_archivos = Directorio.CrearDirectorio(ruta_archivos);
 
-									string ruta_directorio_mail = string.Format(@"{0}{1}\", ruta_archivos, string.Format("{0}-{1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0,10).Replace(".","-"), identificador_mail));
-									ruta_directorio_mail = Directorio.CrearDirectorio(ruta_directorio_mail);
+									//string ruta_directorio_mail = string.Format(@"{0}{1}\", ruta_archivos, string.Format("{0}-{1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0,10).Replace(".","-"), identificador_mail));
+									//ruta_directorio_mail = Directorio.CrearDirectorio(ruta_directorio_mail);
 
-									// almacena el correo electrónico temporalmente
-									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_directorio_mail, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0, 10).Replace(".", "-"), identificador_mail));
+									//// almacena el correo electrónico temporalmente
+									//string ruta_mail = cliente_imap.Guardar(mensaje, ruta_directorio_mail, string.Format("{0} - {1}", mensaje.From.Mailboxes.FirstOrDefault().Address.Substring(0, 10).Replace(".", "-"), identificador_mail));
 
-									// almacena los adjuntos del correo electrónico temporalmente
-									List<string> rutas_archivos = new List<string>();
-									try
-									{
-										rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_directorio_mail);
-									}
-									catch (Exception)
-									{
-										rutas_archivos.Add(ruta_directorio_mail);
-									}
+									//// almacena los adjuntos del correo electrónico temporalmente
+									//List<string> rutas_archivos = new List<string>();
+									//try
+									//{
+									//	rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_directorio_mail);
+									//}
+									//catch (Exception)
+									//{
+									//	rutas_archivos.Add(ruta_directorio_mail);
+									//}
 
-									// descomprime el zip adjunto
-									string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
-									try
-									{
-										Ctl_Descomprimir.Procesar(rutas_archivos.First(x => x.Contains(".zip")), ruta_descomprimir);
-									}
-									catch (Exception ex)
-									{}
+									//// descomprime el zip adjunto
+									//string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
+									//try
+									//{
+									//	Ctl_Descomprimir.Procesar(rutas_archivos.First(x => x.Contains(".zip")), ruta_descomprimir);
+									//}
+									//catch (Exception ex)
+									//{}
 
-									try
-									{
-										ruta_descomprimir = string.Format("{0}\\Archivo_errores.json", ruta_descomprimir);
+									//try
+									//{
+									//	ruta_descomprimir = string.Format("{0}\\Archivo_errores.json", ruta_descomprimir);
 
-										// almacena el objeto en archivo json
-										File.WriteAllText(ruta_descomprimir, JsonConvert.SerializeObject(mensajes));
-									}
-									catch (Exception)
-									{}
+									//	// almacena el objeto en archivo json
+									//	File.WriteAllText(ruta_descomprimir, JsonConvert.SerializeObject(mensajes));
+									//}
+									//catch (Exception)
+									//{}
 
 									//Se notifica al correo emisor que no se procesa el correo y la razon 
 									try
