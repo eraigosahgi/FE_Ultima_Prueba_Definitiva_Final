@@ -1344,7 +1344,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 												//Primero consulto que este evento cuente con las 72 horas del acuse de recibo con respecto a la fecha actual
 												TimeSpan horas_acuse_evento = Fecha.GetFecha().Subtract(evento_reciboM.DatFechaEvento);
 
-												if (horas_acuse_evento.TotalHours >= 72)
+												if (horas_acuse_evento.TotalHours >= 120)
 												{
 													//Se valida que el plazo para generar de Acuse tacito registrado por el facturador sea igual a superior a la fecha del recibo de mercancia
 													bool cumple_acuse_tacito = horas_acuse_evento.TotalHours >= item.IntAcuseTacito ? true : false;
