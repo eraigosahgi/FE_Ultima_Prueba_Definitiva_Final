@@ -108,7 +108,7 @@ namespace HGInetInteroperabilidad.Procesos
 								}
 
 								//Se valida que el correo no sea emitido por nosotros y no se quede en un ciclo 
-								if (mensaje.TextBody != null && mensaje.TextBody.Contains(Constantes.EmailRemitente))
+								if ((mensaje.TextBody != null && mensaje.TextBody.Contains(Constantes.EmailRemitente)) || mensaje.From.Mailboxes.FirstOrDefault().Address.Equals(Constantes.EmailRemitente))
 								{
 									// mueve el mensaje a no procesado de la bandeja de entrada
 									cliente_imap.MoverNoProcesado(id_mensaje);
