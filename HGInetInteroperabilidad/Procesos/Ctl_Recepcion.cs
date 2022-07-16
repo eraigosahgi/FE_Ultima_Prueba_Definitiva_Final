@@ -899,7 +899,9 @@ namespace HGInetInteroperabilidad.Procesos
 						mensajes = new List<string>();
 						mensajes.Add(string.Format("No se encontró un archivo con extension de {0} de tipo Attached Document para procesar", Path.GetFileName(ruta_xml)));
 
-						ReEnviarCorreoError(ruta_archi_mail, mensajes);
+						//ReEnviarCorreoError(ruta_archi_mail, mensajes);
+
+						RechazarCorreo(mensajes, ruta_archi_mail);
 
 					}
 					catch (Exception e)
@@ -927,7 +929,9 @@ namespace HGInetInteroperabilidad.Procesos
 						mensajes = new List<string>();
 						mensajes.Add(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico, se esperaba un XML-UBL tipo AttachedDocument", Path.GetFileName(ruta_xml)));
 
-						ReEnviarCorreoError(ruta_archi_mail, mensajes);
+						//ReEnviarCorreoError(ruta_archi_mail, mensajes);
+
+						RechazarCorreo(mensajes, ruta_archi_mail);
 
 					}
 					catch (Exception e)
@@ -958,7 +962,9 @@ namespace HGInetInteroperabilidad.Procesos
 							mensajes = new List<string>();
 							mensajes.Add(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico", Path.GetFileName(ruta_xml)));
 
-							ReEnviarCorreoError(ruta_archi_mail, mensajes);
+							//ReEnviarCorreoError(ruta_archi_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archi_mail);
 
 						}
 						catch (Exception e)
@@ -989,18 +995,20 @@ namespace HGInetInteroperabilidad.Procesos
 					// almacena el objeto en archivo json
 					File.WriteAllText(ruta_archivo, JsonConvert.SerializeObject(mensajes));
 
-					try
-					{
-						mensajes = new List<string>();
-						string inner_exc = ex.InnerException != null ? ex.InnerException.Message : string.Empty;
-						mensajes.Add(string.Format("El archivo {0} no se pudo procesar por la siguiente inconsistencia: {1} - {2}", Path.GetFileName(ruta_xml), ex.Message, inner_exc));
+					//try
+					//{
+					//	mensajes = new List<string>();
+					//	string inner_exc = ex.InnerException != null ? ex.InnerException.Message : string.Empty;
+					//	mensajes.Add(string.Format("El archivo {0} no se pudo procesar por la siguiente inconsistencia: {1} - {2}", Path.GetFileName(ruta_xml), ex.Message, inner_exc));
 
-						ReEnviarCorreoError(ruta_archi_mail, mensajes);
+					//	//ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
-					}
-					catch (Exception e)
-					{
-					}
+					//	//RechazarCorreo(mensajes, ruta_archi_mail);
+
+					//}
+					//catch (Exception e)
+					//{
+					//}
 
 					//Cierro la lectura
 					xml_reader_serializacion.Close();
@@ -1046,24 +1054,24 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception excepcion)
 			{
-				try
-				{
-					Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
-					TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(Nombre_arch_mail));
-					if (tblregistro != null)
-					{
-						tblregistro.IntEstado = 1;
-						if (mensajes == null)
-							mensajes.Add(excepcion.Message);
-						tblregistro.StrObservaciones = string.Format("{0} - {1}", tblregistro.StrObservaciones, JsonConvert.SerializeObject(mensajes));
+				//try
+				//{
+				//	Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
+				//	TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(Nombre_arch_mail));
+				//	if (tblregistro != null)
+				//	{
+				//		tblregistro.IntEstado = 1;
+				//		if (mensajes == null)
+				//			mensajes.Add(excepcion.Message);
+				//		tblregistro.StrObservaciones = string.Format("{0} - {1}", tblregistro.StrObservaciones, JsonConvert.SerializeObject(mensajes));
 
-						_ctrl_registro.Actualizar(tblregistro);
-					}
-				}
-				catch (Exception)
-				{
+				//		_ctrl_registro.Actualizar(tblregistro);
+				//	}
+				//}
+				//catch (Exception)
+				//{
 				   
-				}
+				//}
 				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
@@ -1125,7 +1133,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					if (!string.Format("{0}{1}", attach_document.Prefijo, attach_document.Documento).Equals(string.Format("{0}{1}", doc_acuse_Dian.Prefijo, doc_acuse_Dian.Documento)))
 					{
-						if (!attach_document.CufeDocumentoElectronico.Equals(doc_acuse_Dian.CufeDocumento))
+						if (string.IsNullOrEmpty(attach_document.CufeDocumentoElectronico) || !attach_document.CufeDocumentoElectronico.Equals(doc_acuse_Dian.CufeDocumento))
 							throw new ArgumentException("El CUFE del Documento Electrónico en el AttachDocument no coincide con la respuesta de la DIAN recibida ");
 					}
 
@@ -1309,8 +1317,17 @@ namespace HGInetInteroperabilidad.Procesos
 				//Convierto XML-UBL en Objeto
 				attach_document = AttachedDocument.Convertir(obj_attach_serializado);
 
-				if (string.IsNullOrEmpty(attach_document.CufeDocumentoElectronico) || string.IsNullOrEmpty(attach_document.RespuestaDianXml))
-					throw new ArgumentException("El Attached Document no cumple con la estructura indicada por la DIAN");
+				if (string.IsNullOrEmpty(attach_document.RespuestaDianXml))
+				{
+					string mensaje = "El Attached Document no cumple con la estructura indicada por la DIAN, no se encuentra el application response de la DIAN";
+
+					List<string> mensajes = new List<string>();
+					mensajes.Add(mensaje);
+
+					RechazarCorreo(mensajes, ruta_archivo_mail);
+
+					throw new ArgumentException(mensaje);
+				}
 
 				// representación de datos en objeto
 				var documento_acuse = (dynamic)null;
@@ -1320,7 +1337,22 @@ namespace HGInetInteroperabilidad.Procesos
 				Acuse doc_acuse_Dian = documento_acuse;
 
 				//Validaciones del Attach
-				Validaciones(attach_document, doc_acuse_Dian, null, TipoDocumento.Attached);
+				try
+				{
+					Validaciones(attach_document, doc_acuse_Dian, null, TipoDocumento.Attached);
+				}
+				catch (Exception excepcion)
+				{
+					string mensaje = string.Format("Error validando el Attached Document recibido Detalle: {0}", excepcion.Message);
+					List<string> mensajes = new List<string>();
+					mensajes.Add(mensaje);
+
+					//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+					RechazarCorreo(mensajes, ruta_archivo_mail);
+
+					throw new ApplicationException(mensaje);
+				}
 
 				// obtiene los datos del Adquiriente enviado, que es nuestro facturador(Cliente)
 				Ctl_Empresa empresa = new Ctl_Empresa();
@@ -1334,7 +1366,10 @@ namespace HGInetInteroperabilidad.Procesos
 					List<string> mensajes = new List<string>();
 					mensajes.Add(string.Format("Error validando el Facturador receptor Detalle: {0}", excepcion.Message));
 
-					ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+					//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+					RechazarCorreo(mensajes, ruta_archivo_mail);
+
 					throw new ApplicationException(string.Format("Error validando el Facturador receptor Detalle: {0}", excepcion.Message));
 				}
 				
@@ -1355,7 +1390,22 @@ namespace HGInetInteroperabilidad.Procesos
 						documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.Factura);
 
 						//Validaciones del objeto
-						Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.Factura);
+						try
+						{
+							Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.Factura);
+						}
+						catch (Exception excepcion)
+						{
+							string mensaje = string.Format("Error validando el XMl-UBL del documento recibido Detalle: {0}", excepcion.Message);
+							List<string> mensajes = new List<string>();
+							mensajes.Add(mensaje);
+
+							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archivo_mail);
+
+							throw new ApplicationException(mensaje);
+						}
 
 						nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.Factura, documento_obj.Prefijo);
 					}
@@ -1365,7 +1415,22 @@ namespace HGInetInteroperabilidad.Procesos
 						documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaCredito);
 
 						//Validaciones del objeto
-						Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaCredito);
+						try
+						{
+							Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaCredito);
+						}
+						catch (Exception excepcion)
+						{
+							string mensaje = string.Format("Error validando el XMl-UBL del documento recibido Detalle: {0}", excepcion.Message);
+							List<string> mensajes = new List<string>();
+							mensajes.Add(mensaje);
+
+							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archivo_mail);
+
+							throw new ApplicationException(mensaje);
+						}
 
 						nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaCredito, documento_obj.Prefijo);
 					}
@@ -1375,7 +1440,22 @@ namespace HGInetInteroperabilidad.Procesos
 						documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaDebito);
 
 						//Validaciones del objeto
-						Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaDebito);
+						try
+						{
+							Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaDebito);
+						}
+						catch (Exception excepcion)
+						{
+							string mensaje = string.Format("Error validando el XMl-UBL del documento recibido Detalle: {0}", excepcion.Message);
+							List<string> mensajes = new List<string>();
+							mensajes.Add(mensaje);
+
+							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archivo_mail);
+
+							throw new ApplicationException(mensaje);
+						}
 
 						nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaDebito, documento_obj.Prefijo);
 
@@ -1450,35 +1530,43 @@ namespace HGInetInteroperabilidad.Procesos
 						}
 
 						Ctl_PlanesTransacciones Planestransacciones = new Ctl_PlanesTransacciones();
-						List<ObjPlanEnProceso> ListaPlanes = new List<ObjPlanEnProceso>();
+						List<ObjPlanEnProceso> ListaPlanes = null;
 
 						//asignacion plan de documentos
 						try
 						{
 							ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_receptor.StrIdentificacion, 1, TipoDocPlanes.Documento.GetHashCode());
-
-							if (ListaPlanes == null)
-							{
-								///Validación de alertas y notificaciones
-								try
-								{
-									Ctl_Alertas controlador = new Ctl_Alertas();
-									controlador.alertaSinSaldo(facturador_receptor.StrIdentificacion);
-								}
-								catch (Exception excepcion)
-								{
-									LogExcepcion.Guardar(excepcion);
-								}
-								throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
-							}
-
-							documento_bd.StrIdPlanTransaccion = Guid.Parse(ListaPlanes.FirstOrDefault().plan.ToString());
-							ListaPlanes.FirstOrDefault().reservado += 1;
 						}
 						catch (Exception excepcion)
 						{
 							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, string.Format("Se genera inconsistencias en el proceso de planes. Detalle: {0}", excepcion.Message));
+							throw new ApplicationException(string.Format("Se genera inconsistencias en el proceso de planes. Detalle: {0}", excepcion.Message));
 						}
+
+						if (ListaPlanes == null)
+						{
+							///Validación de alertas y notificaciones
+							try
+							{
+								Ctl_Alertas controlador = new Ctl_Alertas();
+								controlador.alertaSinSaldo(facturador_receptor.StrIdentificacion);
+							}
+							catch (Exception excepcion)
+							{
+								LogExcepcion.Guardar(excepcion);
+							}
+
+							string mensaje = "No se encontró saldo disponible para procesar los documentos";
+							List<string> mensajes = new List<string>();
+							mensajes.Add(mensaje);
+
+							RechazarCorreo(mensajes, ruta_archivo_mail);
+
+							throw new ApplicationException(mensaje);
+						}
+
+						documento_bd.StrIdPlanTransaccion = Guid.Parse(ListaPlanes.FirstOrDefault().plan.ToString());
+						ListaPlanes.FirstOrDefault().reservado += 1;
 
 						//Guardo el documento en BD
 						try
@@ -1508,29 +1596,31 @@ namespace HGInetInteroperabilidad.Procesos
 						{
 							mensajes.Add(string.Format("El Documento Electrónico {0} con prefijo {1} ya existe en nuestra plataforma", documento_bd.IntNumero, documento_bd.StrPrefijo));
 
-							ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archivo_mail);
 						}
 						catch (Exception)
 						{
 						}
 
-						try
-						{
-							Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
-							TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(Path.GetFileNameWithoutExtension(ruta_archivo_mail)));
-							if (tblregistro != null)
-							{
-								tblregistro.IntEstado = 1;
-								tblregistro.StrObservaciones = JsonConvert.SerializeObject(mensajes);
+						//try
+						//{
+						//	Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
+						//	TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(Path.GetFileNameWithoutExtension(ruta_archivo_mail)));
+						//	if (tblregistro != null)
+						//	{
+						//		tblregistro.IntEstado = 1;
+						//		tblregistro.StrObservaciones = JsonConvert.SerializeObject(mensajes);
 
-								_ctrl_registro.Actualizar(tblregistro);
-							}
-						}
-						catch (Exception excepcion)
-						{
-							string msg = string.Format("Error al procesar correo electrónico: {0} - {1}", Path.GetFileNameWithoutExtension(ruta_archivo_mail), excepcion.Message);
-							RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, msg);
-						}
+						//		_ctrl_registro.Actualizar(tblregistro);
+						//	}
+						//}
+						//catch (Exception excepcion)
+						//{
+						//	string msg = string.Format("Error al procesar correo electrónico: {0} - {1}", Path.GetFileNameWithoutExtension(ruta_archivo_mail), excepcion.Message);
+						//	RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, msg);
+						//}
 
 						throw new ArgumentException(string.Format("El Documento Electrónico {0} con prefijo {1} ya existe en nuestra plataforma", documento_bd.IntNumero, documento_bd.StrPrefijo));
 					}
@@ -1585,23 +1675,25 @@ namespace HGInetInteroperabilidad.Procesos
 					catch (Exception)
 					{ }
 
-					try
-					{
-						Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
-						TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(Path.GetFileNameWithoutExtension(ruta_archivo_mail)));
-						if (tblregistro != null)
-						{
-							tblregistro.IntEstado = 1;
-							tblregistro.StrObservaciones = JsonConvert.SerializeObject(mensajes);
+					RechazarCorreo(mensajes, ruta_archivo_mail);
 
-							_ctrl_registro.Actualizar(tblregistro);
-						}
-					}
-					catch (Exception excepcion)
-					{
-						string msg = string.Format("Error al procesar correo electrónico: {0} - {1}", Path.GetFileNameWithoutExtension(ruta_archivo_mail), excepcion.Message);
-						RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, msg);
-					}
+					//try
+					//{
+					//	Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
+					//	TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(Path.GetFileNameWithoutExtension(ruta_archivo_mail)));
+					//	if (tblregistro != null)
+					//	{
+					//		tblregistro.IntEstado = 1;
+					//		tblregistro.StrObservaciones = JsonConvert.SerializeObject(mensajes);
+
+					//		_ctrl_registro.Actualizar(tblregistro);
+					//	}
+					//}
+					//catch (Exception excepcion)
+					//{
+					//	string msg = string.Format("Error al procesar correo electrónico: {0} - {1}", Path.GetFileNameWithoutExtension(ruta_archivo_mail), excepcion.Message);
+					//	RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, msg);
+					//}
 				}
 
 			}
@@ -1640,6 +1732,35 @@ namespace HGInetInteroperabilidad.Procesos
 
 		}
 
+		public static void RechazarCorreo(List<string> mensajes , string ruta_archivo_mail)
+		{
+			try
+			{
+				Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
+				TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(Path.GetFileNameWithoutExtension(ruta_archivo_mail)));
+				if (tblregistro != null)
+				{
+					tblregistro.IntEstado = 1;
+					tblregistro.StrObservaciones = JsonConvert.SerializeObject(mensajes);
+
+					_ctrl_registro.Actualizar(tblregistro);
+				}
+			}
+			catch (Exception excepcion)
+			{
+				string msg = string.Format("Error al procesar correo electrónico: {0} - {1}", Path.GetFileNameWithoutExtension(ruta_archivo_mail), excepcion.Message);
+				RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, msg);
+			}
+
+			try
+			{
+				
+				ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+			}
+			catch (Exception)
+			{
+			}
+		}
 
 	}
 }
