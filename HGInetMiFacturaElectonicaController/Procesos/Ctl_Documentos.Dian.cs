@@ -196,7 +196,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="empresa">Obligado a facturar</param>
 		/// <param name="respuesta">Objeto de respuesta</param>
 		/// <returns>Segun la respuesta de la DIAN cambia el estado del documento</returns>
-		public static DocumentoRespuesta Consultar(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string id_validacion_previa = "", List<HGInetDIANServicios.DianWSValidacionPrevia.DianResponse> respuesta_dian = null, int proceso_acuse = 0)
+		public static DocumentoRespuesta Consultar(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string id_validacion_previa = "", int proceso_acuse = 0)
 		{
 
 			DateTime fecha_actual = Fecha.GetFecha();

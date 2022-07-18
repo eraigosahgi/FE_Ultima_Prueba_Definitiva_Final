@@ -2513,6 +2513,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					Ctl_Documentos.Consultar(doc, facturador, ref resp, acuse.KeyV2);
 				}
 
+				//Se agrega validacion por inconsistencias de la DIAN y actualizar los eventos ya recibidos
+				if (acuse.MessagesFieldV2.FirstOrDefault().ProcessedMessage.Contains("Regla: LGC01"))
+				{
+					ConsultarEventosRadian(false, doc.StrIdSeguridad.ToString());
+				}
+
 				if (resp.EstadoDian != null &&  resp.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 				{
 					var acuse_obj = (dynamic)null;
@@ -2921,8 +2927,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				TimeSpan tiempo_transcurrido = Fecha.GetFecha().Subtract(doc.DatFechaIngreso);
 
 				DateTime fecha_recibo = Fecha.GetFecha();
+
+				bool tiene_fecha_recibo = false;
+				
 				if (doc.DatAdquirienteFechaRecibo != null)
+				{
 					fecha_recibo = Convert.ToDateTime(doc.DatAdquirienteFechaRecibo);
+					tiene_fecha_recibo = true;
+				}
+					
 
 				//Si lleva ese tiempo y aun esta en el mismo estado, lo consulto de nuevo a ver si ya tiene eventos
 				if (tiempo_transcurrido.TotalHours >= 12 && tiempo_transcurrido.TotalHours < 16 && doc.IntAdquirienteRecibo <= 1 && sonda == true)
@@ -2948,6 +2961,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (tiempo_transcurrido.TotalHours >= 60 && tiempo_transcurrido.TotalHours < 64 && doc.IntAdquirienteRecibo <= 1 && sonda == true)
 				{
 					fecha_recibo = Fecha.GetFecha();
+				}
+
+				if (sonda == false && tiene_fecha_recibo == false)
+				{
+					fecha_recibo = doc.DatFechaActualizaEstado;
 				}
 
 				TimeSpan ultima_consulta = Fecha.GetFecha().Subtract(fecha_recibo);
@@ -3063,6 +3081,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
 						}
 
+						doc.DatFechaActualizaEstado = Fecha.GetFecha();
 						Actualizar(doc);
 
 					}
