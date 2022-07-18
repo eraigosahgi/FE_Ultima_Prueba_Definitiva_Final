@@ -385,15 +385,15 @@ namespace HGInetUBLv2_1
 							detalle.CamposAdicionales = new List<CampoValor>();
 							foreach (ItemPropertyType item in factura_ubl.InvoiceLine[i].Item.AdditionalItemProperty)
 							{
-								if (item.Name.Value.Equals("Item Oculto para Impresion"))
+								if (item.Name.Value != null && item.Name.Value.Equals("Item Oculto para Impresion"))
 								{
 									detalle.OcultarItem = Convert.ToInt16(item.Value.Value);
 								}
 								else
 								{
 									CampoValor campo = new CampoValor();
-									campo.Descripcion = item.Name.Value;
-									campo.Valor = item.Value.Value;
+									campo.Descripcion = item.Name.Value != null ? item.Name.Value : string.Empty;
+									campo.Valor = item.Value.Value != null ? item.Value.Value : string.Empty;
 									detalle.CamposAdicionales.Add(campo);
 								}
 
