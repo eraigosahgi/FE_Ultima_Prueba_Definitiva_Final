@@ -1003,7 +1003,16 @@ namespace HGInetInteroperabilidad.Procesos
 
 					//	//ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
-					//	//RechazarCorreo(mensajes, ruta_archi_mail);
+					mensajes = new List<string>();
+
+					string mensaje = ex.Message;
+
+					if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
+						mensaje = string.Format("{0} - {1}", mensaje, ex.InnerException.Message);
+
+					mensajes.Add(string.Format("Error al serializar el archivo Attached Document Detalle: {0}" , mensaje));
+
+					RechazarCorreo(mensajes, ruta_archi_mail);
 
 					//}
 					//catch (Exception e)
@@ -1013,7 +1022,7 @@ namespace HGInetInteroperabilidad.Procesos
 					//Cierro la lectura
 					xml_reader_serializacion.Close();
 
-					throw new ApplicationException(string.Format("Error al serializar el archivo en la ruta {0} Detalle: {1}", ruta_xml, ex.Message));
+					throw new ApplicationException(string.Format("Error al serializar el archivo en la ruta {0} Detalle: {1}", ruta_xml, mensaje));
 
 					//try
 					//{
