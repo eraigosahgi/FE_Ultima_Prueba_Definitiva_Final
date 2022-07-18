@@ -1598,7 +1598,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-							RechazarCorreo(mensajes, ruta_archivo_mail);
+							RechazarCorreo(mensajes, ruta_archivo_mail, false);
 						}
 						catch (Exception)
 						{
@@ -1732,7 +1732,13 @@ namespace HGInetInteroperabilidad.Procesos
 
 		}
 
-		public static void RechazarCorreo(List<string> mensajes , string ruta_archivo_mail)
+		/// <summary>
+		/// Metodo que actualiza tabla de recepcion y envia respuesta al remitente
+		/// </summary>
+		/// <param name="mensajes">Inconsistencia a notificar</param>
+		/// <param name="ruta_archivo_mail">ruta del archivo y Id del registro del correo</param>
+		/// <param name="notificar">si envia correo o no de la respuesta</param>
+		public static void RechazarCorreo(List<string> mensajes , string ruta_archivo_mail, bool notificar = true)
 		{
 			try
 			{
@@ -1754,8 +1760,8 @@ namespace HGInetInteroperabilidad.Procesos
 
 			try
 			{
-				
-				ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+				if (notificar == true)
+					ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 			}
 			catch (Exception)
 			{
