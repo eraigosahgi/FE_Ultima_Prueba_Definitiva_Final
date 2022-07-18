@@ -575,7 +575,7 @@ namespace HGInetUBLv2_1
 							factura_obj.Trm = new TasaCambio();
 							factura_obj.Trm.Moneda = factura_ubl.PaymentExchangeRate.TargetCurrencyCode.Value;
 							factura_obj.Trm.FechaTrm = factura_ubl.PaymentExchangeRate.Date.Value;
-							factura_obj.Trm.Valor = factura_ubl.PaymentExchangeRate.CalculationRate.Value;
+							factura_obj.Trm.Valor = factura_ubl.PaymentExchangeRate.CalculationRate != null ? factura_ubl.PaymentExchangeRate.CalculationRate.Value : 0;
 
 						}
 
