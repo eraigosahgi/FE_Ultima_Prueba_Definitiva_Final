@@ -109,8 +109,14 @@ namespace HGInetUBLv2_1
 				{
 					facturaXML.CustomizationID.Value = "20-POS";
 
-				} 
+				}
 				#endregion
+
+				if (documento.TipoOperacion == 3 && documento.DatosAdquiriente.TipoIdentificacion != 13 && documento.DatosAdquiriente.TipoIdentificacion != 31)
+				{
+					//16.1.4.1 Procedencia de Vendedor: cbc:CustomizationID - No Residente
+					facturaXML.CustomizationID.Value = "11";
+				}
 
 				facturaXML.ProfileID = new ProfileIDType();
 				if (documento.TipoOperacion < 3)
@@ -282,9 +288,13 @@ namespace HGInetUBLv2_1
 				{
 					InvoiceTypeCode.Value = "02";
 				}
-				else//Documento Equivalente
+				else if (documento.TipoOperacion == 3)//documento soporte en adquisiciones efectuadas a sujetos no obligados(equivalente)
 				{
 					InvoiceTypeCode.Value = "05";
+				}
+				else
+				{
+					InvoiceTypeCode.Value = "01";
 				}
 
 				facturaXML.InvoiceTypeCode = InvoiceTypeCode;
@@ -343,20 +353,23 @@ namespace HGInetUBLv2_1
 
 				#region período al que aplica el documento
 				// <cac:InvoicePeriod>
-
-				PeriodType PeriodType = new PeriodType()
+				if (documento.TipoOperacion < 3)
 				{
-					StartDate = new StartDateType()
+					PeriodType PeriodType = new PeriodType()
 					{
-						Value = new DateTime(documento.Fecha.Date.Year, documento.Fecha.Date.Month, 1)
-					},
-					EndDate = new EndDateType()
-					{
-						Value = new DateTime(documento.Fecha.Date.Year, documento.Fecha.Date.Month, DateTime.DaysInMonth(documento.Fecha.Date.Year, documento.Fecha.Date.Month))
-					}
-				};
-				facturaXML.InvoicePeriod = new PeriodType[1];
-				facturaXML.InvoicePeriod[0] = PeriodType;
+						StartDate = new StartDateType()
+						{
+							Value = new DateTime(documento.Fecha.Date.Year, documento.Fecha.Date.Month, 1)
+						},
+						EndDate = new EndDateType()
+						{
+							Value = new DateTime(documento.Fecha.Date.Year, documento.Fecha.Date.Month, DateTime.DaysInMonth(documento.Fecha.Date.Year, documento.Fecha.Date.Month))
+						}
+					};
+					facturaXML.InvoicePeriod = new PeriodType[1];
+					facturaXML.InvoicePeriod[0] = PeriodType;
+				}
+
 				#endregion
 
 				//Validar
@@ -444,20 +457,23 @@ namespace HGInetUBLv2_1
 
 				/*** QUEMADO ***/
 				//---Validar persona autorizada por el emisor a descargar el documento desde la base de datos de la DIAN
-				#region facturaXML.TaxRepresentativeParty - Grupo con informaciones que definen una persona autorizada por el emisor a descargar el documento desde la base de datos de la DIAN 
-				PartyType TaxRepresentativeParty = new PartyType();
-				PartyIdentificationType[] PartyIdentification = new PartyIdentificationType[1];
-				PartyIdentificationType PartyIdentificate = new PartyIdentificationType();
-				PartyIdentificate.ID = new IDType();
-				PartyIdentificate.ID.Value = "811021438";
-				PartyIdentificate.ID.schemeID = "4";
-				PartyIdentificate.ID.schemeName = "31";
-				PartyIdentificate.ID.schemeAgencyID = "195";
-				PartyIdentificate.ID.schemeAgencyName = "CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)";
-				PartyIdentification[0] = PartyIdentificate;
-				TaxRepresentativeParty.PartyIdentification = PartyIdentification;
-				facturaXML.TaxRepresentativeParty = TaxRepresentativeParty;
-				#endregion
+				if (documento.TipoOperacion < 3)
+				{
+					#region facturaXML.TaxRepresentativeParty - Grupo con informaciones que definen una persona autorizada por el emisor a descargar el documento desde la base de datos de la DIAN 
+					PartyType TaxRepresentativeParty = new PartyType();
+					PartyIdentificationType[] PartyIdentification = new PartyIdentificationType[1];
+					PartyIdentificationType PartyIdentificate = new PartyIdentificationType();
+					PartyIdentificate.ID = new IDType();
+					PartyIdentificate.ID.Value = "811021438";
+					PartyIdentificate.ID.schemeID = "4";
+					PartyIdentificate.ID.schemeName = "31";
+					PartyIdentificate.ID.schemeAgencyID = "195";
+					PartyIdentificate.ID.schemeAgencyName = "CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)";
+					PartyIdentification[0] = PartyIdentificate;
+					TaxRepresentativeParty.PartyIdentification = PartyIdentification;
+					facturaXML.TaxRepresentativeParty = TaxRepresentativeParty;
+					#endregion
+				}
 
 				#region facturaXML.AccountingSupplierParty - Información del obligado a facturaXMLr
 				if (documento.TipoOperacion < 3)
@@ -705,12 +721,17 @@ namespace HGInetUBLv2_1
 					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);//resolucion.ClaveTecnicaDIAN
 					UUID.schemeName = "CUFE-SHA384";
 				}
-				else
+				else if (facturaXML.InvoiceTypeCode.Value.Equals("03"))
 				{
 					CUFE = CalcularCUFE(facturaXML, resolucion.PinSoftware, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);
 					UUID.schemeName = "CUDE-SHA384";
 				}
-				
+				else if (facturaXML.InvoiceTypeCode.Value.Equals("05"))
+				{
+					CUFE = CalcularCUFE(facturaXML, resolucion.PinSoftware, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);
+					UUID.schemeName = "CUDS-SHA384";
+				}
+
 				UUID.Value = CUFE;
 				UUID.schemeID = facturaXML.ProfileExecutionID.Value; //"2";
 				facturaXML.UUID = UUID;
@@ -957,23 +978,45 @@ namespace HGInetUBLv2_1
 					NumAdq = factura.AccountingCustomerParty.Party.PartyTaxScheme[contador_adquiriente].CompanyID.Value;
 				}
 
-				cadena_cufe = "NumDoc: "+ NumFac + ", "
-					+ "FechaDoc: "+FecFac + ", "
-					+ "SubtotalDoc:"+ValFac.Replace(",", ".") + ", "
-					+ "CodImp1: "+CodImp1 + ", "
-					+ "ValImp1: "+ValImp1.ToString().Replace(",", ".") + ", "
-					+ "CodImp2: "+CodImp2 + ", "
-					+ "ValImp2: " +ValImp2.ToString().Replace(",", ".") + ", "
-					+ "CodImp3: " +CodImp3 + ", "
-					+ "ValImp3: " +ValImp3.ToString().Replace(",", ".") + ", "
-					+ "TotalDoc: "+ValImp.Replace(",", ".") + ", "
-					+ "NitObligado: "+NitOFE + ", "
-					+ "NitAdquiriente: "+NumAdq + ", "
-					+ "Clave o Pin: "+clave_tecnica + ", "
-					+ "Ambiente: "+ambiente + ", "
-				;
+				bool doc_equivalente = false;
 
-				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, string.Empty, NumFac, FecFac, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false);
+				if (!factura.InvoiceTypeCode.Value.Equals("05"))
+				{
+					cadena_cufe = "NumDoc: " + NumFac + ", "
+					+ "FechaDoc: " + FecFac + ", "
+					+ "SubtotalDoc:" + ValFac.Replace(",", ".") + ", "
+					+ "CodImp1: " + CodImp1 + ", "
+					+ "ValImp1: " + ValImp1.ToString().Replace(",", ".") + ", "
+					+ "CodImp2: " + CodImp2 + ", "
+					+ "ValImp2: " + ValImp2.ToString().Replace(",", ".") + ", "
+					+ "CodImp3: " + CodImp3 + ", "
+					+ "ValImp3: " + ValImp3.ToString().Replace(",", ".") + ", "
+					+ "TotalDoc: " + ValImp.Replace(",", ".") + ", "
+					+ "NitObligado: " + NitOFE + ", "
+					+ "NitAdquiriente: " + NumAdq + ", "
+					+ "Clave o Pin: " + clave_tecnica + ", "
+					+ "Ambiente: " + ambiente + ", "
+					;
+				}
+				else
+				{
+					cadena_cufe = "NumDoc: " + NumFac + ", "
+				   + "FechaDoc: " + FecFac + ", "
+				   + "SubtotalDoc:" + ValFac.Replace(",", ".") + ", "
+				   + "CodImp1: " + CodImp1 + ", "
+				   + "ValImp1: " + ValImp1.ToString().Replace(",", ".") + ", "
+				   + "TotalDoc: " + ValImp.Replace(",", ".") + ", "
+				   + "NitObligado: " + NitOFE + ", "
+				   + "NitAdquiriente: " + NumAdq + ", "
+				   + "Clave o Pin: " + clave_tecnica + ", "
+				   + "Ambiente: " + ambiente + ", "
+				   ;
+
+					doc_equivalente = true;
+				}
+
+				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, string.Empty, NumFac, FecFac, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false, doc_equivalente);
+
 				return cufe_encriptado;
 				#endregion
 			}
@@ -2116,6 +2159,11 @@ namespace HGInetUBLv2_1
 						IDType IDItem = new IDType();
 						IDItem.Value = DocDet.ProductoCodigo;
 						SellersItemIdentification.ID = IDItem;
+						if (tipo_operacion.Equals(3))
+						{
+							SellersItemIdentification.ExtendedID = new ExtendedIDType();
+							SellersItemIdentification.ExtendedID.Value = DocDet.ProductoCodigo;
+						}
 						Item.SellersItemIdentification = SellersItemIdentification;
 
 						// <cac:StandardItemIdentification>
@@ -2343,6 +2391,25 @@ namespace HGInetUBLv2_1
 					}
 					#endregion
 
+
+					//Documento Equivalente indicando si es una compra semanal o por operacion
+					if (tipo_operacion == 3)
+					{
+						InvoiceLineType1.InvoicePeriod = new PeriodType[1];
+						InvoiceLineType1.InvoicePeriod[0] = new PeriodType();
+						InvoiceLineType1.InvoicePeriod[0].StartDate = new StartDateType();
+						InvoiceLineType1.InvoicePeriod[0].StartDate.Value = Fecha.GetFecha();
+
+						// 1 - Por operación, 2 - Acumulado semanal
+						InvoiceLineType1.InvoicePeriod[0].DescriptionCode = new DescriptionCodeType[1];
+						InvoiceLineType1.InvoicePeriod[0].DescriptionCode[0] = new DescriptionCodeType();
+						InvoiceLineType1.InvoicePeriod[0].DescriptionCode[0].Value = "1";
+
+						InvoiceLineType1.InvoicePeriod[0].Description = new DescriptionType[1];
+						InvoiceLineType1.InvoicePeriod[0].Description[0] = new DescriptionType();
+						InvoiceLineType1.InvoicePeriod[0].Description[0].Value = "Por operación";
+
+					}
 
 					InvoicesLineType1[contadorPosicion] = InvoiceLineType1;
 					contadorProducto++;

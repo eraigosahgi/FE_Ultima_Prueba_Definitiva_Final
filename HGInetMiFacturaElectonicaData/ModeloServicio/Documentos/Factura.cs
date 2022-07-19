@@ -254,7 +254,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public List<Anticipo> Anticipos { get; set; }
 
 		/// <summary>
-		/// Tipo Operacion del documento ( 0 - Factura, 1 - Contingencia, 2 - Exportacion)
+		/// Tipo Operacion del documento ( 0 - Factura, 1 - Contingencia, 2 - Exportacion, 3 - Adquisiciones)
 		/// </summary>
 		public int TipoOperacion { get; set; }
 

@@ -13,6 +13,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using LibreriaGlobalHGInet.HgiNet.Controladores;
 using HGInetUBLv2_1.XML;
+using System.IO;
 
 namespace HGInetUBLv2_1
 {
@@ -128,6 +129,23 @@ namespace HGInetUBLv2_1
 				CreditNoteTypeCode.Value = "91";
 				nota_credito.CreditNoteTypeCode = CreditNoteTypeCode;
 
+				//Si es nota de ajuste de documento de Adquisiciones
+				if (documento.TipoOperacion == 3)
+				{
+					//16.1.4.1 Procedencia de Vendedor: cbc:CustomizationID - No Residente
+					nota_credito.CustomizationID.Value = "10";
+
+					if (documento.DatosAdquiriente.TipoIdentificacion != 13 && documento.DatosAdquiriente.TipoIdentificacion != 31)
+					{
+						//16.1.4.1 Procedencia de Vendedor: cbc:CustomizationID - No Residente
+						nota_credito.CustomizationID.Value = "11";
+					}
+
+					nota_credito.ProfileID.Value = "DIAN 2.1: Nota de ajuste al documento soporte en adquisiciones efectuadas a sujetos no obligados a expedir factura o documento equivalente";
+
+					nota_credito.CreditNoteTypeCode.Value = "95";
+				}
+
 				//Lineas del Detalle
 				nota_credito.LineCountNumeric = new LineCountNumericType();
 				nota_credito.LineCountNumeric.Value = documento.DocumentoDetalles.Count;
@@ -226,6 +244,8 @@ namespace HGInetUBLv2_1
 					DocumentReference.UUID = new UUIDType();
 					DocumentReference.UUID.Value = documento.CufeFactura;
 					DocumentReference.UUID.schemeName = "CUDE-SHA384";
+					if (documento.TipoOperacion == 3)
+						DocumentReference.UUID.schemeName = "CUDS-SHA384";
 					DocumentReference.IssueDate = new IssueDateType();
 					DocumentReference.IssueDate.Value = documento.FechaFactura;
 					DocReference.InvoiceDocumentReference = DocumentReference;
@@ -338,11 +358,18 @@ namespace HGInetUBLv2_1
 					PaymentExchangeRate.Date = new DateType1();
 					PaymentExchangeRate.Date.Value = ((documento.Trm != null) ? Convert.ToDateTime(documento.Trm.FechaTrm.ToString(Fecha.formato_fecha_hginet)) : Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet)));
 					nota_credito.PaymentExchangeRate = PaymentExchangeRate;
-				} 
+				}
 				#endregion
 
 				#region nota_credito.AccountingSupplierParty // Información del obligado a facturar
-				nota_credito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado,documento.Prefijo, true);
+				if (documento.TipoOperacion != 3)
+					nota_credito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado,documento.Prefijo, true);
+				else
+				{
+					documento.DatosAdquiriente.TipoIdentificacion = documento.DatosAdquiriente.TipoIdentificacion == 13 ? 31 : documento.DatosAdquiriente.TipoIdentificacion;
+					nota_credito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosAdquiriente, documento.Prefijo, true);
+				}
+					
 				#endregion
 
 				#region nota_credito.AccountingCustomerParty //Información del Adquiriente
@@ -350,8 +377,10 @@ namespace HGInetUBLv2_1
 				51 o documento equivalente y, que tratándose de la factura electrónica, 
 			    la recibe, rechaza, cuando
 				52 sea del caso, y conserva para su posterior exhibición*/
-
-				nota_credito.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosAdquiriente);
+				if (documento.TipoOperacion != 3)
+					nota_credito.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosAdquiriente);
+				else
+					nota_credito.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosObligado);
 				#endregion
 
 				if (documento.Descuentos != null || documento.Cargos != null)
@@ -373,7 +402,7 @@ namespace HGInetUBLv2_1
 
 				#region nota_credito.CreditNoteLine  //Línea de nota_credito
 				//Elemento que agrupa todos los campos de una línea de nota_credito
-				nota_credito.CreditNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.CufeFactura, documento.Moneda, documento.DatosObligado.Identificacion);
+				nota_credito.CreditNoteLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.CufeFactura, documento.Moneda, documento.DatosObligado.Identificacion, documento.TipoOperacion);
 
 				#endregion
 
@@ -429,7 +458,10 @@ namespace HGInetUBLv2_1
 				//-----Se agrega Ambiente al cual se va enviar el documento
 				string CUFE = CalcularCUFE(nota_credito, resolucion.PinSoftware, documento.CufeFactura, nota_credito.ProfileExecutionID.Value, ref cadena_cufe);
 				UUID.Value = CUFE;
-				UUID.schemeName = "CUDE-SHA384";
+				if (documento.TipoOperacion != 3)
+					UUID.schemeName = "CUDE-SHA384";
+				else
+					UUID.schemeName = "CUDS-SHA384";
 				UUID.schemeID = nota_credito.ProfileExecutionID.Value; //"2";
 				nota_credito.UUID = UUID;
 				#endregion
@@ -482,6 +514,18 @@ namespace HGInetUBLv2_1
 
 				// convierte los datos del objeto en texto XML 
 				StringBuilder txt_xml = ConvertirXML.Convertir(nota_credito, namespaces_xml, TipoDocumento.NotaCredito);
+
+				//if (documento.TipoOperacion == 3)
+				//{
+				//	TextReader textReader = new StringReader(txt_xml.ToString());
+				//	string texto_xml = textReader.ReadToEnd();
+
+				//	if (texto_xml.Contains("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\""))
+				//	{
+				//		texto_xml = texto_xml.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
+				//		txt_xml = new StringBuilder(texto_xml);
+				//	}
+				//}
 
 				FacturaE_Documento xml_sin_firma = new FacturaE_Documento();
 				xml_sin_firma.Documento = documento;
@@ -615,15 +659,35 @@ namespace HGInetUBLv2_1
 					NumAdq = nota_credito.AccountingCustomerParty.Party.PartyTaxScheme[contador_adquiriente].CompanyID.Value;
 				}
 
-				cadena_cufe = "NumDoc: " + NumCr + ", "
+				string cufe_encriptado = string.Empty;
+
+				if (!nota_credito.CreditNoteTypeCode.Value.Equals("95"))
+				{
+					cadena_cufe = "NumDoc: " + NumCr + ", "
+										+ "FechaDoc: " + FecCr + ", "
+										+ "SubtotalDoc:" + ValCr.Replace(",", ".") + ", "
+										+ "CodImp1: " + CodImp1 + ", "
+										+ "ValImp1: " + ValImp1.ToString().Replace(",", ".") + ", "
+										+ "CodImp2: " + CodImp2 + ", "
+										+ "ValImp2: " + ValImp2.ToString().Replace(",", ".") + ", "
+										+ "CodImp3: " + CodImp3 + ", "
+										+ "ValImp3: " + ValImp3.ToString().Replace(",", ".") + ", "
+										+ "TotalDoc: " + ValImp.Replace(",", ".") + ", "
+										+ "NitObligado: " + NitOFE + ", "
+										+ "NitAdquiriente: " + NumAdq + ", "
+										+ "PinSW " + pin_software + ", "
+										+ "Ambiente: " + ambiente + ", "
+				   ;
+
+					cufe_encriptado = Ctl_CalculoCufe.CufeNotaCreditoV2(pin_software, String.Empty, NumCr, FecCr, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValCr), ValImp1, ValImp2, ValImp3, false);
+				}
+				else
+				{
+					cadena_cufe = "NumDoc: " + NumCr + ", "
 										 + "FechaDoc: " + FecCr + ", "
 										 + "SubtotalDoc:" + ValCr.Replace(",", ".") + ", "
 										 + "CodImp1: " + CodImp1 + ", "
 										 + "ValImp1: " + ValImp1.ToString().Replace(",", ".") + ", "
-										 + "CodImp2: " + CodImp2 + ", "
-										 + "ValImp2: " + ValImp2.ToString().Replace(",", ".") + ", "
-										 + "CodImp3: " + CodImp3 + ", "
-										 + "ValImp3: " + ValImp3.ToString().Replace(",", ".") + ", "
 										 + "TotalDoc: " + ValImp.Replace(",", ".") + ", "
 										 + "NitObligado: " + NitOFE + ", "
 										 + "NitAdquiriente: " + NumAdq + ", "
@@ -631,8 +695,13 @@ namespace HGInetUBLv2_1
 										 + "Ambiente: " + ambiente + ", "
 					;
 
+					cufe_encriptado = Ctl_CalculoCufe.CufeNotaCreditoV2(pin_software, String.Empty, NumCr, FecCr, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValCr), ValImp1, ValImp2, ValImp3, false, true);
+				}
+
+				
+
 				//string cufe_encriptado = Encriptar.Encriptar_SHA384(cufe);
-				string cufe_encriptado = Ctl_CalculoCufe.CufeNotaCreditoV2(pin_software,String.Empty, NumCr,FecCr,NitOFE,ambiente,NumAdq,Convert.ToDecimal(ValImp), Convert.ToDecimal(ValCr),ValImp1,ValImp2,ValImp3,false);
+				
 				return cufe_encriptado;
 				#endregion
 			}
@@ -647,7 +716,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="DocumentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo CreditNoteLineType</returns>
-		public static CreditNoteLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string cufefactura, string moneda, string identificiacion_Obligado)
+		public static CreditNoteLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string cufefactura, string moneda, string identificiacion_Obligado, int tipo_operacion)
 		{
 			try
 			{
@@ -1174,6 +1243,11 @@ namespace HGInetUBLv2_1
 					IDType IDItem = new IDType();
 					IDItem.Value = DocDet.ProductoCodigo;
 					SellersItemIdentification.ID = IDItem;
+					if (tipo_operacion.Equals(3))
+					{
+						SellersItemIdentification.ExtendedID = new ExtendedIDType();
+						SellersItemIdentification.ExtendedID.Value = DocDet.ProductoCodigo;
+					}
 					Item.SellersItemIdentification = SellersItemIdentification;
 
 					// <cac:StandardItemIdentification>
@@ -1205,6 +1279,8 @@ namespace HGInetUBLv2_1
 					else
 					{
 						IDItemStandard.schemeID = "999";
+						if (tipo_operacion == 3)
+							IDItemStandard.schemeName = "Estándar de adopción del contribuyente";
 						IDItemStandard.Value = DocDet.ProductoCodigo;
 					}
 					StandardItemIdentification.ID = IDItemStandard;
@@ -1272,6 +1348,28 @@ namespace HGInetUBLv2_1
 					}
 
 					#endregion
+
+					if (tipo_operacion == 3 )
+					{
+						if  (Item.BrandName == null || Item.BrandName.Length == 0)
+						{
+							BrandNameType[] BrandName = new BrandNameType[1];
+							BrandNameType Brand = new BrandNameType();
+							Brand.Value = "N/A";
+							BrandName[0] = Brand;
+							Item.BrandName = BrandName;
+						}
+
+						if (Item.ModelName == null || Item.ModelName.Length == 0)
+						{
+							ModelNameType[] ModelName = new ModelNameType[1];
+							ModelNameType Model = new ModelNameType();
+							Model.Value = "N/A";
+							ModelName[0] = Model;
+							Item.ModelName = ModelName;
+						}
+
+					}
 
 					if (DocDet.DatosMandatario != null)
 					{

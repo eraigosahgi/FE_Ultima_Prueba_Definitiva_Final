@@ -473,7 +473,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode() )
 							{
 								//Crea el attached para poder ser enviado en el correo con los demas archivos menos en nomina.
-								if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
+								if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste && documento_obj.TipoOperacion != 3)
 								{
 									try
 									{
@@ -489,7 +489,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								bool enviar_correo = true;
 
 								//Se hace validacion si es documento de nomina y no tiene habilitado el envio de correo
-								if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && empresa.IntEnvioNominaMail == false)
+								if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && empresa.IntEnvioNominaMail == false || documento_obj.TipoOperacion == 3)
 									enviar_correo = false;
 
 
