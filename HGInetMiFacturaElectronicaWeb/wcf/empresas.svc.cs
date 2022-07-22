@@ -55,12 +55,12 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 					respuesta.PinSoftware = data_dian.Pin;
 
-					if (datos_tbl.IntHabilitacion < 99 && datos_tbl.StrIdentificacion.Equals(data_dian.NitProveedor))
-					{
-						//Para el ambiente de habilitacion a nombre de HGI se cambia informacion del pin e id del SW
-						DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
-						respuesta.PinSoftware = data_dian_habilitacion.Pin;
-					}
+					//if (datos_tbl.IntHabilitacion < 99 && datos_tbl.StrIdentificacion.Equals(data_dian.NitProveedor))
+					//{
+					//	//Para el ambiente de habilitacion a nombre de HGI se cambia informacion del pin e id del SW
+					//	DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
+					//	respuesta.PinSoftware = data_dian_habilitacion.Pin;
+					//}
 					
 				}
 
