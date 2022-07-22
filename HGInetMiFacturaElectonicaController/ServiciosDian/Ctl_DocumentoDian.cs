@@ -229,12 +229,19 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 										acuse = Ctl_Factura.EnviarSync_v2(ruta_zip, documento.NombreZip, documento.RutaArchivosEnvio, ruta_certificado, certificado.Clave, UrlServicioWeb, ambiente_dian, ref respuesta_dian, documento.CUFE, documento.DocumentoTipo.GetHashCode(), proceso_acuse);
 
 										//Se agrega validacion por inconsistencias de la DIAN y actualizar los eventos ya recibidos
-										if (respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("LGC01"))
+										try
 										{
-											//RegistroLog.EscribirLog(null, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, string.Format("Ingresa a consultar evento IDdoc: {0}", documentoBd.StrIdSeguridad.ToString()));
-											Registros.Ctl_Documento Controlador = new Registros.Ctl_Documento();
-											Controlador.ConsultarEventosRadian(false, documentoBd.StrIdSeguridad.ToString());
-											//Procesos.Ctl_Documentos.ConsultarEventos(documentoBd, empresa, ref respuesta);
+											if (respuesta_dian.FirstOrDefault().ErrorMessage != null && respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("LGC01"))
+											{
+												//RegistroLog.EscribirLog(null, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, string.Format("Ingresa a consultar evento IDdoc: {0}", documentoBd.StrIdSeguridad.ToString()));
+												Registros.Ctl_Documento Controlador = new Registros.Ctl_Documento();
+												Controlador.ConsultarEventosRadian(false, documentoBd.StrIdSeguridad.ToString());
+												//Procesos.Ctl_Documentos.ConsultarEventos(documentoBd, empresa, ref respuesta);
+											}
+										}
+										catch (Exception)
+										{
+										  
 										}
 									}
 
