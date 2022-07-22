@@ -24,7 +24,14 @@ namespace HGInetUBLv2_1
 			try
 			{
 				attach_document.IdAttached = attach_ubl.ID.Value;
-				DateTime hora = attach_ubl.IssueTime != null && attach_ubl.IssueTime.Value != null ? Convert.ToDateTime(attach_ubl.IssueTime.Value).AddHours(-5) : new DateTime();
+				DateTime hora = new DateTime();
+				try
+				{
+					hora = attach_ubl.IssueTime != null ? Convert.ToDateTime(attach_ubl.IssueTime.Value).AddHours(-5) : new DateTime();
+				}
+				catch (Exception)
+				{
+				}
 				DateTime fecha = attach_ubl.IssueDate.Value;
 				DateTime fecha_hora = new DateTime(fecha.Year, fecha.Month, fecha.Day, hora.Hour, hora.Minute, hora.Second);
 				attach_document.Fecha = fecha_hora;
