@@ -231,12 +231,10 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 										//Se agrega validacion por inconsistencias de la DIAN y actualizar los eventos ya recibidos
 										try
 										{
-											if (respuesta_dian.FirstOrDefault().ErrorMessage != null && respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("LGC01"))
+											if (respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("LGC01"))
 											{
-												//RegistroLog.EscribirLog(null, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, string.Format("Ingresa a consultar evento IDdoc: {0}", documentoBd.StrIdSeguridad.ToString()));
 												Registros.Ctl_Documento Controlador = new Registros.Ctl_Documento();
 												Controlador.ConsultarEventosRadian(false, documentoBd.StrIdSeguridad.ToString());
-												//Procesos.Ctl_Documentos.ConsultarEventos(documentoBd, empresa, ref respuesta);
 											}
 										}
 										catch (Exception)

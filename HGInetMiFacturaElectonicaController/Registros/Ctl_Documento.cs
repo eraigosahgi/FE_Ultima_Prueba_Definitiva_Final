@@ -2479,13 +2479,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				//Se hace envio del evento a la DIAN
 				acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
-			   
-				//Se agrega validacion por inconsistencias de la DIAN y actualizar los eventos ya recibidos
-				if (acuse.MessagesFieldV2.FirstOrDefault().ProcessedMessage.Contains("LGC01"))
-				{
-					RegistroLog.EscribirLog(null, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, string.Format("Ingresa a consultar evento IDdoc: {0}", doc.StrIdSeguridad.ToString()));
-					ConsultarEventosRadian(false, doc.StrIdSeguridad.ToString());
-				}
 
 				//Se valida si esta haciendo pruebas para el Radian para consultar el resultado del envio
 				bool habilitar_set = true;
