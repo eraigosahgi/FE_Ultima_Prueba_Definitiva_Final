@@ -1897,11 +1897,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									//Para las notas no se usa clave tecnica si no el pin del software
 									DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
 									item.ClaveTecnica = data_dian.Pin;
-									if (ambiente_dian.Equals("2") && facturador_electronico.StrIdentificacion.Equals("811021438"))
-									{
-										DianProveedor data_dian_hab = HgiConfiguracion.GetConfiguration().DianProveedor;
-										item.ClaveTecnica = data_dian_hab.Pin;
-									}
 									item.Cufe = Ctl_CalculoCufe.CufeNotaCreditoV2(item.ClaveTecnica, item.Prefijo, item.Documento.ToString(), FecFac, item.IdentificacionObligado, ambiente_dian, item.IdentificacionAdquiriente, Convert.ToDecimal(item.Total), Convert.ToDecimal(item.ValorSubtotal), Convert.ToDecimal(item.ValorIva), Convert.ToDecimal(item.ValorImpuestoConsumo), Convert.ToDecimal(item.ValorIca), true);
 								}
 								break;
@@ -2485,6 +2480,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//Se hace envio del evento a la DIAN
 				acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
 			   
+				//Se agrega validacion por inconsistencias de la DIAN y actualizar los eventos ya recibidos
+				if (acuse.MessagesFieldV2.FirstOrDefault().ProcessedMessage.Contains("LGC01"))
+				{
+					RegistroLog.EscribirLog(null, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.lectura, string.Format("Ingresa a consultar evento IDdoc: {0}", doc.StrIdSeguridad.ToString()));
+					ConsultarEventosRadian(false, doc.StrIdSeguridad.ToString());
+				}
+
 				//Se valida si esta haciendo pruebas para el Radian para consultar el resultado del envio
 				bool habilitar_set = true;
 
