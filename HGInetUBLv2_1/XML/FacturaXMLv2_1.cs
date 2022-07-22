@@ -978,7 +978,7 @@ namespace HGInetUBLv2_1
 					NumAdq = factura.AccountingCustomerParty.Party.PartyTaxScheme[contador_adquiriente].CompanyID.Value;
 				}
 
-				bool doc_equivalente = false;
+				string cufe_encriptado = string.Empty;
 
 				if (!factura.InvoiceTypeCode.Value.Equals("05"))
 				{
@@ -997,6 +997,8 @@ namespace HGInetUBLv2_1
 					+ "Clave o Pin: " + clave_tecnica + ", "
 					+ "Ambiente: " + ambiente + ", "
 					;
+
+					cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, string.Empty, NumFac, FecFac, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false);
 				}
 				else
 				{
@@ -1012,10 +1014,22 @@ namespace HGInetUBLv2_1
 				   + "Ambiente: " + ambiente + ", "
 				   ;
 
-					doc_equivalente = true;
+					string cufe = NumFac
+					  + FecFac
+					  + ValFac.Replace(",", ".")
+					  + CodImp1
+					  + ValImp1.ToString().Replace(",", ".")
+					  + ValImp.Replace(",", ".")
+					  + NitOFE
+					  + NumAdq
+					  + clave_tecnica
+					  + ambiente
+					  ;
+
+					cufe_encriptado = Encriptar.Encriptar_SHA384(cufe);
 				}
 
-				string cufe_encriptado = Ctl_CalculoCufe.CufeFacturaV2(clave_tecnica, string.Empty, NumFac, FecFac, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValFac), Convert.ToDecimal(ValImp1), Convert.ToDecimal(ValImp2), Convert.ToDecimal(ValImp3), false, doc_equivalente);
+				
 
 				return cufe_encriptado;
 				#endregion

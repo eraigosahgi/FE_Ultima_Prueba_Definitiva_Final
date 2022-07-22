@@ -695,7 +695,20 @@ namespace HGInetUBLv2_1
 										 + "Ambiente: " + ambiente + ", "
 					;
 
-					cufe_encriptado = Ctl_CalculoCufe.CufeNotaCreditoV2(pin_software, String.Empty, NumCr, FecCr, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValCr), ValImp1, ValImp2, ValImp3, false, true);
+					string cufe = NumCr
+					+ FecCr
+					+ ValCr.Replace(",", ".")
+					+ CodImp1
+					+ ValImp1.ToString().Replace(",", ".")
+					+ ValImp.Replace(",", ".")
+					+ NitOFE
+					+ NumAdq
+					+ pin_software
+					+ ambiente
+					;
+
+					cufe_encriptado = Encriptar.Encriptar_SHA384(cufe);
+					//cufe_encriptado = Ctl_CalculoCufe.CufeNotaCreditoV2(pin_software, String.Empty, NumCr, FecCr, NitOFE, ambiente, NumAdq, Convert.ToDecimal(ValImp), Convert.ToDecimal(ValCr), ValImp1, ValImp2, ValImp3, false, true);
 				}
 
 				
