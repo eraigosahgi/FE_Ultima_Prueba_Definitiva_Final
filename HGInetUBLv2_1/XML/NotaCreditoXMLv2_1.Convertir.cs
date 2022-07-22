@@ -95,8 +95,8 @@ namespace HGInetUBLv2_1
 					if (nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference != null && nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID != null && nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value != null)
 					{
 						nota_credito_obj.DocumentoRef = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.ID.Value;
-						nota_credito_obj.CufeFactura = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.UUID.Value;
-						nota_credito_obj.FechaFactura = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.IssueDate.Value;
+						nota_credito_obj.CufeFactura = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.UUID != null ? nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.UUID.Value : string.Empty;
+						nota_credito_obj.FechaFactura = nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.IssueDate != null ? nota_credito_ubl.BillingReference.FirstOrDefault().InvoiceDocumentReference.IssueDate.Value : Fecha.GetFecha();
 					}
 				}
 
