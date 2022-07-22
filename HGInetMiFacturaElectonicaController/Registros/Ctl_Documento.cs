@@ -2484,7 +2484,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				//Se hace envio del evento a la DIAN
 				acuse = ServiciosDian.Ctl_DocumentoDian.Enviar(resultado, doc, facturador, ref resp, doc.TblEmpresasResoluciones.StrIdSetDian, false, estado);
-
+			   
 				//Se valida si esta haciendo pruebas para el Radian para consultar el resultado del envio
 				bool habilitar_set = true;
 
@@ -2511,12 +2511,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					System.Threading.Thread.Sleep(5000);
 
 					Ctl_Documentos.Consultar(doc, facturador, ref resp, acuse.KeyV2);
-				}
-
-				//Se agrega validacion por inconsistencias de la DIAN y actualizar los eventos ya recibidos
-				if (acuse.MessagesFieldV2.FirstOrDefault().ProcessedMessage.Contains("Regla: LGC01"))
-				{
-					ConsultarEventosRadian(false, doc.StrIdSeguridad.ToString());
 				}
 
 				if (resp.EstadoDian != null &&  resp.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
@@ -3026,7 +3020,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								foreach (Acuse item_acuse in objeto_acuse)
 								{
 									CodigoResponseV2 cod_acuse = Enumeracion.GetValueFromAmbiente<HGInetMiFacturaElectonicaData.CodigoResponseV2>(item_acuse.CodigoRespuesta);
-									TblEventosRadian eventobd = evento.Convertir(doc.StrIdSeguridad, Convert.ToInt16(cod_acuse.GetHashCode()), Convert.ToInt64(item_acuse.IdAcuse), item_acuse.Fecha);
+									string num_evento = string.Format("{0}{1}", cod_acuse.GetHashCode(), doc.IntNumero);
+									long id_evento = Convert.ToInt64(num_evento);
+									TblEventosRadian eventobd = evento.Convertir(doc.StrIdSeguridad, Convert.ToInt16(cod_acuse.GetHashCode()), id_evento, item_acuse.Fecha);
 									eventobd.StrUrlEvento = url_acuse;
 									bool crear_evento = true;
 									if (list_evento != null && list_evento.Count > 0)

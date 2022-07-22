@@ -39,7 +39,14 @@ namespace HGInetUBLv2_1
 
 					Match numero_doc = Regex.Match(acuse_ubl.DocumentResponse[i].DocumentReference[0].ID.Value, "\\d+");
 
-					doc_acuse.Documento = Convert.ToInt64(numero_doc.Value);
+					try
+					{
+						doc_acuse.Documento = Convert.ToInt64(numero_doc.Value);
+					}
+					catch (Exception)
+					{
+						
+					}
 
 					doc_acuse.Prefijo = acuse_ubl.DocumentResponse[i].DocumentReference[0].ID.Value.Substring(0, acuse_ubl.DocumentResponse[i].DocumentReference[0].ID.Value.Length - doc_acuse.Documento.ToString().Length);
 
