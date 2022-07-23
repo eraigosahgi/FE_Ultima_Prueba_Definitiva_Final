@@ -315,6 +315,94 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+
+
+		/// <summary>
+		/// Obtiene los documentos por obligado
+		/// </summary>
+		/// <param name="codigo_facturador"></param>
+		/// <param name="numero_documento"></param>
+		/// <param name="codigo_adquiriente"></param>
+		/// <param name="estado_dian"></param>
+		/// <param name="estado_recibo"></param>
+		/// <param name="fecha_inicio"></param>
+		/// <param name="fecha_fin"></param>
+		/// <returns></returns>
+		[HttpGet]
+		[Route("api/ObtenerDocumentosSoporte")]
+		public IHttpActionResult ObtenerDocumentosSoporte(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, string Resolucion, int tipo_filtro_fecha)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+
+				codigo_facturador = Sesion.DatosUsuario.StrEmpresa;
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+				List<ObjDocumentos> datos = ctl_documento.ObtenerDocumentosSoporte(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, Resolucion, tipo_filtro_fecha);
+
+				if (datos == null)
+				{
+					return NotFound();
+				}
+
+				List<string> doc_consulta_evento = datos.Where(x => x.tipodoc == 1 && ((x.IntAdquirienteRecibo >= 0 && x.IntAdquirienteRecibo < 3) || (x.IntAdquirienteRecibo == 4)) && x.FormaPago == 2 && x.EstadoCategoria == 300).Select(x => x.StrIdSeguridad.ToString()).ToList();
+
+				if (doc_consulta_evento != null)
+				{
+					string docs_consulta = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(doc_consulta_evento, ",");
+					var Tarea1 = ctl_documento.SondaConsultareventos(false, docs_consulta);
+				}
+
+				var retorno = datos.Select(d => new
+				{
+					d.IdFacturador,
+					d.Facturador,
+					d.NumeroDocumento,
+					d.DatFechaIngreso,
+					d.DatFechaDocumento,
+					d.DatFechaVencDocumento,
+					d.IntVlrTotal,
+					d.IntSubTotal,
+					d.IntNeto,
+					EstadoFactura = d.EstadoFactura,
+					EstadoCategoria = d.EstadoCategoria,
+					EstadoAcuse = DescripcionEstadoAcuse(d.EstadoAcuse),
+					d.MotivoRechazo,
+					AdquirienteMvoRechazo = d.StrAdquirienteMvoRechazo,
+					d.IdentificacionAdquiriente,
+					d.NombreAdquiriente,
+					d.MailAdquiriente,
+					d.Xml,
+					d.Pdf,
+					d.StrIdSeguridad,
+					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
+					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.tipodoc)),
+					d.zip,
+					RutaServDian = (d.RutaServDian != null) ? d.RutaServDian.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+					d.XmlAcuse,
+					permiteenvio = (d.EstadoCategoria == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
+					d.IntAdquirienteRecibo,
+					d.Estado,
+					EstadoEnvioMail = d.EstadoEnvioMail,
+					MensajeEnvio = d.MensajeEnvio,
+					d.EnvioMail,
+					d.Radian,
+					TituloValor = (d.IntAdquirienteRecibo > 5) ? "Titulo Valor" : (d.IntAdquirienteRecibo == 5) || (d.IntAdquirienteRecibo == 3) ? "Aceptado" : "Documento Electrónico"
+				});
+
+				return Ok(retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
 		/// <summary>
 		/// Obtiene los documentos por obligado
 		/// </summary>
@@ -513,7 +601,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				if (((documento.IntAdquirienteRecibo < (short)CodigoResponseV2.Recibido.GetHashCode()) || (documento.IntAdquirienteRecibo >= (short)CodigoResponseV2.Aceptado.GetHashCode())))
 				{
-					
+
 					if (documento.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode())
 					{
 						documento.IntEstadoEnvio = (short)EstadoEnvio.Leido.GetHashCode();
@@ -862,7 +950,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 					if (string.IsNullOrEmpty(usuario))
 					{
-						usuario = Sesion.DatosUsuario.StrUsuario; 
+						usuario = Sesion.DatosUsuario.StrUsuario;
 					}
 				}
 				catch (Exception)
@@ -2420,7 +2508,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Ctl_Documento Controlador = new Ctl_Documento();
 
-				Controlador.ConsultarEventosRadian(false ,List_IdSeguridad);
+				Controlador.ConsultarEventosRadian(false, List_IdSeguridad);
 
 				return Ok();
 				//}

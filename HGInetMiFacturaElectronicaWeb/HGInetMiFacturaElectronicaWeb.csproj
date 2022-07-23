@@ -1929,6 +1929,7 @@
     <Content Include="Scripts\Pages\Alertas.js" />
     <Content Include="Scripts\Pages\AutenticacionPagos.js" />
     <Content Include="Scripts\Pages\CompraPlanes.js" />
+    <Content Include="Scripts\Pages\ConsultaDocumentoSoporte.js" />
     <Content Include="Scripts\Pages\ConsultaRecepcionDocs.js" />
     <Content Include="Scripts\Pages\ConfigurarFechaRecepcionDian.js" />
     <Content Include="Scripts\Pages\ConsultaAcuse.js" />
@@ -2816,6 +2817,7 @@
     <Content Include="Views\Pages\ConfirmacionEmail.aspx" />
     <Content Include="Views\Pages\ConfirmacionUsuarioPagos.aspx" />
     <Content Include="Views\Pages\ConsultaAdministracionPagos.aspx" />
+    <Content Include="Views\Pages\ConsultaDocumentoSoporte.aspx" />
     <Content Include="Views\Pages\ConsultaRecepcionDocumentos.aspx" />
     <Content Include="Views\Pages\ConsultaResoluciones.aspx" />
     <Content Include="Views\Pages\DocumentosEmisor.aspx" />
@@ -3068,6 +3070,13 @@
     </Compile>
     <Compile Include="Views\Pages\ConsultaAdministracionPagos.aspx.designer.cs">
       <DependentUpon>ConsultaAdministracionPagos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaDocumentoSoporte.aspx.cs">
+      <DependentUpon>ConsultaDocumentoSoporte.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ConsultaDocumentoSoporte.aspx.designer.cs">
+      <DependentUpon>ConsultaDocumentoSoporte.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ConsultaRecepcionDocumentos.aspx.cs">
       <DependentUpon>ConsultaRecepcionDocumentos.aspx</DependentUpon>
@@ -3638,7 +3647,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61428/</IISUrl>
+          <IISUrl>http://localhost:61436/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

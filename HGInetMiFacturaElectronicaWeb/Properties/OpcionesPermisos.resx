@@ -208,4 +208,7 @@
   <data name="ConsultaCorreosRecibidos" xml:space="preserve">
     <value>1349</value>
   </data>
+  <data name="ConsultaDocumentoSoporte" xml:space="preserve">
+    <value>1501</value>
+  </data>
 </root>

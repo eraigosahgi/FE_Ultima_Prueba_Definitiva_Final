@@ -1016,6 +1016,158 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
 		/// <summary>
+		/// Obtiene los documentos Soporte
+		/// </summary>
+		/// <param name="codigo_facturador"></param>
+		/// <param name="numero_documento"></param>
+		/// <param name="codigo_tercero"></param>
+		/// <param name="estado_dian"></param>
+		/// <param name="estado_recibo"></param>
+		/// <param name="fecha_inicio"></param>
+		/// <param name="fecha_fin"></param>
+		///		`
+		/// <returns></returns>
+		public List<ObjDocumentos> ObtenerDocumentosSoporte(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, string Resolucion, int tipo_filtro_fecha)
+		{
+			List<string> LstEstado = null;
+			if (estado_dian == null || estado_dian == "")
+			{
+				estado_dian = "*";
+				LstEstado = Coleccion.ConvertirLista(estado_dian);
+			}
+			else
+			{
+				LstEstado = Coleccion.ConvertirLista(estado_dian);
+			}
+
+			fecha_inicio = fecha_inicio.Date;
+
+			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+			long num_doc = -1;
+			long.TryParse(numero_documento, out num_doc);
+
+			short cod_estado_recibo = -1;
+			short.TryParse(estado_recibo, out cod_estado_recibo);
+
+			if (string.IsNullOrWhiteSpace(numero_documento))
+				numero_documento = "*";
+			if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+				codigo_adquiriente = "*";
+
+			if (string.IsNullOrWhiteSpace(estado_recibo))
+				estado_recibo = "*";
+
+			List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
+
+			List<ObjDocumentos> documentos = new List<ObjDocumentos>();
+
+			if (numero_documento.Equals("*"))
+			{
+				context.Configuration.LazyLoadingEnabled = false;
+
+				documentos = (from datos in context.TblDocumentos.AsNoTracking()
+							  where (datos.StrEmpresaFacturador.Equals(codigo_facturador))
+							  //&& (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
+							  && (LstEstado.Contains(datos.IdCategoriaEstado.ToString()) || estado_dian.Equals("*"))
+							  //&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+							  //&& (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
+							  && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
+							  && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
+							  && ((datos.IntDocTipo == 1) || (datos.IntDocTipo == 3))
+							  && (datos.IntTipoOperacion == 3)
+							  orderby datos.IntNumero descending
+							  select new ObjDocumentos
+							  {
+								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+								  Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+								  Prefijo = datos.StrPrefijo,
+								  NumeroDocumento = datos.StrPrefijo + datos.IntNumero.ToString(),
+								  DatFechaIngreso = datos.DatFechaIngreso,
+								  DatFechaDocumento = datos.DatFechaDocumento,
+								  DatFechaVencDocumento = datos.DatFechaVencDocumento,
+								  IntVlrTotal = (datos.IntDocTipo == 3) ? -datos.IntVlrTotal : datos.IntVlrTotal,
+								  IntSubTotal = (datos.IntDocTipo == 3) ? -datos.IntValorSubtotal : datos.IntValorSubtotal,
+								  IntNeto = (datos.IntDocTipo == 3) ? -datos.IntValorNeto : datos.IntValorNeto,
+								  EstadoFactura = datos.IntIdEstado,
+								  EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+								  EstadoAcuse = datos.IntAdquirienteRecibo,
+								  MotivoRechazo = datos.StrAdquirienteMvoRechazo,
+								  StrAdquirienteMvoRechazo = datos.StrAdquirienteMvoRechazo,
+								  IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+								  NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+								  MailAdquiriente = datos.TblEmpresasAdquiriente.StrMailAdmin,
+								  Xml = datos.StrUrlArchivoUbl,
+								  Pdf = datos.StrUrlArchivoPdf,
+								  StrIdSeguridad = datos.StrIdSeguridad,
+								  tipodoc = datos.IntDocTipo,
+								  zip = datos.StrUrlAnexo,
+								  RutaServDian = datos.StrUrlArchivoUbl,
+								  XmlAcuse = datos.StrUrlAcuseUbl,
+								  permiteenvio = (Int16)datos.IdCategoriaEstado,
+								  IntAdquirienteRecibo = datos.IntAdquirienteRecibo,
+								  Estado = datos.IdCategoriaEstado,
+								  EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
+								  MensajeEnvio = datos.IntMensajeEnvio.ToString(),
+								  EnvioMail = datos.IntEstadoEnvio,
+								  Radian = datos.TblEmpresasFacturador.IntRadian,
+								  FormaPago = datos.IntFormaPago
+							  }).ToList();
+			}
+			else
+			{
+				var listaDocumetos = Coleccion.ConvertirStringlong(numero_documento);
+
+				context.Configuration.LazyLoadingEnabled = false;
+
+				documentos = (from datos in context.TblDocumentos.AsNoTracking()
+							  where (datos.StrEmpresaFacturador.Equals(codigo_facturador))
+							  && (listaDocumetos.Contains(datos.IntNumero))
+							  && ((datos.IntDocTipo == 1) || (datos.IntDocTipo == 3))
+							  && (datos.IntTipoOperacion == 3)
+							  select new ObjDocumentos
+							  {
+								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+								  Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+								  Prefijo = datos.StrPrefijo,
+								  NumeroDocumento = datos.StrPrefijo + datos.IntNumero.ToString(),
+								  DatFechaIngreso = datos.DatFechaIngreso,
+								  DatFechaDocumento = datos.DatFechaDocumento,
+								  DatFechaVencDocumento = datos.DatFechaVencDocumento,
+								  IntVlrTotal = (datos.IntDocTipo == 3) ? -datos.IntVlrTotal : datos.IntVlrTotal,
+								  IntSubTotal = (datos.IntDocTipo == 3) ? -datos.IntValorSubtotal : datos.IntValorSubtotal,
+								  IntNeto = (datos.IntDocTipo == 3) ? -datos.IntValorNeto : datos.IntValorNeto,
+								  EstadoFactura = datos.IntIdEstado,
+								  EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+								  EstadoAcuse = datos.IntAdquirienteRecibo,
+								  MotivoRechazo = datos.StrAdquirienteMvoRechazo,
+								  StrAdquirienteMvoRechazo = datos.StrAdquirienteMvoRechazo,
+								  IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+								  NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+								  MailAdquiriente = datos.TblEmpresasAdquiriente.StrMailAdmin,
+								  Xml = datos.StrUrlArchivoUbl,
+								  Pdf = datos.StrUrlArchivoPdf,
+								  StrIdSeguridad = datos.StrIdSeguridad,
+								  tipodoc = datos.IntDocTipo,
+								  zip = datos.StrUrlAnexo,
+								  RutaServDian = datos.StrUrlArchivoUbl,
+								  XmlAcuse = datos.StrUrlAcuseUbl,
+								  permiteenvio = (Int16)datos.IdCategoriaEstado,
+								  IntAdquirienteRecibo = datos.IntAdquirienteRecibo,
+								  Estado = datos.IdCategoriaEstado,
+								  EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
+								  MensajeEnvio = datos.IntMensajeEnvio.ToString(),
+								  EnvioMail = datos.IntEstadoEnvio,
+								  Radian = datos.TblEmpresasFacturador.IntRadian,
+								  FormaPago = datos.IntFormaPago
+							  }).ToList();
+			}
+
+			return documentos;
+		}
+
+
+		/// <summary>
 		/// Obtiene los documentos del Emisor
 		/// </summary>
 		/// <param name="codigo_facturador"></param>
@@ -1372,7 +1524,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										else
 										{
 											//ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty, string.Empty, true);
-											var Tarea1 = SondaConsultareventos(false, doc.ToString());											
+											var Tarea1 = SondaConsultareventos(false, doc.ToString());
 										}
 
 									}
@@ -1401,10 +1553,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										&& (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
 											 && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual)
 												 && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
-										//********************************************************
-										//|| ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo && (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
-										//	&& (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -HATP, FechaActual))
-										//	&& datos.IntAdquirienteRecibo.Equals(1) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error && datos.TblEmpresasFacturador.IntRadian == true)
+								  //********************************************************
+								  //|| ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo && (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
+								  //	&& (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -HATP, FechaActual))
+								  //	&& datos.IntAdquirienteRecibo.Equals(1) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error && datos.TblEmpresasFacturador.IntRadian == true)
 
 								  orderby datos.IntNumero descending
 								  select datos.StrIdSeguridad).ToList();
@@ -1419,11 +1571,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 		}
 
-		public async Task SondaConsultareventos(bool sonda , string List_IdSeguridad)
+		public async Task SondaConsultareventos(bool sonda, string List_IdSeguridad)
 		{
 			try
 			{
-				var Tarea = TareaConsultarEventosRadian(sonda ,List_IdSeguridad);
+				var Tarea = TareaConsultarEventosRadian(sonda, List_IdSeguridad);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -2024,7 +2176,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (adquiriente_hgi == true)
 				{
 					list_evento = evento.Obtener(doc.StrIdSeguridad);
-				   
+
 					if (list_evento != null && list_evento.Count > 0)
 					{
 
@@ -2164,7 +2316,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							//Si el documento ya tiene eventos y por algun proceso no se actualizo en el documento, aqui se hace.
 							if (evento_procesado_DIAN == false && (expresa != null || rechazo != null || tacito != null))
 							{
-								
+
 								if (expresa != null && !doc.IntAdquirienteRecibo.Equals(estado))
 								{
 									doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Expresa.GetHashCode();
@@ -2269,7 +2421,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						doc.StrUrlAcuseUbl = resultado.RutaArchivosProceso;
 
 						if (estado != CodigoResponseV2.Rechazado.GetHashCode() && !string.IsNullOrEmpty(doc.StrAdquirienteMvoRechazo))
-							doc.StrAdquirienteMvoRechazo = string.Empty;					 
+							doc.StrAdquirienteMvoRechazo = string.Empty;
 
 						Ctl_Documento actualizar_doc = new Ctl_Documento();
 						doc = actualizar_doc.Actualizar(doc);
@@ -2289,7 +2441,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				else
 				{
-					 TblEventosRadian ultimo_evento = list_evento.OrderByDescending(x => x.DatFechaEvento).FirstOrDefault();
+					TblEventosRadian ultimo_evento = list_evento.OrderByDescending(x => x.DatFechaEvento).FirstOrDefault();
 
 					if (!doc.IntAdquirienteRecibo.Equals(ultimo_evento.IntEstadoEvento))
 					{
@@ -2324,7 +2476,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="facturador"></param>
 		/// <param name="proveedor"></param>
 		/// <param name="doc"></param>
-		public void HabilitarRadian (ref FacturaE_Documento resultado, TblEmpresas adquiriente, TblEmpresas facturador, TblEmpresas proveedor, ref TblDocumentos doc)
+		public void HabilitarRadian(ref FacturaE_Documento resultado, TblEmpresas adquiriente, TblEmpresas facturador, TblEmpresas proveedor, ref TblDocumentos doc)
 		{
 
 			Ctl_EventosRadian evento = new Ctl_EventosRadian();
@@ -2369,7 +2521,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Recibido.GetHashCode();
 			}
-			
+
 			if (recibo == null)
 			{
 				try
@@ -2387,7 +2539,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Aceptado.GetHashCode();
 			}
-			
+
 			if (expresa == null)
 			{
 				try
@@ -2508,7 +2660,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					Ctl_Documentos.Consultar(doc, facturador, ref resp, acuse.KeyV2);
 				}
 
-				if (resp.EstadoDian != null &&  resp.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
+				if (resp.EstadoDian != null && resp.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 				{
 					var acuse_obj = (dynamic)null;
 					acuse_obj = resultado.Documento;
@@ -2638,7 +2790,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				doc_acuse.DatosAdquiriente.TipoIdentificacion = 31;
 				doc_acuse.DatosAdquiriente.IdentificacionDv = LibreriaGlobalHGInet.HgiNet.FuncionesIdentificacion.Dv(adquiriente.StrIdentificacion);
 			}
-			
+
 			doc_acuse.DatosObligado = Ctl_Empresa.Convertir(facturador);
 			if (doc_acuse.DatosObligado.TipoIdentificacion != 31)
 			{
@@ -2820,7 +2972,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				int Enviomail = ProcesoEstado.EnvioZip.GetHashCode();
 
-				DateTime FechaActual = Fecha.GetFecha();				
+				DateTime FechaActual = Fecha.GetFecha();
 
 				List<TblEmpresas> facturadores = _empresa.ObtenerEmpresaAcuse();
 
@@ -2854,7 +3006,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					guid_documentos.Add(Guid.Parse(item));
 				}
 			}
-			
+
 
 			foreach (Guid item in guid_documentos)
 			{
@@ -2918,13 +3070,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				DateTime fecha_recibo = Fecha.GetFecha();
 
 				bool tiene_fecha_recibo = false;
-				
+
 				if (doc.DatAdquirienteFechaRecibo != null)
 				{
 					fecha_recibo = Convert.ToDateTime(doc.DatAdquirienteFechaRecibo);
 					tiene_fecha_recibo = true;
 				}
-					
+
 
 				//Si lleva ese tiempo y aun esta en el mismo estado, lo consulto de nuevo a ver si ya tiene eventos
 				if (tiempo_transcurrido.TotalHours >= 12 && tiempo_transcurrido.TotalHours < 16 && doc.IntAdquirienteRecibo <= 1 && sonda == true)
@@ -3084,7 +3236,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 
 			}
-				
+
 		}
 
 
@@ -3416,7 +3568,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				DocumentoRespuesta obj_documento = new DocumentoRespuesta();
 
 				obj_documento.Aceptacion = (respuesta.IntAdquirienteRecibo > CodigoResponseV2.Inscripcion.GetHashCode()) ? CodigoResponseV2.Inscripcion.GetHashCode() : respuesta.IntAdquirienteRecibo;
-				obj_documento.DescripcionAceptacion = (respuesta.IntAdquirienteRecibo > CodigoResponseV2.Inscripcion.GetHashCode()) ? "Titulo Valor" : Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CodigoResponseV2>(respuesta.IntAdquirienteRecibo)); 
+				obj_documento.DescripcionAceptacion = (respuesta.IntAdquirienteRecibo > CodigoResponseV2.Inscripcion.GetHashCode()) ? "Titulo Valor" : Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CodigoResponseV2>(respuesta.IntAdquirienteRecibo));
 				obj_documento.CodigoRegistro = respuesta.StrObligadoIdRegistro;
 				obj_documento.Cufe = respuesta.StrCufe;
 				obj_documento.DocumentoTipo = respuesta.IntDocTipo;
@@ -4000,7 +4152,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						{
 							PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-							
+
 
 							var documento_obj = (dynamic)null;
 
@@ -5634,7 +5786,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					for (int j = 0; j <= 12; j++)
 					{
-						if  (j == 0)
+						if (j == 0)
 						{
 							j = mes;
 						}
@@ -5727,7 +5879,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// </summary>
 		/// <param name="datos">lista de documentos por hacer la gestion de almacenamiento</param>
 		/// <param name="anyo">Año del proceso para tema de creacion del contenedor en Azure si no lo esta</param>
-		public void GenerarAlmacenamientoStorage(List<TblDocumentos> datos , int anyo, bool buscar_faltantes)
+		public void GenerarAlmacenamientoStorage(List<TblDocumentos> datos, int anyo, bool buscar_faltantes)
 		{
 			Ctl_AlmacenamientoDocs almacenamiento = new Ctl_AlmacenamientoDocs();
 
