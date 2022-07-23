@@ -630,9 +630,9 @@ namespace HGInetUBLv2_1
 					persona.ID.schemeName = documento.DatosAdquiriente.TipoIdentificacion.ToString();//"13";
 					persona.ID.schemeID = documento.DatosAdquiriente.IdentificacionDv.ToString();
 					persona.FirstName = new FirstNameType();
-					persona.FirstName.Value = "NA";//"Jhon Stivens";
+					persona.FirstName.Value = documento.DatosAdquiriente.RazonSocial;//"NA";//"Jhon Stivens";
 					persona.FamilyName = new FamilyNameType();
-					persona.FamilyName.Value = "NA";//"Zea Velasquez";
+					persona.FamilyName.Value = documento.DatosAdquiriente.RazonSocial;//"NA";//"Zea Velasquez";
 					//--Opcional el cargo
 					persona.JobTitle = new JobTitleType();
 					persona.JobTitle.Value = documento.DatosAdquiriente.RazonSocial;//"Auxiliar de Cartera";
