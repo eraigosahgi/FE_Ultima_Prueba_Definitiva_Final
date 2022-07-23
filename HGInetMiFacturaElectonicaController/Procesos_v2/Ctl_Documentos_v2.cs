@@ -211,7 +211,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
 						//Validacion de Cufe a documento_obj VS el calculado en Plataforma 
-						if (documento_obj.DocumentoFormato != null && (documento_obj.DocumentoFormato.Codigo == -1) && (!string.IsNullOrEmpty(documento_obj.Cufe)) && (documento_obj.Cufe != documento_result.CUFE))
+						if (documento_obj.DocumentoFormato != null && (documento_obj.DocumentoFormato.Codigo == -1) && (!string.IsNullOrEmpty(documento_obj.Cufe)) && (documento_obj.Cufe != documento_result.CUFE) && documento_obj.TipoOperacion != 3)
 						{
 							//Se agrega validacion para detectar si es una nota generada de version diferente
 							bool Valida_nota = true;
@@ -229,7 +229,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 							
 						}
-						else if (documento_obj.DocumentoFormato != null && documento_obj.DocumentoFormato.Codigo == 99)
+						else if (documento_obj.DocumentoFormato != null && documento_obj.DocumentoFormato.Codigo == 99 && documento_obj.TipoOperacion != 3)
 						{
 							if (!string.IsNullOrEmpty(documento_obj.Cufe))
 							{
@@ -281,6 +281,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								Ctl_Formatos clase_formatos = new Ctl_Formatos();
 								documento_obj.DocumentoFormato.Codigo = clase_formatos.ObtenerFormatosEmpresa(Constantes.NitResolucionconPrefijo, TipoFormato.FormatoPDF.GetHashCode()).Where(x => x.IntDocTipo == TipoDocumento.Nomina.GetHashCode()).FirstOrDefault().IntCodigoFormato;
 								documento_obj.DocumentoFormato.Titulo = Enumeracion.GetDescription(tipo_doc);
+							}
+							catch (Exception)
+							{
+
+							}
+						}//Aunque envien un PDF el formato de impresion sera generado por la plataforma puesto que es un documento interno del facturador
+						else if (documento_obj.TipoOperacion == 3)
+						{
+							try
+							{
+								Ctl_Formatos clase_formatos = new Ctl_Formatos();
+								documento_obj.DocumentoFormato.Codigo = 9;//clase_formatos.ObtenerFormatosEmpresa(Constantes.NitResolucionconPrefijo, TipoFormato.FormatoPDF.GetHashCode()).Where(x => x.IntDocTipo == TipoDocumento.Factura.GetHashCode()).FirstOrDefault().IntCodigoFormato;
+								if (tipo_doc == TipoDocumento.Factura)
+									documento_obj.DocumentoFormato.Titulo = "Documento soporte en Adquisiciones";//Enumeracion.GetDescription(tipo_doc);
+								else
+									documento_obj.DocumentoFormato.Titulo = "Nota de ajuste en Documento soporte en Adquisiciones";//Enumeracion.GetDescription(tipo_doc);
+
+								if (!string.IsNullOrEmpty(documento_obj.ArchivoPdf))
+									documento_obj.ArchivoPdf = string.Empty;
 							}
 							catch (Exception)
 							{
