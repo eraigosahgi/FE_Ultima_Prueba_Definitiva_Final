@@ -380,7 +380,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.Pdf,
 					d.StrIdSeguridad,
 					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
-					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.tipodoc)),
+					tipodoc = (d.tipodoc == 1) ? "Documento de adquisiciones" : "Nota de ajuste",
 					d.zip,
 					RutaServDian = (d.RutaServDian != null) ? d.RutaServDian.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
 					d.XmlAcuse,

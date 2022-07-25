@@ -1076,7 +1076,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							  && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
 							  && ((datos.IntDocTipo == 1) || (datos.IntDocTipo == 3))
 							  && (datos.IntTipoOperacion == 3)
-							  orderby datos.IntNumero descending
+							  orderby datos.DatFechaIngreso descending
 							  select new ObjDocumentos
 							  {
 								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
