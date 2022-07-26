@@ -54,30 +54,18 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		#endregion
 
 
-		#region Prueba de Acuse Tacito
-		public TblDocumentos COnsultaPorDocumento(string identificacion, int documento)
+		#region Consulta Documento Soporte
+		public TblDocumentos ConsultaDocSoporte(string identificacion, int documento, TipoDocumento tipo_doc)
 		{
 
 			try
 			{
-				TblEmpresas empresa = new TblEmpresas();
-
-				Ctl_Empresa _empresa = new Ctl_Empresa();
-
-				empresa = _empresa.Obtener(identificacion, false);
-
-				DateTime FechaActual = Fecha.GetFecha();
-
-				int estado_error = ProcesoEstado.FinalizacionErrorDian.GetHashCode();
-
-				int Enviomail = ProcesoEstado.EnvioZip.GetHashCode();
 
 				TblDocumentos docs = (from datos in context.TblDocumentos.AsNoTracking()
-									  where datos.IntAdquirienteRecibo.Equals(0) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
-											&& datos.StrEmpresaFacturador == identificacion
-											&& (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -empresa.IntAcuseTacito.Value, FechaActual)
-											&& (datos.IntNumero == documento)
-											&& empresa.IntAcuseTacito.Value > 0)))
+									  where datos.StrEmpresaFacturador == identificacion
+											&& datos.IntNumero == documento
+											&& datos.IntDocTipo == tipo_doc.GetHashCode()
+											&& datos.IntTipoOperacion == 3
 									  orderby datos.IntNumero descending
 									  select datos).FirstOrDefault();
 				return docs;
@@ -1444,13 +1432,32 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				DateTime FechaActual = Fecha.GetFecha();
 
+				Ctl_Empresa _empresa = new Ctl_Empresa();
+				List<TblEmpresas> facturadores = null;
+				bool ejecucion_facturador = false;
+
+				if (codigo_facturador.Equals("*"))
+				{	
+					facturadores = _empresa.ObtenerEmpresaAcuse();
+				}
+				else
+				{
+					TblEmpresas facturador = _empresa.Obtener(codigo_facturador);
+					if (facturador.IntAcuseTacito >= 72)
+					{
+						facturadores.Add(facturador);
+						ejecucion_facturador = true;
+					}
+						
+				}
+
 				//context.Configuration.LazyLoadingEnabled = false;
 				List<Guid> documentos = new List<Guid>();
 
-				if (sonda)
+				if (sonda || ejecucion_facturador == true)
 				{
-					Ctl_Empresa _empresa = new Ctl_Empresa();
-					List<TblEmpresas> facturadores = _empresa.ObtenerEmpresaAcuse();
+					//Ctl_Empresa _empresa = new Ctl_Empresa();
+					//List<TblEmpresas> facturadores = _empresa.ObtenerEmpresaAcuse();
 
 					context.Configuration.LazyLoadingEnabled = false;
 
@@ -1466,13 +1473,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 											   orderby datos.IntNumero descending
 											   select datos.StrIdSeguridad).ToList();
 
-							//List<Guid> docs = (from datos in context.TblDocumentos.AsNoTracking()
-							//				   where (datos.IntAdquirienteRecibo.Equals(0) || datos.IntAdquirienteRecibo.Equals(4)) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
-							//						 && datos.StrEmpresaFacturador == item.StrIdentificacion
-							//						 && (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
-							//								  && item.IntAcuseTacito.Value > 0)))
-							//				   orderby datos.IntNumero descending
-							//				   select datos.StrIdSeguridad).ToList();
 
 							if (docs.Count > 0)
 							{
@@ -1496,7 +1496,35 @@ namespace HGInetMiFacturaElectonicaController.Registros
 												//Primero consulto que este evento cuente con las 72 horas del acuse de recibo con respecto a la fecha actual
 												TimeSpan horas_acuse_evento = Fecha.GetFecha().Subtract(evento_reciboM.DatFechaEvento);
 
-												if (horas_acuse_evento.TotalHours >= 120)
+												bool enviar_tacito = false;
+
+												int dia_evento = Convert.ToInt16(evento_reciboM.DatFechaEvento.DayOfWeek.ToString("d"));
+												switch (dia_evento)
+												{
+													//Domingo-Lunes-Martes
+													case 0:
+													case 1:
+													case 2:
+														if (horas_acuse_evento.TotalHours >= 72)
+															enviar_tacito = true;
+													break;
+													//Miercoles-Jueves-Viernes
+													case 3:
+													case 4:
+													case 5:
+														if (horas_acuse_evento.TotalHours >= 120)
+															enviar_tacito = true;
+														break;
+													//Sabado
+													case 6:
+														if (horas_acuse_evento.TotalHours >= 96)
+															enviar_tacito = true;
+														break;
+													default:
+														break;
+												}
+
+												if (enviar_tacito == true)
 												{
 													//Se valida que el plazo para generar de Acuse tacito registrado por el facturador sea igual a superior a la fecha del recibo de mercancia
 													bool cumple_acuse_tacito = horas_acuse_evento.TotalHours >= item.IntAcuseTacito ? true : false;
@@ -1504,21 +1532,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 													if (cumple_acuse_tacito == true)
 													{
 														ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty);
-
-														//Consulto que en la actualidad 
-														//ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty, string.Empty, true);
-														//lista_evento_doc = ctl_evento.Obtener(doc);
-														//evento_reclamo = lista_evento_doc.Where(x => x.IntEstadoEvento == 2).FirstOrDefault();
-														//evento_reciboM = lista_evento_doc.Where(x => x.IntEstadoEvento == 4).FirstOrDefault();
-														//evento_expresa = lista_evento_doc.Where(x => x.IntEstadoEvento == 5).FirstOrDefault();
-
-														//if (evento_reclamo != null || evento_expresa != null)
-														//	generar_acuse_tacito = false;
 													}
 												}
-
-												//if (generar_acuse_tacito == true)
-												//	ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty);
 											}
 										}
 										else

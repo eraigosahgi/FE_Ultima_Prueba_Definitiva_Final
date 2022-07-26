@@ -490,6 +490,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 						}
 					}
+					else
+					{
+						//valida si envian documento a afectar
+						if (!string.IsNullOrEmpty(item.DocumentoRef) && string.IsNullOrEmpty(item.CufeFactura))
+						{
+							//valida si el Documento afectado ya existe en Base de Datos
+							TblDocumentos doc_ref = num_doc.ConsultaDocSoporte(facturador_electronico.StrIdentificacion,Convert.ToInt32(item.DocumentoRef), TipoDocumento.Factura);
+							if (doc_ref != null)
+							{
+								
+								if (doc_ref.StrEmpresaAdquiriente.Equals(item.DatosAdquiriente.Identificacion))
+								{
+									item.DocumentoRef = string.Format("{0} - {1}", doc_ref.StrPrefijo, doc_ref.IntNumero);
+									item.CufeFactura = doc_ref.StrCufe;
+									item.PrefijoFactura = doc_ref.StrPrefijo;
+								}
+							}
+						}
+					}
 				}
 
 				try
