@@ -129,7 +129,6 @@ namespace HGInetInteroperabilidad.Procesos
 									List<string> extension = new List<string>();
 									extension.Add("zip");
 									extension.Add("ZIP");
-									extension.Add("Zip");
 									adjunto = cliente_imap.ObtenerPropiedadesAdjuntos(mensaje, extension);
 								}
 								catch (Exception excepcion)
@@ -267,7 +266,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 									// descomprime el zip adjunto
 									string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
-									Ctl_Descomprimir.Procesar(rutas_archivos.First(x => x.Contains(".zip")), ruta_descomprimir);
+									Ctl_Descomprimir.Procesar(rutas_archivos.First(x => x.Contains(".zip") || x.Contains(".ZIP")), ruta_descomprimir);
 
 									// elimina el mensaje después de procesado de la bandeja de entrada
 									try
