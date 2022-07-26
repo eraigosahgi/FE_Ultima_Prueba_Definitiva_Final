@@ -111,7 +111,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					string facturador_formato = documentoBd.StrEmpresaFacturador;
 
-					if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste))
+					if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste || documento_obj.TipoOperacion == 3))
 					{
 						facturador_formato = Constantes.NitResolucionconPrefijo;
 					}
