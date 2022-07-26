@@ -199,6 +199,12 @@
 										<br />
 										<div class="col-md-12">
 
+											<%--<input type="radio" style="cursor: pointer" class="w3-radio" value="3" data-ng-model="value" id="rb_acuse" name="group2" ng-change="ValidarEstado(value)" data-ng-show="{{datos.IntAdquirienteRecibo != 4}}"/>--%>
+											<label><strong>Acuse de recibo de Factura Electrónica de Venta</strong></label>
+											 <label class="text-danger" data-ng-show="{{datos.IntAdquirienteRecibo >= 0}}">Ejecutado</label>
+										</div>
+										<div class="col-md-12">
+
 											<input type="radio" style="cursor: pointer" class="w3-radio" value="3" data-ng-model="value" id="rb_acuse" name="group2" ng-change="ValidarEstado(value)" data-ng-show="{{datos.IntAdquirienteRecibo != 4}}"/>
 											<label><strong>Recibo del bien o prestación del servicio</strong></label>
 											 <label class="text-danger" data-ng-show="{{datos.IntAdquirienteRecibo > 3}}">Ejecutado</label>
