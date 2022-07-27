@@ -55,7 +55,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
 		#region Consulta Documento Soporte
-		public TblDocumentos ConsultaDocSoporte(string identificacion, int documento, TipoDocumento tipo_doc)
+		public TblDocumentos ConsultaDocSoporte(string identificacion, int documento, int tipo_doc)
 		{
 
 			try
@@ -64,7 +64,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				TblDocumentos docs = (from datos in context.TblDocumentos.AsNoTracking()
 									  where datos.StrEmpresaFacturador == identificacion
 											&& datos.IntNumero == documento
-											&& datos.IntDocTipo == tipo_doc.GetHashCode()
+											&& datos.IntDocTipo == tipo_doc
 											&& datos.IntTipoOperacion == 3
 									  orderby datos.IntNumero descending
 									  select datos).FirstOrDefault();

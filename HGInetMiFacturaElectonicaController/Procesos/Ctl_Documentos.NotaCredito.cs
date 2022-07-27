@@ -496,7 +496,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (!string.IsNullOrEmpty(item.DocumentoRef) && string.IsNullOrEmpty(item.CufeFactura))
 						{
 							//valida si el Documento afectado ya existe en Base de Datos
-							TblDocumentos doc_ref = num_doc.ConsultaDocSoporte(facturador_electronico.StrIdentificacion,Convert.ToInt32(item.DocumentoRef), TipoDocumento.Factura);
+							TblDocumentos doc_ref = num_doc.ConsultaDocSoporte(facturador_electronico.StrIdentificacion,Convert.ToInt32(item.DocumentoRef), TipoDocumento.Factura.GetHashCode());
 							if (doc_ref != null)
 							{
 								

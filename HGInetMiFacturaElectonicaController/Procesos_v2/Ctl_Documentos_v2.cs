@@ -298,8 +298,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								else
 									documento_obj.DocumentoFormato.Titulo = "Nota de ajuste en Documento soporte en Adquisiciones";//Enumeracion.GetDescription(tipo_doc);
 
-								if (!string.IsNullOrEmpty(documento_obj.ArchivoPdf))
-									documento_obj.ArchivoPdf = string.Empty;
+								if (!string.IsNullOrEmpty(documento_obj.DocumentoFormato.ArchivoPdf))
+									documento_obj.DocumentoFormato.ArchivoPdf = string.Empty;
 							}
 							catch (Exception)
 							{
