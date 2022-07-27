@@ -502,7 +502,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								
 								if (doc_ref.StrEmpresaAdquiriente.Equals(item.DatosAdquiriente.Identificacion))
 								{
-									item.DocumentoRef = string.Format("{0} - {1}", doc_ref.StrPrefijo, doc_ref.IntNumero);
+									item.DocumentoRef = string.Format("{0}{1}", doc_ref.StrPrefijo, doc_ref.IntNumero);
 									item.CufeFactura = doc_ref.StrCufe;
 									item.PrefijoFactura = doc_ref.StrPrefijo;
 								}
