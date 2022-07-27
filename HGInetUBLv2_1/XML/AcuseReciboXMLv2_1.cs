@@ -291,6 +291,8 @@ namespace HGInetUBLv2_1
 
 				Factura documento_obj = new Factura();
 
+				string tipo_factura = string.Empty;
+
 				// valida el contenido del archivo
 				if (!string.IsNullOrWhiteSpace(contenido_xml_Fe))
 				{
@@ -312,6 +314,9 @@ namespace HGInetUBLv2_1
 					{
 						doc_prefijo_bd = doc_prefijo;
 					}
+
+					if (conversion.InvoiceTypeCode != null && !conversion.InvoiceTypeCode.Value.Equals(documento.TipoDocumento))
+						documento.TipoDocumento = conversion.InvoiceTypeCode.Value;
 
 				}
 
