@@ -472,21 +472,23 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				 	caption: "Tipo Documento",
 				 	//cssClass: "hidden-xs col-md-1",
 				 	dataField: "tipodoc"
-				 },
+				 },				
 				   {
 				   	dataField: "EstadoFactura",
-				   	caption: "Estado",
-				   	//cssClass: "hidden-xs col-md-1",
+				   	caption: "Estado",				  
 				   	lookup: {
-				   		dataSource: ProcesoEstado,
+				   		dataSource: CategoriaEstado,
 				   		displayExpr: "Name",
 				   		valueExpr: "ID"
-				   	},
-				   	cellTemplate: function (container, options) {
-
+				   	},				   
+				   	cellTemplate: function (container, options) {				   		
 				   		$("<div>")
-							.append($(ColocarEstado(options.data.Estado, options.data.EstadoFactura)))
-							.appendTo(container);
+				   			.append($(ColocarEstado(options.data.Estado, options.data.EstadoFactura)))
+				   			.appendTo(container);
+				   	}
+					,
+				   	calculateCellValue: function (e, a) {
+				   		return e.Estado;
 				   	}
 				   },
 				   {
@@ -505,7 +507,8 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				   		$("<a>")
 							.append($(ColocarColorRadian(estado, options.data.TituloValor, options.data.StrIdSeguridad, options.data.NumeroDocumento, codigo_facturador)))
 							.appendTo(container);
-				   	}
+				   	},
+
 				   },
 
 				   {
