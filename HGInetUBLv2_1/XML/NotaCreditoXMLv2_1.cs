@@ -203,6 +203,10 @@ namespace HGInetUBLv2_1
 					Reference.ReferenceID = new ReferenceIDType();
 					Reference.ReferenceID.Value = documento.DocumentoRef;
 				}
+
+				if (documento.Concepto.Equals("6"))
+					documento.Concepto = "5";
+
 				Reference.ResponseCode = new ResponseCodeType();
 				Reference.ResponseCode.Value = documento.Concepto;
 				DescriptionType[] DescriptionType = new DescriptionType[1];
