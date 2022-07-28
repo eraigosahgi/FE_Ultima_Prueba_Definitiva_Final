@@ -304,6 +304,15 @@ namespace HGInetMiFacturaElectonicaController.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a interoperabilidad\operacion\emision\.
+        /// </summary>
+        public static string RutaInteroperabilidadEmision {
+            get {
+                return ResourceManager.GetString("RutaInteroperabilidadEmision", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a interoperabilidad\operacion\envio\.
         /// </summary>
         public static string RutaInteroperabilidadEnvio {

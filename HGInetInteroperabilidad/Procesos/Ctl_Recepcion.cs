@@ -847,7 +847,7 @@ namespace HGInetInteroperabilidad.Procesos
 		/// </summary>
 		/// <param name="ruta_archivo">Ruta donde estan alojados los archivos a procesar</param>
 		/// <returns></returns>
-		public static bool ProcesarCorreo(string ruta_archivo)
+		public static bool ProcesarCorreo(string ruta_archivo, bool emision)
 		{
 			//Ubicacion del archivo del Mail original para re-enviar correo cuando se presente algun fallo si se requiere
 			string Nombre_arch_mail = Path.GetFileName(ruta_archivo);
@@ -1051,7 +1051,7 @@ namespace HGInetInteroperabilidad.Procesos
 				//Se valida si no es un acuse de un cliente
 				if (!obj_attach_serializado.Attachment.ExternalReference.Description.FirstOrDefault().Value.Contains("ApplicationResponse"))
 				{
-					respuesta = ProcesarAttach(obj_attach_serializado, ruta_archivo, ruta_archi_mail);
+					respuesta = ProcesarAttach(obj_attach_serializado, ruta_archivo, ruta_archi_mail, emision);
 				}
 				else
 				{
@@ -1311,7 +1311,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 		}
 
-		public static bool ProcesarAttach(AttachedDocumentType obj_attach_serializado, string ruta_archivo, string ruta_archivo_mail)
+		public static bool ProcesarAttach(AttachedDocumentType obj_attach_serializado, string ruta_archivo, string ruta_archivo_mail, bool emision)
 		{
 
 			bool respuesta = false;
@@ -1368,7 +1368,10 @@ namespace HGInetInteroperabilidad.Procesos
 				TblEmpresas facturador_receptor = null;
 				try
 				{
-					facturador_receptor = empresa.ValidarInteroperabilidad(attach_document.Identificacionadquiriente);
+					if (emision == false)
+						facturador_receptor = empresa.ValidarInteroperabilidad(attach_document.Identificacionadquiriente);
+					else
+						facturador_receptor = empresa.ValidarInteroperabilidad(attach_document.IdentificacionFacturador);
 				}
 				catch (Exception excepcion)
 				{
@@ -1381,10 +1384,18 @@ namespace HGInetInteroperabilidad.Procesos
 
 					throw new ApplicationException(string.Format("Error validando el Facturador receptor Detalle: {0}", excepcion.Message));
 				}
-				
+
+				//Se valida si el facturador cumple segun el proceso
+				bool facturador_habilitado = false;
+
+				if (emision == false && facturador_receptor.IntInteroperabilidad == true)
+					facturador_habilitado = true;
+				else if (facturador_receptor.IntRadian == true)
+					facturador_habilitado = true;
+
 
 				//Si tiene habilitado este servicio hace todo el proceso
-				if (facturador_receptor != null && facturador_receptor.IntInteroperabilidad == true)
+				if (facturador_receptor != null && facturador_habilitado == true)
 				{
 					// representación de datos en objeto
 					var documento_obj = (dynamic)null;
@@ -1613,6 +1624,14 @@ namespace HGInetInteroperabilidad.Procesos
 						{
 						}
 
+
+						if (emision == true)
+						{
+							Ctl_Documento ctl_documento = new Ctl_Documento();
+
+							var Tarea1 = ctl_documento.SondaConsultareventos(false, documento_bd.StrIdSeguridad.ToString());
+						}
+
 						//try
 						//{
 						//	Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
@@ -1634,7 +1653,7 @@ namespace HGInetInteroperabilidad.Procesos
 						throw new ArgumentException(string.Format("El Documento Electrónico {0} con prefijo {1} ya existe en nuestra plataforma", documento_bd.IntNumero, documento_bd.StrPrefijo));
 					}
 					
-					if (doc_nuevo == true || documento_bd.IntEnvioMail == false)
+					if ((doc_nuevo == true || documento_bd.IntEnvioMail == false) && emision == false)
 					{
 						try
 						{   // envía el correo del documento al Adquiriente(Facturador Receptor)
@@ -1661,6 +1680,12 @@ namespace HGInetInteroperabilidad.Procesos
 							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 							throw new ApplicationException(string.Format("Error al notificar al facturador receptor la recepcion del documento {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
 						}
+					}
+					else if (emision == true)
+					{
+						Ctl_Documento ctl_documento = new Ctl_Documento();
+
+						var Tarea1 = ctl_documento.SondaConsultareventos(false, documento_bd.StrIdSeguridad.ToString());
 					}
 
 					respuesta = true;

@@ -95,6 +95,7 @@
     <Compile Include="Objetos\RespuestaRegistro.cs" />
     <Compile Include="Objetos\Usuario.cs" />
     <Compile Include="Procesos\Ctl_Envio.cs" />
+    <Compile Include="Procesos\Ctl_MailEmision.cs" />
     <Compile Include="Procesos\Ctl_MailRecepcion.cs" />
     <Compile Include="Procesos\Ctl_Recepcion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

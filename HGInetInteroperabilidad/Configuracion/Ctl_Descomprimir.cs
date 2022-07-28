@@ -139,7 +139,7 @@ namespace HGInetInteroperabilidad.Configuracion
 		/// Metodo para procesar documentos recibidos por correo
 		/// </summary>
 		/// <returns></returns>
-		public static bool ProcesarArchivosCorreo()
+		public static bool ProcesarArchivosCorreo(bool emision)
 		{
 
 			bool datos_respuesta = false;
@@ -147,6 +147,9 @@ namespace HGInetInteroperabilidad.Configuracion
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 			string ruta_archivos = string.Format(@"{0}\{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion);
+
+			if (emision == true)
+				ruta_archivos = string.Format(@"{0}\{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadEmision);
 
 			string[] directorios_Obligado = Directorio.ObtenerSubdirectoriosDirectorio(ruta_archivos);
 
@@ -238,7 +241,7 @@ namespace HGInetInteroperabilidad.Configuracion
 									string registro = Path.GetFileName(item);
 									try
 									{ 
-										procesado = Ctl_Recepcion.ProcesarCorreo(item);
+										procesado = Ctl_Recepcion.ProcesarCorreo(item, emision);
 										datos_respuesta = procesado;
 
 										if (procesado == true)
@@ -432,11 +435,11 @@ namespace HGInetInteroperabilidad.Configuracion
 		/// Sonda para descargar los correos de interoperabilidad y alojarlos en una ruta para procesarlos
 		/// </summary>
 		/// <returns></returns>
-		public async Task SondaProcesarCorreos()
+		public async Task SondaProcesarCorreos(bool emision)
 		{
 			try
 			{
-				var Tarea = TareaProcesarCorreos();
+				var Tarea = TareaProcesarCorreos(emision);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -447,11 +450,11 @@ namespace HGInetInteroperabilidad.Configuracion
 
 		}
 
-		public async Task TareaProcesarCorreos()
+		public async Task TareaProcesarCorreos(bool emision)
 		{
 			await Task.Factory.StartNew(() =>
 			{
-				ProcesarArchivosCorreo();
+				ProcesarArchivosCorreo(emision);
 			});
 		}
 

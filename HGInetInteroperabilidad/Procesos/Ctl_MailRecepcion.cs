@@ -973,11 +973,11 @@ namespace HGInetInteroperabilidad.Procesos
 		/// Sonda para descargar los correos de interoperabilidad y alojarlos en una ruta para procesarlos
 		/// </summary>
 		/// <returns></returns>
-		public async Task SondaDescargarCorreos()
+		public async Task SondaDescargarCorreos(bool emision)
 		{
 			try
 			{
-				var Tarea = TareaDescargarCorreos();
+				var Tarea = TareaDescargarCorreos(emision);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -988,11 +988,14 @@ namespace HGInetInteroperabilidad.Procesos
 
 		}
 
-		public async Task TareaDescargarCorreos()
+		public async Task TareaDescargarCorreos(bool emision)
 		{
 			await Task.Factory.StartNew(() =>
 			{
-				Procesar();
+				if (emision == false)
+					Procesar();
+				else
+					Ctl_MailEmision.Procesar();
 			});
 		}
 

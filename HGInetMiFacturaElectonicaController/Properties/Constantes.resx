@@ -340,4 +340,8 @@
   <data name="CarpetaFacturaElectronicaTmp" xml:space="preserve">
     <value>facturaelectronica_tmp</value>
   </data>
+  <data name="RutaInteroperabilidadEmision" xml:space="preserve">
+    <value>interoperabilidad\operacion\emision\</value>
+    <comment>Ruta fisica para el proceso de emision de los documentos a interoperabilidad</comment>
+  </data>
 </root>

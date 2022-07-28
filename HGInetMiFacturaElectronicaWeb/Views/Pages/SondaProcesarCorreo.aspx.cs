@@ -14,8 +14,14 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 		{
 			try
 			{
+				bool emision = false;
+
+				//Se envia para que descargue del buzon de emision
+				if (Request.QueryString["Emision"] != null)
+					bool.TryParse(Request.QueryString["Emision"], out emision);
+
 				Ctl_Descomprimir correos = new Ctl_Descomprimir();
-				var Tarea1 = correos.SondaProcesarCorreos();
+				var Tarea1 = correos.SondaProcesarCorreos(emision);
 				lblResultado.Text = string.Format("Termino");
 			}
 			catch (Exception excepcion)
