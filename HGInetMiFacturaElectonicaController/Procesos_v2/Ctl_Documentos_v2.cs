@@ -257,7 +257,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta.Cufe = documento_result.CUFE;
 
 						//Obtiene el Formato Generico de Nomina
-						if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && documento_obj.DocumentoFormato == null && documento_obj.TipoOperacion != 3)
+						if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && documento_obj.DocumentoFormato == null)
 						{
 							try
 							{
@@ -274,7 +274,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 
 						}
-						else if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && documento_obj.DocumentoFormato != null && documento_obj.TipoOperacion != 3)
+						else if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && documento_obj.DocumentoFormato != null)
 						{
 							try
 							{
