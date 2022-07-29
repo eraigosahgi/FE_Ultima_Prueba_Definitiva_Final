@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Masters/MasterPrincipal.Master" AutoEventWireup="true" CodeBehind="ConsultaDocumentoRadian.aspx.cs" Inherits="HGInetMiFacturaElectronicaWeb.Views.Pages.ConsultaDocumentoRadian" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
@@ -36,34 +37,47 @@
 
 								<div class="dx-fieldset">
 
-									<div class="col-md-4" style="margin-top: 1%">
+									<div class="col-md-3" style="margin-top: 1%">
 										<i class="icon-file-text"></i>
 										<label>Filtro Fecha:</label>
 										<div data-dx-select-box="filtros.TipoFiltroFecha"></div>
 									</div>
 
-									<div class="col-md-4" style="margin-top: 1%">
+									<div class="col-md-3" style="margin-top: 1%">
 										<i class=" icon-calendar"></i>
 										<label>Fecha Inicial:</label>
 										<div id="FechaInicial"></div>
 									</div>
 
 
-									<div class="col-md-4" style="margin-top: 1%">
+									<div class="col-md-3" style="margin-top: 1%">
 										<i class=" icon-calendar"></i>
 										<label>Fecha Final:</label>
 										<div id="FechaFinal"></div>
 									</div>
-									<div class="col-md-4" style="margin-top: 1%">
+									<div class="col-md-3" style="margin-top: 1%">
 										<div data-hgi-filtro="Adquiriente"></div>
 									</div>
-									<div class="col-md-4" style="margin-top: 1%">
+
+
+									<div class="col-md-3" style="margin-top: 1%">
 										<i class="icon-files-empty"></i>
 										<label>Nº Documento:</label>
 										<div data-dx-autocomplete="filtros.NumeroDocumento"></div>
 									</div>
 
 
+									<div class="col-md-6" style="margin-top: 1%">
+										<i class="icon-files-empty"></i>
+										<label>Resolución:</label>
+										<div id="filtrosResolucion"></div>
+									</div>
+
+									<div class="col-lg-3 text-right">
+										<br />
+										
+										<div data-dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
+									</div>
 									<%--<div class="col-md-2" style="margin-top: 1%">
 										<i class="icon-file-text"></i>
 										<label>Estado Acuse:</label>
@@ -75,26 +89,13 @@
 										<label>Estado:</label>
 										<div id="filtrosEstadoRecibo"></div>
 									</div>--%>
-
-
-									<div class="col-md-4" style="margin-top: 1%">
-										<i class="icon-files-empty"></i>
-										<label>Resolución:</label>
-										<div id="filtrosResolucion"></div>
-									</div>
-
-
 								</div>
 
 							</div>
 
 
 						</div>
-						<div class="col-lg-12 text-right">
-							<br />
-							<br />
-							<div data-dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
-						</div>
+
 
 						<p data-ng-bind-html="message"></p>
 

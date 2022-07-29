@@ -126,14 +126,14 @@ App.controller('DocRadianController', function DocRadianController($scope, $http
                                  	caption: "Descripción",
                                  	dataField: "Descripcion",
                                  	title: "Descripcion",
-                                 	width: 500
+                                 	//width: 500
 
                                  }],
                     	hoverStateEnabled: true,
                     	paging: { enabled: true, pageSize: 10 },
                     	filterRow: { visible: true },
                     	scrolling: { mode: "infinite" },
-                    	height: 240,
+                    	//height: 240,
                     	selection: { mode: "multiple" },
                     	selectedRowKeys: value,
                     	onSelectionChanged: function (selectedItems) {
@@ -557,10 +557,8 @@ App.controller('DocRadianController', function DocRadianController($scope, $http
 				enabled: true,
 				template: function (container, options) {
 
-
-
-					container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.StrEmpresaFacturador, options.data.NumeroDocumento));
-
+					//container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.StrEmpresaFacturador, options.data.NumeroDocumento));
+					container.append(ObtenerDetallleDocumentoSoporte(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.StrEmpresaFacturador, options.data.NumeroDocumento));
 				}
 			},
 			//****************************************************************
