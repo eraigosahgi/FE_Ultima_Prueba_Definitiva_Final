@@ -1165,9 +1165,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<ObjDocumentos> ObtenerDocumentosRadian(string codigo_facturador, string numero_documento, string codigo_adquiriente,  DateTime fecha_inicio, DateTime fecha_fin, string Resolucion, int tipo_filtro_fecha)
+		public List<ObjDocumentos> ObtenerDocumentosRadian(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string Resolucion, int tipo_filtro_fecha)
 		{
-			
+
 			fecha_inicio = fecha_inicio.Date;
 
 			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
@@ -1175,14 +1175,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			long num_doc = -1;
 			long.TryParse(numero_documento, out num_doc);
 
-		
+
 
 			if (string.IsNullOrWhiteSpace(numero_documento))
 				numero_documento = "*";
 			if (string.IsNullOrWhiteSpace(codigo_adquiriente))
 				codigo_adquiriente = "*";
 
-						List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
+			List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
 
 			List<ObjDocumentos> documentos = new List<ObjDocumentos>();
 
@@ -1192,11 +1192,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				documentos = (from datos in context.TblDocumentos.AsNoTracking()
 							  where (datos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
-							  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))							
+							  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
 							  && (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
 							  && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
 							  && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
-							  && (datos.IntDocTipo < 10)
+							  && (datos.IntDocTipo == 1)
+							  && (datos.IntTipoOperacion == 0)
+							  && (datos.IntAdquirienteRecibo == 3 || (datos.IntAdquirienteRecibo > 4))
 							  orderby datos.IntNumero descending
 							  select new ObjDocumentos
 							  {
@@ -1244,7 +1246,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				documentos = (from datos in context.TblDocumentos.AsNoTracking()
 							  where (datos.StrEmpresaFacturador.Equals(codigo_facturador))
 							  && (listaDocumetos.Contains(datos.IntNumero))
-							  && (datos.IntDocTipo < 10)
+							  && (datos.IntDocTipo == 1)
+							  && (datos.IntTipoOperacion == 0)
+							  && (datos.IntAdquirienteRecibo == 3 || (datos.IntAdquirienteRecibo > 4))
 							  select new ObjDocumentos
 							  {
 								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
@@ -1568,7 +1572,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				bool ejecucion_facturador = false;
 
 				if (codigo_facturador.Equals("*"))
-				{	
+				{
 					facturadores = _empresa.ObtenerEmpresaAcuse();
 				}
 				else
@@ -1579,7 +1583,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						facturadores.Add(facturador);
 						ejecucion_facturador = true;
 					}
-						
+
 				}
 
 				//context.Configuration.LazyLoadingEnabled = false;
@@ -1638,7 +1642,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 													case 2:
 														if (horas_acuse_evento.TotalHours >= 72)
 															enviar_tacito = true;
-													break;
+														break;
 													//Miercoles-Jueves-Viernes
 													case 3:
 													case 4:

@@ -469,11 +469,11 @@ App.controller('DocRadianController', function DocRadianController($scope, $http
 				 	//cssClass: "hidden-xs col-md-1",
 				 	dataField: "NombreAdquiriente"
 				 },
-				 {
-				 	caption: "Tipo Documento",
-				 	//cssClass: "hidden-xs col-md-1",
-				 	dataField: "tipodoc"
-				 },
+				 //{
+				 //	caption: "Tipo Documento",
+				 //	//cssClass: "hidden-xs col-md-1",
+				 //	dataField: "tipodoc"
+				 //},
 				   //{
 				   //	dataField: "EstadoFactura",
 				   //	caption: "Estado",

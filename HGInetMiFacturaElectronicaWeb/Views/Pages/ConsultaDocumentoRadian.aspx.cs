@@ -1,6 +1,8 @@
-﻿using HGInetMiFacturaElectonicaData.Enumerables;
+﻿using HGInetMiFacturaElectonicaData;
+using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectronicaWeb.Properties;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
+using HGInetMiFacturaElectronicaWeb.Seguridad.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,27 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			base.Page_Load(sender, e);
+
+			Sesion.ValidarSesion();
+
+			try
+			{
+				if (!Sesion.DatosEmpresa.IntRadian)
+				{
+					throw new ApplicationException("El usuario no tiene permisos para esta ejecución.");
+
+
+				}
+			}
+			catch (Exception excepcion)
+			{
+
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+				this.RutaRedireccionAlerta =  string.Format("{0}/Views/Pages/Inicio.aspx", plataforma.RutaPublica);
+
+				CustomMaster.Modal = new SweetAlert("Alerta", excepcion.Message, true, this.RutaRedireccionAlerta, SweetAlert.TipoMensaje.warning);
+				CustomMaster.MostrarModal();
+			}
 
 		}
 	}
