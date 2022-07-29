@@ -272,7 +272,8 @@ namespace HGInetInteroperabilidad.Procesos
 									}
 									catch (ExcepcionHgi ex)
 									{
-										mensajes.Add("No se pudo guardar archivo adjunto del correo electrónico, valide en el correo original que el nombre de este archivo no contenga caracteres especiales");
+										string mensaje_error = "No se pudo guardar archivo adjunto del correo electrónico, valide en el correo original que el nombre de este archivo no contenga caracteres especiales";
+										mensajes.Add(mensaje_error);
 
 										//Se notifica al correo emisor que no se procesa el correo y la razon 
 										try
@@ -286,7 +287,26 @@ namespace HGInetInteroperabilidad.Procesos
 										// mueve el mensaje a no procesado de la bandeja de entrada
 										cliente_imap.MoverNoProcesado(id_mensaje);
 
-										throw new ApplicationException("El Asunto del correo electrónico indica que es un evento");
+										throw new ApplicationException(string.Format("{0} - {1}", mensaje_error, ex.MensajeResultado));
+									}
+									catch (Exception excepcion)
+									{
+										string mensaje_error = "No se pudo guardar archivo adjunto del correo electrónico, valide en el correo original que este archivo no este corrupto o si fue comprimido como .zip";
+										mensajes.Add(mensaje_error);
+
+										//Se notifica al correo emisor que no se procesa el correo y la razon 
+										try
+										{
+											//RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
+											EnviarAlerta(mensaje, mensajes);
+										}
+										catch (Exception exc)
+										{ }
+
+										// mueve el mensaje a no procesado de la bandeja de entrada
+										cliente_imap.MoverNoProcesado(id_mensaje);
+
+										throw new ApplicationException(string.Format("{0} - {1}", mensaje_error, excepcion.Message));
 									}
 
 									// elimina el mensaje después de procesado de la bandeja de entrada
