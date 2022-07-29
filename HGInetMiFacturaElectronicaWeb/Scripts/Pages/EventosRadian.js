@@ -29,20 +29,20 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 				onContentReady: function (e) {
 					try {
 						$("#cmdenviar").dxButton({ visible: response.data[0].Inscribir_Documento });
-						//$("#cmdenviar1").dxButton({ visible: response.data[0].Inscribir_Documento, disabled: true });
-						//$("#cmdenviar2").dxButton({ visible: response.data[0].Inscribir_Documento, disabled: true });
-						//$("#cmdenviar3").dxButton({ visible: response.data[0].Inscribir_Documento, disabled: true });
-						//$("#cmdenviar4").dxButton({ visible: response.data[0].Inscribir_Documento, disabled: true });
-						//$("#cmdenviar5").dxButton({ visible: response.data[0].Inscribir_Documento, disabled: true });
+						$("#cmdenviar1").dxButton({ visible: response.data[0].otros_eventos});
+						$("#cmdenviar2").dxButton({ visible: response.data[0].otros_eventos });
+						$("#cmdenviar3").dxButton({ visible: response.data[0].otros_eventos });
+						$("#cmdenviar4").dxButton({ visible: response.data[0].otros_eventos });
+						$("#cmdenviar5").dxButton({ visible: response.data[0].otros_eventos });
 
 					}
 					catch (err) {
 						$("#cmdenviar").dxButton({ visible: false });
-						//$("#cmdenviar1").dxButton({ visible: false });
-						//$("#cmdenviar2").dxButton({ visible: false });
-						//$("#cmdenviar3").dxButton({ visible: false });
-						//$("#cmdenviar4").dxButton({ visible: false });
-						//$("#cmdenviar5").dxButton({ visible: false });
+						$("#cmdenviar1").dxButton({ visible: false });
+						$("#cmdenviar2").dxButton({ visible: false });
+						$("#cmdenviar3").dxButton({ visible: false });
+						$("#cmdenviar4").dxButton({ visible: false });
+						$("#cmdenviar5").dxButton({ visible: false });
 					}
 				},
 				columns: [
@@ -113,89 +113,96 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 				}
 			});
 
-			//$("#cmdenviar1").dxButton({
-			//	text: "Endoso",
-			//	type: "default",
-			//	visible: false,
-			//	onClick: function () {
-			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-			//		//	//alert(response.data);
-			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-			//		//});
-			//	}
-			//});
+			$("#cmdenviar1").dxButton({
+				text: "Endoso",
+				type: "default",
+				visible: false,
+				onClick: function () {
+					MensajeEventoRadian();
+					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+					//	//alert(response.data);
+					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+					//});
+				}
+			});
 
-			//$("#cmdenviar2").dxButton({
-			//	text: "Aval",
-			//	type: "default",
-			//	visible: false,
-			//	onClick: function () {
-			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-			//		//	//alert(response.data);
-			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-			//		//});
-			//	}
-			//});
+			$("#cmdenviar2").dxButton({
+				text: "Aval",
+				type: "default",
+				visible: false,
+				onClick: function () {
+					MensajeEventoRadian();
+					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+					//	//alert(response.data);
+					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+					//});
+				}
+			});
 
-			//$("#cmdenviar3").dxButton({
-			//	text: "Mandato",
-			//	type: "default",
-			//	visible: false,
-			//	onClick: function () {
-			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-			//		//	//alert(response.data);
-			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-			//		//});
-			//	}
-			//});
+			$("#cmdenviar3").dxButton({
+				text: "Mandato",
+				type: "default",
+				visible: false,
+				onClick: function () {
+					MensajeEventoRadian();
+					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+					//	//alert(response.data);
+					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+					//});
+				}
+			});
 
-			//$("#cmdenviar4").dxButton({
-			//	text: "Limitación",
-			//	type: "default",
-			//	visible: false,
-			//	onClick: function () {
-			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-			//		//	//alert(response.data);
-			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-			//		//});
-			//	}
-			//});
+			$("#cmdenviar4").dxButton({
+				text: "Limitación",
+				type: "default",
+				visible: false,
+				onClick: function () {
+					MensajeEventoRadian();
+					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+					//	//alert(response.data);
+					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+					//});
+				}
+			});
 
-			//$("#cmdenviar5").dxButton({
-			//	text: "Transferencia Derecho",
-			//	type: "default",
-			//	visible: false,
-			//	onClick: function () {
-			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-			//		//	//alert(response.data);
-			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-			//		//});
-			//	}
-			//});
+			$("#cmdenviar5").dxButton({
+				text: "Transferencia Derecho",
+				type: "default",
+				visible: false,
+				onClick: function () {
+					MensajeEventoRadian();
+					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+					//	//alert(response.data);
+					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+					//});
+				}
+			});
 
-			//$("#cmdenviar6").dxButton({
-			//	text: "Informe Pago",
-			//	type: "default",
-			//	visible: false,
-			//	onClick: function () {
-			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-			//		//	//alert(response.data);
-			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-			//		//});
-			//	}
-			//});
+			$("#cmdenviar6").dxButton({
+				text: "Informe Pago",
+				type: "default",
+				visible: false,
+				onClick: function () {
+					MensajeEventoRadian();
+					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+					//	//alert(response.data);
+					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+					//});
+				}
+			});
 
-			//$("#cmdenviar7").dxButton({
-			//	text: "Pago",
-			//	type: "default",
-			//	visible: false,
-			//	onClick: function () {
-			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-			//		//	//alert(response.data);
-			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-			//		//});
-			//	}
-			//});
+			$("#cmdenviar7").dxButton({
+				text: "Pago",
+				type: "default",
+				visible: false,
+				onClick: function () {
+					MensajeEventoRadian();
+					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+					//	//alert(response.data);
+					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+					//});
+				}
+			});
 
 
 
@@ -203,6 +210,10 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		}, function (response) {
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
+	}
+
+	function MensajeEventoRadian() {
+		DevExpress.ui.notify("Evento no disponible temporalmente", 'error', 3000);
 	}
 
 });

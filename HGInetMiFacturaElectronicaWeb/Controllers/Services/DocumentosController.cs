@@ -403,6 +403,91 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		}
 
 
+
+		/// <summary>
+		/// Obtiene los documentos por obligado
+		/// </summary>
+		/// <param name="codigo_facturador"></param>
+		/// <param name="numero_documento"></param>
+		/// <param name="codigo_adquiriente"></param>		
+		/// <param name="fecha_inicio"></param>
+		/// <param name="fecha_fin"></param>
+		/// <returns></returns>
+		/// 
+		[HttpGet]
+		[Route("api/ObtenerDocumentosRadian")]
+		public IHttpActionResult ObtenerDocumentosRadian(string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string Resolucion, int tipo_filtro_fecha)
+		{
+			try
+			{
+				Sesion.ValidarSesion();
+
+				string codigo_facturador = Sesion.DatosUsuario.StrEmpresa;
+
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+				List<ObjDocumentos> datos = ctl_documento.ObtenerDocumentosRadian(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, Resolucion, tipo_filtro_fecha);
+
+				if (datos == null)
+				{
+					return NotFound();
+				}
+
+				List<string> doc_consulta_evento = datos.Where(x => x.tipodoc == 1 && ((x.IntAdquirienteRecibo >= 0 && x.IntAdquirienteRecibo < 3) || (x.IntAdquirienteRecibo == 4)) && x.FormaPago == 2 && x.EstadoCategoria == 300).Select(x => x.StrIdSeguridad.ToString()).ToList();
+
+				if (doc_consulta_evento != null)
+				{
+					string docs_consulta = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(doc_consulta_evento, ",");
+					var Tarea1 = ctl_documento.SondaConsultareventos(false, docs_consulta);
+				}
+
+				var retorno = datos.Select(d => new
+				{
+					d.IdFacturador,
+					d.Facturador,
+					d.NumeroDocumento,
+					d.DatFechaIngreso,
+					d.DatFechaDocumento,
+					d.DatFechaVencDocumento,
+					d.IntVlrTotal,
+					d.IntSubTotal,
+					d.IntNeto,
+					EstadoFactura = d.EstadoFactura,// DescripcionEstadoFactura(d.EstadoFactura),
+					EstadoCategoria = d.EstadoCategoria,//DescripcionCategoriaFactura(d.EstadoCategoria),
+					EstadoAcuse = DescripcionEstadoAcuse(d.EstadoAcuse),
+					d.MotivoRechazo,
+					AdquirienteMvoRechazo = d.StrAdquirienteMvoRechazo,
+					d.IdentificacionAdquiriente,
+					d.NombreAdquiriente,
+					d.MailAdquiriente,
+					d.Xml,
+					d.Pdf,
+					d.StrIdSeguridad,
+					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
+					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.tipodoc)),
+					d.zip,
+					RutaServDian = (d.RutaServDian != null) ? d.RutaServDian.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+					d.XmlAcuse,
+					permiteenvio = (d.EstadoCategoria == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
+					d.IntAdquirienteRecibo,
+					d.Estado,
+					EstadoEnvioMail = d.EstadoEnvioMail,// DescripcionEstadoEmail(Convert.ToInt16(d.EstadoEnvioMail)),
+					MensajeEnvio = d.MensajeEnvio,// DescripcionMensajeEmail(Convert.ToInt16(d.MensajeEnvio)),
+					d.EnvioMail,
+					d.Radian,
+					TituloValor = (d.IntAdquirienteRecibo > 5) ? "Titulo Valor" : (d.IntAdquirienteRecibo == 5) || (d.IntAdquirienteRecibo == 3) ? "Aceptado" : "Documento Electrónico"
+				});
+
+				return Ok(retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
 		/// <summary>
 		/// Obtiene los documentos por obligado
 		/// </summary>

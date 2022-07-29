@@ -1154,6 +1154,137 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			return documentos;
 		}
 
+		/// <summary>
+		/// Obtiene los documentos del Facturador
+		/// </summary>
+		/// <param name="codigo_facturador"></param>
+		/// <param name="numero_documento"></param>
+		/// <param name="codigo_tercero"></param>
+		/// <param name="estado_dian"></param>
+		/// <param name="estado_recibo"></param>
+		/// <param name="fecha_inicio"></param>
+		/// <param name="fecha_fin"></param>
+		/// <returns></returns>
+		public List<ObjDocumentos> ObtenerDocumentosRadian(string codigo_facturador, string numero_documento, string codigo_adquiriente,  DateTime fecha_inicio, DateTime fecha_fin, string Resolucion, int tipo_filtro_fecha)
+		{
+			
+			fecha_inicio = fecha_inicio.Date;
+
+			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+			long num_doc = -1;
+			long.TryParse(numero_documento, out num_doc);
+
+		
+
+			if (string.IsNullOrWhiteSpace(numero_documento))
+				numero_documento = "*";
+			if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+				codigo_adquiriente = "*";
+
+						List<string> LstResolucion = Coleccion.ConvertirLista(Resolucion);
+
+			List<ObjDocumentos> documentos = new List<ObjDocumentos>();
+
+			if (numero_documento.Equals("*"))
+			{
+				context.Configuration.LazyLoadingEnabled = false;
+
+				documentos = (from datos in context.TblDocumentos.AsNoTracking()
+							  where (datos.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
+							  && (datos.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))							
+							  && (LstResolucion.Contains(datos.StrNumResolucion.ToString()) || Resolucion.Equals("*"))
+							  && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
+							  && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
+							  && (datos.IntDocTipo < 10)
+							  orderby datos.IntNumero descending
+							  select new ObjDocumentos
+							  {
+								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+								  Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+								  Prefijo = datos.StrPrefijo,
+								  NumeroDocumento = datos.StrPrefijo + datos.IntNumero.ToString(),
+								  DatFechaIngreso = datos.DatFechaIngreso,
+								  DatFechaDocumento = datos.DatFechaDocumento,
+								  DatFechaVencDocumento = datos.DatFechaVencDocumento,
+								  IntVlrTotal = (datos.IntDocTipo == 3) ? -datos.IntVlrTotal : datos.IntVlrTotal,
+								  IntSubTotal = (datos.IntDocTipo == 3) ? -datos.IntValorSubtotal : datos.IntValorSubtotal,
+								  IntNeto = (datos.IntDocTipo == 3) ? -datos.IntValorNeto : datos.IntValorNeto,
+								  EstadoFactura = datos.IntIdEstado,
+								  EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+								  EstadoAcuse = datos.IntAdquirienteRecibo,
+								  MotivoRechazo = datos.StrAdquirienteMvoRechazo,
+								  StrAdquirienteMvoRechazo = datos.StrAdquirienteMvoRechazo,
+								  IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+								  NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+								  MailAdquiriente = datos.TblEmpresasAdquiriente.StrMailAdmin,
+								  Xml = datos.StrUrlArchivoUbl,
+								  Pdf = datos.StrUrlArchivoPdf,
+								  StrIdSeguridad = datos.StrIdSeguridad,
+								  tipodoc = datos.IntDocTipo,
+								  zip = datos.StrUrlAnexo,
+								  RutaServDian = datos.StrUrlArchivoUbl,
+								  XmlAcuse = datos.StrUrlAcuseUbl,
+								  permiteenvio = (Int16)datos.IdCategoriaEstado,
+								  IntAdquirienteRecibo = datos.IntAdquirienteRecibo,
+								  Estado = datos.IdCategoriaEstado,
+								  EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
+								  MensajeEnvio = datos.IntMensajeEnvio.ToString(),
+								  EnvioMail = datos.IntEstadoEnvio,
+								  Radian = datos.TblEmpresasFacturador.IntRadian,
+								  FormaPago = datos.IntFormaPago
+							  }).ToList();
+			}
+			else
+			{
+				var listaDocumetos = Coleccion.ConvertirStringlong(numero_documento);
+
+				context.Configuration.LazyLoadingEnabled = false;
+
+				documentos = (from datos in context.TblDocumentos.AsNoTracking()
+							  where (datos.StrEmpresaFacturador.Equals(codigo_facturador))
+							  && (listaDocumetos.Contains(datos.IntNumero))
+							  && (datos.IntDocTipo < 10)
+							  select new ObjDocumentos
+							  {
+								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+								  Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+								  Prefijo = datos.StrPrefijo,
+								  NumeroDocumento = datos.StrPrefijo + datos.IntNumero.ToString(),
+								  DatFechaIngreso = datos.DatFechaIngreso,
+								  DatFechaDocumento = datos.DatFechaDocumento,
+								  DatFechaVencDocumento = datos.DatFechaVencDocumento,
+								  IntVlrTotal = (datos.IntDocTipo == 3) ? -datos.IntVlrTotal : datos.IntVlrTotal,
+								  IntSubTotal = (datos.IntDocTipo == 3) ? -datos.IntValorSubtotal : datos.IntValorSubtotal,
+								  IntNeto = (datos.IntDocTipo == 3) ? -datos.IntValorNeto : datos.IntValorNeto,
+								  EstadoFactura = datos.IntIdEstado,
+								  EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+								  EstadoAcuse = datos.IntAdquirienteRecibo,
+								  MotivoRechazo = datos.StrAdquirienteMvoRechazo,
+								  StrAdquirienteMvoRechazo = datos.StrAdquirienteMvoRechazo,
+								  IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+								  NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+								  MailAdquiriente = datos.TblEmpresasAdquiriente.StrMailAdmin,
+								  Xml = datos.StrUrlArchivoUbl,
+								  Pdf = datos.StrUrlArchivoPdf,
+								  StrIdSeguridad = datos.StrIdSeguridad,
+								  tipodoc = datos.IntDocTipo,
+								  zip = datos.StrUrlAnexo,
+								  RutaServDian = datos.StrUrlArchivoUbl,
+								  XmlAcuse = datos.StrUrlAcuseUbl,
+								  permiteenvio = (Int16)datos.IdCategoriaEstado,
+								  IntAdquirienteRecibo = datos.IntAdquirienteRecibo,
+								  Estado = datos.IdCategoriaEstado,
+								  EstadoEnvioMail = datos.IntEstadoEnvio.ToString(),
+								  MensajeEnvio = datos.IntMensajeEnvio.ToString(),
+								  EnvioMail = datos.IntEstadoEnvio,
+								  Radian = datos.TblEmpresasFacturador.IntRadian,
+								  FormaPago = datos.IntFormaPago
+							  }).ToList();
+			}
+
+			return documentos;
+		}
 
 		/// <summary>
 		/// Obtiene los documentos del Emisor

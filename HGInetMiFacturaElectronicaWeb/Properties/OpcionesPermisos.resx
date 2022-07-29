@@ -211,4 +211,7 @@
   <data name="ConsultaDocumentoSoporte" xml:space="preserve">
     <value>1501</value>
   </data>
+  <data name="ConsultaDocumentosRadian" xml:space="preserve">
+    <value>4401</value>
+  </data>
 </root>

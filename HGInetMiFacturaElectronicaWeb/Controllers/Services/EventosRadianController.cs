@@ -29,10 +29,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				List<TblEventosRadian> eventos = Ctrl_Eventos.Obtener(id_seguridad);
 
 				bool inscribir_documento = false;
+				bool otros_eventos = false;
 
 				foreach (var item in eventos)
 				{
-					if(item.IntEstadoEvento==3 || item.IntEstadoEvento == 5)
+					if (item.IntEstadoEvento == 3 || item.IntEstadoEvento == 5)
 					{
 						inscribir_documento = true;
 					}
@@ -40,9 +41,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				foreach (var item in eventos)
 				{
-					if (item.IntEstadoEvento >=6 )
+					if (item.IntEstadoEvento >= 6)
 					{
 						inscribir_documento = false;
+						otros_eventos = true;
 					}
 				}
 
@@ -54,6 +56,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				var retorno = eventos.Select(d => new
 				{
 					Inscribir_Documento = inscribir_documento,
+					otros_eventos = otros_eventos,
 					d.DatFechaEvento,
 					d.IntEstadoEvento,
 					EstadoEvento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CodigoResponseV2>(d.IntEstadoEvento)),
