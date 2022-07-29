@@ -276,6 +276,10 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 				},
 				headerFilter: {
 					visible: true
+				},
+				"export": {
+					enabled: true,
+					fileName: "DocumentosRecep",
 				}
                 , allowColumnResizing: true
                 , allowColumnReordering: true
