@@ -261,12 +261,33 @@ namespace HGInetInteroperabilidad.Procesos
 									// almacena el correo electrónico temporalmente
 									string ruta_mail = cliente_imap.Guardar(mensaje, ruta_archivos, identificador_mail);
 
-									// almacena los adjuntos del correo electrónico temporalmente
-									List<string> rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_archivos);
+									try
+									{
+										// almacena los adjuntos del correo electrónico temporalmente
+										List<string> rutas_archivos = cliente_imap.GuardarAdjuntos(mensaje, ruta_archivos);
 
-									// descomprime el zip adjunto
-									string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
-									Ctl_Descomprimir.Procesar(rutas_archivos.First(x => x.Contains(".zip") || x.Contains(".ZIP")), ruta_descomprimir);
+										// descomprime el zip adjunto
+										string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
+										Ctl_Descomprimir.Procesar(rutas_archivos.First(x => x.Contains(".zip") || x.Contains(".ZIP")), ruta_descomprimir);
+									}
+									catch (ExcepcionHgi ex)
+									{
+										mensajes.Add("No se pudo guardar archivo adjunto del correo electrónico, valide en el correo original que el nombre de este archivo no contenga caracteres especiales");
+
+										//Se notifica al correo emisor que no se procesa el correo y la razon 
+										try
+										{
+											//RenviarAlerta(empresa, mensajes, mensaje, asunto, cliente_imap, id_mensaje);
+											EnviarAlerta(mensaje, mensajes);
+										}
+										catch (Exception exc)
+										{ }
+
+										// mueve el mensaje a no procesado de la bandeja de entrada
+										cliente_imap.MoverNoProcesado(id_mensaje);
+
+										throw new ApplicationException("El Asunto del correo electrónico indica que es un evento");
+									}
 
 									// elimina el mensaje después de procesado de la bandeja de entrada
 									try
