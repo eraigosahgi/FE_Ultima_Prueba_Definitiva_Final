@@ -340,6 +340,25 @@ App.controller('AcuseReciboController', function ($scope, $rootScope, $http, $ti
 				var id = id;
 				$('#wait').hide();
 			}, function errorCallback(response) {
+				//DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 5000);
+
+				//Carga notificación de creación con opción de editar formato.
+				var myDialog = DevExpress.ui.dialog.custom({
+					title: "Proceso Falló",
+					message: response.data.ExceptionMessage,
+					buttons: [{
+						text: "Aceptar",
+						onClick: function (e) {
+							myDialog.hide();
+							$scope.CargarPlanes();
+						}
+					}]
+				});
+				myDialog.show().done(function (dialogResult) {
+				});
+
+				consultar();
+				var id = id;
 				$('#wait').hide();
 			});
 		}

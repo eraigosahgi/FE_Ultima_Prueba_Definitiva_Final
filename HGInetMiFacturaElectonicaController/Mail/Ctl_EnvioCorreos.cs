@@ -592,7 +592,10 @@ namespace HGInetMiFacturaElectonicaController
 
 				// obtiene los datos del facturador electrónico
 				Ctl_Empresa facturador_electronico = new Ctl_Empresa();
-				empresa_obligado = facturador_electronico.Obtener(documento.StrEmpresaFacturador);
+				if (documento.IntTipoOperacion != 3)
+					empresa_obligado = facturador_electronico.Obtener(documento.StrEmpresaFacturador);
+				else
+					empresa_obligado = facturador_electronico.Obtener(documento.StrEmpresaAdquiriente);
 
 				#region Fecha de Validacion en PDF
 
@@ -629,7 +632,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				var objeto = (dynamic)null;
 				var documento_obj = (dynamic)null;
-				if (string.IsNullOrEmpty(nombre_comercial) && tipo_documento.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode())
+				if (string.IsNullOrEmpty(nombre_comercial) && tipo_documento.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode() && documento.IntTipoOperacion != 3)
 				{
 					objeto = Ctl_Documento.ConvertirServicio(documento, true);
 				}
@@ -638,9 +641,15 @@ namespace HGInetMiFacturaElectonicaController
 				if (tipo_documento == TipoDocumento.Factura)
 				{
 					tipodoc_asunto = "01";
-					if (string.IsNullOrEmpty(nombre_comercial))
+					if (string.IsNullOrEmpty(nombre_comercial) && documento.IntTipoOperacion != 3)
 					{
 						nombre_comercial = string.IsNullOrEmpty(objeto.DatosFactura.DatosObligado.NombreComercial) ? objeto.DatosFactura.DatosObligado.RazonSocial : objeto.DatosFactura.DatosObligado.NombreComercial;
+					}
+					else
+					{
+						nombre_comercial = empresa_obligado.StrRazonSocial;
+						if (documento.IntTipoOperacion == 3)
+							tipodoc_asunto = "05";
 					}
 
 					if (objeto != null)
@@ -725,7 +734,10 @@ namespace HGInetMiFacturaElectonicaController
 
 				// obtiene los datos del adquiriente
 				Ctl_Empresa adquiriente = new Ctl_Empresa();
-				empresa_adquiriente = adquiriente.Obtener(documento.StrEmpresaAdquiriente);
+				if (documento.IntTipoOperacion != 3)
+					empresa_adquiriente = adquiriente.Obtener(documento.StrEmpresaAdquiriente);
+				else
+					empresa_adquiriente = adquiriente.Obtener(documento.StrEmpresaFacturador);
 
 				List<DestinatarioEmail> correos_destino = new List<DestinatarioEmail>();
 
@@ -881,6 +893,11 @@ namespace HGInetMiFacturaElectonicaController
 						//TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(documento.IntDocTipo);
 						string titulo_documento = Enumeracion.GetDescription(tipo_documento);
 
+						if (documento.IntTipoOperacion == 3)
+						{
+							titulo_documento = "Documento Soporte en Adquisiciones Efectuadas a No Obligados a Facturar";
+						}
+
 						mensaje = mensaje.Replace("{TipoDocumento}", titulo_documento);
 						mensaje = mensaje.Replace("{NumeroDocumento}", String.Format("{0}{1}", documento.StrPrefijo, documento.IntNumero.ToString()));
 						mensaje = mensaje.Replace("{FechaDocumento}", documento.DatFechaDocumento.ToString(Fecha.formato_fecha_hginet));
@@ -913,7 +930,7 @@ namespace HGInetMiFacturaElectonicaController
 						if (documento.TblEmpresasResoluciones != null)
 							IdPago = (empresa_obligado.IntManejaPagoE) ? true : false;
 
-						if (tipo_documento == TipoDocumento.Factura && IdPago)
+						if (tipo_documento == TipoDocumento.Factura && IdPago && documento.IntTipoOperacion != 3)
 						{
 							string total_a_pagar = String.Format(@"<tr>
 															<td class=""tg-yzt1"">Total a Pagar:</td>
@@ -1004,7 +1021,16 @@ namespace HGInetMiFacturaElectonicaController
 							}
 
 							// ruta física del xml
-							string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
+							string id_seguridad_carpeta = string.Empty;
+							if (documento.IntTipoOperacion != 3)
+							{
+								id_seguridad_carpeta = empresa_obligado.StrIdSeguridad.ToString();
+							}
+							else
+							{
+								id_seguridad_carpeta = empresa_adquiriente.StrIdSeguridad.ToString();
+							}
+							string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, id_seguridad_carpeta);
 							carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
 							string nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, TipoDocumento.Attached, documento.StrPrefijo);//nombre_xml.Replace("face", "attach");
@@ -1238,7 +1264,7 @@ namespace HGInetMiFacturaElectonicaController
 									correo_doc = proceso_correo.Actualizar(correo_doc);
 
 									//Se hace el registro del evento de recepcion del documento siempre y cuando el correo no presente bloqueo y el adquiriente sea cliente de HGI
-									if ((plataforma.RutaPublica.Contains("habilitacion") || plataforma.RutaPublica.Contains("localhost")) && correo_doc.IntEnvioMail == true && adquiriente_hgi == true && empresa_obligado.IntRadian == true && empresa_obligado.StrIdentificacion.Equals(empresa_adquiriente.StrIdentificacion))
+									if ((plataforma.RutaPublica.Contains("habilitacion") || plataforma.RutaPublica.Contains("localhost")) && correo_doc.IntEnvioMail == true && adquiriente_hgi == true && empresa_obligado.IntRadian == true && empresa_obligado.StrIdentificacion.Equals(empresa_adquiriente.StrIdentificacion) && documento.IntTipoOperacion != 3)
 									{
 										Ctl_EventosRadian evento = new Ctl_EventosRadian();
 										Task envio_acuse = evento.ProcesoCrearAcuseRecibo(correo_doc.StrIdMensaje, documento.StrIdSeguridad);

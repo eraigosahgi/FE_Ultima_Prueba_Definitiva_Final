@@ -1666,7 +1666,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 													if (cumple_acuse_tacito == true)
 													{
-														ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty);
+														string respuesta_error_dian = string.Empty;
+														ActualizarRespuestaAcuse(doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), string.Empty, ref respuesta_error_dian);
 													}
 												}
 											}
@@ -2272,7 +2273,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="estado"></param>
 		/// <param name="motivo_rechazo"></param>
 		/// <returns></returns>
-		public TblDocumentos ActualizarRespuestaAcuse(System.Guid id_seguridad, short estado, string motivo_rechazo, string usuario = "")
+		public TblDocumentos ActualizarRespuestaAcuse(System.Guid id_seguridad, short estado, string motivo_rechazo, ref string respuesta_error_dian, string usuario = "")
 		{
 			try
 			{
@@ -2366,7 +2367,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 						if ((list_evento == null || list_evento.Count == 0) && estado == CodigoResponseV2.Recibido.GetHashCode())
 						{
-							acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)estado);
+							acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)estado, ref respuesta_error_dian);
 							if (acuse != null)
 								evento_procesado_DIAN = true;
 						}
@@ -2374,7 +2375,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						{
 							try
 							{
-								acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode());
+								acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode(), ref respuesta_error_dian);
 							}
 							catch (Exception excepcion)
 							{
@@ -2389,7 +2390,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								if (acuse != null)
 								{
 									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo);
-									recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode());
+									recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
 									if (recibo != null)
 										evento_procesado_DIAN = true;
 								}
@@ -2404,7 +2405,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							{
 								//Crea el XML del Acuse
 								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
-								TblEventosRadian evento_x = EnviarAcuse(resultado, adquiriente, facturador, doc, estado);
+								TblEventosRadian evento_x = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
 								if (evento_x != null)
 									evento_procesado_DIAN = true;
 							}
@@ -2424,7 +2425,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							if (acuse == null && estado != CodigoResponseV2.Recibido.GetHashCode())
 							{
-								acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode());
+								acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode(), ref respuesta_error_dian);
 							}
 
 
@@ -2432,7 +2433,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							{
 								//Crea el XML del Acuse
 								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo);
-								recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode());
+								recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
 								evento_procesado_DIAN = true;
 							}
 							else if (recibo != null && !doc.IntAdquirienteRecibo.Equals(estado))
@@ -2447,7 +2448,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								if (estado == CodigoResponseV2.Expresa.GetHashCode())
 								{
-									expresa = EnviarAcuse(resultado, adquiriente, facturador, doc, estado);
+									expresa = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
 									if (expresa != null)
 										evento_procesado_DIAN = true;
 								}
@@ -2455,7 +2456,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								if (estado == CodigoResponseV2.Rechazado.GetHashCode())
 								{
-									rechazo = EnviarAcuse(resultado, adquiriente, facturador, doc, estado);
+									rechazo = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
 									if (rechazo != null)
 										evento_procesado_DIAN = true;
 								}
@@ -2500,7 +2501,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							{
 								//Crea el XML del Acuse
 								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Inscripcion.GetHashCode(), motivo_rechazo);
-								TblEventosRadian inscripcion_titulo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Inscripcion.GetHashCode());
+								TblEventosRadian inscripcion_titulo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Inscripcion.GetHashCode(), ref respuesta_error_dian);
 								if (inscripcion_titulo != null)
 									evento_procesado_DIAN = true;
 							}
@@ -2518,7 +2519,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), motivo_rechazo);
 							if (facturador.IntRadian == true)
 							{
-								tacito = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode());
+								tacito = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), ref respuesta_error_dian);
 								if (tacito == null)
 								{
 									throw new ArgumentException("No fue posible registrar el evento Aprobado Tacito");
@@ -2641,6 +2642,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			TblEventosRadian inscripcion = null;
 
+			string respuesta_error_dian = string.Empty;
+
 			if (list_evento != null && list_evento.Count > 0)
 			{
 
@@ -2660,7 +2663,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					//Crea el XML del Acuse
 					resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Recibido.GetHashCode(), string.Empty);
-					EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode());
+					EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode(), ref respuesta_error_dian);
 				}
 				catch (Exception excepcion)
 				{
@@ -2678,7 +2681,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					//Crea el XML del Acuse
 					resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), string.Empty);
-					EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode());
+					EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
 				}
 				catch (Exception excepcion)
 				{
@@ -2696,7 +2699,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					//Crea el XML del Acuse
 					resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Expresa.GetHashCode(), string.Empty);
-					EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Expresa.GetHashCode());
+					EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Expresa.GetHashCode(), ref respuesta_error_dian);
 				}
 				catch (Exception excepcion)
 				{
@@ -2714,7 +2717,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					//Crea el XML del Acuse
 					resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Inscripcion.GetHashCode(), string.Empty);
-					EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Inscripcion.GetHashCode());
+					EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Inscripcion.GetHashCode(), ref respuesta_error_dian);
 				}
 				catch (Exception excepcion)
 				{
@@ -2742,7 +2745,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		}
 
-		public TblEventosRadian EnviarAcuse(FacturaE_Documento resultado, TblEmpresas adquiriente, TblEmpresas facturador, TblDocumentos doc, short estado)
+		public TblEventosRadian EnviarAcuse(FacturaE_Documento resultado, TblEmpresas adquiriente, TblEmpresas facturador, TblDocumentos doc, short estado, ref string respuesta_error_dian)
 		{
 
 			TblEventosRadian eventobd = null;
@@ -2830,6 +2833,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					doc = actualizar_doc.Actualizar(doc);
 					//RegistroLog.EscribirLog(new ApplicationException("Creacion del Evento"), MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.envio, string.Format("Codigo Estado Doc {0} - Codigo respuesta DIAN {1} - descripcion {2}", resp.EstadoDian.EstadoDocumento, resp.EstadoDian.CodigoRespuesta, resp.EstadoDian.Descripcion));
+				}
+				else
+				{
+					respuesta_error_dian = acuse.MessagesFieldV2.FirstOrDefault().ProcessedMessage;
 				}
 
 				resp.Documento = estado;

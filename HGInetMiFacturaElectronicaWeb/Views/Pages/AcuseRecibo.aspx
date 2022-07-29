@@ -88,13 +88,13 @@
 	<script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
 
 	<!-- JS AcuseRecibo -->
-	<script src="../../Scripts/WebConfig.js?vjs20220621"></script>
-	<script src="../../Scripts/config.js?vjs20220621"></script>
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20220621"></script>
-	<script src="../../Scripts/config.js?vjs20220621"></script>
-	<script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs20220621"></script>
-	<script src="../../Scripts/Pages/AcuseRecibo.js?vjs20220621"></script>
-	<script src="../../Scripts/Pages/ModalPagos.js?vjs20220621"></script>
+	<script src="../../Scripts/WebConfig.js?vjs20220729"></script>
+	<script src="../../Scripts/config.js?vjs20220729"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20220729"></script>
+	<script src="../../Scripts/config.js?vjs20220729"></script>
+	<script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs20220729"></script>
+	<script src="../../Scripts/Pages/AcuseRecibo.js?vjs20220729"></script>
+	<script src="../../Scripts/Pages/ModalPagos.js?vjs20220729"></script>
 
 </head>
 

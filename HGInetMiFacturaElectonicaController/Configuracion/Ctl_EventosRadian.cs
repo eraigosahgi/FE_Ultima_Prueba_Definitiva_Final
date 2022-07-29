@@ -161,7 +161,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 				}
 
-				documento.ActualizarRespuestaAcuse(StrIdSeguridadDoc, (short)CodigoResponseV2.Recibido.GetHashCode(), Enumeracion.GetDescription(CodigoResponseV2.Recibido));
+				string respuesta_error_dian = string.Empty;
+				documento.ActualizarRespuestaAcuse(StrIdSeguridadDoc, (short)CodigoResponseV2.Recibido.GetHashCode(), Enumeracion.GetDescription(CodigoResponseV2.Recibido),ref respuesta_error_dian);
 
 			}
 			catch (Exception excepcion)

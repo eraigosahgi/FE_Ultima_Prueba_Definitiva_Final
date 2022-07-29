@@ -993,7 +993,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					try
 					{
 						documento = new Ctl_Documento();
-						documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito));
+						string respuesta_error_dian = string.Empty;
+						documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito),ref respuesta_error_dian);
 
 					}
 					catch (Exception ex)
@@ -1048,32 +1049,42 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				List<TblDocumentos> datos = new List<TblDocumentos>();
 
-				TblDocumentos doc = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo, (!string.IsNullOrEmpty(usuario)) ? usuario : "");
+				string respuesta_error_dian = string.Empty;
+
+				TblDocumentos doc = ctl_documento.ActualizarRespuestaAcuse(id_seguridad, estado, motivo_rechazo, ref respuesta_error_dian, (!string.IsNullOrEmpty(usuario)) ? usuario : "");
 
 				if (doc == null)
 				{
 					return NotFound();
 				}
 
-				datos.Add(doc);
-
-				var retorno = datos.Select(d => new
+				if (string.IsNullOrEmpty(respuesta_error_dian))
 				{
-					NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
-					IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
-					NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
-					Cufe = d.StrCufe,
-					IdSeguridad = d.StrIdSeguridad,
-					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-					MotivoRechazo = d.StrAdquirienteMvoRechazo,
-					Xml = d.StrUrlArchivoUbl,
-					Pdf = d.StrUrlArchivoPdf,
-					//RespuestaVisible = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? false : true,
-					//CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? ((cliente_hgi == false) ? false : true) : false,
-					RespuestaVisible = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? true : false,
-					CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? true : false
-				});
-				return Ok(retorno);
+					datos.Add(doc);
+
+					var retorno = datos.Select(d => new
+					{
+						NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+						IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+						NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
+						Cufe = d.StrCufe,
+						IdSeguridad = d.StrIdSeguridad,
+						EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+						MotivoRechazo = d.StrAdquirienteMvoRechazo,
+						Xml = d.StrUrlArchivoUbl,
+						Pdf = d.StrUrlArchivoPdf,
+						//RespuestaVisible = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? false : true,
+						//CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? ((cliente_hgi == false) ? false : true) : false,
+						RespuestaVisible = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? true : false,
+						CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? true : false
+					});
+					return Ok(retorno);
+				}
+				else
+				{
+					throw new ArgumentException(respuesta_error_dian);
+				}
+				
 
 			}
 			catch (Exception excepcion)
