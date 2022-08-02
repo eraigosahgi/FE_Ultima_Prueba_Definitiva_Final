@@ -231,7 +231,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 										//Se agrega validacion por inconsistencias de la DIAN y actualizar los eventos ya recibidos
 										try
 										{
-											if (respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("LGC01"))
+											if (respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("LGC01") || respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento"))
 											{
 												Registros.Ctl_Documento Controlador = new Registros.Ctl_Documento();
 												Controlador.ConsultarEventosRadian(false, documentoBd.StrIdSeguridad.ToString());

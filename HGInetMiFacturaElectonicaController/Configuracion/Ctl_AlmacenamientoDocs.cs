@@ -2,6 +2,7 @@
 using HGInetMiFacturaElectonicaData.ControllerSql;
 using HGInetMiFacturaElectonicaData.Modelo;
 using LibreriaGlobalHGInet.Funciones;
+using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,11 +51,21 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		public TblAlmacenamientoDocs ObtenerUltimoSincronizado(int anyo, bool LazyLoading = false)
 		{
-			context.Configuration.LazyLoadingEnabled = LazyLoading;
+			TblAlmacenamientoDocs datos = null;
+			try
+			{
+				context.Configuration.LazyLoadingEnabled = LazyLoading;
 
-			TblAlmacenamientoDocs datos = (from item in context.TblAlmacenamientoDocs
-										   where item.DatFechaRegistroDoc.Year == anyo
-												 select item).OrderByDescending(x => x.DatFechaSincronizacion).Take(1).FirstOrDefault();
+				datos = (from item in context.TblAlmacenamientoDocs
+												   //where item.DatFechaRegistroDoc.Year == anyo
+											   select item).OrderByDescending(x => x.DatFechaSincronizacion).Take(1).FirstOrDefault();
+
+				
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Consultando los documentos en bd con fecha proceso");
+			}
 
 			return datos;
 		}
@@ -95,6 +106,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			return archivo;
 		}
+
+
+		public void ProcesoCreacion(Guid doc_StrIdSeguridad, DateTime fecha_ingreso_doc, int tipo_archivo, string ruta_anterior, string ruta_actual, bool buscar_faltantes)
+		{
+			Ctl_AlmacenamientoDocs ctl_almacenamiento = new Ctl_AlmacenamientoDocs();
+			TblAlmacenamientoDocs almacenamiento = ctl_almacenamiento.Convertir(doc_StrIdSeguridad, fecha_ingreso_doc, tipo_archivo, ruta_anterior, ruta_actual, buscar_faltantes);
+
+			ctl_almacenamiento.Crear(almacenamiento);
+		}
+
 
 
 	}

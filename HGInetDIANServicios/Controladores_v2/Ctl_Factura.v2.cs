@@ -244,7 +244,7 @@ namespace HGInetDIANServicios
 						{
 							if (respuesta.ErrorMessage != null)
 							{
-								bool consultar_nuevamente = (cufe_doc.Equals(respuesta.XmlDocumentKey) && tipo_doc != TipoDocumento.AcuseRecibo.GetHashCode()) ? true : (tipo_doc == TipoDocumento.AcuseRecibo.GetHashCode()) ? true : false; 
+								bool consultar_nuevamente = (cufe_doc.Equals(respuesta.XmlDocumentKey) && tipo_doc != TipoDocumento.AcuseRecibo.GetHashCode()) ? true : false; 
 			
 								if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())) && consultar_nuevamente == true)
 								{

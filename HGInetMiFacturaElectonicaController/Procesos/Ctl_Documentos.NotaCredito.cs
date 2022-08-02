@@ -762,7 +762,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			if (facturador.IntHabilitacion > 0)
 			{
-				if (documento.DocumentoFormato != null)
+				if (documento.DocumentoFormato != null && documento.TipoOperacion != 3)
 				{
 					//Valida que envien el titulo del documento y si es vacio lo llena
 					if (string.IsNullOrEmpty(documento.DocumentoFormato.Titulo) || documento.DocumentoFormato.Titulo == null)

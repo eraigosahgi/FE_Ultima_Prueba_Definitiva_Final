@@ -4391,6 +4391,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 									documento_obj = HGInetUBLv2_1.FacturaXMLv2_1.Convertir(conversion, documento);
 
+									documento_obj.TipoOperacion = documento.IntTipoOperacion;
+
 
 								}
 								else if (documento.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
@@ -4400,6 +4402,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
 
 									documento_obj = HGInetUBLv2_1.NotaCreditoXMLv2_1.Convertir(conversion, documento);
+
+									documento_obj.TipoOperacion = documento.IntTipoOperacion;
 
 								}
 								else if (documento.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
@@ -5921,19 +5925,35 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					int mes = 1;
 					int dia = 1;
+					int hora = 1;
+					int min = 1;
+
+					RegistroLog.EscribirLog(new ApplicationException("Inicia Proceso"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, "Inicia Proceso");
 
 					//se obtiene el ultimo registro sincronizado a Azure segun año que se este procesando
 					Ctl_AlmacenamientoDocs almacenamiento = new Ctl_AlmacenamientoDocs();
 					TblAlmacenamientoDocs ultimo_registro = almacenamiento.ObtenerUltimoSincronizado(anyo);
 
+					try
+					{
+						RegistroLog.EscribirLog(new ApplicationException("Obtiene el ultimo registro sincronizado"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Doc : {0} - Fecha_doc: {1} - Fecha_sincro: {2} - Numero: {3}", ultimo_registro.StrIdSeguridadDoc.ToString(), ultimo_registro.DatFechaRegistroDoc.ToString(""), ultimo_registro.DatFechaSincronizacion.ToString(), ultimo_registro.TblDocumentos.IntNumero));
+
+					}
+					catch (Exception)
+					{
+					 
+					}
+
 					if (buscar_faltantes == false)
 					{
-						if (ultimo_registro != null && buscar_faltantes == false)
+						if (ultimo_registro != null)
 						{
 							if (ultimo_registro.DatFechaRegistroDoc.Year == anyo)
 							{
 								mes = ultimo_registro.DatFechaRegistroDoc.Month;
 								dia = ultimo_registro.DatFechaRegistroDoc.Day;
+								hora = ultimo_registro.DatFechaRegistroDoc.Hour;
+								min = ultimo_registro.DatFechaRegistroDoc.Minute;
 							}
 
 						}
@@ -5963,7 +5983,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							int diasmes = DateTime.DaysInMonth(anyo, j);
 
 							if (ultimo_registro.DatFechaRegistroDoc.Month == j)
-								fecha_inicio = new DateTime(anyo, j, dia);
+								fecha_inicio = new DateTime(anyo, j, dia, hora, min, 0);
 							else
 								fecha_inicio = new DateTime(anyo, j, 1);
 
@@ -5980,12 +6000,54 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									i = diasmes;
 								}
 
-								List<TblDocumentos> datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_proceso, fecha_proceso, 0, 2, 1, 30000).OrderBy(x => x.DatFechaIngreso).ToList();
-
-								if (datos != null && datos.Count > 0)
+								//va hacer el recorrido por hora
+								for (int h = 0; h < 24; h++)
 								{
-									GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
+									if (h == 0)
+									{
+										h = fecha_proceso.Hour;
+									}
+									else
+									{
+										DateTime fecha_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 0, 0);
+										fecha_proceso = fecha_consulta;
+									}
+
+									List<TblDocumentos> datos = null;
+
+									try
+									{
+										RegistroLog.EscribirLog(new ApplicationException("Consulta documento segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Consultando los documentos en bd con fecha proceso {0}", fecha_proceso.ToString()));
+
+										DateTime fecha_fin_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 59, 59, 999);
+
+										datos = (from doc in context.TblDocumentos
+												where (doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+												select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+
+
+										//datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_proceso, fecha_proceso, 0, 2, 1, 30000).OrderBy(x => x.DatFechaIngreso).ToList();
+									}
+									catch (Exception excepcion)
+									{
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Consultando los documentos en bd con fecha proceso {0}", fecha_proceso.ToString()));
+									}
+
+									try
+									{
+										RegistroLog.EscribirLog(new ApplicationException("Resultado de consulta documento segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Resultado de consulta de los documentos en bd con fecha proceso {0} y cantidad {1}", fecha_proceso.ToString(), datos.Count));
+
+									}
+									catch (Exception)
+									{
+									
+									}
+									if (datos != null && datos.Count > 0)
+									{
+										GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
+									}
 								}
+
 							}
 						}
 						else
@@ -6080,7 +6142,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (!string.IsNullOrEmpty(archivo_memoria))
 						{
 							ruta_blob_ubl = contenedor.Enviar(archivo_memoria, Path.GetExtension(item.StrUrlArchivoUbl), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoUbl));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XML.GetHashCode(), item.StrUrlArchivoUbl, ruta_blob_ubl, buscar_faltantes);
+							//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XML.GetHashCode(), item.StrUrlArchivoUbl, ruta_blob_ubl, buscar_faltantes);
+							try
+							{
+								almacenamiento.ProcesoCreacion(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XML.GetHashCode(), item.StrUrlArchivoUbl, ruta_blob_ubl, buscar_faltantes);
+							}
+							catch (Exception excepcion)
+							{
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo XML");
+							}
+
 							url_resp_dian_original = item.StrUrlArchivoUbl;
 							item.StrUrlArchivoUbl = ruta_blob_ubl;
 							actualizarbd_doc = true;
@@ -6107,7 +6178,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (!string.IsNullOrEmpty(archivo_memoria))
 						{
 							ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(item.StrUrlAcuseUbl), metadata_acuse, Path.GetFileNameWithoutExtension(item.StrUrlAcuseUbl));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLACUSE.GetHashCode(), item.StrUrlAcuseUbl, ruta_blob_acuse, buscar_faltantes);
+							//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLACUSE.GetHashCode(), item.StrUrlAcuseUbl, ruta_blob_acuse, buscar_faltantes);
+							try
+							{
+								almacenamiento.ProcesoCreacion(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLACUSE.GetHashCode(), item.StrUrlAcuseUbl, ruta_blob_acuse, buscar_faltantes);
+							}
+							catch (Exception excepcion)
+							{
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo XML-Acuse");
+							}
 							item.StrUrlAcuseUbl = ruta_blob_acuse;
 							actualizarbd_doc = true;
 						}
@@ -6128,7 +6207,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (!string.IsNullOrEmpty(archivo_memoria))
 						{
 							ruta_blob_resp_dian = contenedor.Enviar(archivo_memoria, Path.GetExtension(ruta_resp_dian), metadata_acuse, Path.GetFileNameWithoutExtension(ruta_resp_dian));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLRESPDIAN.GetHashCode(), ruta_resp_dian, ruta_blob_resp_dian, buscar_faltantes);
+							//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLRESPDIAN.GetHashCode(), ruta_resp_dian, ruta_blob_resp_dian, buscar_faltantes);
+							try
+							{
+								almacenamiento.ProcesoCreacion(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLRESPDIAN.GetHashCode(), ruta_resp_dian, ruta_blob_resp_dian, buscar_faltantes);
+							}
+							catch (Exception excepcion)
+							{
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo XML-RespDian");
+							}
 						}
 					}
 				}
@@ -6149,7 +6236,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (archivo != null)
 						{
 							ruta_blob_pdf = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlArchivoPdf), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoPdf));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.PDF.GetHashCode(), item.StrUrlArchivoPdf, ruta_blob_pdf, buscar_faltantes);
+							//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.PDF.GetHashCode(), item.StrUrlArchivoPdf, ruta_blob_pdf, buscar_faltantes);
+							try
+							{
+								almacenamiento.ProcesoCreacion(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.PDF.GetHashCode(), item.StrUrlArchivoPdf, ruta_blob_pdf, buscar_faltantes);
+							}
+							catch (Exception excepcion)
+							{
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo PDF");
+							}
 							item.StrUrlArchivoPdf = ruta_blob_pdf;
 							actualizarbd_doc = true;
 						}
@@ -6171,7 +6266,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (archivo != null)
 						{
 							ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlArchivoZip), metadata, Path.GetFileNameWithoutExtension(item.StrUrlArchivoZip));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlArchivoZip, ruta_blob_zip, buscar_faltantes);
+							//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlArchivoZip, ruta_blob_zip, buscar_faltantes);
+							try
+							{
+								almacenamiento.ProcesoCreacion(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlArchivoZip, ruta_blob_zip, buscar_faltantes);
+							}
+							catch (Exception excepcion)
+							{
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo ZIP");
+							}
 							item.StrUrlArchivoZip = ruta_blob_zip;
 							actualizarbd_doc = true;
 						}
@@ -6197,7 +6300,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (archivo != null)
 						{
 							ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(url_zip_original.Replace(nombre_zip, nombre_archivo)), metadata, Path.GetFileNameWithoutExtension(nombre_archivo));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIPAttached.GetHashCode(), url_zip_original.Replace(nombre_zip, nombre_archivo), ruta_blob_zip, buscar_faltantes);
+							//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIPAttached.GetHashCode(), url_zip_original.Replace(nombre_zip, nombre_archivo), ruta_blob_zip, buscar_faltantes);
+							try
+							{
+								almacenamiento.ProcesoCreacion(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIPAttached.GetHashCode(), url_zip_original.Replace(nombre_zip, nombre_archivo), ruta_blob_zip, buscar_faltantes);
+							}
+							catch (Exception excepcion)
+							{
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo ZIP Attach-PDF");
+							}
 						}
 					}
 				}
@@ -6216,7 +6327,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (archivo != null)
 						{
 							ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(item.StrUrlAnexo), metadata, Path.GetFileNameWithoutExtension(item.StrUrlAnexo));
-							var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlAnexo, ruta_blob_zip, buscar_faltantes);
+							//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlAnexo, ruta_blob_zip, buscar_faltantes);
+							try
+							{
+								almacenamiento.ProcesoCreacion(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIP.GetHashCode(), item.StrUrlAnexo, ruta_blob_zip, buscar_faltantes);
+							}
+							catch (Exception excepcion)
+							{
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo ZIPAnexos");
+							}
 							item.StrUrlAnexo = ruta_blob_zip;
 							actualizarbd_doc = true;
 						}
@@ -6262,7 +6381,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								metadata_acuse.Add(string.Format("Evento{0}", item_eve.IntEstadoEvento), TipoDocumento.AcuseRecibo.GetHashCode().ToString());
 								ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(item_eve.StrUrlEvento), metadata_acuse, Path.GetFileNameWithoutExtension(item_eve.StrUrlEvento));
 								cont_consecutivo += item_eve.IntEstadoEvento;
-								var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, item_eve.StrUrlEvento, ruta_blob_acuse, buscar_faltantes);
+								//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, item_eve.StrUrlEvento, ruta_blob_acuse, buscar_faltantes);
+								try
+								{
+									almacenamiento.ProcesoCreacion(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, item_eve.StrUrlEvento, ruta_blob_acuse, buscar_faltantes);
+								}
+								catch (Exception excepcion)
+								{
+									Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo Evento");
+								}
 								item_eve.StrUrlEvento = ruta_blob_acuse;
 								actualizarbd_eve = true;
 							}
@@ -6277,7 +6404,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							{
 								ruta_blob_acuse = contenedor.Enviar(archivo_memoria, Path.GetExtension(url_evento), metadata_acuse, Path.GetFileNameWithoutExtension(url_evento));
 								cont_consecutivo += 10;
-								var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, url_evento, ruta_blob_acuse, buscar_faltantes);
+								//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, url_evento, ruta_blob_acuse, buscar_faltantes);
+								try
+								{
+									almacenamiento.ProcesoCreacion(item.StrIdSeguridad, item.DatFechaIngreso, cont_consecutivo, url_evento, ruta_blob_acuse, buscar_faltantes);
+								}
+								catch (Exception excepcion)
+								{
+									Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo Evento");
+								}
 							}
 
 							try
@@ -6335,7 +6470,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				Ctl_AlmacenamientoDocs ctl_almacenamiento = new Ctl_AlmacenamientoDocs();
 				TblAlmacenamientoDocs almacenamiento = ctl_almacenamiento.Convertir(doc_StrIdSeguridad, fecha_ingreso_doc, tipo_archivo, ruta_anterior, ruta_actual, buscar_faltantes);
 
-				ctl_almacenamiento.Crear(almacenamiento);
+				try
+				{
+					ctl_almacenamiento.Crear(almacenamiento);
+				}
+				catch (Exception excepcion)
+				{
+					Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion,"Tarea de creacion del registro");
+				}
 
 			});
 		}

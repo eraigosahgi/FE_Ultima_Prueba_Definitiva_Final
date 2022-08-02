@@ -792,7 +792,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//Valida totales del objeto
 			ValidarTotales(documento, null, null, TipoDocumento.Factura, facturador);
 
-			if (facturador.IntHabilitacion > 0)
+			if (facturador.IntHabilitacion > 0 && documento.TipoOperacion != 3)
 			{
 				if (documento.DocumentoFormato != null)
 				{
