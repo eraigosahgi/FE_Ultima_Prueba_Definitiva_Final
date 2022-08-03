@@ -18,7 +18,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="documentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo TaxTotalType1</returns>
-		public static TaxTotalType[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle, string moneda, string version_erp, int hgi)
+		public static TaxTotalType[] ObtenerImpuestos(List<DocumentoDetalle> documentoDetalle, string moneda, string version_erp)
 		{
 			try
 			{
