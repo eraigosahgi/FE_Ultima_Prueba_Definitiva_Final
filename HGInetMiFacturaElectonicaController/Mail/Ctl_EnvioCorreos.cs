@@ -1264,8 +1264,15 @@ namespace HGInetMiFacturaElectonicaController
 											{
 												
 												string estado_correo = Enumeracion.GetDescription(LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked);
-												List<MensajeEnvio> notificacion = NotificacionCorreofacturador(documento, empresa_adquiriente.StrTelefono, item.Email, estado_correo, documento.StrIdSeguridad.ToString());
-												
+												if (interoperabilidad == false)
+												{
+													List<MensajeEnvio> notificacion = NotificacionCorreofacturador(documento, empresa_adquiriente.StrTelefono, item.Email, estado_correo, documento.StrIdSeguridad.ToString());
+												}
+												//else
+												//{
+												//	List<MensajeEnvio> notificacion = NotificacionCorreofacturador(documento, empresa_adquiriente.StrTelefono, empresa_adquiriente.StrMailAdmin, estado_correo, documento.StrIdSeguridad.ToString());
+												//}
+
 											}
 											catch (Exception excepcion)
 											{
