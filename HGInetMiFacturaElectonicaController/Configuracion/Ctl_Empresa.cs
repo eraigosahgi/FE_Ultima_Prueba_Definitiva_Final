@@ -1689,7 +1689,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				
 				tbl_empresa.StrEmpresaAsociada = empresa.Identificacion;
 				tbl_empresa.StrEmpresaDescuento = empresa.Identificacion;
-				tbl_empresa.IntNumUsuarios = 1;
+				tbl_empresa.IntNumUsuarios = 3;
 
 				tbl_empresa.StrMailAdmin = empresa.EmailAdmin;
 				tbl_empresa.StrMailAcuse = empresa.EmailAdmin;
@@ -1799,6 +1799,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				{
 					tbl_empresa.IntHabilitacion = (empresa.FacturaE == true && (tbl_empresa.IntHabilitacion == null || tbl_empresa.IntHabilitacion == Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode()))) ? Convert.ToByte(Habilitacion.Produccion.GetHashCode()) : tbl_empresa.IntHabilitacion;
 					tbl_empresa.IntHabilitacionNomina = (empresa.NominaE == true && (tbl_empresa.IntHabilitacionNomina == null || tbl_empresa.IntHabilitacionNomina == Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode()))) ? Convert.ToByte(Habilitacion.Produccion.GetHashCode()) : tbl_empresa.IntHabilitacionNomina;
+					tbl_empresa.IntNumUsuarios = (tbl_empresa.IntNumUsuarios < 3) ? 3 : tbl_empresa.IntNumUsuarios;
 
 					ListaEmailRegistro.Add(new ObjVerificacionEmail { email = tbl_empresa.StrMailAdmin });
 

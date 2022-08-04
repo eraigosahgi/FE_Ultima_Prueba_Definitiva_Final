@@ -353,23 +353,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if ((tercero.IdentificacionDv < 0) || (tercero.IdentificacionDv > 9) && tipo.Equals("Obligado"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "IdentificacionDv", tipo).Replace("de tipo", "del"));
 
-			if (string.IsNullOrEmpty(tercero.CodigoPais))
+			if (string.IsNullOrEmpty(tercero.CodigoPais) && !tipo.Equals("Mandatario"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "CodigoPais", tipo).Replace("de tipo", "del"));
 
-			if (!ConfiguracionRegional.ValidarCodigoPais(tercero.CodigoPais))
+			if (!ConfiguracionRegional.ValidarCodigoPais(tercero.CodigoPais) && !tipo.Equals("Mandatario"))
 				throw new ArgumentException(string.Format("No se encuentra registrado {0} con valor {1} según ISO 3166-1 alfa-2 en el {2} ", "CodigoPais", tercero.CodigoPais, tipo));
 
-			if (string.IsNullOrEmpty(tercero.Ciudad) && tercero.CodigoPais.Equals("CO"))
+			if (string.IsNullOrEmpty(tercero.Ciudad) && tercero.CodigoPais.Equals("CO") && !tipo.Equals("Mandatario"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Ciudad", tipo).Replace("de tipo", "del"));
 
-			if (string.IsNullOrEmpty(tercero.Departamento) && tercero.CodigoPais.Equals("CO"))
+			if (string.IsNullOrEmpty(tercero.Departamento) && tercero.CodigoPais.Equals("CO") && !tipo.Equals("Mandatario"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Departamento", tipo).Replace("de tipo", "del"));
 
-			if (string.IsNullOrEmpty(tercero.Direccion))
+			if (string.IsNullOrEmpty(tercero.Direccion) && !tipo.Equals("Mandatario"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
 
 			//Se valida si envian una direccion fiscal diferente a la de entrega
-			if (tercero.DireccionFiscal != null)
+			if (tercero.DireccionFiscal != null && !tipo.Equals("Mandatario"))
 			{
 				if (string.IsNullOrEmpty(tercero.DireccionFiscal.CodigoPais))
 					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DireccionFiscal - CodigoPais", tipo).Replace("de tipo", "del"));
@@ -387,15 +387,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DireccionFiscal - Direccion", tipo).Replace("de tipo", "del"));
 			}
 
-			if (string.IsNullOrEmpty(tercero.Telefono))
+			if (string.IsNullOrEmpty(tercero.Telefono) && !tipo.Equals("Mandatario"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Telefono", tipo).Replace("de tipo", "del"));
 
-			if (string.IsNullOrEmpty(tercero.Email))
+			if (string.IsNullOrEmpty(tercero.Email) && !tipo.Equals("Mandatario"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Email", tipo).Replace("de tipo", "del"));
 
 			//Regex ismail = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
 
-			if (tercero.Email.Contains(";"))
+			if (tercero.Email.Contains(";") && !tipo.Equals("Mandatario"))
 			{
 				string tercero_mail = string.Empty;
 				if (Coleccion.ConvertirLista(tercero.Email, ';').Count > 0)
@@ -415,7 +415,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
 				}
 			}
-			else
+			else if (!tipo.Equals("Mandatario"))
 			{
 				tercero.Email = tercero.Email.Trim();
 				if (!Texto.ValidarExpresion(TipoExpresion.Email, tercero.Email))
@@ -430,13 +430,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			else if (!Texto.ValidarExpresion(TipoExpresion.PaginaWeb, tercero.PaginaWeb))
 				tercero.PaginaWeb = string.Empty;
 
-			if (string.IsNullOrEmpty(tercero.RazonSocial))
+			if (string.IsNullOrEmpty(tercero.RazonSocial) && !tipo.Equals("Mandatario"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "RazonSocial", tipo).Replace("de tipo", "del"));
 
 			if ((tercero.TipoPersona < 1) || (tercero.TipoPersona > 2))
 				throw new ArgumentException(string.Format("El parámetro {0} con valor {1} del {2} no esta bien formado", "TipoPersona", tercero.TipoPersona, tipo));
 
-			if (tercero.TipoPersona == 2)
+			if (tercero.TipoPersona == 2 && !tipo.Equals("Mandatario"))
 			{
 				if (string.IsNullOrEmpty(tercero.PrimerApellido))
 					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "PrimerApellido", tipo).Replace("de tipo", "del"));
@@ -470,86 +470,91 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ArgumentException(string.Format("El Código del Regimen Fiscal {0} no esta bien formado del {1}", tercero.RegimenFiscal, tipo));
 				*/
 				ListaPaises list_paises = new ListaPaises();
-				ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.CodigoPais)).FirstOrDefault();
-				if (pais == null)
+				ListaItem pais = null;
+
+				if (!tipo.Equals("Mandatario"))
 				{
-					throw new ArgumentException(string.Format("El Codigo Pais {0} no esta bien formado del {1}", tercero.CodigoPais, tipo));
-				}
-				else
-				{
-					tercero.Pais = pais.Descripcion;
-				}
-					
-
-				if (tercero.CodigoPais.Equals("CO"))
-				{
-
-					ListaMunicipio list_municipio = new ListaMunicipio();
-					ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.CodigoCiudad)).FirstOrDefault();
-					if (municipio == null)
-						throw new ArgumentException(string.Format("El Código Ciudad {0} no esta bien formado del {1}", tercero.CodigoCiudad, tipo));
-					else
-						tercero.Ciudad = municipio.Nombre;
-
-
-					ListaDepartamentos list_depart = new ListaDepartamentos();
-					ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.CodigoDepartamento)).FirstOrDefault();
-					if (departamento == null)
-						throw new ArgumentException(string.Format("El Codigo Departamento {0} no esta bien formado del {1}", tercero.CodigoDepartamento, tipo));
-					else
-						tercero.Departamento = departamento.Nombre;
-
-					if (!tercero.CodigoCiudad.Substring(0, 2).Equals(tercero.CodigoDepartamento))
-						throw new ArgumentException(string.Format("El codigo del departamento {0} no coincide con el del municipio {1} según estandar DANE en el {2} ", tercero.CodigoDepartamento, tercero.CodigoCiudad, tipo));
-
-					//if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
-					//	throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
-
-					ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
-					ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.CodigoPostal)).FirstOrDefault();
-					if (codpostal == null)
-						throw new ArgumentException(string.Format("El Codigo Postal {0} del {1} no cumplen con el listado de la DIAN", tercero.CodigoPostal, tipo));
-				}
-
-				//Se valida si envian una direccion fiscal
-				if (tercero.DireccionFiscal != null)
-				{
-					list_paises = new ListaPaises();
-					pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoPais)).FirstOrDefault();
+					pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.CodigoPais)).FirstOrDefault();
 					if (pais == null)
 					{
-						throw new ArgumentException(string.Format("El Codigo Pais de la dirección fiscal {0} no esta bien formado del {1}", tercero.DireccionFiscal.CodigoPais, tipo));
+						throw new ArgumentException(string.Format("El Codigo Pais {0} no esta bien formado del {1}", tercero.CodigoPais, tipo));
 					}
 					else
 					{
-						tercero.DireccionFiscal.Pais = pais.Descripcion;
+						tercero.Pais = pais.Descripcion;
 					}
 
 
-					if (tercero.DireccionFiscal.CodigoPais.Equals("CO"))
+					if (tercero.CodigoPais.Equals("CO"))
 					{
 
 						ListaMunicipio list_municipio = new ListaMunicipio();
-						ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoCiudad)).FirstOrDefault();
+						ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.CodigoCiudad)).FirstOrDefault();
 						if (municipio == null)
-							throw new ArgumentException(string.Format("El Código Ciudad de la dirección fiscal {0} no esta bien formado del {1}", tercero.DireccionFiscal.CodigoCiudad, tipo));
+							throw new ArgumentException(string.Format("El Código Ciudad {0} no esta bien formado del {1}", tercero.CodigoCiudad, tipo));
 						else
-							tercero.DireccionFiscal.Ciudad = municipio.Nombre;
+							tercero.Ciudad = municipio.Nombre;
 
 
 						ListaDepartamentos list_depart = new ListaDepartamentos();
-						ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoDepartamento)).FirstOrDefault();
+						ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.CodigoDepartamento)).FirstOrDefault();
 						if (departamento == null)
-							throw new ArgumentException(string.Format("El Codigo Departamento de la dirección fiscal {0} no esta bien formado del {1}", tercero.DireccionFiscal.CodigoDepartamento, tipo));
+							throw new ArgumentException(string.Format("El Codigo Departamento {0} no esta bien formado del {1}", tercero.CodigoDepartamento, tipo));
 						else
-							tercero.DireccionFiscal.Departamento = departamento.Nombre;
+							tercero.Departamento = departamento.Nombre;
+
+						if (!tercero.CodigoCiudad.Substring(0, 2).Equals(tercero.CodigoDepartamento))
+							throw new ArgumentException(string.Format("El codigo del departamento {0} no coincide con el del municipio {1} según estandar DANE en el {2} ", tercero.CodigoDepartamento, tercero.CodigoCiudad, tipo));
 
 						//if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
 						//	throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
+
 						ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
-						ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoPostal)).FirstOrDefault();
+						ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.CodigoPostal)).FirstOrDefault();
 						if (codpostal == null)
-							throw new ArgumentException(string.Format("El Codigo Postal de la dirección fiscal {0} del {1} no cumplen con el listado de la DIAN", tercero.DireccionFiscal.CodigoPostal, tipo));
+							throw new ArgumentException(string.Format("El Codigo Postal {0} del {1} no cumplen con el listado de la DIAN", tercero.CodigoPostal, tipo));
+					}
+
+					//Se valida si envian una direccion fiscal
+					if (tercero.DireccionFiscal != null)
+					{
+						list_paises = new ListaPaises();
+						pais = list_paises.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoPais)).FirstOrDefault();
+						if (pais == null)
+						{
+							throw new ArgumentException(string.Format("El Codigo Pais de la dirección fiscal {0} no esta bien formado del {1}", tercero.DireccionFiscal.CodigoPais, tipo));
+						}
+						else
+						{
+							tercero.DireccionFiscal.Pais = pais.Descripcion;
+						}
+
+
+						if (tercero.DireccionFiscal.CodigoPais.Equals("CO"))
+						{
+
+							ListaMunicipio list_municipio = new ListaMunicipio();
+							ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoCiudad)).FirstOrDefault();
+							if (municipio == null)
+								throw new ArgumentException(string.Format("El Código Ciudad de la dirección fiscal {0} no esta bien formado del {1}", tercero.DireccionFiscal.CodigoCiudad, tipo));
+							else
+								tercero.DireccionFiscal.Ciudad = municipio.Nombre;
+
+
+							ListaDepartamentos list_depart = new ListaDepartamentos();
+							ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoDepartamento)).FirstOrDefault();
+							if (departamento == null)
+								throw new ArgumentException(string.Format("El Codigo Departamento de la dirección fiscal {0} no esta bien formado del {1}", tercero.DireccionFiscal.CodigoDepartamento, tipo));
+							else
+								tercero.DireccionFiscal.Departamento = departamento.Nombre;
+
+							//if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
+							//	throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
+							ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
+							ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.DireccionFiscal.CodigoPostal)).FirstOrDefault();
+							if (codpostal == null)
+								throw new ArgumentException(string.Format("El Codigo Postal de la dirección fiscal {0} del {1} no cumplen con el listado de la DIAN", tercero.DireccionFiscal.CodigoPostal, tipo));
+						}
 					}
 				}
 
@@ -595,44 +600,47 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 				}
 
-				//Se agrega validacion, se tiene en el listado de la DIAN estas opciones pero presenta notificacion en la rececpion.
-				if (tercero.CodigoTributo.Equals("22"))
-					tercero.CodigoTributo = "01";
-
-				ListaTipoImpuestoTercero list_tipoImp = new ListaTipoImpuestoTercero();
-				ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals(tercero.CodigoTributo)).FirstOrDefault();
-				if (tipoimp == null)
+				if (!tipo.Equals("Mandatario"))
 				{
-					tercero.CodigoTributo = "01";
-					//throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
-				}
+					//Se agrega validacion, se tiene en el listado de la DIAN estas opciones pero presenta notificacion en la rececpion.
+					if (tercero.CodigoTributo.Equals("22"))
+						tercero.CodigoTributo = "01";
 
-				List<string> responsabilidades = new List<string>();
-
-				if (tercero.Responsabilidades == null || tercero.Responsabilidades.Count == 0)
-				{
-					responsabilidades.Add("R-99-PN");
-				}
-				else
-				{
-					foreach (string item in tercero.Responsabilidades)
+					ListaTipoImpuestoTercero list_tipoImp = new ListaTipoImpuestoTercero();
+					ListaItem tipoimp = list_tipoImp.Items.Where(d => d.Codigo.Equals(tercero.CodigoTributo)).FirstOrDefault();
+					if (tipoimp == null)
 					{
-						ListaTipoResponsabilidad list_resp = new ListaTipoResponsabilidad();
-						ListaItem responsabilidad = list_resp.Items.Where(r => r.Codigo.Equals(item)).FirstOrDefault();
-						if (responsabilidad != null)
-							responsabilidades.Add(item);
-						//throw new ArgumentException(string.Format("Responsabilidad {0} Invalida del {1}", item, tipo));
-
+						tercero.CodigoTributo = "01";
+						//throw new ArgumentException(string.Format("El Codigo Tributo {0} no esta bien formado del {1}", tercero.CodigoTributo, tipo));
 					}
-				}
 
-				if (responsabilidades.Count == 0)
-				{
-					responsabilidades.Add("R-99-PN");
-					//throw new ArgumentException(string.Format(" Las Responsabilidades enviadas del {0} no cumplen con el listado de la DIAN", tipo));
-				}
+					List<string> responsabilidades = new List<string>();
 
-				tercero.Responsabilidades = responsabilidades;
+					if (tercero.Responsabilidades == null || tercero.Responsabilidades.Count == 0)
+					{
+						responsabilidades.Add("R-99-PN");
+					}
+					else
+					{
+						foreach (string item in tercero.Responsabilidades)
+						{
+							ListaTipoResponsabilidad list_resp = new ListaTipoResponsabilidad();
+							ListaItem responsabilidad = list_resp.Items.Where(r => r.Codigo.Equals(item)).FirstOrDefault();
+							if (responsabilidad != null)
+								responsabilidades.Add(item);
+							//throw new ArgumentException(string.Format("Responsabilidad {0} Invalida del {1}", item, tipo));
+
+						}
+					}
+
+					if (responsabilidades.Count == 0)
+					{
+						responsabilidades.Add("R-99-PN");
+						//throw new ArgumentException(string.Format(" Las Responsabilidades enviadas del {0} no cumplen con el listado de la DIAN", tipo));
+					}
+
+					tercero.Responsabilidades = responsabilidades;
+				}
 
 				/*
 				if (string.IsNullOrEmpty(tercero.RegimenFiscal))

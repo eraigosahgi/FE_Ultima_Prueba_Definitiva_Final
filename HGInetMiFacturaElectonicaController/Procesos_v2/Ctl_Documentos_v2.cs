@@ -307,7 +307,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 								documento_obj.DocumentoFormato.Codigo = 9;//clase_formatos.ObtenerFormatosEmpresa(Constantes.NitResolucionconPrefijo, TipoFormato.FormatoPDF.GetHashCode()).Where(x => x.IntDocTipo == TipoDocumento.Factura.GetHashCode()).FirstOrDefault().IntCodigoFormato;
 								if (tipo_doc == TipoDocumento.Factura)
+								{
 									documento_obj.DocumentoFormato.Titulo = "Documento soporte en Adquisiciones";//Enumeracion.GetDescription(tipo_doc);
+									try
+									{
+										List<FormatoCampo> CamposPredeterminados = new List<FormatoCampo>();
+										FormatoCampo formato = new FormatoCampo();
+										formato.Ubicacion = "campo2";
+										formato.Valor = string.Format("Resolución No {0}, Fecha: {1}, del No.{2} {3} al {4} {5}, vigencia: 12 meses", resolucion.StrNumResolucion, resolucion.DatFechaVigenciaDesde.ToString("yyyy-MM-dd"), resolucion.StrPrefijo, resolucion.IntRangoInicial, resolucion.StrPrefijo, resolucion.IntRangoFinal);
+										CamposPredeterminados.Add(formato);
+										documento_obj.DocumentoFormato.CamposPredeterminados = CamposPredeterminados;
+									}
+									catch (Exception)
+									{
+									  
+									}
+								}
 								else
 									documento_obj.DocumentoFormato.Titulo = "Nota de ajuste en Documento soporte en Adquisiciones";//Enumeracion.GetDescription(tipo_doc);
 

@@ -6021,6 +6021,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 										DateTime fecha_fin_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 59, 59, 999);
 
+										context.Configuration.LazyLoadingEnabled = false;
+
 										datos = (from doc in context.TblDocumentos
 												where (doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
 												select doc).OrderBy(x => x.DatFechaIngreso).ToList();
@@ -6052,19 +6054,27 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						}
 						else
 						{
-							//Se valida que solo se pueda revisar los documentos en los meses que ya se han sincronizado
-							if (j <= ultimo_registro.DatFechaRegistroDoc.Month)
+							fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+							context.Configuration.LazyLoadingEnabled = false;
+
+							List<TblDocumentos> datos = (from doc in context.TblDocumentos
+														 where (doc.StrUrlArchivoUbl.Contains("files") && doc.DatFechaIngreso >= fecha_inicio && doc.DatFechaIngreso <= fecha_fin)
+														 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+
+							try
 							{
-								fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+								RegistroLog.EscribirLog(new ApplicationException("Resultado de consulta documentos faltantes segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Resultado de consulta de los documentos en bd con fecha_inicio {0} - Fecha_Fin {1} y cantidad {2}", fecha_inicio.ToString(), fecha_fin.ToString(), datos.Count));
 
-								List<TblDocumentos> datos = (from doc in context.TblDocumentos
-															 where (doc.StrUrlArchivoUbl.Contains("files") && doc.DatFechaIngreso >= fecha_inicio && doc.DatFechaIngreso <= fecha_fin)
-															 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+							}
+							catch (Exception)
+							{
 
-								if (datos != null && datos.Count > 0)
-								{
-									GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
-								}
+							}
+
+							if (datos != null && datos.Count > 0)
+							{
+								GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
 							}
 						}
 
@@ -6075,6 +6085,19 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						//Se envia notificacion a tic para indicar que termino de importar el rango especificado
 						List<string> mensajes = new List<string>();
 						mensajes.Add(string.Format("Termino de subir Archivos a Azure: Año: {0} - Fecha terminacion: {1}", anyo, Fecha.GetFecha()));
+						try
+						{
+							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+							email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
+						}
+						catch (Exception)
+						{ }
+					}
+					else
+					{
+						//Se envia notificacion a tic para indicar que termino de importar el rango especificado
+						List<string> mensajes = new List<string>();
+						mensajes.Add(string.Format("Termino de subir Archivos Faltantes a Azure: Año: {0} - Fecha terminacion: {1}", anyo, Fecha.GetFecha()));
 						try
 						{
 							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
