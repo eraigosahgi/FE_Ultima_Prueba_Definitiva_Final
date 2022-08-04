@@ -32,7 +32,7 @@ GestionCompraPlanesApp.controller('ModalComprarPlanController', function ModalCo
 					//Carga notificación de creación con opción de editar formato.
 					var myDialog = DevExpress.ui.dialog.custom({
 						title: "Proceso Éxitoso",
-						message: "El plan ha sido activado correctamente.",
+						message: "Tú plan ha sido activado correctamente, pronto será enviada la factura electrónica correspondiente.",
 						buttons: [{
 							text: "Aceptar",
 							onClick: function (e) {
