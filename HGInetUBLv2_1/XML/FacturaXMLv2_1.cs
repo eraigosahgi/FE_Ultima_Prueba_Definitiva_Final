@@ -2119,6 +2119,10 @@ namespace HGInetUBLv2_1
 								TaxSchemeIva.Name = new NameType1();
 								TaxSchemeIva.Name.Value = tipoimp.Nombre; //"IVA";/*** QUEMADO ***/
 
+								//Si es documento soporte el nombre cambia
+								if (tipo_operacion.Equals(3))
+									TaxSchemeIva.Name.Value = "ReteRenta";
+
 								TaxCategoryRete.TaxScheme = TaxSchemeIva;
 							}
 
