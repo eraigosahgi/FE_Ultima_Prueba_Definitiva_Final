@@ -308,15 +308,23 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								documento_obj.DocumentoFormato.Codigo = 9;//clase_formatos.ObtenerFormatosEmpresa(Constantes.NitResolucionconPrefijo, TipoFormato.FormatoPDF.GetHashCode()).Where(x => x.IntDocTipo == TipoDocumento.Factura.GetHashCode()).FirstOrDefault().IntCodigoFormato;
 								if (tipo_doc == TipoDocumento.Factura)
 								{
-									documento_obj.DocumentoFormato.Titulo = "Documento soporte en Adquisiciones";//Enumeracion.GetDescription(tipo_doc);
+									documento_obj.DocumentoFormato.Titulo = "documento soporte en adquisiciones efectuadas a no obligados a facturar";//Enumeracion.GetDescription(tipo_doc);
 									try
 									{
 										List<FormatoCampo> CamposPredeterminados = new List<FormatoCampo>();
 										FormatoCampo formato = new FormatoCampo();
 										formato.Ubicacion = "campo2";
 										formato.Valor = string.Format("Resolución No {0}, Fecha: {1}, del No.{2} {3} al {4} {5}, vigencia: 12 meses", resolucion.StrNumResolucion, resolucion.DatFechaVigenciaDesde.ToString("yyyy-MM-dd"), resolucion.StrPrefijo, resolucion.IntRangoInicial, resolucion.StrPrefijo, resolucion.IntRangoFinal);
-										CamposPredeterminados.Add(formato);
-										documento_obj.DocumentoFormato.CamposPredeterminados = CamposPredeterminados;
+										if (documento_obj.DocumentoFormato.CamposPredeterminados == null)
+										{
+											CamposPredeterminados.Add(formato);
+											documento_obj.DocumentoFormato.CamposPredeterminados = CamposPredeterminados;
+										}
+										else
+										{
+											documento_obj.DocumentoFormato.CamposPredeterminados.Add(formato);
+										}
+										
 									}
 									catch (Exception)
 									{
@@ -324,7 +332,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									}
 								}
 								else
-									documento_obj.DocumentoFormato.Titulo = "Nota de ajuste en Documento soporte en Adquisiciones";//Enumeracion.GetDescription(tipo_doc);
+									documento_obj.DocumentoFormato.Titulo = "nota de ajuste del documento soporte en adquisiciones efectuadas a no obligados a expedir factura o documento equivalente";//Enumeracion.GetDescription(tipo_doc);
 
 								if (!string.IsNullOrEmpty(documento_obj.DocumentoFormato.ArchivoPdf))
 									documento_obj.DocumentoFormato.ArchivoPdf = string.Empty;
