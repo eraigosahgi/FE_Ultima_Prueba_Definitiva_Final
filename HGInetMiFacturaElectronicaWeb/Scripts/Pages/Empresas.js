@@ -967,7 +967,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			//		message: "Debe indicar el tipo de Habilitacion de Nomina"
 			//	}]
 			//});
-			
+
 		}
 
 
@@ -2088,7 +2088,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				StrSerialCloudServices: Datos_Serial_Cloud,
 				IntDebug: Datos_debug,
 				IntInteroperabilidad: Datos_InterOp,
-				IntRadian : Datos_Radian,
+				IntRadian: Datos_Radian,
 				IntEnvioNominaMail: Datos_EnvioNominaMail,
 			});
 			var tipo = Datos_Tipo;
@@ -2117,40 +2117,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		visible: false,
 		onClick: function (e) {
 			$('#modal_Resoluciones').modal('show');
-			SrvResoluciones.ObtenerComercios($("#NumeroIdentificacion").dxTextBox("instance").option().value, $("#txtSerialCloud").dxTextBox("instance").option().value).then(function (data) {
-				var Datos = data;
+			try {
+				SrvResoluciones.ObtenerComercios($("#NumeroIdentificacion").dxTextBox("instance").option().value, $("#txtSerialCloud").dxTextBox("instance").option().value).then(function (data) {
+					var Datos = data;
 
-				//try {
-				//	Datos_ComercioConfigId = Datos_ComercioConfigId;
-				//	Datos_ComercioConfigDescrip = Datos_ComercioConfigDescrip;
-				//	Datos_Pagos_Parciales = (Datos_PermitePagosParciales == true) ? true : false;
-				//} catch (e) {
-
-				//}
-
-				try {
-					//**************************************
-					$("#IddeComercio").dxTextBox({
-						value: Datos_ComercioConfigId,
-						onValueChanged: function (data) {
-							Datos_ComercioConfigId = (data.value == null) ? "" : data.value;
-						}
-					});
-
-					$("#DescripcionComercio").dxTextBox({
-						value: Datos_ComercioConfigDescrip,
-						onValueChanged: function (data) {
-							Datos_ComercioConfigDescrip = (data.value == null) ? "" : data.value;
-						}
-					});
-
-					$("#PermiteParciales").dxCheckBox({
-						value: Datos_PermitePagosParciales,
-						onValueChanged: function (data) {
-							Datos_PermitePagosParciales = (data.value == null) ? "" : data.value;
-						}
-					});
-
+					//Los Comercios se activan, solo si la empresa es admin
 					//Crear Lista de comercios
 					$("#lstComercios").dxSelectBox({
 						dataSource: new DevExpress.data.ArrayStore({
@@ -2179,28 +2150,62 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 						}
 					});
 
-					// Botón Guardar
-					$("#buttonGuardar").dxButton({
-						text: "Guardar",
-						type: "default",
-						onClick: function (e) {
-							//Servicio para guardar la configuración
-							SrvEmpresas.EditarConfigPago(id_seguridad, Datos_PermitePagosParciales, Datos_ComercioConfigId, Datos_ComercioConfigDescrip).then(function (data) {
-								DevExpress.ui.notify("Datos guardados con exito", 'success', 6000);
+				});
+			} catch (e) {
 
-								Datos_PermitePagosParciales = data.IntPagoEParcial;
-								Datos_ComercioConfigId = data.ComercioConfigId;
-								Datos_ComercioConfigDescrip = data.ComercioConfigDescrip;
+			}
 
-								$('#btncancelar').click();
-								//consultar(txt_hgi_Facturador);
-							});
-						}
-					});
-				} catch (e) {
+			//******************************
+			try {
+				//**************************************
+				$("#IddeComercio").dxTextBox({
+					value: Datos_ComercioConfigId,
+					readOnly: true,
+					onValueChanged: function (data) {
+						Datos_ComercioConfigId = (data.value == null) ? "" : data.value;
+					}
+				});
 
-				}
-			});
+				$("#DescripcionComercio").dxTextBox({
+					value: Datos_ComercioConfigDescrip,
+					onValueChanged: function (data) {
+						Datos_ComercioConfigDescrip = (data.value == null) ? "" : data.value;
+					}
+				});
+
+				$("#PermiteParciales").dxCheckBox({
+					value: Datos_PermitePagosParciales,
+					onValueChanged: function (data) {
+						Datos_PermitePagosParciales = (data.value == null) ? "" : data.value;
+					}
+				});
+
+
+
+				// Botón Guardar
+				$("#buttonGuardar").dxButton({
+					text: "Guardar",
+					type: "default",
+					onClick: function (e) {
+						//Servicio para guardar la configuración
+						SrvEmpresas.EditarConfigPago(id_seguridad, Datos_PermitePagosParciales, Datos_ComercioConfigId, Datos_ComercioConfigDescrip).then(function (data) {
+							DevExpress.ui.notify("Datos guardados con exito", 'success', 6000);
+
+							Datos_PermitePagosParciales = data.IntPagoEParcial;
+							Datos_ComercioConfigId = data.ComercioConfigId;
+							Datos_ComercioConfigDescrip = data.ComercioConfigDescrip;
+
+							$('#btncancelar').click();
+							//consultar(txt_hgi_Facturador);
+						});
+					}
+				});
+
+
+			} catch (e) {
+
+			}
+			//******************************
 		}
 	});
 	//**************************
