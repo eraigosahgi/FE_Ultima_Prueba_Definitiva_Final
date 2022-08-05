@@ -178,6 +178,9 @@
           <Property Name="IntEnvioNominaMail" Type="bit" Nullable="false" />
           <Property Name="IntTipoPlan" Type="smallint" Nullable="false" />
           <Property Name="IntCompraPlan" Type="bit" Nullable="false" />
+          <Property Name="IntFacturaE" Type="bit" Nullable="false" />
+          <Property Name="IntNominaE" Type="bit" Nullable="false" />
+          <Property Name="IntDocSoporte" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -1474,6 +1477,9 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="IntEnvioNominaMail" Type="Boolean" Nullable="false" />
           <Property Name="IntTipoPlan" Type="Int16" Nullable="false" />
           <Property Name="IntCompraPlan" Type="Boolean" Nullable="false" />
+          <Property Name="IntFacturaE" Type="Boolean" Nullable="false" />
+          <Property Name="IntNominaE" Type="Boolean" Nullable="false" />
+          <Property Name="IntDocSoporte" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -2156,6 +2162,9 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntDocSoporte" ColumnName="IntDocSoporte" />
+                <ScalarProperty Name="IntNominaE" ColumnName="IntNominaE" />
+                <ScalarProperty Name="IntFacturaE" ColumnName="IntFacturaE" />
                 <ScalarProperty Name="IntCompraPlan" ColumnName="IntCompraPlan" />
                 <ScalarProperty Name="IntTipoPlan" ColumnName="IntTipoPlan" />
                 <ScalarProperty Name="IntEnvioNominaMail" ColumnName="IntEnvioNominaMail" />
