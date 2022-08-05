@@ -2370,6 +2370,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)estado, ref respuesta_error_dian);
 							if (acuse != null)
 								evento_procesado_DIAN = true;
+
+							//RegistroLog.EscribirLog(new ApplicationException(respuesta_error_dian), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
+
+							//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+							if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+							{
+								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Recibido.GetHashCode(), motivo_rechazo, true);
+								acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)estado, ref respuesta_error_dian);
+							}
 						}
 						else if ((list_evento == null || list_evento.Count == 0) && estado != CodigoResponseV2.Recibido.GetHashCode())
 						{
@@ -2860,7 +2869,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="estado">estado del Acuse</param>
 		/// <param name="motivo_rechazo">descripcion del acuse</param>
 		/// <returns></returns>
-		public static FacturaE_Documento ConvertirAcuse(TblDocumentos doc, TblEmpresas facturador, TblEmpresas adquiriente, short estado, string motivo_rechazo)
+		public static FacturaE_Documento ConvertirAcuse(TblDocumentos doc, TblEmpresas facturador, TblEmpresas adquiriente, short estado, string motivo_rechazo, bool reenvio = false)
 		{
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
@@ -2934,6 +2943,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 
 			doc_acuse.IdAcuse = string.Format("{0}{1}", doc_acuse.CodigoRespuesta, doc.IntNumero);
+
+			if (reenvio == true)
+			{
+				doc_acuse.IdAcuse = string.Format("{0}{1}", doc_acuse.CodigoRespuesta, doc_acuse.IdAcuse);
+			}
 			doc_acuse.IdSeguridad = doc.StrIdSeguridad.ToString();
 			doc_acuse.Documento = doc.IntNumero;
 			doc_acuse.Prefijo = doc.StrPrefijo;
@@ -6020,6 +6034,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										RegistroLog.EscribirLog(new ApplicationException("Consulta documento segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Consultando los documentos en bd con fecha proceso {0}", fecha_proceso.ToString()));
 
 										DateTime fecha_fin_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 59, 59, 999);
+
+										if (fecha_proceso.Hour == 23 && fecha_proceso.Minute == 59)
+										{
+											fecha_fin_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 59, 59, 999).AddDays(1);
+										}
 
 										context.Configuration.LazyLoadingEnabled = false;
 
