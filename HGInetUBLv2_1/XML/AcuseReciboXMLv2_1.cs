@@ -151,6 +151,70 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
+
+				#region Obtiene Factura Original
+				//Se obtiene la informacion del XMl de la Factura para tomar los datos correctos 
+				string contenido_xml_Fe = Archivo.ObtenerContenido(documento_factura.StrUrlArchivoUbl);
+
+				string doc_prefijo_bd = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
+
+				Factura documento_obj = new Factura();
+
+				string tipo_factura = string.Empty;
+
+				// valida el contenido del archivo
+				if (!string.IsNullOrWhiteSpace(contenido_xml_Fe))
+				{
+					// convierte el contenido de texto a xml
+					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml_Fe));
+
+					// convierte el objeto de acuerdo con el tipo de documento
+					XmlSerializer serializacion1 = new XmlSerializer(typeof(InvoiceType));
+
+					InvoiceType conversion = (InvoiceType)serializacion1.Deserialize(xml_reader);
+
+					//documento_obj = FacturaXMLv2_1.Convertir(conversion, null);
+
+					//documento.Prefijo = (documento_obj.Prefijo == documento.Prefijo) ? documento.Prefijo : documento_obj.Prefijo;
+					//documento.Documento = (documento_obj.Documento == documento.Documento) ? documento.Documento : documento_obj.Documento;
+					string doc_prefijo = conversion.ID.Value;
+
+					if (!doc_prefijo.Equals(doc_prefijo_bd))
+					{
+						doc_prefijo_bd = doc_prefijo;
+					}
+
+					if (conversion.InvoiceTypeCode != null && !conversion.InvoiceTypeCode.Value.Equals(documento.TipoDocumento))
+						documento.TipoDocumento = conversion.InvoiceTypeCode.Value;
+
+					try
+					{
+						//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
+						string rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+
+						if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
+						{
+							documento.DatosObligado.RazonSocial = rz_obligado;
+						}
+
+						//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
+						string rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+
+						if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente))
+						{
+							documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
+						}
+
+					}
+					catch (Exception)
+					{
+					  
+					}
+
+				}
+
+				#endregion
+
 				if (tipo_acuse.Equals(CodigoResponseV2.AprobadoTacito) || tipo_acuse.GetHashCode() > CodigoResponseV2.Expresa.GetHashCode() && !tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.InformePago))
 				{
 					List<NoteType> notas = new List<NoteType>();
@@ -283,42 +347,6 @@ namespace HGInetUBLv2_1
 				acuse.DocumentResponse = new DocumentResponseType[cant_response];
                 DocumentResponseType DocumentResponse = new DocumentResponseType();
                 ResponseType response = new ResponseType();
-
-				//Se obtiene la informacion del XMl de la Factura para tomar los datos correctos 
-				string contenido_xml_Fe = Archivo.ObtenerContenido(documento_factura.StrUrlArchivoUbl);
-
-				string doc_prefijo_bd = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
-
-				Factura documento_obj = new Factura();
-
-				string tipo_factura = string.Empty;
-
-				// valida el contenido del archivo
-				if (!string.IsNullOrWhiteSpace(contenido_xml_Fe))
-				{
-					// convierte el contenido de texto a xml
-					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml_Fe));
-
-					// convierte el objeto de acuerdo con el tipo de documento
-					XmlSerializer serializacion1 = new XmlSerializer(typeof(InvoiceType));
-
-					InvoiceType conversion = (InvoiceType)serializacion1.Deserialize(xml_reader);
-
-					//documento_obj = FacturaXMLv2_1.Convertir(conversion, null);
-
-					//documento.Prefijo = (documento_obj.Prefijo == documento.Prefijo) ? documento.Prefijo : documento_obj.Prefijo;
-					//documento.Documento = (documento_obj.Documento == documento.Documento) ? documento.Documento : documento_obj.Documento;
-					string doc_prefijo = conversion.ID.Value;
-					
-					if (!doc_prefijo.Equals(doc_prefijo_bd))
-					{
-						doc_prefijo_bd = doc_prefijo;
-					}
-
-					if (conversion.InvoiceTypeCode != null && !conversion.InvoiceTypeCode.Value.Equals(documento.TipoDocumento))
-						documento.TipoDocumento = conversion.InvoiceTypeCode.Value;
-
-				}
 
 				if (!tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG) && !tipo_acuse.Equals(CodigoResponseV2.TerminacionMandatoG) && !tipo_acuse.Equals(CodigoResponseV2.InformePago) && !tipo_acuse.Equals(CodigoResponseV2.Aval) && !tipo_acuse.Equals(CodigoResponseV2.PagoFvTV))
 				{

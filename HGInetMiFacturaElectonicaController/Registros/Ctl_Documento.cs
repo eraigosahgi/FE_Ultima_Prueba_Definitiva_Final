@@ -2359,7 +2359,17 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					//Crea el XML del Acuse
 					if (acuse == null && estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
-						resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Recibido.GetHashCode(), motivo_rechazo);
+						try
+						{
+							resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Recibido.GetHashCode(), motivo_rechazo);
+						}
+						catch (Exception excepcion)
+						{
+							respuesta_error_dian = excepcion.Message;
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error generando XML-Acuse Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.Recibido.GetHashCode()))));
+
+							throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+						}
 
 					//Se valida si el adquiriente se esta habilitando en RADIAN o si va a registrar los eventos de Acuse en la DIAN
 					if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
@@ -2385,6 +2395,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							try
 							{
 								acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode(), ref respuesta_error_dian);
+
+								//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+								if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+								{
+									respuesta_error_dian = string.Empty;
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Recibido.GetHashCode(), motivo_rechazo, true);
+									acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)estado, ref respuesta_error_dian);
+								}
 							}
 							catch (Exception excepcion)
 							{
@@ -2398,10 +2416,28 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								//Crea el XML del Acuse
 								if (acuse != null)
 								{
-									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo);
+									try
+									{
+										resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo);
+									}
+									catch (Exception excepcion)
+									{
+										respuesta_error_dian = excepcion.Message;
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error generando XML-Acuse Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.Aceptado.GetHashCode()))));
+
+										throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+									}
 									recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
 									if (recibo != null)
 										evento_procesado_DIAN = true;
+
+									//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+									if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+									{
+										respuesta_error_dian = string.Empty;
+										resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo, true);
+										recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
+									}
 								}
 
 							}
@@ -2413,10 +2449,28 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							if (recibo != null && estado != CodigoResponseV2.Aceptado.GetHashCode())
 							{
 								//Crea el XML del Acuse
-								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
+								try
+								{
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
+								}
+								catch (Exception excepcion)
+								{
+									respuesta_error_dian = excepcion.Message;
+									RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error generando XML-Acuse Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado))));
+
+									throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+								}
 								TblEventosRadian evento_x = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
 								if (evento_x != null)
 									evento_procesado_DIAN = true;
+
+								//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+								if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+								{
+									respuesta_error_dian = string.Empty;
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo, true);
+									evento_x = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
+								}
 							}
 						}
 						else if (list_evento != null && list_evento.Count > 0 && estado != CodigoResponseV2.Recibido.GetHashCode())
@@ -2435,15 +2489,42 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							if (acuse == null && estado != CodigoResponseV2.Recibido.GetHashCode())
 							{
 								acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode(), ref respuesta_error_dian);
+
+								//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+								if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+								{
+									respuesta_error_dian = string.Empty;
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Recibido.GetHashCode(), motivo_rechazo, true);
+									acuse = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)estado, ref respuesta_error_dian);
+								}
 							}
 
 
 							if (recibo == null && estado != CodigoResponseV2.Recibido.GetHashCode())
 							{
 								//Crea el XML del Acuse
-								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo);
+								try
+								{
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo);
+								}
+								catch (Exception excepcion)
+								{
+									respuesta_error_dian = excepcion.Message;
+									RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error generando XML-Acuse Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.Aceptado.GetHashCode()))));
+
+									throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+								}
 								recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
-								evento_procesado_DIAN = true;
+								if (recibo != null)
+									evento_procesado_DIAN = true;
+
+								//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+								if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+								{
+									respuesta_error_dian = string.Empty;
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo, true);
+									recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
+								}
 							}
 							else if (recibo != null && !doc.IntAdquirienteRecibo.Equals(estado))
 							{
@@ -2453,13 +2534,31 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							if (expresa == null && rechazo == null && tacito == null && estado != CodigoResponseV2.Aceptado.GetHashCode())
 							{
 								//Crea el XML del Acuse
-								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
+								try
+								{
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
+								}
+								catch (Exception excepcion)
+								{
+									respuesta_error_dian = excepcion.Message;
+									RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error generando XML-Acuse Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado))));
+
+									throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+								}
 
 								if (estado == CodigoResponseV2.Expresa.GetHashCode())
 								{
 									expresa = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
 									if (expresa != null)
 										evento_procesado_DIAN = true;
+
+									//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+									if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+									{
+										respuesta_error_dian = string.Empty;
+										resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo, true);
+										expresa = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
+									}
 								}
 
 
@@ -2468,6 +2567,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									rechazo = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
 									if (rechazo != null)
 										evento_procesado_DIAN = true;
+
+									//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+									if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+									{
+										respuesta_error_dian = string.Empty;
+										resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo, true);
+										rechazo = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
+									}
 								}
 
 
@@ -2509,10 +2616,29 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							if (estado == CodigoResponseV2.Inscripcion.GetHashCode() && rechazo == null && (expresa != null || tacito != null))
 							{
 								//Crea el XML del Acuse
-								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Inscripcion.GetHashCode(), motivo_rechazo);
+								try
+								{
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Inscripcion.GetHashCode(), motivo_rechazo);
+								}
+								catch (Exception excepcion)
+								{
+									respuesta_error_dian = excepcion.Message;
+									RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error generando XML-Acuse Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.Inscripcion.GetHashCode()))));
+
+									throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+								}
 								TblEventosRadian inscripcion_titulo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Inscripcion.GetHashCode(), ref respuesta_error_dian);
 								if (inscripcion_titulo != null)
 									evento_procesado_DIAN = true;
+
+								//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+								if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+								{
+									respuesta_error_dian = string.Empty;
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo, true);
+									inscripcion_titulo = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
+								}
+
 							}
 
 						}
@@ -2525,24 +2651,40 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (tacito == null)
 						{
 							//Crea el XML del Acuse
-							resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), motivo_rechazo);
-							if (facturador.IntRadian == true)
+							try
 							{
-								tacito = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), ref respuesta_error_dian);
-								if (tacito == null)
-								{
-									throw new ArgumentException("No fue posible registrar el evento Aprobado Tacito");
-								}
-								else
-								{
-									evento_procesado_DIAN = true;
-									doc.IntAdquirienteRecibo = (short)CodigoResponseV2.AprobadoTacito.GetHashCode();
-									doc.DatAdquirienteFechaRecibo = tacito.DatFechaEvento;
-								}
+								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), motivo_rechazo);
+							}
+							catch (Exception excepcion)
+							{
+								respuesta_error_dian = excepcion.Message;
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error generando XML-Acuse Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.AprobadoTacito.GetHashCode()))));
+
+								throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+							}
+							tacito = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.AprobadoTacito.GetHashCode(), ref respuesta_error_dian);
+
+							//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+							if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+							{
+								respuesta_error_dian = string.Empty;
+								resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo, true);
+								tacito = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
+							}
+
+							if (tacito == null)
+							{
+								throw new ArgumentException(string.Format("No fue posible registrar el evento Aprobado Tacito - {0}", respuesta_error_dian));
+							}
+							else
+							{
+								evento_procesado_DIAN = true;
+								doc.IntAdquirienteRecibo = (short)CodigoResponseV2.AprobadoTacito.GetHashCode();
+								doc.DatAdquirienteFechaRecibo = tacito.DatFechaEvento;
 							}
 						}
 
-						if (doc.IntAdquirienteRecibo != (short)CodigoResponseV2.AprobadoTacito.GetHashCode())
+						if (doc.IntAdquirienteRecibo != (short)CodigoResponseV2.AprobadoTacito.GetHashCode() && evento_procesado_DIAN == true)
 						{
 							doc.IntAdquirienteRecibo = (short)CodigoResponseV2.AprobadoTacito.GetHashCode();
 							doc.DatAdquirienteFechaRecibo = tacito.DatFechaEvento;
