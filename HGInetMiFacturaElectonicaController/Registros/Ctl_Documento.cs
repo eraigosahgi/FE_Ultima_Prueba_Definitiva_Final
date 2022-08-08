@@ -6171,11 +6171,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 									List<TblDocumentos> datos = null;
 
+									DateTime fecha_fin_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 59, 59, 999);
+
 									try
 									{
 										RegistroLog.EscribirLog(new ApplicationException("Consulta documento segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Consultando los documentos en bd con fecha proceso {0}", fecha_proceso.ToString()));
-
-										DateTime fecha_fin_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 59, 59, 999);
 
 										if (fecha_proceso.Hour == 23 && fecha_proceso.Minute == 59)
 										{
@@ -6188,17 +6188,26 @@ namespace HGInetMiFacturaElectonicaController.Registros
 												where (doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
 												select doc).OrderBy(x => x.DatFechaIngreso).ToList();
 
+										if ((datos == null || datos.Count == 0) && fecha_fin_consulta.Hour == 23)
+										{
+											fecha_fin_consulta.AddHours(8);
+
+											datos = (from doc in context.TblDocumentos
+													 where (doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+													 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+										}
+
 
 										//datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_proceso, fecha_proceso, 0, 2, 1, 30000).OrderBy(x => x.DatFechaIngreso).ToList();
 									}
 									catch (Exception excepcion)
 									{
-										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Consultando los documentos en bd con fecha proceso {0}", fecha_proceso.ToString()));
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Consultando los documentos en bd con fecha proceso {0} y fecha fin {1}", fecha_proceso.ToString(), fecha_fin_consulta.ToString()));
 									}
 
 									try
 									{
-										RegistroLog.EscribirLog(new ApplicationException("Resultado de consulta documento segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Resultado de consulta de los documentos en bd con fecha proceso {0} y cantidad {1}", fecha_proceso.ToString(), datos.Count));
+										RegistroLog.EscribirLog(new ApplicationException("Resultado de consulta documento segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Resultado de consulta de los documentos en bd con fecha proceso {0} - fecha fin {1} y cantidad {2}", fecha_proceso.ToString(), fecha_fin_consulta.ToString(), datos.Count));
 
 									}
 									catch (Exception)
