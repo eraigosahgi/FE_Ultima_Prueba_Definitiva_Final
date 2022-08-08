@@ -918,7 +918,18 @@ namespace HGInetInteroperabilidad.Procesos
 
 				//Se valida que el archivo recibido si sea de tipo Attached Document
 				XmlDocument xDoc = new XmlDocument();
-				xDoc.Load(ruta_xml);
+				try
+				{
+					xDoc.Load(ruta_xml);
+				}
+				catch (Exception ex)
+				{
+					mensajes = new List<string>();
+					mensajes.Add(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico, se esperaba un XML-UBL tipo AttachedDocument", Path.GetFileName(ruta_xml)));
+					mensajes.Add(ex.Message);
+
+					RechazarCorreo(mensajes, ruta_archi_mail, true);
+				}
 
 				XmlNodeList xAttach = xDoc.GetElementsByTagName("AttachedDocument");
 
@@ -931,7 +942,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 						//ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
-						RechazarCorreo(mensajes, ruta_archi_mail);
+						RechazarCorreo(mensajes, ruta_archi_mail,true);
 
 					}
 					catch (Exception e)
@@ -964,7 +975,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 							//ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
-							RechazarCorreo(mensajes, ruta_archi_mail);
+							RechazarCorreo(mensajes, ruta_archi_mail, true);
 
 						}
 						catch (Exception e)
@@ -1063,24 +1074,24 @@ namespace HGInetInteroperabilidad.Procesos
 			}
 			catch (Exception excepcion)
 			{
-				//try
-				//{
-				//	Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
-				//	TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(Nombre_arch_mail));
-				//	if (tblregistro != null)
-				//	{
-				//		tblregistro.IntEstado = 1;
-				//		if (mensajes == null)
-				//			mensajes.Add(excepcion.Message);
-				//		tblregistro.StrObservaciones = string.Format("{0} - {1}", tblregistro.StrObservaciones, JsonConvert.SerializeObject(mensajes));
+				try
+				{
+					Ctl_RegistroRecepcion _ctrl_registro = new Ctl_RegistroRecepcion();
+					TblRegistroRecepcion tblregistro = _ctrl_registro.Obtener(Guid.Parse(Nombre_arch_mail));
+					if (tblregistro != null && tblregistro.IntEstado != 1)
+					{
+						tblregistro.IntEstado = 1;
+						if (mensajes == null)
+							mensajes.Add(excepcion.Message);
+						tblregistro.StrObservaciones = string.Format("{0} - {1}", tblregistro.StrObservaciones, JsonConvert.SerializeObject(mensajes));
 
-				//		_ctrl_registro.Actualizar(tblregistro);
-				//	}
-				//}
-				//catch (Exception)
-				//{
-				   
-				//}
+						_ctrl_registro.Actualizar(tblregistro);
+					}
+				}
+				catch (Exception)
+				{
+
+				}
 				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
