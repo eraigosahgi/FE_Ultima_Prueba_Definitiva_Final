@@ -129,6 +129,7 @@ namespace HGInetInteroperabilidad.Procesos
 									List<string> extension = new List<string>();
 									extension.Add("zip");
 									extension.Add("ZIP");
+									extension.Add("Zip");
 									adjunto = cliente_imap.ObtenerPropiedadesAdjuntos(mensaje, extension);
 								}
 								catch (Exception excepcion)
