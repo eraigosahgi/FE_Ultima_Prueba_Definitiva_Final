@@ -6148,7 +6148,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							{
 								DateTime fecha_proceso = fecha_inicio;
 								if (i > 0 && i < diasmes)
-									fecha_proceso = fecha_inicio.AddDays(i);
+									fecha_proceso = new DateTime(fecha_inicio.Year, fecha_inicio.Month, fecha_inicio.Day, 0, 0, 0).AddDays(i);//fecha_inicio.AddDays(i);
+
 
 								if (i == diasmes || fecha_proceso.Day == diasmes)
 								{
