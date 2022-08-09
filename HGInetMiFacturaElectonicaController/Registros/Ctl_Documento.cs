@@ -6179,7 +6179,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 										if (fecha_proceso.Hour == 23 && fecha_proceso.Minute == 59)
 										{
-											fecha_fin_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 59, 59, 999).AddDays(1);
+											fecha_fin_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 59, 59, 999).AddHours(3);
 										}
 
 										context.Configuration.LazyLoadingEnabled = false;
@@ -6190,7 +6190,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 										if ((datos == null || datos.Count == 0) && fecha_fin_consulta.Hour == 23)
 										{
-											fecha_fin_consulta.AddHours(8);
+											fecha_fin_consulta.AddHours(3);
 
 											datos = (from doc in context.TblDocumentos
 													 where (doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
