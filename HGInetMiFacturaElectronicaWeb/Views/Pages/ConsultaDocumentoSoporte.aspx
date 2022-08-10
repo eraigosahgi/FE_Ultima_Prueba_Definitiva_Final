@@ -4,12 +4,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 	<!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20220317"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20220317"></script>
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20220317"></script>
-	<script src="../../Scripts/Pages/ConsultaDocumentoSoporte.js?vjs20220317"></script>
-	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs20220317"></script>
-	<script src="../../Scripts/Pages/EventosRadian.js?vjs20220317"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20220810"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20220810"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20220810"></script>
+	<script src="../../Scripts/Pages/ConsultaDocumentoSoporte.js?vjs20220810"></script>
+	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs20220810"></script>
+	<script src="../../Scripts/Pages/EventosRadian.js?vjs20220810"></script>
 	<div data-ng-app="App">
 
 		<!-- CONTENEDOR PRINCIPAL -->
