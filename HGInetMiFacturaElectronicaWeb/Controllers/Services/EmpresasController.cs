@@ -414,7 +414,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				#endregion
 
 				Empresa.StrMailAdmin = ObjEmpresa.StrMailAdmin;
-				Empresa.IntAcuseTacito = (ObjEmpresa.IntRadian == true && ObjEmpresa.IntAcuseTacito < 72) ? 72 : ObjEmpresa.IntAcuseTacito;
+				Empresa.IntAcuseTacito = ObjEmpresa.IntAcuseTacito;
 				Empresa.StrMailAcuse = ObjEmpresa.StrMailAcuse;
 				Empresa.StrMailEnvio = ObjEmpresa.StrMailEnvio;
 				Empresa.StrMailRecepcion = ObjEmpresa.StrMailRecepcion;
