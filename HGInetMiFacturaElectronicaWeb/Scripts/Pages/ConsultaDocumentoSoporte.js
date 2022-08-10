@@ -309,7 +309,7 @@ App.controller('ConsultaDocumentoSoporteController', function ConsultaDocumentoS
 								onClick: function () {
 									//$http.get('/api/ConsultarEventosRadian?List_IdSeguridad=' + $scope.documentos).then(function (response) {
 									//})
-									BotonConsultaEvento(true)
+									//BotonConsultaEvento(true)
 								}
 							}
 						},
@@ -706,7 +706,7 @@ App.controller('ConsultaDocumentoSoporteController', function ConsultaDocumentoS
 				//lista = "[" + lista + "]"
 				$scope.documentos = lista;
 
-				BotonConsultaEvento(true);
+				//BotonConsultaEvento(true);
 				//$("#consultaeventos").dxButton({ visible: true });
 				//$("#gridDocumentos").dxDataGrid({
 				//	onToolbarPreparing: function (e) {
@@ -728,7 +728,7 @@ App.controller('ConsultaDocumentoSoporteController', function ConsultaDocumentoS
 			} else {
 
 				//$("#consultaeventos").dxButton({ visible: false });
-				BotonConsultaEvento(false);
+				//BotonConsultaEvento(false);
 				$scope.documentos = '';
 				//$("#gridDocumentos").dxDataGrid({
 				//	onToolbarPreparing: function (e) {
@@ -751,22 +751,22 @@ App.controller('ConsultaDocumentoSoporteController', function ConsultaDocumentoS
 
 		function BotonConsultaEvento(Visible) {
 
-			$("#gridDocumentos").dxDataGrid({
-				onToolbarPreparing: function (e) {
-					e.toolbarOptions.items.unshift({
-						location: "after",
-						widget: "dxButton",
-						visible: Visible,
-						options: {
-							icon: "find", elementAttr: { title: "Consultar" },
-							onClick: function () {
-								$http.get('/api/ConsultarEventosRadian?List_IdSeguridad=' + $scope.documentos).then(function (response) {
-								})
-							}
-						}
-					})
-				}
-			});
+			//$("#gridDocumentos").dxDataGrid({
+			//	onToolbarPreparing: function (e) {
+			//		e.toolbarOptions.items.unshift({
+			//			location: "after",
+			//			widget: "dxButton",
+			//			visible: Visible,
+			//			options: {
+			//				icon: "find", elementAttr: { title: "Consultar" },
+			//				onClick: function () {
+			//					$http.get('/api/ConsultarEventosRadian?List_IdSeguridad=' + $scope.documentos).then(function (response) {
+			//					})
+			//				}
+			//			}
+			//		})
+			//	}
+			//});
 
 		}
 
@@ -828,7 +828,10 @@ App.controller('ConsultaDocumentoSoporteController', function ConsultaDocumentoS
 		var codigo_adquiriente = (txt_hgi_Adquiriente == undefined || txt_hgi_Adquiriente == '') ? '' : txt_hgi_Adquiriente;
 		$http.get('/api/ObtenerDocumentosSoporte?codigo_facturador=' + codigo_facturador + '&numero_documento=' + numero_documento + '&codigo_adquiriente=' + codigo_adquiriente + '&estado_dian=' + estado_dian + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&resolucion=' + resolucion + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
 			$('#wait').hide();
-			Radian = response.data[0].Radian;
+
+			//if (response.data.length > 0) {
+			//	Radian = response.data[0].Radian;
+			//}
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
 				paging: {

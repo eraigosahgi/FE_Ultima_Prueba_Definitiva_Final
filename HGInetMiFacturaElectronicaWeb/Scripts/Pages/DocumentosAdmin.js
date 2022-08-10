@@ -797,6 +797,8 @@ var items_Tipo =
 		{ ID: "5", Texto: 'Attached de Recibo' },
 		{ ID: "10", Texto: 'Documento Soporte de Pago de Nómina Electrónica' },
 		{ ID: "11", Texto: 'Nota de Ajuste de Documento Soporte de Pago de Nómina Electrónica' },
+		{ ID: "15", Texto: 'Documento Soporte Adquisiciones' },
+		{ ID: "16", Texto: 'Nota de Ajuste de Adquisiciones' },
 
     ];
 

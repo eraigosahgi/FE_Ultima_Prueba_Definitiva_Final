@@ -51,5 +51,6 @@ namespace HGInetMiFacturaElectonicaData.Objetos
 		public string NumResolucion { get; set; }
 		public bool Radian { get; set; }
 		public int FormaPago { get; set; }
+		public int tipoOperacion { get; set; }
 	}
 }

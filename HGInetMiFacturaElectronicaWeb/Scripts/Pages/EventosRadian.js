@@ -109,6 +109,24 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 					$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
 						//alert(response.data);
 						$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+					}, function errorCallback(response) {
+						
+						//Carga notificación de creación con opción de editar formato.
+						var myDialog = DevExpress.ui.dialog.custom({
+							title: "Proceso Falló",
+							message: response.data.ExceptionMessage,
+							buttons: [{
+								text: "Aceptar",
+								onClick: function (e) {
+									myDialog.hide();
+									$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+								}
+							}]
+						});
+						myDialog.show().done(function (dialogResult) {
+						});
+
+						$('#wait').hide();
 					});
 				}
 			});
