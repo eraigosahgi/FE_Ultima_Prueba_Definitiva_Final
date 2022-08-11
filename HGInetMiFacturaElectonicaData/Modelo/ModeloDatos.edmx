@@ -408,6 +408,7 @@
           <Property Name="StrAsunto" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="IntEstado" Type="smallint" Nullable="false" />
           <Property Name="StrObservaciones" Type="varchar" MaxLength="400" />
+          <Property Name="IntProceso" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="TblUsuarios">
           <Key>
@@ -1916,6 +1917,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="StrAsunto" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="IntEstado" Type="Int16" Nullable="false" />
           <Property Name="StrObservaciones" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="IntProceso" Type="Int16" Nullable="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2417,6 +2419,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySetMapping Name="TblRegistroRecepcion">
             <EntityTypeMapping TypeName="Modelo.TblRegistroRecepcion">
               <MappingFragment StoreEntitySet="TblRegistroRecepcion">
+                <ScalarProperty Name="IntProceso" ColumnName="IntProceso" />
                 <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
                 <ScalarProperty Name="IntEstado" ColumnName="IntEstado" />
                 <ScalarProperty Name="StrAsunto" ColumnName="StrAsunto" />

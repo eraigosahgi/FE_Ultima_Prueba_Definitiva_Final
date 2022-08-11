@@ -21,5 +21,6 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrAsunto { get; set; }
         public short IntEstado { get; set; }
         public string StrObservaciones { get; set; }
+        public short IntProceso { get; set; }
     }
 }
