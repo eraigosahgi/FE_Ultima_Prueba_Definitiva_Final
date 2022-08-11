@@ -479,13 +479,22 @@ namespace HGInetUBLv2_1
 
 				//Informacion del QR
 				string ruta_qr_Dian = string.Empty;
+
+				string cufe_qr = string.Empty;
+
+				//Regla NSAB36 del Anexo Tecnico de la DIAN de documento soporte en adquisiciones
+				if (documento.TipoOperacion != 3)
+					cufe_qr = nota_credito.UUID.Value;
+				else
+					cufe_qr = nota_credito.BillingReference.FirstOrDefault().CreditNoteDocumentReference.UUID.Value;
+
 				if (nota_credito.ProfileExecutionID.Value.Equals("2"))
 				{
-					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=", nota_credito.UUID.Value);
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=", cufe_qr);
 				}
 				else
 				{
-					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", nota_credito.UUID.Value);
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", cufe_qr);
 				}
 
 				// Extension del sector Salud
