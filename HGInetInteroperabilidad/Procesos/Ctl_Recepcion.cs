@@ -1348,7 +1348,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-					RechazarCorreo(mensajes, ruta_archivo_mail);
+					RechazarCorreo(mensajes, ruta_archivo_mail, true);
 
 					throw new ApplicationException(mensaje);
 				}
@@ -1360,9 +1360,45 @@ namespace HGInetInteroperabilidad.Procesos
 					List<string> mensajes = new List<string>();
 					mensajes.Add(mensaje);
 
-					RechazarCorreo(mensajes, ruta_archivo_mail);
+					RechazarCorreo(mensajes, ruta_archivo_mail, true);
 
 					throw new ArgumentException(mensaje);
+				}
+
+				//Se valida que el archivo recibido si sea de tipo Attached Document
+				XmlDocument xDoc = new XmlDocument();
+				try
+				{
+					xDoc.LoadXml(attach_document.RespuestaDianXml);
+				}
+				catch (Exception ex)
+				{
+					List<string> mensajes = new List<string>();
+					mensajes.Add("El Attached Document no cumple con la estructura indicada por la DIAN en el Anexo técnico, se esperaba un XML-UBL tipo ApplicationResponse en su contenido");
+					mensajes.Add(ex.Message);
+
+					RechazarCorreo(mensajes, ruta_archivo_mail, true);
+				}
+
+				XmlNodeList xApplication = xDoc.GetElementsByTagName("ApplicationResponse");
+
+				if (xApplication.Count == 0)
+				{
+					try
+					{
+						List<string> mensajes = new List<string>();
+						mensajes.Add("El Attached Document no cumple con la estructura indicada por la DIAN en el Anexo técnico, se esperaba un XML-UBL tipo ApplicationResponse en su contenido");
+
+						//ReEnviarCorreoError(ruta_archi_mail, mensajes);
+
+						RechazarCorreo(mensajes, ruta_archivo_mail, true);
+
+					}
+					catch (Exception e)
+					{
+					}
+
+					throw new ApplicationException("El Attached Document no cumple con la estructura indicada por la DIAN en el Anexo técnico, se esperaba un XML-UBL tipo ApplicationResponse en su contenido");
 				}
 
 				// representación de datos en objeto
