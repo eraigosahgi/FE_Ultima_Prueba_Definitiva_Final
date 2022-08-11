@@ -269,7 +269,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 										// descomprime el zip adjunto
 										string ruta_descomprimir = Path.Combine(Path.GetDirectoryName(ruta_mail), Path.GetFileNameWithoutExtension(ruta_mail));
-										Ctl_Descomprimir.Procesar(rutas_archivos.First(x => x.Contains(".zip") || x.Contains(".ZIP")), ruta_descomprimir);
+										Ctl_Descomprimir.Procesar(rutas_archivos.First(x => x.Contains(".zip") || x.Contains(".ZIP") || x.Contains(".Zip")), ruta_descomprimir);
 									}
 									catch (ExcepcionHgi ex)
 									{

@@ -1335,7 +1335,22 @@ namespace HGInetInteroperabilidad.Procesos
 			{
 
 				//Convierto XML-UBL en Objeto
-				attach_document = AttachedDocument.Convertir(obj_attach_serializado);
+				try
+				{
+					attach_document = AttachedDocument.Convertir(obj_attach_serializado);
+				}
+				catch (Exception excepcion)
+				{
+					string mensaje = string.Format("El Attached Document no cumple con la estructura indicada por la DIAN: {0}", excepcion.Message);
+					List<string> mensajes = new List<string>();
+					mensajes.Add(mensaje);
+
+					//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+					RechazarCorreo(mensajes, ruta_archivo_mail);
+
+					throw new ApplicationException(mensaje);
+				}
 
 				if (string.IsNullOrEmpty(attach_document.RespuestaDianXml))
 				{
@@ -1757,8 +1772,10 @@ namespace HGInetInteroperabilidad.Procesos
 					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 					email.EnviaNotificacionAlertaDIAN(attach_document.IdentificacionFacturador, attach_document.Documento.ToString(), mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
 				}
-				catch (Exception)
-				{}
+				catch (Exception ex)
+				{
+					mensajes.Add(ex.Message);
+				}
 
 				ruta_archivo = string.Format("{0}\\Archivo_errores.json", ruta_archivo);
 

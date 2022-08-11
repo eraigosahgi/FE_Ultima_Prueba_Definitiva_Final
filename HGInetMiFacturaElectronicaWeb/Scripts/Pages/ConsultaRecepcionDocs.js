@@ -264,6 +264,17 @@ App.controller('RecepcionCorreoController', function RecepcionCorreoController($
 						}]
 					},
 					{
+						caption: "Proceso",
+						dataField: "IntProceso",
+						cssClass: "hidden-xs col-md-1",
+						lookup: {
+							dataSource: EstadoProcesoRecepcion,
+							displayExpr: "Name",
+							valueExpr: "ID"
+						},
+						
+					},
+					{
 						caption: "Remitente",
 						dataField: "StrRemitente"
 					}, {
@@ -275,7 +286,7 @@ App.controller('RecepcionCorreoController', function RecepcionCorreoController($
 						dataField: "IntEstado",
 						cssClass: "hidden-xs col-md-1",
 					   	lookup: {
-					   		dataSource: EstadoRecepcion,
+					   		dataSource: EstadoProcesoRecepcion,
 					   		displayExpr: "Name",
 					   		valueExpr: "ID"
 					   	},
@@ -300,9 +311,6 @@ App.controller('RecepcionCorreoController', function RecepcionCorreoController($
 		});
 
 	}
-
-
-
 
 
 	function consultar2() {
@@ -380,5 +388,11 @@ var TiposFiltroFecha =
     { ID: "1", Texto: 'Fecha Recepción' },
     { ID: "2", Texto: 'Fecha Documento' }
     ];
+
+var EstadoProcesoRecepcion =
+[
+{ "ID": 0, "Name": "Recepción" },
+{ "ID": 1, "Name": "Emisión" },
+];
 
 

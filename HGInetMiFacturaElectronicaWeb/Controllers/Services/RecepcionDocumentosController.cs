@@ -37,6 +37,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.StrId,
 					d.DatFechaRegistro,
 					d.DatFechaCorreo,
+					d.IntProceso,
 					d.StrRemitente,
 					d.StrAsunto,
 					d.IntEstado,

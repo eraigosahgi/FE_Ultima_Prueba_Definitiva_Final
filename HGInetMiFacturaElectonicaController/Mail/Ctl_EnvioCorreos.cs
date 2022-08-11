@@ -3335,6 +3335,9 @@ namespace HGInetMiFacturaElectonicaController
 
 				// obtiene los datos del Facturador
 				Ctl_Empresa empresa = new Ctl_Empresa();
+				if (string.IsNullOrEmpty(Facturador))
+					Facturador = Constantes.NitResolucionconPrefijo;
+
 				TblEmpresas facturador = empresa.Obtener(Facturador);
 
 

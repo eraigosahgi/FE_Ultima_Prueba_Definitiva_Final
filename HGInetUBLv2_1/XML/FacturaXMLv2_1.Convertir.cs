@@ -570,7 +570,7 @@ namespace HGInetUBLv2_1
 					//Tasa de Cambio
 					if (factura_ubl.PaymentExchangeRate != null)
 					{
-						if (!factura_ubl.PaymentExchangeRate.SourceCurrencyCode.Value.Equals(factura_ubl.PaymentExchangeRate.TargetCurrencyCode.Value))
+						if (factura_ubl.PaymentExchangeRate.SourceCurrencyCode.Value != null && !factura_ubl.PaymentExchangeRate.SourceCurrencyCode.Value.Equals(factura_ubl.PaymentExchangeRate.TargetCurrencyCode.Value))
 						{
 							factura_obj.Trm = new TasaCambio();
 							factura_obj.Trm.Moneda = factura_ubl.PaymentExchangeRate.TargetCurrencyCode.Value;

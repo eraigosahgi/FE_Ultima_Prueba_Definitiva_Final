@@ -53,9 +53,15 @@ namespace HGInetUBLv2_1
 
 				attach_document.CufeDocumentoElectronico = (attach_ubl.ParentDocumentLineReference != null) ? (attach_ubl.ParentDocumentLineReference[0].DocumentReference.UUID != null) ? attach_ubl.ParentDocumentLineReference[0].DocumentReference.UUID.Value : string.Empty: string.Empty;
 
-				attach_document.IdentificacionFacturador = attach_ubl.SenderParty.PartyTaxScheme[0].CompanyID.Value;
+				if (attach_ubl.SenderParty != null && attach_ubl.SenderParty.PartyTaxScheme != null)
+					attach_document.IdentificacionFacturador = attach_ubl.SenderParty.PartyTaxScheme[0].CompanyID.Value;
+				else
+					throw new ArgumentException("No se encontró identificación del Facturador en el AttachDocument, validar estructura de este tipo de documento");
 
-				attach_document.Identificacionadquiriente = attach_ubl.ReceiverParty.PartyTaxScheme[0].CompanyID.Value;
+				if (attach_ubl.ReceiverParty != null && attach_ubl.ReceiverParty.PartyTaxScheme != null)
+					attach_document.Identificacionadquiriente = attach_ubl.ReceiverParty.PartyTaxScheme[0].CompanyID.Value;
+				else
+					throw new ArgumentException("No se encontró identificación del Adquiriente en el AttachDocument, validar estructura de este tipo de documento");
 
 				attach_document.RespuestaDianXml = (attach_ubl.ParentDocumentLineReference != null) ? attach_ubl.ParentDocumentLineReference[0].DocumentReference.Attachment.ExternalReference.Description[0].Value.Trim() : string.Empty;
 
