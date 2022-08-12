@@ -1581,6 +1581,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					TblEmpresas facturador = _empresa.Obtener(codigo_facturador);
 					if (facturador.IntAcuseTacito >= 72)
 					{
+						facturadores = new List<TblEmpresas>();
 						facturadores.Add(facturador);
 						ejecucion_facturador = true;
 					}
@@ -1701,7 +1702,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					documentos = (from datos in context.TblDocumentos
 								  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
 								  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
-								  where datos.IntAdquirienteRecibo.Equals(4) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error && datos.TblEmpresasFacturador.IntRadian == true
+								  where datos.IntAdquirienteRecibo.Equals(4) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
 										&& (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
 											 && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual)
 												 && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
@@ -2400,7 +2401,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				TblEventosRadian recibo = null;
 
-				if (adquiriente_hgi == true)
+				if (adquiriente_hgi == true || estado == CodigoResponseV2.Inscripcion.GetHashCode())
 				{
 					list_evento = evento.Obtener(doc.StrIdSeguridad);
 
@@ -2411,9 +2412,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 						if (acuse != null && estado == CodigoResponseV2.Recibido.GetHashCode())
 							continuar_proceso = false;
+						else if (acuse == null && estado == CodigoResponseV2.Inscripcion.GetHashCode())
+							continuar_proceso = false;
+
+					}
+					else if (estado == CodigoResponseV2.Inscripcion.GetHashCode())
+					{
+						continuar_proceso = false;
 					}
 				}
-				else if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && estado != CodigoResponseV2.Inscripcion.GetHashCode())
+				else if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode())
 				{
 					continuar_proceso = false;
 				}
@@ -2607,7 +2615,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								doc.IntAdquirienteRecibo = (short)CodigoResponseV2.Recibido.GetHashCode();
 							}
 
-							if (expresa == null && rechazo == null && tacito == null && estado != CodigoResponseV2.Aceptado.GetHashCode())
+							if (expresa == null && rechazo == null && tacito == null && estado != CodigoResponseV2.Aceptado.GetHashCode() && estado != CodigoResponseV2.Inscripcion.GetHashCode())
 							{
 								//Crea el XML del Acuse
 								try
@@ -2715,6 +2723,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									inscripcion_titulo = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
 								}
 
+							}
+							else
+							{
+								respuesta_error_dian = "No fue posible registrar el evento Inscripción como titulo Valor, no se encontró una aceptación expresa o tácita";
 							}
 
 						}

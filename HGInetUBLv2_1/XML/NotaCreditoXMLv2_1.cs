@@ -253,6 +253,9 @@ namespace HGInetUBLv2_1
 					DocumentReference.IssueDate = new IssueDateType();
 					DocumentReference.IssueDate.Value = documento.FechaFactura;
 					DocReference.InvoiceDocumentReference = DocumentReference;
+					if (documento.TipoOperacion == 3)
+						DocReference.CreditNoteDocumentReference = DocumentReference;
+
 
 					nota_credito.BillingReference[0] = DocReference;
 				}
