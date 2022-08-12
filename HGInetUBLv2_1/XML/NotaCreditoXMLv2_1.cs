@@ -486,7 +486,7 @@ namespace HGInetUBLv2_1
 				if (documento.TipoOperacion != 3)
 					cufe_qr = nota_credito.UUID.Value;
 				else
-					cufe_qr = nota_credito.BillingReference.FirstOrDefault().CreditNoteDocumentReference.UUID.Value;
+					cufe_qr = documento.CufeFactura;
 
 				if (nota_credito.ProfileExecutionID.Value.Equals("2"))
 				{
