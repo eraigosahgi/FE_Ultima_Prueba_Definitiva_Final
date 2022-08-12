@@ -913,7 +913,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							  && ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
 							  && ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
 							  && (datos.IntDocTipo < 10)
-							  && (datos.IntTipoOperacion < 3)//Que no muestre los documento soporte
+							  && (datos.IntTipoOperacion != 3)//Que no muestre los documento soporte
 							  orderby datos.IntNumero descending
 							  select new ObjDocumentos
 							  {
