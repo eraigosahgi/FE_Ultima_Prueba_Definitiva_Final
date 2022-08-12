@@ -23,7 +23,9 @@ namespace HGInetUBLv2_1
 
 			try
 			{
-				attach_document.IdAttached = attach_ubl.ID.Value;
+				if (attach_ubl.ID != null && !string.IsNullOrEmpty(attach_ubl.ID.Value))
+					attach_document.IdAttached = attach_ubl.ID.Value;
+
 				DateTime hora = new DateTime();
 				try
 				{

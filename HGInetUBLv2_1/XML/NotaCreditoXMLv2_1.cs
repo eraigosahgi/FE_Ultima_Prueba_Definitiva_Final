@@ -371,7 +371,7 @@ namespace HGInetUBLv2_1
 				else
 				{
 					documento.DatosAdquiriente.TipoIdentificacion = documento.DatosAdquiriente.TipoIdentificacion == 13 ? 31 : documento.DatosAdquiriente.TipoIdentificacion;
-					nota_credito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosAdquiriente, documento.Prefijo, true);
+					nota_credito.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosAdquiriente, documento.Prefijo, true, true);
 				}
 					
 				#endregion

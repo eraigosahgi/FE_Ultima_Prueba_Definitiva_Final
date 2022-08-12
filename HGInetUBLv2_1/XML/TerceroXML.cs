@@ -16,7 +16,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="empresa">Datos de la empresa</param>
 		/// <returns>Objeto de tipo SupplierPartyType1</returns>
-		public static SupplierPartyType ObtenerObligado(Tercero empresa, string prefijo, bool Notas = false)
+		public static SupplierPartyType ObtenerObligado(Tercero empresa, string prefijo, bool Notas = false, bool nota_adquisicion = false)
 		{
 			try
 			{
@@ -234,37 +234,41 @@ namespace HGInetUBLv2_1
 				#endregion
 
 				#region PartyLegalEntity -- Grupo de informaciones legales del adquirente 
-				PartyLegalEntityType[] PartyLegalEntitys = new PartyLegalEntityType[1];
-				PartyLegalEntityType PartyLegalEntity = new PartyLegalEntityType();
-				PartyLegalEntity.RegistrationName = new RegistrationNameType();
-				PartyLegalEntity.RegistrationName.Value = empresa.RazonSocial;
-				PartyLegalEntity.CompanyID = new CompanyIDType();
-				PartyLegalEntity.CompanyID = CompanyID;
-
-				if (Notas == false)
+				//notas de adquisicion no requiere esta informacion por que el facturador del documento no esta obligado a facturar electronico
+				if (nota_adquisicion == false)
 				{
-					//Grupo de informaciones legales del emisor 
-					PartyLegalEntity.CorporateRegistrationScheme = new CorporateRegistrationSchemeType();
+					PartyLegalEntityType[] PartyLegalEntitys = new PartyLegalEntityType[1];
+					PartyLegalEntityType PartyLegalEntity = new PartyLegalEntityType();
+					PartyLegalEntity.RegistrationName = new RegistrationNameType();
+					PartyLegalEntity.RegistrationName.Value = empresa.RazonSocial;
+					PartyLegalEntity.CompanyID = new CompanyIDType();
+					PartyLegalEntity.CompanyID = CompanyID;
 
-					//Prefijo de la facturación usada para el punto de venta
-					//---Validar---obligatorio para el obligado ocurrencia 1..1
-					PartyLegalEntity.CorporateRegistrationScheme.ID = new IDType();
-					PartyLegalEntity.CorporateRegistrationScheme.ID.Value = prefijo;
+					if (Notas == false)
+					{
+						//Grupo de informaciones legales del emisor 
+						PartyLegalEntity.CorporateRegistrationScheme = new CorporateRegistrationSchemeType();
 
-					//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
-					//---Validar--ocurrencia 0..1
-					PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
-					PartyLegalEntity.CorporateRegistrationScheme.Name.Value = "0";//empresa.NombreComercial; //"HGI SAS";
+						//Prefijo de la facturación usada para el punto de venta
+						//---Validar---obligatorio para el obligado ocurrencia 1..1
+						PartyLegalEntity.CorporateRegistrationScheme.ID = new IDType();
+						PartyLegalEntity.CorporateRegistrationScheme.ID.Value = prefijo;
+
+						//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
+						//---Validar--ocurrencia 0..1
+						PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
+						PartyLegalEntity.CorporateRegistrationScheme.Name.Value = "0";//empresa.NombreComercial; //"HGI SAS";
+					}
+
+					if (!string.IsNullOrEmpty(empresa.ActividadEconomica))
+					{
+						Party.IndustryClassificationCode = new IndustryClassificationCodeType();
+						Party.IndustryClassificationCode.Value = empresa.ActividadEconomica;
+					}
+
+					PartyLegalEntitys[0] = PartyLegalEntity;
+					Party.PartyLegalEntity = PartyLegalEntitys;
 				}
-
-				if (!string.IsNullOrEmpty(empresa.ActividadEconomica))
-				{
-					Party.IndustryClassificationCode = new IndustryClassificationCodeType();
-					Party.IndustryClassificationCode.Value = empresa.ActividadEconomica;
-				}
-
-				PartyLegalEntitys[0] = PartyLegalEntity;
-				Party.PartyLegalEntity = PartyLegalEntitys;
 				#endregion
 
 				#region Contact
