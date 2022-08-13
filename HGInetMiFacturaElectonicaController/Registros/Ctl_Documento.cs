@@ -3323,11 +3323,20 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			//Si el adquiriente es de HGI es por que es Facturador, esta habilitado y tiene la forma de firmar sea certificado propio o nuestro
 			bool adquiriente_hgi = (adquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() && adquiriente.IntObligado == true && adquiriente.IntAdquiriente == true && adquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode()) ? true : false;
 
+			bool eventos_facturador = (estado == CodigoResponseV2.AprobadoTacito.GetHashCode() || estado >= CodigoResponseV2.Inscripcion.GetHashCode()) ? true : false;
 
 			//Valida si el adquiriente del documento tiene certificado con nosotros para firmar el acuse con ese certificado
-			if ((adquiriente.IntCertFirma > 0 || adquiriente_hgi == true))
+			if ((adquiriente.IntCertFirma > 0 || adquiriente_hgi == true) || eventos_facturador == true)
 			{
-				empresa_firma = adquiriente;
+				if (eventos_facturador == false)
+				{
+					empresa_firma = adquiriente;
+				}
+				else
+				{
+					empresa_firma = facturador;
+				}
+				
 				respuesta = Ctl_Documentos.UblFirmar(empresa_firma, doc, ref respuesta, ref resultado);
 			}
 			else
