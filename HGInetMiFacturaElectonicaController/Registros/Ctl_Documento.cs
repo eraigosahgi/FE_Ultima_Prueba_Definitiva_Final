@@ -1603,7 +1603,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						try
 						{
 							List<Guid> docs = (from datos in context.TblDocumentos.AsNoTracking()
-											   where (datos.IntAdquirienteRecibo.Equals(4)) && datos.IntDocTipo == 1 && datos.IntFormaPago == 2 && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+											   where (datos.IntAdquirienteRecibo.Equals(4)) && datos.IntDocTipo == 1 && datos.IntTipoOperacion != 3 && datos.IntFormaPago == 2 && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
 													 && datos.StrEmpresaFacturador == item.StrIdentificacion
 													 && (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
 															  && item.IntAcuseTacito.Value > 0)))
@@ -2395,7 +2395,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				bool continuar_proceso = true;
 
-				List<TblEventosRadian> list_evento = null;
+				List<TblEventosRadian> list_evento = evento.Obtener(doc.StrIdSeguridad);
 
 				TblEventosRadian acuse = null;
 
@@ -2403,7 +2403,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				if (adquiriente_hgi == true || estado == CodigoResponseV2.Inscripcion.GetHashCode())
 				{
-					list_evento = evento.Obtener(doc.StrIdSeguridad);
+					//list_evento = evento.Obtener(doc.StrIdSeguridad);
 
 					if (list_evento != null && list_evento.Count > 0)
 					{
