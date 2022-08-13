@@ -984,17 +984,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					List_id_seguridad.Add(item.Documentos);
 				}
 
-				Ctl_Documento documento = new Ctl_Documento();
-
-				var lista = documento.ProcesarDocumentosSinLazy(List_id_seguridad);
-
-				foreach (var item in lista)
+				foreach (var item in List_id_seguridad)
 				{
 					try
 					{
 						documento = new Ctl_Documento();
 						string respuesta_error_dian = string.Empty;
-						documento.ActualizarRespuestaAcuse(item.StrIdSeguridad, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito),ref respuesta_error_dian);
+						documento.ActualizarRespuestaAcuse(item, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito),ref respuesta_error_dian);
 
 					}
 					catch (Exception ex)

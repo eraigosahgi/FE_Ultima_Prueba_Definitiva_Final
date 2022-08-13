@@ -1606,12 +1606,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						try
 						{
 							List<Guid> docs = (from datos in context.TblDocumentos.AsNoTracking()
-											   where (datos.IntAdquirienteRecibo.Equals(4)) && datos.IntDocTipo == 1 && datos.IntTipoOperacion != 3 
+											   where ((datos.IntAdquirienteRecibo < 2 || datos.IntAdquirienteRecibo.Equals(4)) && datos.IntDocTipo == 1 && datos.IntTipoOperacion != 3 
 													&& datos.IntFormaPago == 2 && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
 													&& datos.DatFechaIngreso > FechaConsulta
 													 && datos.StrEmpresaFacturador == item.StrIdentificacion
-													 && (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
-															  && item.IntAcuseTacito.Value > 0)))
+													 && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
+													&& item.IntAcuseTacito.Value > 0))
 											   orderby datos.IntNumero descending
 											   select datos.StrIdSeguridad).ToList();
 
@@ -1707,10 +1707,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					documentos = (from datos in context.TblDocumentos
 								  join obligado in context.TblEmpresas on datos.StrEmpresaFacturador equals obligado.StrIdentificacion
 								  join adquiriente in context.TblEmpresas on datos.StrEmpresaAdquiriente equals adquiriente.StrIdentificacion
-								  where datos.IntAdquirienteRecibo.Equals(4) && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
-										&& (((datos.StrProveedorEmisor == Constantes.NitResolucionsinPrefijo || string.IsNullOrEmpty(datos.StrProveedorEmisor))
-											 && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual)
-												 && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0)))
+								  where (datos.IntAdquirienteRecibo.Equals(4) && datos.IntDocTipo == 1 && datos.IntTipoOperacion != 3
+													&& datos.IntFormaPago == 2 && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+													&& datos.DatFechaIngreso > FechaConsulta && (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -datos.TblEmpresasFacturador.IntAcuseTacito.Value, FechaActual)
+												 && datos.TblEmpresasFacturador.IntAcuseTacito.Value > 0))
 								  //********************************************************
 								  //|| ((datos.StrProveedorEmisor != Constantes.NitResolucionsinPrefijo && (!string.IsNullOrEmpty(datos.StrProveedorEmisor)))
 								  //	&& (datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -HATP, FechaActual))
