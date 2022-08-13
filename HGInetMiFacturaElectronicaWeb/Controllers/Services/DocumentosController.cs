@@ -988,7 +988,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					try
 					{
-						documento = new Ctl_Documento();
+						Ctl_Documento documento = new Ctl_Documento();
 						string respuesta_error_dian = string.Empty;
 						documento.ActualizarRespuestaAcuse(item, (short)AdquirienteRecibo.AprobadoTacito.GetHashCode(), Enumeracion.GetDescription(AdquirienteRecibo.AprobadoTacito),ref respuesta_error_dian);
 
