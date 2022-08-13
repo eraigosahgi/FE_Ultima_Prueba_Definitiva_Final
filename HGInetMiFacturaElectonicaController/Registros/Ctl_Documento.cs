@@ -1568,6 +1568,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				DateTime FechaActual = Fecha.GetFecha();
 
+				//Empieza a operar el proceso de generacion de eventos para enviar a la DIAN 2022-07-13
+				DateTime FechaConsulta = new DateTime(2022, 07, 12);
+
 				Ctl_Empresa _empresa = new Ctl_Empresa();
 				List<TblEmpresas> facturadores = null;
 				bool ejecucion_facturador = false;
@@ -1603,7 +1606,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						try
 						{
 							List<Guid> docs = (from datos in context.TblDocumentos.AsNoTracking()
-											   where (datos.IntAdquirienteRecibo.Equals(4)) && datos.IntDocTipo == 1 && datos.IntTipoOperacion != 3 && datos.IntFormaPago == 2 && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+											   where (datos.IntAdquirienteRecibo.Equals(4)) && datos.IntDocTipo == 1 && datos.IntTipoOperacion != 3 
+													&& datos.IntFormaPago == 2 && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
+													&& datos.DatFechaIngreso > FechaConsulta
 													 && datos.StrEmpresaFacturador == item.StrIdentificacion
 													 && (((datos.DatFechaIngreso <= SqlFunctions.DateAdd("hh", -item.IntAcuseTacito.Value, FechaActual)
 															  && item.IntAcuseTacito.Value > 0)))
