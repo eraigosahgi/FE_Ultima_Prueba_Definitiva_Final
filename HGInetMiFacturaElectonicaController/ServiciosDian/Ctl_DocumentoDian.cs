@@ -246,7 +246,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 													respuesta_dian.FirstOrDefault().ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(respuesta_dian.FirstOrDefault().StatusDescription).ToArray();
 													respuesta_dian.FirstOrDefault().StatusCode = "99";
 													acuse.MessagesFieldV2 = new HGInetDIANServicios.DianWSValidacionPrevia.XmlParamsResponseTrackId[1];
-													acuse.MessagesFieldV2[0].ProcessedMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(respuesta_dian.FirstOrDefault().ErrorMessage.ToList(), ",");
+													acuse.MessagesFieldV2[0].ProcessedMessage = respuesta_dian.FirstOrDefault().StatusDescription;
 												}
 											}
 											catch (Exception excepcion)
