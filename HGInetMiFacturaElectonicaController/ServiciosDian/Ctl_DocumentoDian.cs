@@ -231,7 +231,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 										//Se agrega validacion por inconsistencias de la DIAN y actualizar los eventos ya recibidos
 										try
 										{
-											if (respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("LGC01") || respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento"))
+											if (respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("LGC01") || respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("LGC05") || respuesta_dian.FirstOrDefault().ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento"))
 											{
 												Registros.Ctl_Documento Controlador = new Registros.Ctl_Documento();
 												Controlador.ConsultarEventosRadian(false, documentoBd.StrIdSeguridad.ToString());
@@ -239,7 +239,20 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 										}
 										catch (Exception)
 										{
-										  
+											try
+											{
+												if (respuesta_dian.FirstOrDefault().StatusCode.Equals("94") && respuesta_dian.FirstOrDefault().StatusDescription.Contains("no autorizado a enviar documentos"))
+												{
+													respuesta_dian.FirstOrDefault().ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(respuesta_dian.FirstOrDefault().StatusDescription).ToArray();
+													respuesta_dian.FirstOrDefault().StatusCode = "99";
+													acuse.MessagesFieldV2 = new HGInetDIANServicios.DianWSValidacionPrevia.XmlParamsResponseTrackId[1];
+													acuse.MessagesFieldV2[0].ProcessedMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(respuesta_dian.FirstOrDefault().ErrorMessage.ToList(), ",");
+												}
+											}
+											catch (Exception excepcion)
+											{
+												RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.envio, string.Format("Enviando evento, no se pudo llenar el mensaje de error de la DIAN segun Status {0} y StatusDescription", respuesta_dian.FirstOrDefault().StatusCode));
+											}
 										}
 									}
 
