@@ -241,7 +241,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 										{
 											try
 											{
-												if (respuesta_dian.FirstOrDefault().StatusCode.Equals("94") && respuesta_dian.FirstOrDefault().StatusDescription.Contains("no autorizado a enviar documentos"))
+												if (respuesta_dian.FirstOrDefault().StatusDescription.Contains("no autorizado a enviar documentos"))
 												{
 													respuesta_dian.FirstOrDefault().ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(respuesta_dian.FirstOrDefault().StatusDescription).ToArray();
 													respuesta_dian.FirstOrDefault().StatusCode = "99";
