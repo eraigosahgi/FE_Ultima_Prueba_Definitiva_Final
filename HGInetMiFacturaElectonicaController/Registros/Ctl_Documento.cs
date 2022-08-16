@@ -2415,7 +2415,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 						acuse = list_evento.Where(x => x.IntEstadoEvento == 1).FirstOrDefault();
 
+						recibo = list_evento.Where(x => x.IntEstadoEvento == 4).FirstOrDefault();
+
 						if (acuse != null && estado == CodigoResponseV2.Recibido.GetHashCode())
+							continuar_proceso = false;
+						else if (recibo != null && estado == CodigoResponseV2.Aceptado.GetHashCode())
 							continuar_proceso = false;
 						else if (acuse == null && estado == CodigoResponseV2.Inscripcion.GetHashCode())
 							continuar_proceso = false;
@@ -2448,6 +2452,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					//Crea el XML del Acuse
 					if (acuse == null && estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
+					{
 						try
 						{
 							resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Recibido.GetHashCode(), motivo_rechazo);
@@ -2459,6 +2464,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 						}
+					}
+						
 
 					//Se valida si el adquiriente se esta habilitando en RADIAN o si va a registrar los eventos de Acuse en la DIAN
 					if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
@@ -2729,10 +2736,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								}
 
 							}
-							else
+							else if (estado == CodigoResponseV2.Inscripcion.GetHashCode())
 							{
 								respuesta_error_dian = "No fue posible registrar el evento Inscripción como titulo Valor, no se encontró una aceptación expresa o tácita";
 							}
+							
+
+
 
 						}
 					}
