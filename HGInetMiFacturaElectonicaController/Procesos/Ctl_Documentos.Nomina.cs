@@ -306,6 +306,42 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			string mensaje = string.Empty;
 
+			if (facturador_electronico.IntDebug == true)
+			{
+				try
+				{
+					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+					// ruta física de la carpeta
+					string carpeta_debug = string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaDocumentosDebug);
+
+					// valida la existencia de la carpeta
+					carpeta_debug = Directorio.CrearDirectorio(carpeta_debug);
+
+					// nombre del archivo
+					string archivo_debug = string.Format(@"{0}-{1}-{2}.json", facturador_electronico.StrIdentificacion, item.Prefijo, item.Documento);
+
+					string ruta_archivo = string.Format("{0}\\{1}", carpeta_debug, archivo_debug);
+
+					// almacena el objeto en archivo json
+					File.WriteAllText(ruta_archivo, JsonConvert.SerializeObject(item));
+
+				}
+				catch (Exception excepcion)
+				{
+					mensaje = string.Format("Error al guardar el objeto peticion. Detalle: {0} ", excepcion.Message);
+
+					Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
+				}
+
+				//Se lee un archivo json y se convierte a objeto Factura para pruebas
+				//Factura obj_nc = new Factura();
+				//string objeto = System.IO.File.ReadAllText(@"E:\Desarrollo\jzea\Proyectos\HGInetMiFacturaElectronica\Codigo\HGInetMiFacturaElectronicaWeb\dms\Debug\811021438-SETP-990001209-.json").ToString();
+				//obj_nc = JsonConvert.DeserializeObject<Factura>(objeto);
+				//item = obj_nc;
+
+			}
+
 			// valida que el documento no sea nulo
 			if (item == null)
 			{
@@ -457,42 +493,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_actual, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
 				}
 				catch (Exception) { }
-
-				if (facturador_electronico.IntDebug == true)
-				{
-					try
-					{
-						PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-						// ruta física de la carpeta
-						string carpeta_debug = string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaDocumentosDebug);
-
-						// valida la existencia de la carpeta
-						carpeta_debug = Directorio.CrearDirectorio(carpeta_debug);
-
-						// nombre del archivo
-						string archivo_debug = string.Format(@"{0}-{1}-{2}.json", facturador_electronico.StrIdentificacion, item.Prefijo, item.Documento);
-
-						string ruta_archivo = string.Format("{0}\\{1}", carpeta_debug, archivo_debug);
-
-						// almacena el objeto en archivo json
-						File.WriteAllText(ruta_archivo, JsonConvert.SerializeObject(item));
-
-					}
-					catch (Exception excepcion)
-					{
-						mensaje = string.Format("Error al guardar el objeto peticion. Detalle: {0} ", excepcion.Message);
-
-						Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
-					}
-
-					//Se lee un archivo json y se convierte a objeto Factura para pruebas
-					//Factura obj_nc = new Factura();
-					//string objeto = System.IO.File.ReadAllText(@"E:\Desarrollo\jzea\Proyectos\HGInetMiFacturaElectronica\Codigo\HGInetMiFacturaElectronicaWeb\dms\Debug\811021438-SETP-990001209-.json").ToString();
-					//obj_nc = JsonConvert.DeserializeObject<Factura>(objeto);
-					//item = obj_nc;
-
-				}
 
 				// realiza el proceso de envío a la DIAN del documento en Validacion Previa V2
 				item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.Nomina, resolucion,

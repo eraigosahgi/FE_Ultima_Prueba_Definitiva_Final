@@ -55,7 +55,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
 		#region Consulta Documento Soporte
-		public TblDocumentos ConsultaDocSoporte(string identificacion, int documento, int tipo_doc)
+		public TblDocumentos ConsultaDocSoporte(string identificacion, int documento, int tipo_doc, string identificacion_adquiriente)
 		{
 
 			try
@@ -66,6 +66,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 											&& datos.IntNumero == documento
 											&& datos.IntDocTipo == tipo_doc
 											&& datos.IntTipoOperacion == 3
+											&& datos.StrEmpresaAdquiriente == identificacion_adquiriente
 									  orderby datos.IntNumero descending
 									  select datos).FirstOrDefault();
 				return docs;

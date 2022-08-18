@@ -253,6 +253,37 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			Ctl_DocumentosAudit _auditoria = new Ctl_DocumentosAudit();
 
+			string mensaje = string.Empty;
+
+			if (facturador_electronico.IntDebug == true)
+			{
+				try
+				{
+					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+					// ruta física de la carpeta
+					string carpeta_debug = string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaDocumentosDebug);
+
+					// valida la existencia de la carpeta
+					carpeta_debug = Directorio.CrearDirectorio(carpeta_debug);
+
+					// nombre del archivo
+					string archivo_debug = string.Format(@"{0}-{1}-{2}.json", facturador_electronico.StrIdentificacion, item.Prefijo, item.Documento);
+
+					string ruta_archivo = string.Format("{0}\\{1}", carpeta_debug, archivo_debug);
+
+					// almacena el objeto en archivo json
+					File.WriteAllText(ruta_archivo, JsonConvert.SerializeObject(item));
+				}
+				catch (Exception excepcion)
+				{
+					mensaje = string.Format("Error al guardar el objeto peticion. Detalle: {0} ", excepcion.Message);
+
+					Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
+				}
+
+			}
+
 			//Si el documento enviado ya existe retorna la informacion que se tiene almacenada
 			bool doc_existe = false;
 
@@ -268,8 +299,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
 			string proceso_txt = Enumeracion.GetDescription(proceso_actual);
 			CategoriaEstado estado = Enumeracion.GetEnumObjectByValue<CategoriaEstado>(Ctl_Documento.ObtenerCategoria(proceso_actual.GetHashCode()));
-
-			string mensaje = string.Empty;
 
 			TblDocumentos numero_documento = new TblDocumentos();
 			Ctl_Documento num_doc = new Ctl_Documento();
@@ -489,35 +518,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_actual, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
 				}
 				catch (Exception) { }
-
-				if (facturador_electronico.IntDebug == true)
-				{
-					try
-					{
-						PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-
-						// ruta física de la carpeta
-						string carpeta_debug = string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaDocumentosDebug);
-
-						// valida la existencia de la carpeta
-						carpeta_debug = Directorio.CrearDirectorio(carpeta_debug);
-
-						// nombre del archivo
-						string archivo_debug = string.Format(@"{0}-{1}-{2}.json", facturador_electronico.StrIdentificacion, item.Prefijo, item.Documento);
-
-						string ruta_archivo = string.Format("{0}\\{1}", carpeta_debug, archivo_debug);
-
-						// almacena el objeto en archivo json
-						File.WriteAllText(ruta_archivo, JsonConvert.SerializeObject(item));
-					}
-					catch (Exception excepcion)
-					{
-						mensaje = string.Format("Error al guardar el objeto peticion. Detalle: {0} ", excepcion.Message);
-
-						Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
-					}
-
-				}
 
 				if (facturadorelec_proceso.IntVersionDian == 1)
 				{
