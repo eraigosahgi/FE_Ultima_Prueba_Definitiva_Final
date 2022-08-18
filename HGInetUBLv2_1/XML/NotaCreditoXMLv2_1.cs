@@ -253,8 +253,8 @@ namespace HGInetUBLv2_1
 					DocumentReference.IssueDate = new IssueDateType();
 					DocumentReference.IssueDate.Value = documento.FechaFactura;
 					DocReference.InvoiceDocumentReference = DocumentReference;
-					if (documento.TipoOperacion == 3)
-						DocReference.CreditNoteDocumentReference = DocumentReference;
+					//if (documento.TipoOperacion == 3)
+					//	DocReference.CreditNoteDocumentReference = DocumentReference;
 
 
 					nota_credito.BillingReference[0] = DocReference;
@@ -483,21 +483,13 @@ namespace HGInetUBLv2_1
 				//Informacion del QR
 				string ruta_qr_Dian = string.Empty;
 
-				string cufe_qr = string.Empty;
-
-				//Regla NSAB36 del Anexo Tecnico de la DIAN de documento soporte en adquisiciones
-				if (documento.TipoOperacion != 3)
-					cufe_qr = nota_credito.UUID.Value;
-				else
-					cufe_qr = documento.CufeFactura;
-
 				if (nota_credito.ProfileExecutionID.Value.Equals("2"))
 				{
-					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=", cufe_qr);
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=", nota_credito.UUID.Value);
 				}
 				else
 				{
-					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", cufe_qr);
+					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", nota_credito.UUID.Value);
 				}
 
 				// Extension del sector Salud
