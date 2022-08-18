@@ -500,7 +500,7 @@ namespace HGInetUBLv2_1
 					DocumentReference.ValidityPeriod.StartDate = new StartDateType();
 					DocumentReference.ValidityPeriod.StartDate.Value = Fecha.GetFecha();
 					DocumentReference.ValidityPeriod.EndDate = new EndDateType();
-					DocumentReference.ValidityPeriod.EndDate.Value = Fecha.GetFecha().AddMonths(6);
+					DocumentReference.ValidityPeriod.EndDate.Value = Fecha.GetFecha().AddMonths(12);
 
 					//Tiempo del mandato - Obligatorio para todos los tipos de operación
 					DocumentReference.ValidityPeriod.DescriptionCode = new DescriptionCodeType[1];
