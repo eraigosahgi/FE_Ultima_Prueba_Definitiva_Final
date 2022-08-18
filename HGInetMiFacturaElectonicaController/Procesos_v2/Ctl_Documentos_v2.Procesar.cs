@@ -311,7 +311,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								bool enviar_correo = true;
 
 								//Se hace validacion si es documento de nomina y no tiene habilitado el envio de correo
-								if ((tipo_documento == TipoDocumento.Nomina || tipo_documento == TipoDocumento.NominaAjuste) && empresa.IntEnvioNominaMail == false)
+								if ((tipo_documento == TipoDocumento.Nomina || tipo_documento == TipoDocumento.NominaAjuste) && empresa.IntEnvioNominaMail == false || documento_obj.TipoOperacion == 3)
 									enviar_correo = false;
 
 								if ((documento.IntEnvioMail == null || documento.IntEnvioMail == false) && enviar_correo == true)
