@@ -708,7 +708,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				}
 
-				TblEventosRadian evento = ctl_evento.Obtener(documento.StrIdSeguridad).OrderByDescending(x => x.DatFechaEvento).FirstOrDefault();
+				TblEventosRadian evento = ctl_evento.Obtener(documento.StrIdSeguridad).OrderByDescending(x => x.IntEstadoEvento).FirstOrDefault();
 
 				if (evento != null && documento.IntAdquirienteRecibo != evento.IntEstadoEvento)
 				{
