@@ -531,6 +531,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				}
 
 				EmpresaActualiza.IntRadian = empresa.IntRadian;
+				//Si habilitan Radian y firma con HGI, trata de generar el evento Mandato
+				if (empresa.IntRadian == true && empresa.IntCertFirma == 0)
+				{
+					Ctl_Documento _doc = new Ctl_Documento();
+					var Tarea1 = _doc.ProcesoGenerarMandato(empresa.StrIdentificacion);
+				}
 
 				if (EmpresaActualiza.IntAcuseTacito == null)
 					EmpresaActualiza.IntAcuseTacito = 0;

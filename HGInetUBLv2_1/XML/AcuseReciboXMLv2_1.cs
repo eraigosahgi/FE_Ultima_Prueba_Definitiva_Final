@@ -302,7 +302,7 @@ namespace HGInetUBLv2_1
 						acuse.Note = notas.ToArray();
 
 					// Información del emisor del evento
-					if (tipo_acuse.Equals(CodigoResponseV2.Inscripcion) || tipo_acuse.Equals(CodigoResponseV2.AprobadoTacito))
+					if (tipo_acuse.Equals(CodigoResponseV2.Inscripcion) || tipo_acuse.Equals(CodigoResponseV2.AprobadoTacito) || tipo_acuse.Equals(CodigoResponseV2.MandatoG))
 					{
 						acuse.SenderParty = ObtenerTercero(documento.DatosObligado, receptor, participacion_endoso, mandato);
 					}
@@ -548,7 +548,7 @@ namespace HGInetUBLv2_1
 					person.NationalityID = new NationalityIDType();
 					person.NationalityID.Value = "Colombiana";
 					person.OrganizationDepartment = new OrganizationDepartmentType();
-					person.OrganizationDepartment.Value = "Administrativo";
+					person.OrganizationDepartment.Value = "Gerente";
 
 					mandante.AgentParty.Person = new PersonType[1];
 					mandante.AgentParty.Person[0] = person;
@@ -685,9 +685,14 @@ namespace HGInetUBLv2_1
 				{
 					//-----Se debe agregar validacion cuando es endoso la propiedad response.ResponseCode.listID si es 2 el calculo tiene un cambio
 					string code_response = string.Empty;
-					if (response.ResponseCode.listID != null && response.ResponseCode.listID.Equals("2") && !tipo_acuse.Equals(CodigoResponseV2.PagoFvTV))
+					if (acuse.DocumentResponse != null && acuse.DocumentResponse[0].Response != null && acuse.DocumentResponse[0].Response.ResponseCode != null && (acuse.DocumentResponse[0].Response.ResponseCode.listID.Equals("2")) && !tipo_acuse.Equals(CodigoResponseV2.PagoFvTV) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG))
 					{
-						code_response = response.ResponseCode.listID;
+						code_response = acuse.DocumentResponse[0].Response.ResponseCode.listID;
+					}
+
+					if (tipo_acuse.Equals(CodigoResponseV2.MandatoG))
+					{
+						doc_prefijo_bd = "1";
 					}
 					CUFE = CufeApplicationV2(pin_sw, acuse.ID.Value, string.Format("{0}{1}", documento.Fecha.ToString(Fecha.formato_fecha_hginet), documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona)), documento.DatosObligado.Identificacion, acuse.ReceiverParty.PartyTaxScheme[0].CompanyID.Value, documento.CodigoRespuesta, doc_prefijo_bd, documento.TipoDocumento, code_response);
 				}
@@ -894,18 +899,18 @@ namespace HGInetUBLv2_1
 					person.ID = new IDType();
 					person.ID.schemeID = "";
 					person.ID.schemeName = "13";
-					person.ID.Value = "8005097";
+					person.ID.Value = "43561722";//"8005097";
 					person.FirstName = new FirstNameType();
-					person.FirstName.Value = "Jorge";
+					person.FirstName.Value = "Gloria Yaneth";
 					person.FamilyName = new FamilyNameType();
-					person.FamilyName.Value = "Bedoya";
+					person.FamilyName.Value = "Castañeda Lopez";
 					person.JobTitle = new JobTitleType();
 					person.JobTitle.Value = "Representante Legal Principal";
 					//En el Anexo del Radian las siguientes propiedades las ponen como opcionales.
 					person.NationalityID = new NationalityIDType();
 					person.NationalityID.Value = "Colombiana";
 					person.OrganizationDepartment = new OrganizationDepartmentType();
-					person.OrganizationDepartment.Value = "Administrativo";
+					person.OrganizationDepartment.Value = "Gerente";
 
 					Party.Person = new PersonType[1];
 					Party.Person[0] = person;

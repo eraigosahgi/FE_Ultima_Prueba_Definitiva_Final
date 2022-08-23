@@ -1752,6 +1752,28 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			});
 		}
 
+		public async Task ProcesoGenerarMandato(string identificacion_facturador)
+		{
+			try
+			{
+				var Tarea = TareaGenerarMandato(identificacion_facturador);
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+			}
+
+		}
+
+		public async Task TareaGenerarMandato(string identificacion_facturador)
+		{
+			await Task.Factory.StartNew(() =>
+			{
+				GenerarMandato(identificacion_facturador);
+			});
+		}
+
 		#endregion
 
 		#region Documentos Administrador
@@ -2741,8 +2763,33 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							{
 								respuesta_error_dian = "No fue posible registrar el evento Inscripción como titulo Valor, no se encontró una aceptación expresa o tácita";
 							}
-							
 
+							if (estado == CodigoResponseV2.MandatoG.GetHashCode())
+							{
+								//Crea el XML del Acuse
+								try
+								{
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo);
+								}
+								catch (Exception excepcion)
+								{
+									respuesta_error_dian = excepcion.Message;
+									RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error generando XML-Acuse Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado))));
+
+									throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+								}
+								TblEventosRadian evento_x = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
+								if (evento_x != null)
+									evento_procesado_DIAN = true;
+
+								//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+								if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+								{
+									respuesta_error_dian = string.Empty;
+									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo, true);
+									evento_x = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
+								}
+							}
 
 
 						}
@@ -3671,6 +3718,65 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					}
 				}
 
+			}
+
+		}
+
+
+		public void GenerarMandato(string identificacion_facturador)
+		{
+
+			try
+			{
+				context.Configuration.LazyLoadingEnabled = false;
+
+				//obtengo documento tipo factura que ya tenga inscripcion como TV
+				TblDocumentos documento = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
+										   where datos.StrEmpresaFacturador.Equals(identificacion_facturador)
+											&& datos.IntDocTipo == 1
+											&& datos.IntTipoOperacion != 3
+											&& datos.IntAdquirienteRecibo > 5
+										   select datos).OrderByDescending(x => x.DatFechaIngreso).FirstOrDefault();
+
+				//Si no hay un documento que ya tiene inscripcion como TV genero el Mandato
+				if (documento == null)
+				{
+					//Obtengo el ultimo documento recibido por la pltaforma del facturador
+					documento = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
+								 where datos.StrEmpresaFacturador.Equals(identificacion_facturador)
+								  && datos.IntDocTipo == 1
+								  && datos.IntTipoOperacion != 3
+								 //&& datos.IntAdquirienteRecibo > 5
+								 select datos).OrderByDescending(x => x.DatFechaIngreso).FirstOrDefault();
+
+					Ctl_Empresa _empresa = new Ctl_Empresa();
+					TblEmpresas facturador = null;
+					if (documento.TblEmpresasFacturador != null)
+					{
+						facturador = documento.TblEmpresasFacturador;
+					}
+					else
+					{
+						facturador = _empresa.Obtener(identificacion_facturador);
+					}
+
+					TblEmpresas adquiriente = _empresa.Obtener(Constantes.NitResolucionsinPrefijo);
+
+					//Hago lo generacion del evento como XML
+					FacturaE_Documento resultado = ConvertirAcuse(documento, facturador, adquiriente, (short)CodigoResponseV2.MandatoG.GetHashCode(), "");
+
+					string respuesta_error_dian = string.Empty;
+
+					TblEventosRadian mandato = EnviarAcuse(resultado, adquiriente, facturador, documento, (short)CodigoResponseV2.MandatoG.GetHashCode(), ref respuesta_error_dian);
+					if (mandato == null)
+					{
+						RegistroLog.EscribirLog(new ApplicationException(respuesta_error_dian), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.ServicioDian, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("No se puedo crear evento Mandato de la empresa {0}", identificacion_facturador));
+					}
+				}
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.ServicioDian, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("No se puedo crear evento Mandato de la empresa {0}", identificacion_facturador));
 			}
 
 		}
