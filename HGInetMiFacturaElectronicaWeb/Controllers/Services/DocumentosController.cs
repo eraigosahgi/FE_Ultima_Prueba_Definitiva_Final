@@ -708,12 +708,24 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				}
 
-				TblEventosRadian evento = ctl_evento.Obtener(documento.StrIdSeguridad).OrderByDescending(x => x.IntEstadoEvento).FirstOrDefault();
+				List<TblEventosRadian> list_evento = ctl_evento.Obtener(documento.StrIdSeguridad);
 
-				if (evento != null && documento.IntAdquirienteRecibo != evento.IntEstadoEvento)
+				TblEventosRadian ultimo_evento = list_evento.OrderByDescending(x => x.IntEstadoEvento).FirstOrDefault();
+
+				TblEventosRadian rechazo = list_evento.Where(x => x.IntEstadoEvento == 2).FirstOrDefault();
+
+				TblEventosRadian tacito = list_evento.Where(x => x.IntEstadoEvento == 3).FirstOrDefault();
+
+				if (rechazo != null)
+					ultimo_evento = rechazo;
+
+				if (tacito != null && ultimo_evento.IntEstadoEvento == 4)
+					ultimo_evento = tacito;
+
+				if (ultimo_evento != null && documento.IntAdquirienteRecibo != ultimo_evento.IntEstadoEvento)
 				{
-					documento.IntAdquirienteRecibo = evento.IntEstadoEvento;
-					documento.DatAdquirienteFechaRecibo = evento.DatFechaEvento;
+					documento.IntAdquirienteRecibo = ultimo_evento.IntEstadoEvento;
+					documento.DatAdquirienteFechaRecibo = ultimo_evento.DatFechaEvento;
 					actualizar_doc = true;
 				}
 

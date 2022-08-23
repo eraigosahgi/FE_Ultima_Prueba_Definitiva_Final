@@ -2849,6 +2849,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					TblEventosRadian ultimo_evento = list_evento.OrderByDescending(x => x.IntEstadoEvento).FirstOrDefault();
 
+					TblEventosRadian rechazo = list_evento.Where(x => x.IntEstadoEvento == 2).FirstOrDefault();
+
+					TblEventosRadian tacito = list_evento.Where(x => x.IntEstadoEvento == 3).FirstOrDefault();
+
+					if (rechazo != null)
+						ultimo_evento = rechazo;
+
+					if (tacito != null && ultimo_evento.IntEstadoEvento == 4)
+						ultimo_evento = tacito;
+
 					if (!doc.IntAdquirienteRecibo.Equals(ultimo_evento.IntEstadoEvento))
 					{
 						doc.IntAdquirienteRecibo = ultimo_evento.IntEstadoEvento;
