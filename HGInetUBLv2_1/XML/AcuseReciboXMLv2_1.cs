@@ -685,7 +685,7 @@ namespace HGInetUBLv2_1
 				{
 					//-----Se debe agregar validacion cuando es endoso la propiedad response.ResponseCode.listID si es 2 el calculo tiene un cambio
 					string code_response = string.Empty;
-					if (acuse.DocumentResponse != null && acuse.DocumentResponse[0].Response != null && acuse.DocumentResponse[0].Response.ResponseCode != null && (acuse.DocumentResponse[0].Response.ResponseCode.listID.Equals("2")) && !tipo_acuse.Equals(CodigoResponseV2.PagoFvTV) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG))
+					if (acuse.DocumentResponse != null && acuse.DocumentResponse[0].Response != null && acuse.DocumentResponse[0].Response.ResponseCode != null && acuse.DocumentResponse[0].Response.ResponseCode.listID != null && (acuse.DocumentResponse[0].Response.ResponseCode.listID.Equals("2")) && !tipo_acuse.Equals(CodigoResponseV2.PagoFvTV) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG))
 					{
 						code_response = acuse.DocumentResponse[0].Response.ResponseCode.listID;
 					}
