@@ -90,6 +90,11 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public bool IntFacturaE { get; set; }
         public bool IntNominaE { get; set; }
         public bool IntDocSoporte { get; set; }
+        public string StrNombresRep { get; set; }
+        public string StrApellidosRep { get; set; }
+        public string StrIdentificacionRep { get; set; }
+        public string StrTipoIdentificacionRep { get; set; }
+        public string StrCargo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }
