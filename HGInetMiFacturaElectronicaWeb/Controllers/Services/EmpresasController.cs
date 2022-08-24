@@ -318,7 +318,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				InterOp = d.IntInteroperabilidad,
 				d.IntPagosPermiteConsTodos,
 				d.ComercioConfigId,
-				d.ComercioConfigDescrip
+				d.ComercioConfigDescrip,
+
+				d.StrIdentificacionRep,
+				d.StrTipoIdentificacionRep,
+				d.StrNombresRep,
+				d.StrApellidosRep,
+				d.StrCargo
 
 			});
 
@@ -528,6 +534,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				#endregion
 
+				Empresa.StrIdentificacionRep = ObjEmpresa.StrIdentificacionRep;
+				Empresa.StrTipoIdentificacionRep = ObjEmpresa.StrTipoIdentificacionRep;
+				Empresa.StrNombresRep = ObjEmpresa.StrNombresRep;
+				Empresa.StrApellidosRep = ObjEmpresa.StrApellidosRep;
+				Empresa.StrCargo = ObjEmpresa.StrCargo;
 
 				if (ObjEmpresa.StrIdSeguridad == Guid.Empty)//Nuevo
 				{

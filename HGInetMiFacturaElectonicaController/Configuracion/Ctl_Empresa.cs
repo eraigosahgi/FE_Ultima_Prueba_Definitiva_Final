@@ -531,12 +531,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				}
 
 				EmpresaActualiza.IntRadian = empresa.IntRadian;
-				//Si habilitan Radian y firma con HGI, trata de generar el evento Mandato
-				if (empresa.IntRadian == true && empresa.IntCertFirma == 0)
-				{
-					Ctl_Documento _doc = new Ctl_Documento();
-					var Tarea1 = _doc.ProcesoGenerarMandato(empresa.StrIdentificacion);
-				}
 
 				if (EmpresaActualiza.IntAcuseTacito == null)
 					EmpresaActualiza.IntAcuseTacito = 0;
@@ -598,7 +592,24 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				EmpresaActualiza.IntMailRecepcionVerificado = (EmailVerificado(ListaEmailVerificados, EmpresaActualiza.StrMailRecepcion)) ? (short)EstadoVerificacionEmail.Verificado.GetHashCode() : empresa.IntMailRecepcionVerificado;
 				EmpresaActualiza.IntMailPagosVerificado = (EmailVerificado(ListaEmailVerificados, EmpresaActualiza.StrMailPagos)) ? (short)EstadoVerificacionEmail.Verificado.GetHashCode() : empresa.IntMailPagosVerificado;
 
+				//Si habilitan Radian y firma con HGI, trata de generar el evento Mandato
+				if (empresa.IntRadian == true && empresa.IntCertFirma == 0)
+				{
+					EmpresaActualiza.StrIdentificacionRep = empresa.StrIdentificacionRep;
+					EmpresaActualiza.StrTipoIdentificacionRep = empresa.StrTipoIdentificacionRep;
+					EmpresaActualiza.StrNombresRep = empresa.StrNombresRep;
+					EmpresaActualiza.StrApellidosRep = empresa.StrApellidosRep;
+					EmpresaActualiza.StrCargo = empresa.StrCargo;
+				}
+
 				Actualizar(EmpresaActualiza);
+
+				//Si habilitan Radian y firma con HGI, trata de generar el evento Mandato
+				if (empresa.IntRadian == true && empresa.IntCertFirma == 0)
+				{
+					Ctl_Documento _doc = new Ctl_Documento();
+					var Tarea1 = _doc.ProcesoGenerarMandato(empresa.StrIdentificacion);
+				}
 
 				//Obtiene el usuario principal de la empresa.
 				Ctl_Usuario clase_usuario = new Ctl_Usuario();

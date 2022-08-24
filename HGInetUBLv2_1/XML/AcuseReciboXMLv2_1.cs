@@ -18,7 +18,7 @@ namespace HGInetUBLv2_1
 	public partial class AcuseReciboXMLv2_1
 	{
 
-		public static FacturaE_Documento CrearDocumento(Acuse documento, string ambiente, string pin_sw, string cufe_docreferenciado, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TblDocumentos documento_factura, CodigoResponseV2 tipo_acuse, TblEventosRadian evento_anterior = null)
+		public static FacturaE_Documento CrearDocumento(Acuse documento, string ambiente, string pin_sw, string cufe_docreferenciado, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TblDocumentos documento_factura, CodigoResponseV2 tipo_acuse, TblEventosRadian evento_anterior = null, TblEmpresas Mandante = null)
         {
 
 			try
@@ -264,12 +264,12 @@ namespace HGInetUBLv2_1
 							tercero_dian = documento.DatosObligado;
 							break;
 						case CodigoResponseV2.MandatoG:
-							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
+							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosAdquiriente.RazonSocial);
 							notas.Add(nota);
 							nota = new NoteType();
 							//"XXXX, identificado con la cédula de ciudadanía (o el documento de identificación que corresponda) No. XXXX, expresamente manifiesto que obro en nombre y representación de YYYY,
 							//de conformidad con el contrato de mandato verbal/escrito existente entre las partes y con las facultades señaladas en el presente documento y por el tiempo consignado en este/sin limitaciones de tiempo.";
-							nota.Value = string.Format("{0}, identificado con {1} No. {2}, expresamente manifiesto que obro en nombre y representación de {3}, de conformidad con el contrato de mandato verbal existente entre las partes y con las facultades señaladas en el presente documento y por el tiempo consignado en este", "Jorge Bedoya", "Cédula de Ciudadanía", "8005097", documento.DatosAdquiriente.RazonSocial);
+							nota.Value = string.Format("{0}, identificado con {1} No. {2}, expresamente manifiesto que obro en nombre y representación de {3}, de conformidad con el contrato de mandato verbal existente entre las partes y con las facultades señaladas en el presente documento y por el tiempo consignado en este", "Jorge Bedoya", "Cédula de Ciudadanía", "8005097", documento.DatosObligado.RazonSocial);
 							receptor = true;
 							mandato = true;
 							break;
@@ -302,13 +302,13 @@ namespace HGInetUBLv2_1
 						acuse.Note = notas.ToArray();
 
 					// Información del emisor del evento
-					if (tipo_acuse.Equals(CodigoResponseV2.Inscripcion) || tipo_acuse.Equals(CodigoResponseV2.AprobadoTacito) || tipo_acuse.Equals(CodigoResponseV2.MandatoG))
+					if (tipo_acuse.Equals(CodigoResponseV2.Inscripcion) || tipo_acuse.Equals(CodigoResponseV2.AprobadoTacito))
 					{
 						acuse.SenderParty = ObtenerTercero(documento.DatosObligado, receptor, participacion_endoso, mandato);
 					}
 					else
 					{
-						acuse.SenderParty = ObtenerTercero(documento.DatosAdquiriente, receptor, participacion_endoso, mandato);
+						acuse.SenderParty = ObtenerTercero(documento.DatosAdquiriente, receptor, participacion_endoso, mandato, Mandante);
 					}
 					
 					if (tipo_acuse.Equals(CodigoResponseV2.Aval) || tipo_acuse.Equals(CodigoResponseV2.PagoFvTV))
@@ -806,7 +806,7 @@ namespace HGInetUBLv2_1
 		/// <param name="tercero">Objeto Adquiriente</param>
 		/// <param name="proveedor_receptor">Objeto del Proveedor del Adquiriente</param>
 		/// <returns>Objeto ubl con la informacion del generador del documento electrónico</returns>
-		private static PartyType ObtenerTercero(Tercero tercero, bool receptor, decimal participacion_endoso = 0, bool mandato = false)
+		private static PartyType ObtenerTercero(Tercero tercero, bool receptor, decimal participacion_endoso = 0, bool mandato = false, TblEmpresas empresa_mandante = null)
         {
             try
             {
@@ -898,19 +898,19 @@ namespace HGInetUBLv2_1
 					PersonType person = new PersonType();
 					person.ID = new IDType();
 					person.ID.schemeID = "";
-					person.ID.schemeName = "13";
-					person.ID.Value = "43561722";//"8005097";
+					person.ID.schemeName = empresa_mandante.StrTipoIdentificacionRep;//"13";
+					person.ID.Value = empresa_mandante.StrIdentificacionRep;//"43561722";//"8005097";
 					person.FirstName = new FirstNameType();
-					person.FirstName.Value = "Gloria Yaneth";
+					person.FirstName.Value = empresa_mandante.StrNombresRep;//"Gloria Yaneth";
 					person.FamilyName = new FamilyNameType();
-					person.FamilyName.Value = "Castañeda Lopez";
+					person.FamilyName.Value = empresa_mandante.StrApellidosRep;//"Castañeda Lopez";
 					person.JobTitle = new JobTitleType();
 					person.JobTitle.Value = "Representante Legal Principal";
 					//En el Anexo del Radian las siguientes propiedades las ponen como opcionales.
 					person.NationalityID = new NationalityIDType();
 					person.NationalityID.Value = "Colombiana";
 					person.OrganizationDepartment = new OrganizationDepartmentType();
-					person.OrganizationDepartment.Value = "Gerente";
+					person.OrganizationDepartment.Value = (string.IsNullOrEmpty(empresa_mandante.StrCargo)) ? "Gerente" : empresa_mandante.StrCargo;
 
 					Party.Person = new PersonType[1];
 					Party.Person[0] = person;

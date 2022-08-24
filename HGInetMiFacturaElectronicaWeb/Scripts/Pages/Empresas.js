@@ -53,6 +53,11 @@ Datos_Serial = "",
 Datos_Serial_Cloud = "",
 Datos_EnvioNominaMail = 0,
 Datos_proveedores = "",
+Datos_NombresRep = "",
+Datos_ApellidosRep = "",
+Datos_IdentificacionRep = "",
+Datos_TipoidentificacionRep = "",
+Datos_CargoRep = "",
 Datos_TipoPlan = 0;
 //Desde hasta en la consulta de la grid
 var Desde = 0;
@@ -383,6 +388,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			//text: "Radian",
 			onValueChanged: function (data) {
 				Datos_Radian = (data.value == true) ? 1 : 0;
+				if (Datos_CertFirma == 0 && Datos_Radian == 1) {
+					$('#PanelRepresentante').show();
+				}
+				else {
+					$('#PanelRepresentante').hide();
+				}
 			}
 		});
 
@@ -535,6 +546,76 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				type: "email",
 				message: "El campo Email de Pagos no tiene el formato correcto"
 			}]
+		});
+
+		$("#TipoIndentificacionRep").dxSelectBox({
+			placeholder: "Seleccione el tipo de Idetificación",
+			displayExpr: "Texto",
+			dataSource: TiposIdentificacion,
+			onValueChanged: function (data) {
+				Datos_TipoidentificacionRep = data.value.ID;
+			}
+		}).dxValidator({
+			validationRules: [{
+				type: "required",
+				message: "Debe seleccionar el tipo de documento"
+			}]
+		});
+
+		$("#txtIdentificacionRep").dxTextBox({
+			onValueChanged: function (data) {
+				Datos_IdententificacionRep = data.value;
+			}
+		})
+		.dxValidator({
+			validationRules: [
+			//{
+			//	type: "required",
+			//	message: "Debe Indicar el numero de Identificación"
+			//},
+			{
+				type: "stringLength",
+				max: 50,
+				min: 6,
+				message: "El numero de Identificación no puede ser mayor a 50 digitos ni menor a 2"
+			}, {
+				type: "numeric",
+				message: "El numero de Identificación debe ser numérico"
+			}]
+		});
+
+		$("#txtNombresRep").dxTextBox({
+			onValueChanged: function (data) {
+				Datos_NombresRep = data.value;
+			}
+		})
+		.dxValidator({
+			validationRules: [{
+				type: "stringLength",
+				max: 50,
+				min: 6,
+				message: "Los nombres no pueden ser mayor a 200 letras ni menor a 2"
+			}]
+		});
+
+		$("#txtApellidosRep").dxTextBox({
+			onValueChanged: function (data) {
+				Datos_ApellidosRep = data.value;
+			}
+		})
+		.dxValidator({
+			validationRules: [{
+				type: "stringLength",
+				max: 50,
+				min: 6,
+				message: "Los Apellidos no pueden ser mayor a 200 letras ni menor a 2"
+			}]
+		});
+
+		$("#txtCargoRep").dxTextBox({
+			onValueChanged: function (data) {
+				Datos_CargoRep = data.value;
+			}
 		});
 
 
@@ -1641,6 +1722,16 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 						$("#button").click();
 					}
 				} else {
+					if (Datos_Radian == 1 || Datos_Radian == "1") {
+						if (Datos_IdentificacionRep == undefined || Datos_IdentificacionRep == "")
+							DevExpress.ui.notify('Debe Ingresar Identificación del Representante Legal', 'error', 7000);
+						if (Datos_TipoidentificacionRep == undefined || Datos_TipoidentificacionRep == "")
+							DevExpress.ui.notify('Debe Ingresar Tipo de Identificación del Representante Legal', 'error', 7000);
+						if (Datos_NombresRep == undefined || Datos_NombresRep == "")
+							DevExpress.ui.notify('Debe Ingresar Nombres del Representante Legal', 'error', 7000);
+						if (Datos_ApellidosRep == undefined || Datos_ApellidosRep == "")
+							DevExpress.ui.notify('Debe Ingresar Nombres del Representante Legal', 'error', 7000);
+					}
 					//Si no es administrador, no validamos esos datos y simplemente habilitamos el viaje de los datos del formulario, al servidor
 					$("#button").dxButton({ useSubmitBehavior: true });
 					$("#button").click();
@@ -1843,6 +1934,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				try {
 					if (Datos_Radian == 1) {
 						$("#Radian").dxCheckBox({ value: true });
+						if (Datos_CertFirma == 0) {
+							$('#PanelRepresentante').show();
+						}
+					}
+					else {
+						$('#PanelRepresentante').hide();
 					}
 				} catch (e) { }
 
@@ -1860,6 +1957,28 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Copia_Proc_MailRecepcion = Proc_MailRecepcion;
 				Copia_Proc_MailAcuse = Proc_MailAcuse;
 				Copia_Proc_MailPagos = Proc_MailPagos;
+
+
+				Datos_NombresRep = response.data[0].StrNombresRep;
+				if (Datos_NombresRep != null) {
+					$("#txtNombresRep").dxTextBox({ value: Datos_NombresRep });
+				}
+				Datos_ApellidosRep = response.data[0].StrApellidosRep;
+				if (Datos_ApellidosRep != null) {
+					$("#txtApellidosRep").dxTextBox({ value: Datos_ApellidosRep });
+				}
+				Datos_IdentificacionRep = response.data[0].StrIdentificacionRep;
+				if (Datos_IdentificacionRep != null) {
+					$("#txtIdentificacionRep").dxTextBox({ value: Datos_IdentificacionRep });
+				}
+				Datos_TipoidentificacionRep = response.data[0].StrTipoIdentificacionRep;
+				if (Datos_TipoidentificacionRep != null) {
+					$("#TipoIndentificacionRep").dxSelectBox({ value: TiposIdentificacion[BuscarID(TiposIdentificacion, Datos_TipoidentificacionRep)] });
+				}
+				Datos_CargoRep = response.data[0].StrCargo;
+				if (Datos_CargoRep != null) {
+					$("#txtCargoRep").dxTextBox({ value: Datos_CargoRep });
+				}
 
 				//***********************************************************				
 
@@ -2090,6 +2209,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntInteroperabilidad: Datos_InterOp,
 				IntRadian: Datos_Radian,
 				IntEnvioNominaMail: Datos_EnvioNominaMail,
+				StrIdentificacionRep: Datos_IdententificacionRep,
+				StrTipoIdentificacionRep: Datos_TipoidentificacionRep,
+				StrNombresRep: Datos_NombresRep,
+				StrApellidosRep: Datos_ApellidosRep,
+				StrCargo: Datos_CargoRep
 			});
 			var tipo = Datos_Tipo;
 

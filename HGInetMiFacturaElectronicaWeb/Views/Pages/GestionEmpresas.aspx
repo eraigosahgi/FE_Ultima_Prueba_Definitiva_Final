@@ -227,6 +227,60 @@
 				</div>
 			</div>
 		</div>
+		<%--Panel Representante Legal--%>
+		<div class="col-md-6" id="PanelRepresentante">
+			<div class="panel panel-white">
+
+				<div class="panel-heading">
+					<h6 class="panel-title">Representante legal</h6>
+				</div>
+
+
+				<div class="panel-body">
+					<div class="col-lg-12">
+						<div class="row">
+
+							<div id="divRepresentante" class="col-md-12" style="z-index: 9;">
+								<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Identificación Representante Legal:</label>
+
+								<div class="col-md-11" style="z-index: 9; margin-left: -10px;">
+									<div id="txtIdentificacionRep"></div>
+								</div>
+		
+							</div>
+							<div class="col-md-12" style="z-index: 9;">
+								<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Tipo de Identificación:</label>
+								<div id="TipoIndentificacionRep"></div>
+							</div>
+							<div class="col-md-12" style="z-index: 9;">
+								<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Nombres Representante:</label>
+
+								<div class="col-md-11" style="z-index: 9; margin-left: -10px;">
+									<div id="txtNombresRep"></div>
+								</div>
+							</div>
+
+							<div class="col-md-12" style="z-index: 9;">
+								<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Apellidos Representante:</label>
+
+								<div class="col-md-11" style="z-index: 9; margin-left: -10px;">
+									<div id="txtApellidosRep"></div>
+								</div>
+							</div>
+
+							<div class="col-md-12" style="z-index: 9;">
+								<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Cargo:</label>
+
+								<div class="col-md-12" style="z-index: 9; margin-left: -10px;">
+									<div id="txtCargoRep"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<%--Panel Plataforma--%>
 		<div class="col-md-12" id="PanelAdministracion" data-ng-show="Admin">
 			<div class="panel panel-white">

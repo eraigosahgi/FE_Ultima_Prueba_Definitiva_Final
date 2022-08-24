@@ -3344,8 +3344,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 			}
 
+			TblEmpresas Mandante = null;
+
+			if (estado == CodigoResponseV2.MandatoG.GetHashCode())
+			{
+				Mandante = adquiriente;
+			}
+
 			//Convierte el objeto en archivo XML-UBL
-			FacturaE_Documento resultado = HGInetUBLv2_1.AcuseReciboXMLv2_1.CrearDocumento(doc_acuse, ambiente_dian, PinSoftware, doc.StrCufe, extension_documento, doc, cod_acuse, evento_anterior);
+			FacturaE_Documento resultado = HGInetUBLv2_1.AcuseReciboXMLv2_1.CrearDocumento(doc_acuse, ambiente_dian, PinSoftware, doc.StrCufe, extension_documento, doc, cod_acuse, evento_anterior, Mandante);
 			resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
 			resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
 			resultado.IdSeguridadPeticion = Guid.NewGuid();
@@ -3732,10 +3739,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				//obtengo documento tipo factura que ya tenga inscripcion como TV
 				TblDocumentos documento = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
-										   where datos.StrEmpresaFacturador.Equals(identificacion_facturador)
+										   where datos.StrEmpresaFacturador.Equals(Constantes.NitResolucionsinPrefijo)
+											&& datos.StrEmpresaAdquiriente.Equals(identificacion_facturador)
 											&& datos.IntDocTipo == 1
 											&& datos.IntTipoOperacion != 3
-											&& datos.IntAdquirienteRecibo > 5
+											&& datos.IntAdquirienteRecibo == 20
 										   select datos).OrderByDescending(x => x.DatFechaIngreso).FirstOrDefault();
 
 				//Si no hay un documento que ya tiene inscripcion como TV genero el Mandato
@@ -3743,7 +3751,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					//Obtengo el ultimo documento recibido por la pltaforma del facturador
 					documento = (from datos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
-								 where datos.StrEmpresaFacturador.Equals(identificacion_facturador)
+								 where datos.StrEmpresaFacturador.Equals(Constantes.NitResolucionsinPrefijo)
+									&& datos.StrEmpresaAdquiriente.Equals(identificacion_facturador)
 								  && datos.IntDocTipo == 1
 								  && datos.IntTipoOperacion != 3
 								 //&& datos.IntAdquirienteRecibo > 5
@@ -3760,7 +3769,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						facturador = _empresa.Obtener(identificacion_facturador);
 					}
 
-					TblEmpresas adquiriente = _empresa.Obtener(Constantes.NitResolucionsinPrefijo);
+					TblEmpresas adquiriente = null;
+
+					if (documento.TblEmpresasAdquiriente != null)
+					{
+						adquiriente = documento.TblEmpresasAdquiriente;
+					}
+					else
+					{
+						adquiriente = _empresa.Obtener(Constantes.NitResolucionsinPrefijo);
+					}
 
 					//Hago lo generacion del evento como XML
 					FacturaE_Documento resultado = ConvertirAcuse(documento, facturador, adquiriente, (short)CodigoResponseV2.MandatoG.GetHashCode(), "");
