@@ -40,8 +40,11 @@ namespace HGInetMiFacturaElectonicaData
 
         [Description("Endoso")]
         [AmbientValue("7")]
-        Enviado = 7
+        Enviado = 7,
 
+		[Description("Mandato")]
+		[AmbientValue("20")]
+		Mandato = 20
 
 	}
 

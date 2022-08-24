@@ -555,62 +555,63 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			onValueChanged: function (data) {
 				Datos_TipoidentificacionRep = data.value.ID;
 			}
-		}).dxValidator({
-			validationRules: [{
-				type: "required",
-				message: "Debe seleccionar el tipo de documento"
-			}]
 		});
+		//.dxValidator({
+		//	validationRules: [{
+		//		type: "required",
+		//		message: "Debe seleccionar el tipo de documento"
+		//	}]
+		//});
 
 		$("#txtIdentificacionRep").dxTextBox({
 			onValueChanged: function (data) {
-				Datos_IdententificacionRep = data.value;
+				Datos_IdentificacionRep = data.value;
 			}
-		})
-		.dxValidator({
-			validationRules: [
-			//{
-			//	type: "required",
-			//	message: "Debe Indicar el numero de Identificación"
-			//},
-			{
-				type: "stringLength",
-				max: 50,
-				min: 6,
-				message: "El numero de Identificación no puede ser mayor a 50 digitos ni menor a 2"
-			}, {
-				type: "numeric",
-				message: "El numero de Identificación debe ser numérico"
-			}]
 		});
+		//.dxValidator({
+		//	validationRules: [
+		//	//{
+		//	//	type: "required",
+		//	//	message: "Debe Indicar el numero de Identificación"
+		//	//},
+		//	{
+		//		type: "stringLength",
+		//		max: 50,
+		//		min: 6,
+		//		message: "El numero de Identificación no puede ser mayor a 50 digitos ni menor a 2"
+		//	}, {
+		//		type: "numeric",
+		//		message: "El numero de Identificación debe ser numérico"
+		//	}]
+		//});
 
 		$("#txtNombresRep").dxTextBox({
 			onValueChanged: function (data) {
 				Datos_NombresRep = data.value;
 			}
-		})
-		.dxValidator({
-			validationRules: [{
-				type: "stringLength",
-				max: 50,
-				min: 6,
-				message: "Los nombres no pueden ser mayor a 200 letras ni menor a 2"
-			}]
 		});
+		//.dxValidator({
+		//	validationRules: [{
+		//		type: "stringLength",
+		//		max: 50,
+		//		min: 6,
+		//		message: "Los nombres no pueden ser mayor a 200 letras ni menor a 2"
+		//	}]
+		//});
 
 		$("#txtApellidosRep").dxTextBox({
 			onValueChanged: function (data) {
 				Datos_ApellidosRep = data.value;
 			}
-		})
-		.dxValidator({
-			validationRules: [{
-				type: "stringLength",
-				max: 50,
-				min: 6,
-				message: "Los Apellidos no pueden ser mayor a 200 letras ni menor a 2"
-			}]
 		});
+		//.dxValidator({
+		//	validationRules: [{
+		//		type: "stringLength",
+		//		max: 50,
+		//		min: 6,
+		//		message: "Los Apellidos no pueden ser mayor a 200 letras ni menor a 2"
+		//	}]
+		//});
 
 		$("#txtCargoRep").dxTextBox({
 			onValueChanged: function (data) {
@@ -2209,7 +2210,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntInteroperabilidad: Datos_InterOp,
 				IntRadian: Datos_Radian,
 				IntEnvioNominaMail: Datos_EnvioNominaMail,
-				StrIdentificacionRep: Datos_IdententificacionRep,
+				StrIdentificacionRep: Datos_IdentificacionRep,
 				StrTipoIdentificacionRep: Datos_TipoidentificacionRep,
 				StrNombresRep: Datos_NombresRep,
 				StrApellidosRep: Datos_ApellidosRep,
