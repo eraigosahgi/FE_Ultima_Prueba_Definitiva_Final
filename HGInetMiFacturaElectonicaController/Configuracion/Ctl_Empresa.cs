@@ -605,7 +605,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				Actualizar(EmpresaActualiza);
 
 				//Si habilitan Radian y firma con HGI, trata de generar el evento Mandato
-				if (empresa.IntRadian == true && empresa.IntCertFirma == 0)
+				if (empresa.IntRadian == true && empresa.IntCertFirma == 0 && empresa.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
 				{
 					Ctl_Documento _doc = new Ctl_Documento();
 					var Tarea1 = _doc.ProcesoGenerarMandato(empresa.StrIdentificacion);
