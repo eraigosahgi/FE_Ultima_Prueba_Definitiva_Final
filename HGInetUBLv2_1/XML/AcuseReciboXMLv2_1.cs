@@ -685,6 +685,7 @@ namespace HGInetUBLv2_1
 				{
 					//-----Se debe agregar validacion cuando es endoso la propiedad response.ResponseCode.listID si es 2 el calculo tiene un cambio
 					string code_response = string.Empty;
+					string identificacion_obligado = documento.DatosObligado.Identificacion;
 					if (acuse.DocumentResponse != null && acuse.DocumentResponse[0].Response != null && acuse.DocumentResponse[0].Response.ResponseCode != null && acuse.DocumentResponse[0].Response.ResponseCode.listID != null && (acuse.DocumentResponse[0].Response.ResponseCode.listID.Equals("2")) && !tipo_acuse.Equals(CodigoResponseV2.PagoFvTV) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG))
 					{
 						code_response = acuse.DocumentResponse[0].Response.ResponseCode.listID;
@@ -693,8 +694,9 @@ namespace HGInetUBLv2_1
 					if (tipo_acuse.Equals(CodigoResponseV2.MandatoG))
 					{
 						doc_prefijo_bd = "1";
+						identificacion_obligado = documento.DatosAdquiriente.Identificacion;
 					}
-					CUFE = CufeApplicationV2(pin_sw, acuse.ID.Value, string.Format("{0}{1}", documento.Fecha.ToString(Fecha.formato_fecha_hginet), documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona)), documento.DatosObligado.Identificacion, acuse.ReceiverParty.PartyTaxScheme[0].CompanyID.Value, documento.CodigoRespuesta, doc_prefijo_bd, documento.TipoDocumento, code_response);
+					CUFE = CufeApplicationV2(pin_sw, acuse.ID.Value, string.Format("{0}{1}", documento.Fecha.ToString(Fecha.formato_fecha_hginet), documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona)), identificacion_obligado, acuse.ReceiverParty.PartyTaxScheme[0].CompanyID.Value, documento.CodigoRespuesta, doc_prefijo_bd, documento.TipoDocumento, code_response);
 				}
 				else
 				{ 
