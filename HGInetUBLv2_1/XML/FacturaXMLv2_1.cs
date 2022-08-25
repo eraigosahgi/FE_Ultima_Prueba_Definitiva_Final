@@ -480,7 +480,9 @@ namespace HGInetUBLv2_1
 					facturaXML.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado, documento.Prefijo);
 				else
 				{
-					documento.DatosAdquiriente.TipoIdentificacion = 31;
+					if (documento.DatosAdquiriente.TipoIdentificacion == 13)
+						documento.DatosAdquiriente.TipoIdentificacion = 31;
+
 					facturaXML.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosAdquiriente, documento.Prefijo);
 				}
 					
