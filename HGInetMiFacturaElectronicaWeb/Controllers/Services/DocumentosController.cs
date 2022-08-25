@@ -1558,7 +1558,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					d.IntNeto,
 					EstadoFactura = d.EstadoFactura,// DescripcionEstadoFactura(d.EstadoFactura),
 					EstadoCategoria = d.EstadoCategoria,//DescripcionCategoriaFactura(d.EstadoCategoria),
-					EstadoAcuse = d.EstadoAcuse,// DescripcionEstadoAcuse(d.EstadoAcuse),
+					EstadoAcuse = DescripcionEstadoAcuse(d.EstadoAcuse),//d.EstadoAcuse,// DescripcionEstadoAcuse(d.EstadoAcuse),//
 					d.MotivoRechazo,
 					d.StrAdquirienteMvoRechazo,
 					d.IdentificacionAdquiriente,

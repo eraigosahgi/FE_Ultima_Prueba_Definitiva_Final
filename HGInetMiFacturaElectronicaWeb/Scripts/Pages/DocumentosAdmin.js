@@ -449,7 +449,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					  {
 					  	caption: "Estado Acuse",
 					  	visible: false,
-					  	dataField: "EstadoAcuse",
+					  	dataField: "IntAdquirienteRecibo",
 					  	cssClass: "hidden-xs col-md-1",
 					  	lookup: {
 					  		dataSource: AdquirienteRecibo,
@@ -460,7 +460,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 					  		$("<div>")
 								.append($(ColocarEstadoAcuse(options.data.IntAdquirienteRecibo, options.data.EstadoAcuse)))
-								.appendTo(container);
+					  			.appendTo(container);
 					  	}
 					  },
 					  {

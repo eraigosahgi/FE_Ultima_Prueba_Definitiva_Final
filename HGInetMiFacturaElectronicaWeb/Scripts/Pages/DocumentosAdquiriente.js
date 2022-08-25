@@ -412,7 +412,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
                       {
                       	caption: "Estado Evento",
                       	cssClass: "hidden-xs col-md-1",
-                      	dataField: "EstadoAcuse",
+                      	dataField: "IntAdquirienteRecibo",
                       	cellTemplate: function (container, options) {
 
                       		$("<div>")
