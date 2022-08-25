@@ -448,7 +448,6 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 					  {
 					  	caption: "Estado Acuse",
-					  	visible: false,
 					  	dataField: "IntAdquirienteRecibo",
 					  	cssClass: "hidden-xs col-md-1",
 					  	lookup: {
@@ -470,6 +469,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					  },
 					{
 						caption: "Estado Email",
+						visible: false,
 						dataField: "EstadoEnvioMail",
 						lookup: {
 							dataSource: EstadoEnvio,
