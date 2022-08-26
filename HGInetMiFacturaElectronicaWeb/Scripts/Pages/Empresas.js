@@ -388,7 +388,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			//text: "Radian",
 			onValueChanged: function (data) {
 				Datos_Radian = (data.value == true) ? 1 : 0;
-				if (Datos_CertFirma == 0 && Datos_Radian == 1) {
+				if (Datos_CertFirma == 0 && Datos_Radian == 1 && Datos_Habilitacion == 99) {
 					$('#PanelRepresentante').show();
 				}
 				else {
@@ -1935,7 +1935,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				try {
 					if (Datos_Radian == 1) {
 						$("#Radian").dxCheckBox({ value: true });
-						if (Datos_CertFirma == 0) {
+						if (Datos_CertFirma == 0 && Datos_Habilitacion == 99) {
 							$('#PanelRepresentante').show();
 						}
 					}
