@@ -243,6 +243,30 @@
           <Property Name="FormatoTmp" Type="varbinary(max)" />
           <Property Name="StrUsuarioActualizacion" Type="uniqueidentifier" />
         </EntityType>
+        <EntityType Name="TblImportacionDoc">
+          <Key>
+            <PropertyRef Name="IdSeguridad" />
+          </Key>
+          <Property Name="IdSeguridad" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IdProceso" Type="int" Nullable="false" />
+          <Property Name="StrObservaciones" Type="varchar" MaxLength="400" />
+          <Property Name="StrTipodoc" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="StrCufe" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="IntNumero" Type="bigint" Nullable="false" />
+          <Property Name="StrPrefijo" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="DatFechaEmision" Type="datetime" Nullable="false" />
+          <Property Name="DatFechaRecepcion" Type="datetime" Nullable="false" />
+          <Property Name="StrEmpresaFacturador" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrNombreFacturador" Type="varchar" MaxLength="200" />
+          <Property Name="StrEmpresaAdquiriente" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrNombreAdquiriente" Type="varchar" MaxLength="200" />
+          <Property Name="IntVlrIva" Type="numeric" Precision="17" Scale="2" Nullable="false" />
+          <Property Name="IntVlrIca" Type="numeric" Precision="17" Scale="2" Nullable="false" />
+          <Property Name="IntVlrIPC" Type="numeric" Precision="17" Scale="2" Nullable="false" />
+          <Property Name="IntVlrTotal" Type="numeric" Precision="17" Scale="2" Nullable="false" />
+          <Property Name="StrEstadoDian" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrGrupo" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="TblOpciones">
           <Key>
             <PropertyRef Name="IntId" />
@@ -819,6 +843,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySet Name="TblEmpresasResoluciones" EntityType="Self.TblEmpresasResoluciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEventosRadian" EntityType="Self.TblEventosRadian" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblFormatos" EntityType="Self.TblFormatos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblImportacionDoc" EntityType="Self.TblImportacionDoc" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpciones" EntityType="Self.TblOpciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpcionesERP" EntityType="Self.TblOpcionesERP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpcionesPerfil" EntityType="Self.TblOpcionesPerfil" Schema="dbo" store:Type="Tables" />
@@ -1084,6 +1109,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             <End Role="TblAlmacenamientoDocs" EntitySet="TblAlmacenamientoDocs" />
           </AssociationSet>
           <EntitySet Name="TblRegistroRecepcion" EntityType="Modelo.TblRegistroRecepcion" />
+          <EntitySet Name="TblImportacionDoc" EntityType="Modelo.TblImportacionDoc" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1929,6 +1955,30 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="StrObservaciones" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
           <Property Name="IntProceso" Type="Int16" Nullable="false" />
         </EntityType>
+        <EntityType Name="TblImportacionDoc">
+          <Key>
+            <PropertyRef Name="IdSeguridad" />
+          </Key>
+          <Property Name="IdSeguridad" Type="Guid" Nullable="false" />
+          <Property Name="IdProceso" Type="Int32" Nullable="false" />
+          <Property Name="StrObservaciones" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="StrTipodoc" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="StrCufe" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IntNumero" Type="Int64" Nullable="false" />
+          <Property Name="StrPrefijo" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="DatFechaEmision" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DatFechaRecepcion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StrEmpresaFacturador" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrNombreFacturador" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="StrEmpresaAdquiriente" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrNombreAdquiriente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IntVlrIva" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
+          <Property Name="IntVlrIca" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
+          <Property Name="IntVlrIPC" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
+          <Property Name="IntVlrTotal" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
+          <Property Name="StrEstadoDian" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrGrupo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2442,6 +2492,31 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
                 <ScalarProperty Name="DatFechaCorreo" ColumnName="DatFechaCorreo" />
                 <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
                 <ScalarProperty Name="StrId" ColumnName="StrId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblImportacionDoc">
+            <EntityTypeMapping TypeName="Modelo.TblImportacionDoc">
+              <MappingFragment StoreEntitySet="TblImportacionDoc">
+                <ScalarProperty Name="StrGrupo" ColumnName="StrGrupo" />
+                <ScalarProperty Name="StrEstadoDian" ColumnName="StrEstadoDian" />
+                <ScalarProperty Name="IntVlrTotal" ColumnName="IntVlrTotal" />
+                <ScalarProperty Name="IntVlrIPC" ColumnName="IntVlrIPC" />
+                <ScalarProperty Name="IntVlrIca" ColumnName="IntVlrIca" />
+                <ScalarProperty Name="IntVlrIva" ColumnName="IntVlrIva" />
+                <ScalarProperty Name="StrNombreAdquiriente" ColumnName="StrNombreAdquiriente" />
+                <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+                <ScalarProperty Name="StrNombreFacturador" ColumnName="StrNombreFacturador" />
+                <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+                <ScalarProperty Name="DatFechaRecepcion" ColumnName="DatFechaRecepcion" />
+                <ScalarProperty Name="DatFechaEmision" ColumnName="DatFechaEmision" />
+                <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
+                <ScalarProperty Name="IntNumero" ColumnName="IntNumero" />
+                <ScalarProperty Name="StrCufe" ColumnName="StrCufe" />
+                <ScalarProperty Name="StrTipodoc" ColumnName="StrTipodoc" />
+                <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+                <ScalarProperty Name="IdProceso" ColumnName="IdProceso" />
+                <ScalarProperty Name="IdSeguridad" ColumnName="IdSeguridad" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
