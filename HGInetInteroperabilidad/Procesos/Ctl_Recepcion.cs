@@ -9,6 +9,8 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 //using HGInetUBL;
 using HGInetUBLv2_1;
+using LibreriaGlobalHGInet.Enumerables;
+using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
@@ -1549,6 +1551,25 @@ namespace HGInetInteroperabilidad.Procesos
 
 					try
 					{
+						//Se valida que la identificacion del facturador del documento este bien formada
+						if (emision == false)
+						{
+							if (!string.IsNullOrEmpty(documento_obj.DatosObligado.Identificacion))
+							{
+								if (documento_obj.DatosObligado.TipoIdentificacion.Equals(31) || documento_obj.DatosObligado.TipoIdentificacion.Equals(13))
+								{
+									if (!Texto.ValidarExpresion(TipoExpresion.Numero, documento_obj.DatosObligado.Identificacion) && !Texto.ValidarExpresion(TipoExpresion.Alfanumerico, documento_obj.DatosObligado.Identificacion))
+										throw new ArgumentException(string.Format("La identificación {0} del Facturador Emisor no puede contener caracteres especiales", documento_obj.DatosObligado.Identificacion));
+
+									// valida los ceros al inicio de la identificación
+									if (!Texto.ValidarExpresion(TipoExpresion.NumeroNotStartZero, documento_obj.DatosObligado.Identificacion))
+										throw new ArgumentException(string.Format("La identificación {0} del Facturador Emisor no puede contener ceros al inicio", documento_obj.DatosObligado.Identificacion));
+								}
+							}
+							else
+								throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Identificacion", "Facturador Emisor").Replace("de tipo", "del"));
+						}
+
 						facturador_emisor = CrearFacturadorEmisor(documento_obj, tipo_doc.GetHashCode(), facturador_receptor.IntHabilitacion.Value);
 
 					}
