@@ -237,6 +237,9 @@
     <Compile Include="Modelo\TblFormatos.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\TblImportacionDoc.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblOpciones.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>

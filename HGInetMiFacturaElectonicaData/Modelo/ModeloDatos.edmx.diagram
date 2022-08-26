@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="979a0cc57d4f4569a2807cc6680ed54e" Name="Diagram1" ZoomLevel="88" DisplayType="true">
+      <Diagram DiagramId="979a0cc57d4f4569a2807cc6680ed54e" Name="Diagram1" ZoomLevel="66" DisplayType="true">
         <EntityTypeShape EntityType="Modelo.TblOpcionesUsuario" Width="1.5" PointX="4.375" PointY="13.375" />
         <EntityTypeShape EntityType="Modelo.TblPlanes" Width="1.5" PointX="3.375" PointY="0.75" />
         <EntityTypeShape EntityType="Modelo.TblOpcionesPerfil" Width="1.5" PointX="13.25" PointY="17.875" />
@@ -53,7 +53,7 @@
         <AssociationConnector Association="Modelo.FK_TblEventosRadian_TblDocumentos" />
         <EntityTypeShape EntityType="Modelo.TblAlmacenamientoDocs" Width="1.5" PointX="17" PointY="7" />
         <AssociationConnector Association="Modelo.FK_TblAlmacenamientoDocs_TblDocumentos" />
-        <EntityTypeShape EntityType="Modelo.TblRegistroRecepcion" Width="1.5" PointX="6.375" PointY="15.75" />
+        <EntityTypeShape EntityType="Modelo.TblRegistroRecepcion" Width="1.5" PointX="7.625" PointY="19.625" />
         <EntityTypeShape EntityType="Modelo.TblImportacionDoc" Width="1.5" PointX="5.375" PointY="19.75" />
         </Diagram>
     </edmx:Diagrams>

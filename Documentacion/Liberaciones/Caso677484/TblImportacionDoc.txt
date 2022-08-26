@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[TblImportacionDoc](
 	[StrObservaciones] [varchar](400) NULL,
 	[StrTipodoc] [varchar](60) NOT NULL,
 	[StrCufe] [varchar](100) NOT NULL,
-	[IntNumero] [bigint] NOT NULL,
+	[IntNumero] [varchar](50) NOT NULL,
 	[StrPrefijo] [varchar](5) NOT NULL,
 	[DatFechaEmision] [datetime] NOT NULL,
 	[DatFechaRecepcion] [datetime] NOT NULL,
