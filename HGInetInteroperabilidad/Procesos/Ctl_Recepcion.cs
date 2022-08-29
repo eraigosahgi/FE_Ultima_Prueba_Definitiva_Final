@@ -1549,11 +1549,11 @@ namespace HGInetInteroperabilidad.Procesos
 					//Creacion Facturador Emisor del documento 
 					TblEmpresas facturador_emisor = new TblEmpresas();
 
-					try
+					if (emision == false)
 					{
-						//Se valida que la identificacion del facturador del documento este bien formada
-						if (emision == false)
+						try
 						{
+							//Se valida que la identificacion del facturador del documento este bien formada
 							if (!string.IsNullOrEmpty(documento_obj.DatosObligado.Identificacion))
 							{
 								if (documento_obj.DatosObligado.TipoIdentificacion.Equals(31) || documento_obj.DatosObligado.TipoIdentificacion.Equals(13))
@@ -1568,15 +1568,44 @@ namespace HGInetInteroperabilidad.Procesos
 							}
 							else
 								throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Identificacion", "Facturador Emisor").Replace("de tipo", "del"));
+
+							facturador_emisor = CrearFacturadorEmisor(documento_obj, tipo_doc.GetHashCode(), facturador_receptor.IntHabilitacion.Value);
+
+
 						}
-
-						facturador_emisor = CrearFacturadorEmisor(documento_obj, tipo_doc.GetHashCode(), facturador_receptor.IntHabilitacion.Value);
-
+						catch (Exception excepcion)
+						{
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+							throw new ApplicationException(string.Format("Error creando el Facturador emisor con identificacion {0} Detalle: {1}", documento_obj.DatosObligado.Identificacion, excepcion.Message));
+						}
 					}
-					catch (Exception excepcion)
+					else
 					{
-						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
-						throw new ApplicationException(string.Format("Error creando el Facturador emisor con identificacion {0} Detalle: {1}", documento_obj.DatosObligado.Identificacion, excepcion.Message));
+						Ctl_Empresa empresa_config = new Ctl_Empresa();
+
+						TblEmpresas adquirienteBd = null;
+
+						//Validacion de Adquiriente
+						try
+						{
+
+							//Obtiene la informacion del Adquiriente que se tiene en BD
+							adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+
+							//Si no existe Adquiriente se crea en BD y se crea Usuario
+							if (adquirienteBd == null)
+							{
+								empresa_config = new Ctl_Empresa();
+								//Creacion del Adquiriente
+								adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
+
+							}
+						}
+						catch (Exception excepcion)
+						{
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
+							throw new ApplicationException(string.Format("Error creando el Adquiriente con identificacion {0} Detalle: {1}", documento_obj.DatosAdquiriente.Identificacion, excepcion.Message));
+						}
 					}
 
 					TblDocumentos documento_bd = new TblDocumentos();
