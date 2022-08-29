@@ -114,7 +114,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 																																	  //Telefono = d.TblEmpresasFacturador.StrTelefono,
 					d.poseeIdComercioPSE,
 					d.poseeIdComercioTC,
-					Saldo = (d.poseeIdComercio == 1) ? Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntValorPagar) : 0
+					Saldo = (d.poseeIdComercio == 1) ? Pago.ConsultaSaldoDocumentoPM(d.StrIdSeguridad, d.IntValorPagar) : 0,
+					FormaPago = (d.FormaPago == 1) ? "Contado" : "Credito"
 				});
 
 				return Ok(retorno);
@@ -304,7 +305,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					MensajeEnvio = d.MensajeEnvio,// DescripcionMensajeEmail(Convert.ToInt16(d.MensajeEnvio)),
 					d.EnvioMail,
 					d.Radian,
-					TituloValor = (d.IntAdquirienteRecibo > 5) ? "Titulo Valor" : (d.IntAdquirienteRecibo == 5) || (d.IntAdquirienteRecibo == 3) ? "Aceptado" : "Documento Electrónico"
+					TituloValor = (d.IntAdquirienteRecibo > 5) ? "Titulo Valor" : (d.IntAdquirienteRecibo == 5) || (d.IntAdquirienteRecibo == 3) ? "Aceptado" : "Documento Electrónico",
+					FormaPago = (d.FormaPago == 1) ? "Contado" : "Credito",
 				});
 
 				return Ok(retorno);

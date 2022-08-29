@@ -789,7 +789,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 //PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
 								 PagosParciales = (datos.TblEmpresasFacturador.IntPagoEParcial) ? 1 : 0,// (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
 								 NumResolucion = datos.StrNumResolucion,
-								 IntValorPagar = datos.IntValorPagar
+								 IntValorPagar = datos.IntValorPagar,
+								 FormaPago = datos.IntFormaPago
 							 }).ToList();
 
 
@@ -846,7 +847,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								 //PagosParciales = (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0,
 								 PagosParciales = (datos.TblEmpresasFacturador.IntPagoEParcial) ? 1 : 0,// (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
 								 NumResolucion = datos.StrNumResolucion,
-								 IntValorPagar = datos.IntValorPagar
+								 IntValorPagar = datos.IntValorPagar,
+								 FormaPago = datos.IntFormaPago
 							 }).ToList();
 
 			}

@@ -425,6 +425,12 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
                       	cssClass: "hidden-xs col-md-1",
                       	dataField: "MotivoRechazo",
                       },
+						{
+				 		caption: "Forma Pago",
+				 		visible: false,
+				 		dataField: "FormaPago",
+						},
+
                       //{
                       //	dataField: "",
                       //	caption: "Acuse",
@@ -548,7 +554,8 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 							 .appendTo(container);
                 		}
                 	}
-                },
+                }
+
 
                 ],
 				//**************************************************************

@@ -547,7 +547,12 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 							.append($(ColocarEstadoEmail(options.data.EnvioMail, options.data.MensajeEnvio, options.data.EstadoEnvioMail, options.data.StrIdSeguridad)))
 							.appendTo(container);
 					}
-				}
+				},
+				 {
+				 	caption: "Forma Pago",
+				 	visible: false,
+				 	dataField: "FormaPago",
+				 },
 
 			],
 
