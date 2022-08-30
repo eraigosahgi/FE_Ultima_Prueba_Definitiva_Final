@@ -904,7 +904,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 						//ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
-						RechazarCorreo(mensajes, ruta_archi_mail);
+						RechazarCorreo(mensajes, ruta_archi_mail, false, emision);
 
 					}
 					catch (Exception e)
@@ -931,7 +931,7 @@ namespace HGInetInteroperabilidad.Procesos
 					mensajes.Add(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico, se esperaba un XML-UBL tipo AttachedDocument", Path.GetFileName(ruta_xml)));
 					mensajes.Add(ex.Message);
 
-					RechazarCorreo(mensajes, ruta_archi_mail, true);
+					RechazarCorreo(mensajes, ruta_archi_mail, true, emision);
 				}
 
 				XmlNodeList xAttach = xDoc.GetElementsByTagName("AttachedDocument");
@@ -945,7 +945,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 						//ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
-						RechazarCorreo(mensajes, ruta_archi_mail,true);
+						RechazarCorreo(mensajes, ruta_archi_mail,true, emision);
 
 					}
 					catch (Exception e)
@@ -978,7 +978,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 							//ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
-							RechazarCorreo(mensajes, ruta_archi_mail, true);
+							RechazarCorreo(mensajes, ruta_archi_mail, true, emision);
 
 						}
 						catch (Exception e)
@@ -1026,7 +1026,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					mensajes.Add(string.Format("Error al serializar el archivo Attached Document Detalle: {0}" , mensaje));
 
-					RechazarCorreo(mensajes, ruta_archi_mail);
+					RechazarCorreo(mensajes, ruta_archi_mail, false, emision);
 
 					//}
 					//catch (Exception e)
@@ -1101,7 +1101,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 		}
 
-		public static void ReEnviarCorreoError(string ruta_archivo_mail, List<string> mensajes_inconsistencias)
+		public static void ReEnviarCorreoError(string ruta_archivo_mail, List<string> mensajes_inconsistencias, bool emision)
 		{
 			try
 			{
@@ -1112,6 +1112,8 @@ namespace HGInetInteroperabilidad.Procesos
 					string ruta_archivos = string.Format(@"{0}\{1}", plataforma_datos.RutaDmsFisica, Constantes.RutaInteroperabilidadRecepcion);
 
 					string ruta_mail_noprocesado = ruta_archivos.Replace("recepcion\\", "no procesados\\Archivos");
+					if (emision == true)
+						ruta_mail_noprocesado = ruta_archivos.Replace("emision\\", "no procesados\\Archivos");
 
 					string nombre_archivo_mail = string.Format("Mail - {0}", Path.GetFileName(ruta_archivo_mail));
 
@@ -1350,7 +1352,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-					RechazarCorreo(mensajes, ruta_archivo_mail, true);
+					RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
 
 					throw new ApplicationException(mensaje);
 				}
@@ -1362,7 +1364,7 @@ namespace HGInetInteroperabilidad.Procesos
 					List<string> mensajes = new List<string>();
 					mensajes.Add(mensaje);
 
-					RechazarCorreo(mensajes, ruta_archivo_mail, true);
+					RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
 
 					throw new ArgumentException(mensaje);
 				}
@@ -1379,7 +1381,7 @@ namespace HGInetInteroperabilidad.Procesos
 					mensajes.Add("El Attached Document no cumple con la estructura indicada por la DIAN en el Anexo técnico, se esperaba un XML-UBL tipo ApplicationResponse en su contenido");
 					mensajes.Add(ex.Message);
 
-					RechazarCorreo(mensajes, ruta_archivo_mail, true);
+					RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
 				}
 
 				XmlNodeList xApplication = xDoc.GetElementsByTagName("ApplicationResponse");
@@ -1393,7 +1395,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 						//ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
-						RechazarCorreo(mensajes, ruta_archivo_mail, true);
+						RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
 
 					}
 					catch (Exception e)
@@ -1423,7 +1425,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-					RechazarCorreo(mensajes, ruta_archivo_mail);
+					RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
 
 					throw new ApplicationException(mensaje);
 				}
@@ -1445,7 +1447,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-					RechazarCorreo(mensajes, ruta_archivo_mail);
+					RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
 
 					throw new ApplicationException(string.Format("Error validando el Facturador receptor Detalle: {0}", excepcion.Message));
 				}
@@ -1487,7 +1489,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-							RechazarCorreo(mensajes, ruta_archivo_mail);
+							RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
 
 							throw new ApplicationException(mensaje);
 						}
@@ -1512,7 +1514,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-							RechazarCorreo(mensajes, ruta_archivo_mail);
+							RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
 
 							throw new ApplicationException(mensaje);
 						}
@@ -1537,7 +1539,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-							RechazarCorreo(mensajes, ruta_archivo_mail);
+							RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
 
 							throw new ApplicationException(mensaje);
 						}
@@ -1699,7 +1701,7 @@ namespace HGInetInteroperabilidad.Procesos
 							List<string> mensajes = new List<string>();
 							mensajes.Add(mensaje);
 
-							RechazarCorreo(mensajes, ruta_archivo_mail);
+							RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
 
 							throw new ApplicationException(mensaje);
 						}
@@ -1737,7 +1739,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-							RechazarCorreo(mensajes, ruta_archivo_mail, false);
+							RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
 						}
 						catch (Exception)
 						{
@@ -1828,7 +1830,7 @@ namespace HGInetInteroperabilidad.Procesos
 					catch (Exception)
 					{ }
 
-					RechazarCorreo(mensajes, ruta_archivo_mail);
+					RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
 
 					//try
 					//{
@@ -1893,7 +1895,7 @@ namespace HGInetInteroperabilidad.Procesos
 		/// <param name="mensajes">Inconsistencia a notificar</param>
 		/// <param name="ruta_archivo_mail">ruta del archivo y Id del registro del correo</param>
 		/// <param name="notificar">si envia correo o no de la respuesta</param>
-		public static void RechazarCorreo(List<string> mensajes , string ruta_archivo_mail, bool notificar = true)
+		public static void RechazarCorreo(List<string> mensajes , string ruta_archivo_mail, bool notificar = true, bool emision = false)
 		{
 			try
 			{
@@ -1916,7 +1918,7 @@ namespace HGInetInteroperabilidad.Procesos
 			try
 			{
 				if (notificar == true)
-					ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+					ReEnviarCorreoError(ruta_archivo_mail, mensajes, emision);
 			}
 			catch (Exception)
 			{
