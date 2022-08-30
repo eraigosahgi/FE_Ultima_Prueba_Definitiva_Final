@@ -1,5 +1,6 @@
 ﻿using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetMiFacturaElectonicaData.ModeloServicio.Documentos;
 using HGInetUBLv2_1.Dian;
 using HGInetUBLv2_1.DianListas;
 using LibreriaGlobalHGInet.Enumerables;
@@ -494,6 +495,30 @@ namespace HGInetUBLv2_1
 					factura_obj.DocumentoDetalles = list_detalle;
 					#endregion
 
+
+					try
+					{
+						if (factura_ubl.AllowanceCharge != null && factura_ubl.AllowanceCharge.Length > 0)
+						{
+							List<Descuento> list_desc = new List<Descuento>();
+							foreach (var item in factura_ubl.AllowanceCharge)
+							{
+								Descuento desc = new Descuento();
+								desc.Codigo = (item.AllowanceChargeReasonCode != null) ? item.AllowanceChargeReasonCode.Value : "11";
+								desc.Descripcion = (item.AllowanceChargeReason != null) ? item.AllowanceChargeReason.FirstOrDefault().Value : "";
+								desc.Porcentaje = item.MultiplierFactorNumeric.Value;
+								desc.Valor = item.Amount.Value;
+								list_desc.Add(desc);
+							}
+
+							factura_obj.Descuentos = list_desc;
+						}
+					}
+					catch (Exception ex)
+					{
+						string mensaje = string.Format("Se presento inconsistencia convirtiendo los descuentos. Detalle: {0}", ex.Message);
+						RegistroLog.EscribirLog(ex, MensajeCategoria.Convertir, MensajeTipo.Error, MensajeAccion.ninguna, mensaje);
+					}
 
 					#region Totales
 				
