@@ -1,0 +1,2 @@
+ALTER TABLE TblEmpresas
+ADD IntTipoOperador  int NOT NULL Default (0)

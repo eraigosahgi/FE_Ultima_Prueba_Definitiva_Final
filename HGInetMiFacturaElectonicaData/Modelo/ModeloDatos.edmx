@@ -186,6 +186,7 @@
           <Property Name="StrIdentificacionRep" Type="varchar" MaxLength="50" />
           <Property Name="StrTipoIdentificacionRep" Type="varchar" MaxLength="2" />
           <Property Name="StrCargo" Type="varchar" MaxLength="50" />
+          <Property Name="IntTipoOperador" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -1517,6 +1518,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="StrIdentificacionRep" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrTipoIdentificacionRep" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
           <Property Name="StrCargo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntTipoOperador" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -2224,6 +2226,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntTipoOperador" ColumnName="IntTipoOperador" />
                 <ScalarProperty Name="StrCargo" ColumnName="StrCargo" />
                 <ScalarProperty Name="StrTipoIdentificacionRep" ColumnName="StrTipoIdentificacionRep" />
                 <ScalarProperty Name="StrIdentificacionRep" ColumnName="StrIdentificacionRep" />

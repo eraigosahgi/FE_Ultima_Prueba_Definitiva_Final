@@ -95,6 +95,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrIdentificacionRep { get; set; }
         public string StrTipoIdentificacionRep { get; set; }
         public string StrCargo { get; set; }
+        public int IntTipoOperador { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblEmpresasAdquiriente { get; set; }
