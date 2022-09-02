@@ -331,6 +331,35 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			return Ok(retorno);
 		}
 
+		/// <summary>
+		/// Obtiene Empresa Operador(Factoring - Sistema de Negociacion)
+		/// </summary>
+		/// <param name="identificacion">Identficacion del Operador(Endosatario)</param>
+		/// <returns></returns>
+		[HttpGet]
+		public IHttpActionResult ObtenerOperador(string identificacion)
+		{
+			Sesion.ValidarSesion();
+
+			Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+			TblEmpresas datos = ctl_empresa.Obtener(identificacion);
+
+			if (datos == null)
+			{
+				return NotFound();
+			}
+
+			var retorno = new {
+				RazonSocial = datos.StrRazonSocial,
+				TipoIdentificacion = datos.StrTipoIdentificacion,
+				Identificacion = datos.StrIdentificacion,
+				Email = datos.StrMailAdmin,
+				TipoOperador = datos.IntTipoOperador
+			};
+
+			return Ok(retorno);
+		}
+
 
 
 		/// <summary>
