@@ -3,7 +3,7 @@ var email_destino = "";
 var id_seguridad = "*";
 var items_recibo = [];
 var UsuarioSession = "";
-//var numero_documento = "";
+var numero_documento_val = "";
 
 //Desde hasta en la consulta de la grid
 var Desde = 0;
@@ -248,7 +248,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				e.component.option("stateStoring.ignoreColumnOptionNames", ["filterValues"]);
 			},
 			//*********************
-		
+
 			keyExpr: "StrIdSeguridad",
 			paging: {
 				pageSize: 20,
@@ -458,7 +458,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 					  	},
 					  	cellTemplate: function (container, options) {
 
-					  		numero_documento = options.data.NumeroDocumento;
+					  		numero_documento_val = options.data.NumeroDocumento;
 					  		$("<div>")
 								.append($(ColocarEstadoAcuseAdmin(options.data.IntAdquirienteRecibo, options.data.TituloValor, options.data.StrIdSeguridad, options.data.NumeroDocumento, codigo_facturador)))
 					  			.appendTo(container);
@@ -583,10 +583,10 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 		});
 
-		ConsultarEventosRadian = function (id_seguridad, codigo_facturador, numero_documento) {
-			$rootScope.ConsultarEventosRadian(id_seguridad, codigo_facturador, numero_documento);
+		ConsultarEventosRadian = function (id_seguridad, codigo_facturador, numero_documento_val) {
+			$rootScope.ConsultarEventosRadian(id_seguridad, codigo_facturador, numero_documento_val);
 		}
-	
+
 	}
 
 
