@@ -18,7 +18,7 @@ namespace HGInetUBLv2_1
 	public partial class AcuseReciboXMLv2_1
 	{
 
-		public static FacturaE_Documento CrearDocumento(Acuse documento, string ambiente, string pin_sw, string cufe_docreferenciado, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TblDocumentos documento_factura, CodigoResponseV2 tipo_acuse, TblEventosRadian evento_anterior = null, TblEmpresas Mandante = null)
+		public static FacturaE_Documento CrearDocumento(Acuse documento, string ambiente, string pin_sw, string cufe_docreferenciado, HGInetMiFacturaElectonicaData.ModeloServicio.ExtensionDian resolucion, TblDocumentos documento_factura, CodigoResponseV2 tipo_acuse, TblEventosRadian evento_anterior = null, TblEmpresas Mandante = null, decimal tasa_descuento = 0.00M)
         {
 
 			try
@@ -68,7 +68,12 @@ namespace HGInetUBLv2_1
 							Customization.Value = "361";
 							break;
 						case CodigoResponseV2.EndosoPp:
-							Customization.Value = "372";
+							//Con responsabilidad - 0; Sin responsabilidad - 1 (14.1.2. Tipos de operación)
+							if (documento.OperacionEvento == 0)
+								Customization.Value = "371";
+							else
+								Customization.Value = "372";
+
 							break;
 						case CodigoResponseV2.EndosoG:
 							Customization.Value = documento.CodigoRespuesta;
@@ -190,7 +195,7 @@ namespace HGInetUBLv2_1
 					try
 					{
 						//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-						string rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+						string rz_obligado = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
 						if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
 						{
@@ -198,9 +203,9 @@ namespace HGInetUBLv2_1
 						}
 
 						//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-						string rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+						string rz_adquiriente = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
-						if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente))
+						if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
 						{
 							documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
 						}
@@ -240,12 +245,22 @@ namespace HGInetUBLv2_1
 							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
 							break;
 						case CodigoResponseV2.EndosoPp:
-							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
-							notas.Add(nota);
-							nota = new NoteType();
-							nota.Value = "sin mi responsabilidad u otra equivalente";
+							//Si el facturador tiene mandato por que firma los eventos con HGI se agrega este mensaje
+							if (documento.Mandante == true)
+							{
+								nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", Mandante.StrRazonSocial);
+								notas.Add(nota);
+								nota.Value = string.Empty;
+							}
+
+							//cbc:Note cuando el tipo de operación es “372 - Endoso sin responsabilidad del endosante”. Se debe informar el mensaje: sin mi responsabilidad u otra equivalente
+							if (documento.OperacionEvento == 1)
+							{
+								nota = new NoteType();
+								nota.Value = "sin mi responsabilidad u otra equivalente";
+							}
 							participacion_endoso = documento_factura.IntVlrTotal;
-							tercero_dian = documento.DatosObligado;
+							//tercero_dian = documento.DatosObligado;
 							break;
 						case CodigoResponseV2.EndosoG:
 							nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
@@ -302,7 +317,7 @@ namespace HGInetUBLv2_1
 						acuse.Note = notas.ToArray();
 
 					// Información del emisor del evento
-					if (tipo_acuse.Equals(CodigoResponseV2.Inscripcion) || tipo_acuse.Equals(CodigoResponseV2.AprobadoTacito))
+					if (tipo_acuse.Equals(CodigoResponseV2.Inscripcion) || tipo_acuse.Equals(CodigoResponseV2.AprobadoTacito) || tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
 					{
 						acuse.SenderParty = ObtenerTercero(documento.DatosObligado, receptor, participacion_endoso, mandato);
 					}
@@ -315,7 +330,11 @@ namespace HGInetUBLv2_1
 					{
 						participacion_endoso = 0;
 					}
-					acuse.ReceiverParty = ObtenerTercero(tercero_dian, true, participacion_endoso);
+
+					if (!tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+						acuse.ReceiverParty = ObtenerTercero(tercero_dian, true, participacion_endoso);
+					else
+						acuse.ReceiverParty = ObtenerTercero(documento.DatosAdquiriente, true, participacion_endoso, false, null, documento.TipoFactor);
 				}
 				else
 				{
@@ -370,6 +389,7 @@ namespace HGInetUBLv2_1
 				{
 					//****Son dos opciones para indicar el endos de la factura 1 - completo y 2 - en blanco 
 					response.ResponseCode.listID = "1";
+					documento.TipoDocumento = "01";
 					//if (tipo_acuse.Equals(CodigoResponseV2.EndosoPc))
 					//{
 					//	response.ResponseCode.name = "ClaseEndoso";
@@ -598,26 +618,36 @@ namespace HGInetUBLv2_1
 				if (tipo_acuse.Equals(CodigoResponseV2.EndosoPp) || tipo_acuse.Equals(CodigoResponseV2.EndosoG) || tipo_acuse.Equals(CodigoResponseV2.EndosoPc))
 				{
 					ApplicationResponseType acuse_temp = new ApplicationResponseType();
-					acuse_temp.ReceiverParty = ObtenerTercero(documento.DatosAdquiriente, false);
-
-					string contenido_xml = Archivo.ObtenerContenido(documento_factura.StrUrlArchivoUbl);
+					//acuse_temp.ReceiverParty = ObtenerTercero(documento.DatosAdquiriente, false);
 
 					// valida el contenido del archivo
-					if (string.IsNullOrWhiteSpace(contenido_xml))
-						throw new ArgumentException("El archivo XML UBL se encuentra vacío, para obtener el nombre del adquiriente de la Factura en el Endoso");
+					if (string.IsNullOrWhiteSpace(contenido_xml_Fe))
+					{
+						contenido_xml_Fe = Archivo.ObtenerContenido(documento_factura.StrUrlArchivoUbl);
+					}
 
 					// convierte el contenido de texto a xml
-					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml_Fe));
 
 					// convierte el objeto de acuerdo con el tipo de documento
 					XmlSerializer serializacion1 = new XmlSerializer(typeof(InvoiceType));
 
 					InvoiceType conversion = (InvoiceType)serializacion1.Deserialize(xml_reader);
 
-					if (!acuse_temp.ReceiverParty.PartyTaxScheme[0].RegistrationName.Value.Equals(conversion.AccountingCustomerParty.Party.PartyLegalEntity[0].RegistrationName.Value))
+					acuse_temp.ReceiverParty = conversion.AccountingSupplierParty.Party;
+
+					//Regla AAH31 - 14.2.14. Tipo de organización jurídica (Personas): cbc: CompanyID/@schemeVersionID
+					acuse_temp.ReceiverParty.PartyTaxScheme[0].CompanyID.schemeVersionID = "1";
+
+					if (acuse_temp.ReceiverParty.PartyTaxScheme[0].CompanyID.schemeName.Equals("13"))
 					{
-						acuse_temp.ReceiverParty.PartyTaxScheme[0].RegistrationName.Value = conversion.AccountingCustomerParty.Party.PartyLegalEntity[0].RegistrationName.Value;
+						acuse_temp.ReceiverParty.PartyTaxScheme[0].CompanyID.schemeVersionID = "2";
 					}
+
+					//if (!acuse_temp.ReceiverParty.PartyTaxScheme[0].RegistrationName.Value.Equals(conversion.AccountingCustomerParty.Party.PartyLegalEntity[0].RegistrationName.Value))
+					//{
+					//	acuse_temp.ReceiverParty.PartyTaxScheme[0].RegistrationName.Value = conversion.AccountingCustomerParty.Party.PartyLegalEntity[0].RegistrationName.Value;
+					//}
 
 					DocumentReference.IssuerParty = new PartyType();
 					DocumentReference.IssuerParty.PartyTaxScheme = new PartyTaxSchemeType[1];
@@ -733,7 +763,7 @@ namespace HGInetUBLv2_1
 				if (tipo_acuse.GetHashCode() > CodigoResponseV2.Expresa.GetHashCode() && !tipo_acuse.Equals(CodigoResponseV2.CancelacionEG) && !tipo_acuse.Equals(CodigoResponseV2.MandatoG) && !tipo_acuse.Equals(CodigoResponseV2.TerminacionMandatoG))
 				{
 					UBLExtensionType UBLExtensionSector = new UBLExtensionType();
-					UBLExtensionSector.ExtensionContent = ExtensionRadian.ObtenerRadianInscripcion(documento_factura.IntVlrTotal, tipo_acuse);
+					UBLExtensionSector.ExtensionContent = ExtensionRadian.ObtenerRadianInscripcion(documento_factura.IntVlrTotal, tipo_acuse, tasa_descuento);
 					UBLExtensions.Add(UBLExtensionSector);
 				}
 
@@ -808,7 +838,7 @@ namespace HGInetUBLv2_1
 		/// <param name="tercero">Objeto Adquiriente</param>
 		/// <param name="proveedor_receptor">Objeto del Proveedor del Adquiriente</param>
 		/// <returns>Objeto ubl con la informacion del generador del documento electrónico</returns>
-		private static PartyType ObtenerTercero(Tercero tercero, bool receptor, decimal participacion_endoso = 0, bool mandato = false, TblEmpresas empresa_mandante = null)
+		private static PartyType ObtenerTercero(Tercero tercero, bool receptor, decimal participacion_endoso = 0, bool mandato = false, TblEmpresas empresa_mandante = null, int tipo_factor = 0)
         {
             try
             {
@@ -886,7 +916,7 @@ namespace HGInetUBLv2_1
 					{
 						
 						entidad.CompanyLegalFormCode = new CompanyLegalFormCodeType();
-						entidad.CompanyLegalFormCode.Value = "1";
+						entidad.CompanyLegalFormCode.Value = (tipo_factor == 0) ? "1" : tipo_factor.ToString();
 					}
 
 					Party.PartyLegalEntity = new PartyLegalEntityType[1];

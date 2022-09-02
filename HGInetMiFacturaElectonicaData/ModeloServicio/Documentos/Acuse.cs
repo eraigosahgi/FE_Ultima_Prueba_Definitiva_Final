@@ -68,6 +68,21 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// </summary>
         public string MvoRespuesta { get; set; }
 
+		/// <summary>
+		/// Indica si el generador del evento tiene Mandato con HGI
+		/// </summary>
+		public bool Mandante { get; set; }
+
+		/// <summary>
+		/// Indica que operacion va hacer cuando sea endoso o Aval
+		/// </summary>
+		public int OperacionEvento { get; set; }
+
+		/// <summary>
+		/// Indica que tipo de Factor es la empresa para hacer los eventos de Endoso: 1 Factoring o 2 Confirming
+		/// </summary>
+		public int TipoFactor { get; set; }
+
 
     }
 }

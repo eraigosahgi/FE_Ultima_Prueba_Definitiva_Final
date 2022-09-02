@@ -42,6 +42,9 @@ using System.IO.Compression;
 using HGInetUBL;
 using HGInetDIANServicios;
 using HGInetUtilidadAzure.Almacenamiento;
+using System.Data.OleDb;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -2424,7 +2427,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				bool adquiriente_hgi = (adquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() && adquiriente.IntObligado == true && adquiriente.IntAdquiriente == true && adquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode()) ? true : false;
 
 				bool continuar_proceso = true;
-
+				
 				List<TblEventosRadian> list_evento = evento.Obtener(doc.StrIdSeguridad);
 
 				TblEventosRadian acuse = null;
@@ -2931,6 +2934,84 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		#endregion
 
+		public TblDocumentos GenerarEventoRadian(System.Guid id_seguridad, int id_evento, int operacion_evento, ref string respuesta_error_dian, string id_receptor_evento, decimal tasa_descuento, string usuario)
+		{
+			try
+			{
+				TblDocumentos doc = ObtenerPorIdSeguridad(id_seguridad).FirstOrDefault();
+
+				Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+
+				if (doc == null)
+					throw new ArgumentException(string.Format(LibreriaGlobalHGInet.Properties.RecursoMensajes.ObjectNotExistError, "el documento con Id Seguridad", id_seguridad.ToString()));
+
+				if (string.IsNullOrEmpty(id_receptor_evento))
+					throw new ArgumentException(string.Format(LibreriaGlobalHGInet.Properties.RecursoMensajes.ObjectNotExistError, "el receptor del evento con identificación", id_receptor_evento));
+
+				FacturaE_Documento resultado = null;
+
+				// obtiene los datos del facturador electrónico
+				TblEmpresas Emisor = null;
+				if (doc.TblEmpresasFacturador == null)
+					Emisor = ctl_empresa.Obtener(doc.StrEmpresaFacturador, false);
+				else
+					Emisor = doc.TblEmpresasFacturador;
+
+				Emisor.IntVersionDian = 2;
+
+				// obtiene los datos del adquiriente
+				ctl_empresa = new Ctl_Empresa();
+				TblEmpresas Receptor = ctl_empresa.Obtener(id_receptor_evento, false);
+
+				if (Receptor == null)
+					throw new ArgumentException(string.Format(LibreriaGlobalHGInet.Properties.RecursoMensajes.ObjectNotExistError, "el receptor del evento con identificación", id_receptor_evento));
+
+				Receptor.IntVersionDian = 2;
+
+				Ctl_EventosRadian evento = new Ctl_EventosRadian();
+				List<TblEventosRadian> list_evento = evento.Obtener(doc.StrIdSeguridad);
+
+				//se consulta si el evento que se va hacer ya existe en plataforma
+				TblEventosRadian evento_enviar = list_evento.Where(x => x.IntEstadoEvento == id_evento).FirstOrDefault();
+
+				if (evento_enviar == null)
+				{
+					CodigoResponseV2 cod_acuse = Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(id_evento);
+					try
+					{
+						resultado = Ctl_Documento.ConvertirAcuse(doc, Emisor, Receptor, (short)cod_acuse.GetHashCode(), "", false, operacion_evento, tasa_descuento);
+					}
+					catch (Exception excepcion)
+					{
+						respuesta_error_dian = excepcion.Message;
+						RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Error generando XML-Acuse Evento {0}", Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(CodigoResponseV2.Aceptado.GetHashCode()))));
+
+						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+					}
+					evento_enviar = EnviarAcuse(resultado, Emisor, Receptor, doc, (short)cod_acuse.GetHashCode(), ref respuesta_error_dian);
+					//if (evento_enviar != null)
+					//	evento_procesado_DIAN = true;
+
+					//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
+					if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+					{
+						respuesta_error_dian = string.Empty;
+						resultado = Ctl_Documento.ConvertirAcuse(doc, Emisor, Receptor, (short)CodigoResponseV2.Aceptado.GetHashCode(), "", true, operacion_evento);
+						evento_enviar = EnviarAcuse(resultado, Receptor, Emisor, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
+					}
+
+				}
+
+				return doc;
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 		/// <summary>
 		///Si se esta habilitando el RADIAN se ejecutan todos los demas Eventos automaticamente para cumplir con el set de pruebas que es uno por cada evento
 		///Codigo Evento - Nombre evento
@@ -3173,8 +3254,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="adquiriente">Informacion del receptor del documento electronico</param>
 		/// <param name="estado">estado del Acuse</param>
 		/// <param name="motivo_rechazo">descripcion del acuse</param>
+		/// <param name="reenvio">Si es true cambia el numero del documento por que la DIAN ya lo recibio y lo esta rechazando</param>
+		/// <param name="tipo_operacion">Indica la operacion del evento. Ej: Endoso en propiedad 0 - Con Responsabilidad, 1 - Sin Responsabilidad</param>
 		/// <returns></returns>
-		public static FacturaE_Documento ConvertirAcuse(TblDocumentos doc, TblEmpresas facturador, TblEmpresas adquiriente, short estado, string motivo_rechazo, bool reenvio = false)
+		public static FacturaE_Documento ConvertirAcuse(TblDocumentos doc, TblEmpresas facturador, TblEmpresas adquiriente, short estado, string motivo_rechazo, bool reenvio = false, int tipo_operacion = 0, decimal tasa_descuento = 0.00M)
 		{
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
@@ -3209,10 +3292,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					break;
 				case CodigoResponseV2.EndosoPp:
 					//doc_acuse.IdAcuse = string.Format("{0}7", doc.IntNumero);
+					doc_acuse.OperacionEvento = tipo_operacion;
+					doc_acuse.TipoFactor = adquiriente.IntTipoOperador;
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.EndosoG:
 					//doc_acuse.IdAcuse = string.Format("{0}8", doc.IntNumero);
+					doc_acuse.OperacionEvento = tipo_operacion;
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.CancelacionEG:
@@ -3225,6 +3311,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					break;
 				case CodigoResponseV2.EndosoPc:
 					//doc_acuse.IdAcuse = string.Format("{0}15", doc.IntNumero);
+					doc_acuse.OperacionEvento = tipo_operacion;
 					doc_acuse.CodigoRespuesta = Enumeracion.GetAmbiente(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(estado));
 					break;
 				case CodigoResponseV2.MandatoG:
@@ -3353,8 +3440,17 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				Mandante = adquiriente;
 			}
 
+			if (estado == CodigoResponseV2.EndosoPp.GetHashCode() || estado == CodigoResponseV2.EndosoG.GetHashCode() || estado == CodigoResponseV2.EndosoPc.GetHashCode())
+			{
+				if (facturador.IntCertFirma == 0)
+					doc_acuse.Mandante = true;
+
+				Ctl_Empresa _empresa = new Ctl_Empresa();
+				Mandante = _empresa.Obtener(doc.StrEmpresaAdquiriente);
+			}
+
 			//Convierte el objeto en archivo XML-UBL
-			FacturaE_Documento resultado = HGInetUBLv2_1.AcuseReciboXMLv2_1.CrearDocumento(doc_acuse, ambiente_dian, PinSoftware, doc.StrCufe, extension_documento, doc, cod_acuse, evento_anterior, Mandante);
+			FacturaE_Documento resultado = HGInetUBLv2_1.AcuseReciboXMLv2_1.CrearDocumento(doc_acuse, ambiente_dian, PinSoftware, doc.StrCufe, extension_documento, doc, cod_acuse, evento_anterior, Mandante, tasa_descuento);
 			resultado.IdSeguridadTercero = facturador.StrIdSeguridad;
 			resultado.IdSeguridadDocumento = doc.StrIdSeguridad;
 			resultado.IdSeguridadPeticion = Guid.NewGuid();
@@ -4954,6 +5050,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 			await Task.Factory.StartNew(() =>
 			{
+
+				//****Hay que hacer un proceso para esto de importacion
+				//ImportarExcel(@"C:\Users\jzea.HGI\Desktop\TablaDIAN.xlsx");
 
 				DateTime fecha_inicio = new DateTime(2017, 12, 31);
 				DateTime fecha_fin = Fecha.GetFecha();
@@ -6924,6 +7023,184 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			});
 		}
+
+
+		public void ImportarExcel(string rutaArchivo)
+		{
+			
+			try
+			{
+				
+				string StrConexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + rutaArchivo + ";Extended Properties='Excel 12.0;HDR=NO;IMEX=1;';";
+
+				string nombreTabla = "TblImportacionDoc";
+
+				string nombreDt = "ImportacionDoc";
+
+				DataTable tbl_temporal = new DataTable();
+
+				using (OleDbConnection objConn = new OleDbConnection(StrConexion))
+				{
+					objConn.Open();
+					OleDbCommand cmd = new OleDbCommand();
+					OleDbDataAdapter oleda = new OleDbDataAdapter();
+					DataSet ds = new DataSet();
+					DataTable dt = objConn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+					string sheetName = string.Empty;
+
+					if (dt != null)
+					{
+						var tempDataTable = (from dataRow in dt.AsEnumerable()
+											 where !dataRow["TABLE_NAME"].ToString().Contains("FilterDatabase")
+											 select dataRow).CopyToDataTable();
+						dt = tempDataTable;
+						sheetName = dt.Rows[0]["TABLE_NAME"].ToString();
+					}
+
+					cmd.Connection = objConn;
+					cmd.CommandType = CommandType.Text;
+					cmd.CommandText = "SELECT * FROM [" + sheetName + "]";
+					oleda = new OleDbDataAdapter(cmd);
+					oleda.Fill(ds, nombreDt);
+					tbl_temporal = ds.Tables[nombreDt];
+					objConn.Close();
+				}
+
+
+				if (tbl_temporal.Rows.Count > 0)
+				{
+					foreach (DataRow item_row in tbl_temporal.Rows)
+					{
+						//Se valida que no sea la primera fila que es los nombres de los campos
+						if (!item_row[2].Equals("Folio"))
+						{
+							TblImportacionDoc import = new TblImportacionDoc();
+							for (int i = 0; i < item_row.ItemArray.Count(); i++)
+							{
+								switch (i)
+								{
+									case 0:
+										int tipo_doc = 1;
+										if (item_row[i].ToString().Contains("Application"))
+											tipo_doc = 4;
+										//Cambiar campo tipo integer
+										import.StrTipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc));
+										break;
+									case 1:
+										import.StrCufe = item_row[i].ToString();
+										break;
+									default:
+										break;
+								}
+							}
+
+							//Proceso para crear item en la tabla
+						}
+					}
+				}
+
+				//*********Este proceso no va porque hay que convertir la informacion a como la tenemos en pltaforma
+				// BulkCopy the data in the DataTable to the temp table.
+				using (System.Data.SqlClient.SqlBulkCopy bulk = new System.Data.SqlClient.SqlBulkCopy(context.Database.Connection.ConnectionString.ToString()))
+				{
+					bulk.DestinationTableName = nombreTabla;
+
+					bulk.ColumnMappings.Add("F1", "StrTipodoc");
+					bulk.ColumnMappings.Add("F2", "StrCufe");
+					bulk.ColumnMappings.Add("F3", "IntNumero");
+					bulk.ColumnMappings.Add("F4", "StrPrefijo");
+					bulk.ColumnMappings.Add("F5", "DatFechaEmision");
+					bulk.ColumnMappings.Add("F6", "DatFechaRecepcion");
+					bulk.ColumnMappings.Add("F7", "StrEmpresaFacturador");
+					bulk.ColumnMappings.Add("F8", "StrNombreFacturador");
+					bulk.ColumnMappings.Add("F9", "StrEmpresaAdquiriente");
+					bulk.ColumnMappings.Add("F10", "StrNombreAdquiriente");
+					bulk.ColumnMappings.Add("F11", "IntVlrIva");
+					bulk.ColumnMappings.Add("F12", "IntVlrIca");
+					bulk.ColumnMappings.Add("F13", "IntVlrIPC");
+					bulk.ColumnMappings.Add("F14", "IntVlrTotal");
+					bulk.ColumnMappings.Add("F15", "StrEstadoDian");
+					bulk.ColumnMappings.Add("F16", "StrGrupo");
+
+					bulk.BulkCopyTimeout = 300;
+					
+					bulk.WriteToServer(tbl_temporal);
+				}
+
+
+				//	MyCommand = New System.Data.OleDb.OleDbDataAdapter _
+
+				//	("select * from [" & Ptabla1 & "$]", MyConnection)
+				//         MyCommand.TableMappings.Add("Table", "TestTable")
+
+				//DtSet = New System.Data.DataSet
+
+				/*using (var textFieldParser = new TextFieldParser(path))
+				{
+					textFieldParser.TextFieldType = FieldType.Delimited;
+					textFieldParser.Delimiters = new[] { separator.ToString() };
+					textFieldParser.HasFieldsEnclosedInQuotes = true;
+
+					var dataTable = new DataTable("CorreosDian");
+					dataTable.Columns.Add("StrIdentificacion");
+					dataTable.Columns.Add("StrMailRegistrado");
+					dataTable.Columns.Add("DatFechaRegistro");
+
+					using (var sqlConnection = new SqlConnection(context.Database.Connection.ConnectionString.ToString()))
+					{
+						sqlConnection.Open();
+
+						// Elimina los datos de la tabla
+						using (var sqlCommand = new SqlCommand(@"TRUNCATE TABLE TblCorreosRecepcion", sqlConnection))
+						{
+							sqlCommand.ExecuteNonQuery();
+						}
+
+						var sqlBulkCopy = new SqlBulkCopy(sqlConnection)
+						{
+							DestinationTableName = "TblCorreosRecepcion"
+						};
+
+						sqlBulkCopy.ColumnMappings.Add("StrIdentificacion", "StrIdentificacion");
+						sqlBulkCopy.ColumnMappings.Add("StrMailRegistrado", "StrMailRegistrado");
+						sqlBulkCopy.ColumnMappings.Add("DatFechaRegistro", "DatFechaRegistro");
+
+						while (!textFieldParser.EndOfData)
+						{
+							dataTable.Rows.Add(textFieldParser.ReadFields());
+
+							createdCount++;
+
+							if (createdCount > 1000)
+							{
+								InsertDataTable(sqlBulkCopy, sqlConnection, dataTable);
+
+								dataTable.Clear();
+								createdCount = 0;
+							}
+						}
+						InsertDataTable(sqlBulkCopy, sqlConnection, dataTable);
+
+						sqlConnection.Close();
+					}
+				} */
+			}
+			catch (Exception exec)
+			{
+				MensajeCategoria log_categoria = MensajeCategoria.Convertir;
+				MensajeAccion log_accion = MensajeAccion.creacion;
+				Ctl_Log.Guardar(exec, log_categoria, MensajeTipo.Error, log_accion);
+				throw new ApplicationException("Error al almacenar los datos de correos electrónicos de la DIAN", exec);
+			}
+		}
+
+		protected void InsertDataTable(SqlBulkCopy sqlBulkCopy, SqlConnection sqlConnection, DataTable dataTable)
+		{
+			sqlBulkCopy.WriteToServer(dataTable);
+
+			dataTable.Rows.Clear();
+		}
+
 
 	}
 

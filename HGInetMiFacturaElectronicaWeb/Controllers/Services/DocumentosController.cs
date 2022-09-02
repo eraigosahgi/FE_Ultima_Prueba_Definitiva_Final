@@ -1103,6 +1103,75 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
+		[HttpPost]
+		[Route("api/GenerarEventoRadian")]
+		public IHttpActionResult GenerarEventoRadian(Guid id_seguridad, int tipo_evento, int operacion_evento, string id_receptor_evento, decimal tasa_descuento, [FromUri]string usuario)
+		{
+			try
+			{
+
+				try
+				{
+
+					if (string.IsNullOrEmpty(usuario))
+					{
+						usuario = Sesion.DatosUsuario.StrUsuario;
+					}
+				}
+				catch (Exception)
+				{
+				}
+
+
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				List<TblDocumentos> datos = new List<TblDocumentos>();
+
+				string respuesta_error_dian = string.Empty;
+
+				TblDocumentos doc = ctl_documento.GenerarEventoRadian(id_seguridad, tipo_evento, operacion_evento, ref respuesta_error_dian, id_receptor_evento, tasa_descuento, (!string.IsNullOrEmpty(usuario)) ? usuario : "");
+
+				if (doc == null)
+				{
+					return NotFound();
+				}
+
+				if (string.IsNullOrEmpty(respuesta_error_dian))
+				{
+					datos.Add(doc);
+
+					var retorno = datos.Select(d => new
+					{
+						NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
+						IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
+						NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
+						Cufe = d.StrCufe,
+						IdSeguridad = d.StrIdSeguridad,
+						EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
+						MotivoRechazo = d.StrAdquirienteMvoRechazo,
+						Xml = d.StrUrlArchivoUbl,
+						Pdf = d.StrUrlArchivoPdf,
+						//RespuestaVisible = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? false : true,
+						//CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? ((cliente_hgi == false) ? false : true) : false,
+						RespuestaVisible = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? true : false,
+						CamposVisibles = (d.IntAdquirienteRecibo < (short)CodigoResponseV2.Rechazado.GetHashCode() || d.IntAdquirienteRecibo == (short)CodigoResponseV2.Aceptado.GetHashCode()) ? true : false
+					});
+					return Ok(retorno);
+				}
+				else
+				{
+					throw new ArgumentException(respuesta_error_dian);
+				}
+
+
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 		/// <summary>
 		/// Retorna la descripción del estado de la factura.

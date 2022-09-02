@@ -12,7 +12,7 @@ namespace HGInetUBLv2_1
 {
 	public class ExtensionRadian
 	{
-		public static XmlElement ObtenerRadianInscripcion(decimal valor_fe, CodigoResponseV2 tipo_acuse)
+		public static XmlElement ObtenerRadianInscripcion(decimal valor_fe, CodigoResponseV2 tipo_acuse, decimal tasa_descuento)
 		{
 
 			CustomTagGeneral1 TagGeneral = new CustomTagGeneral1();
@@ -103,7 +103,7 @@ namespace HGInetUBLv2_1
 
 					nodo_value = extension_sector.DocumentElement.FirstChild.ChildNodes[1].Clone();
 					double pagoend = (double)valor_fe;
-					pagoend = (pagoend - (pagoend * (0.05)));
+					pagoend = (pagoend - (pagoend * ((double)tasa_descuento / 100)));
 					nodo_value.InnerText = pagoend.ToString().Replace(",", ".");
 					root.AppendChild(nodo_value);
 
@@ -112,7 +112,7 @@ namespace HGInetUBLv2_1
 					root.AppendChild(nodo_name);
 
 					nodo_value = extension_sector.DocumentElement.FirstChild.ChildNodes[1].Clone();
-					nodo_value.InnerText = "5";
+					nodo_value.InnerText = tasa_descuento.ToString().Replace(",",".");
 					root.AppendChild(nodo_value);
 
 					nodo_name = extension_sector.DocumentElement.FirstChild.FirstChild.Clone();
