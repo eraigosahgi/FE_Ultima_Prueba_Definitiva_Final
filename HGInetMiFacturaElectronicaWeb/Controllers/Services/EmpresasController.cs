@@ -350,6 +350,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 
 			var retorno = new {
+				Idseguridad = datos.StrIdSeguridad,
 				RazonSocial = datos.StrRazonSocial,
 				TipoIdentificacion = datos.StrTipoIdentificacion,
 				Identificacion = datos.StrIdentificacion,
