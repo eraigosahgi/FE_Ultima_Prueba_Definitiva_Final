@@ -337,6 +337,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="identificacion">Identficacion del Operador(Endosatario)</param>
 		/// <returns></returns>
 		[HttpGet]
+		[Route("api/ObtenerOperador")]
 		public IHttpActionResult ObtenerOperador(string identificacion)
 		{
 			Sesion.ValidarSesion();
