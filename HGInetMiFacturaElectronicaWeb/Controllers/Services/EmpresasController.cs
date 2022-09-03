@@ -362,6 +362,50 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			return Ok(retorno);
 		}
 
+		/// <summary>
+		/// Obtiene Empresa Operador(Factoring - Sistema de Negociacion)
+		/// </summary>
+		/// <param name="identificacion">Identficacion del Operador(Endosatario)</param>
+		/// <returns></returns>
+		[HttpPost]
+		[Route("api/CrearEditarOperador")]
+		public IHttpActionResult CrearEditarOperador(Guid Idseguridad, string RazonSocial, string TipoIdentificacion, string Identificacion, string Email, int TipoOperador)
+		{
+			Sesion.ValidarSesion();
+
+			Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+			TblEmpresas datos = null;
+
+			///*******Se debe Crear proceso si va a editar o crear y hacer el llenado de la informacion ncesaria para la creacion como empresa.
+			///
+			if (Idseguridad == null)
+			{
+
+			}
+			else
+			{
+
+			}
+			
+			datos = ctl_empresa.Obtener(Identificacion);
+
+			if (datos == null)
+			{
+				return NotFound();
+			}
+
+			var retorno = new
+			{
+				Idseguridad = datos.StrIdSeguridad,
+				RazonSocial = datos.StrRazonSocial,
+				TipoIdentificacion = datos.StrTipoIdentificacion,
+				Identificacion = datos.StrIdentificacion,
+				Email = datos.StrMailAdmin,
+				TipoOperador = datos.IntTipoOperador
+			};
+
+			return Ok(retorno);
+		}
 
 
 		/// <summary>
