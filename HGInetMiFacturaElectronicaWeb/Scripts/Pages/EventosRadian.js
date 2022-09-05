@@ -138,8 +138,13 @@ App.controller('EventosRadianController', function EventosRadianController($scop
             });
 
             // Función para mostrar el panel Tipo Endoso
-            $("#cmdenviar1").click(function () {
-                $("#panelEndoso").toggle();
+              $("#cmdenviar1").dxButton({
+                text: "Endoso",
+                type: "default",
+                visible: false,
+                onClick: function () {
+                    $("#panelEndoso").toggle();
+                }
             });
 
             $("#cmdenviar2").dxButton({
