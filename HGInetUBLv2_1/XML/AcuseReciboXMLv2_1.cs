@@ -195,7 +195,7 @@ namespace HGInetUBLv2_1
 					try
 					{
 						//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-						string rz_obligado = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+						string rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
 						if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
 						{
@@ -203,7 +203,7 @@ namespace HGInetUBLv2_1
 						}
 
 						//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-						string rz_adquiriente = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+						string rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
 						if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
 						{
@@ -248,7 +248,7 @@ namespace HGInetUBLv2_1
 							//Si el facturador tiene mandato por que firma los eventos con HGI se agrega este mensaje
 							if (documento.Mandante == true)
 							{
-								nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", Mandante.StrRazonSocial);
+								nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
 								notas.Add(nota);
 								nota.Value = string.Empty;
 							}
@@ -615,6 +615,7 @@ namespace HGInetUBLv2_1
 
 				}
 
+				//Obtengo el Adquiriente/Deudor de la Factura
 				if (tipo_acuse.Equals(CodigoResponseV2.EndosoPp) || tipo_acuse.Equals(CodigoResponseV2.EndosoG) || tipo_acuse.Equals(CodigoResponseV2.EndosoPc))
 				{
 					ApplicationResponseType acuse_temp = new ApplicationResponseType();
@@ -634,14 +635,16 @@ namespace HGInetUBLv2_1
 
 					InvoiceType conversion = (InvoiceType)serializacion1.Deserialize(xml_reader);
 
-					acuse_temp.ReceiverParty = conversion.AccountingSupplierParty.Party;
+					acuse_temp.ReceiverParty = conversion.AccountingCustomerParty.Party;
 
 					//Regla AAH31 - 14.2.14. Tipo de organización jurídica (Personas): cbc: CompanyID/@schemeVersionID
 					acuse_temp.ReceiverParty.PartyTaxScheme[0].CompanyID.schemeVersionID = "1";
 
+					//se valida y si tiene cedula el adquiriente de la factura no lo recibe se cambia a NIT.	Regla que muestra (AAH30)
 					if (acuse_temp.ReceiverParty.PartyTaxScheme[0].CompanyID.schemeName.Equals("13"))
 					{
-						acuse_temp.ReceiverParty.PartyTaxScheme[0].CompanyID.schemeVersionID = "2";
+						acuse_temp.ReceiverParty.PartyTaxScheme[0].CompanyID.schemeName = "31";
+						//acuse_temp.ReceiverParty.PartyTaxScheme[0].CompanyID.schemeVersionID = "2";
 					}
 
 					//if (!acuse_temp.ReceiverParty.PartyTaxScheme[0].RegistrationName.Value.Equals(conversion.AccountingCustomerParty.Party.PartyLegalEntity[0].RegistrationName.Value))

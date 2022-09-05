@@ -3445,8 +3445,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				if (facturador.IntCertFirma == 0)
 					doc_acuse.Mandante = true;
 
-				Ctl_Empresa _empresa = new Ctl_Empresa();
-				Mandante = _empresa.Obtener(doc.StrEmpresaAdquiriente);
 			}
 
 			//Convierte el objeto en archivo XML-UBL
