@@ -155,7 +155,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				{
 				}
 
-				return respuesta;
+				return datos;
 
 			}
 			catch (Exception exec)
