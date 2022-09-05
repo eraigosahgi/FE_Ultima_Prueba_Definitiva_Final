@@ -41,7 +41,7 @@
 										<div class="col-sm-8">
 											<Label Style="vertical-align: inherit;" id="Obligado"></Label>
 										</div>
-										<div class="col-sm-12 text-right">
+										<div class="col-sm-12 text-left" style="margin-top: 15px;">
 											<div id="cmdenviar"></div>
 											<div id="cmdenviar1"></div>
 											<div id="cmdenviar2"></div>
@@ -51,6 +51,56 @@
 										</div>
 
 									</div>
+                                    <br />
+                                    <!-- FILTROS DE PARA HACER ENDOSO -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="panelEndoso" class="panel panel-white" style="display: none;">
+                                                <div class="panel-heading">
+                                                    <h6 class="panel-title">Filtros para hacer Endoso<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="col-lg-12">
+                                                        <div class="row">
+                                                            <div class="dx-fieldset">
+                                                                <div class="col-md-3" style="margin-top: 1%">
+                                                                    <i class="icon-file-text"></i>
+                                                                    <label>Tipo de Endoso:</label>
+                                                                    <div id="tiposEndoso"></div>
+                                                                </div>
+                                                                <div class="col-md-3" style="margin-top: 1%">
+                                                                    <i class="icon-file-text"></i>
+                                                                    <label>Operación Evento:</label>
+                                                                    <div id="tipoOperacionEvento"></div>
+                                                                </div>
+                                                                <div class="col-md-3" style="margin-top: 1%">
+                                                                    <i class="icon-files-empty"></i>
+                                                                    <label>Tasa Descuento:</label>
+                                                                    <div id="tasaDescuentoEndoso"></div>
+                                                                </div>
+                                                                <div class="col-md-3" style="margin-top: 1%">
+                                                                    <i class="icon-files-empty"></i>
+                                                                    <label>ID Endosatario:</label>
+                                                                    <div id="idEndosatario"></div>
+                                                                </div>
+                                                                <div class="col-lg-12 text-center">
+                                                                    <br>
+                                                                    <p id="razonSocialEmpresa"></p>
+                                                                </div>
+                                                                <div class="col-lg-12 text-center">
+                                                                    <br>
+                                                                    <div data-dx-button="btnRealizarEndoso" ></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <p data-ng-bind-html="message" class="ng-binding"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /FILTROS DE PARA HACER ENDOSO -->
 									<br />
 
 									<div class="demo-container">
