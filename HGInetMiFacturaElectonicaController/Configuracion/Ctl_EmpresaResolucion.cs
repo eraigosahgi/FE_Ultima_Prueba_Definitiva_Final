@@ -14,6 +14,7 @@ using LibreriaGlobalHGInet.ObjetosComunes.PagosEnLinea;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using LibreriaGlobalHGInet.RegistroLog;
 using LibreriaGlobalHGInet.Objetos;
+using HGInetMiFacturaElectonicaData.Enumerables;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -241,7 +242,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (tbl_resolucion_actual == null)
 				{
 
-					if (empresaBd.IntHabilitacion.Equals(99) && empresaBd.IntManejaPagoE == true)
+					if (empresaBd.IntHabilitacion == Habilitacion.Produccion.GetHashCode() && empresaBd.IntManejaPagoE == true)
 					{
 						TblEmpresasResoluciones tbl_resolucion_comercio = ObtenerResoluciones(empresaBd.StrIdentificacion, "*").Where(x => x.ComercioConfigId != null && x.StrPrefijo.Equals(item.Prefijo)).First();
 						if (tbl_resolucion_comercio != null)
