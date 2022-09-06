@@ -478,7 +478,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					MensajeEnvio = d.MensajeEnvio,// DescripcionMensajeEmail(Convert.ToInt16(d.MensajeEnvio)),
 					d.EnvioMail,
 					d.Radian,
-					TituloValor = (d.IntAdquirienteRecibo > 5) ? "Titulo Valor" : (d.IntAdquirienteRecibo == 5) || (d.IntAdquirienteRecibo == 3) ? "Aceptado" : "Documento Electrónico"
+					TituloValor = (d.IntAdquirienteRecibo == 7) ? "Endoso" : (d.IntAdquirienteRecibo == 6) ? "Titulo Valor" : (d.IntAdquirienteRecibo == 5) || (d.IntAdquirienteRecibo == 3) ? "Aceptado" : "Documento Electrónico"
 				});
 
 				return Ok(retorno);
