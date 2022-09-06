@@ -1122,7 +1122,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 				}
 
-				if (id_seguridad == null || tipo_evento == 0 || tipo_evento > 1 || tasa_descuento == 0 || string.IsNullOrEmpty(id_receptor_evento))
+				if (id_seguridad == null || tipo_evento == 0 || operacion_evento > 1 || tasa_descuento == 0 || string.IsNullOrEmpty(id_receptor_evento))
 					throw new ArgumentException("Algunos de los parametros no contienen información, por favor validar selección y genere de nuevo el proceso");
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
