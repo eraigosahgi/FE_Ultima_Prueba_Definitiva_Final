@@ -1583,6 +1583,9 @@ namespace HGInetInteroperabilidad.Procesos
 					}
 					else
 					{
+						//Se hace validacion para la creacion de la Resolucion del facturador emisor que la tiene con otro proveedor
+						facturador_emisor = CrearFacturadorEmisor(documento_obj, tipo_doc.GetHashCode(), facturador_receptor.IntHabilitacion.Value);
+
 						Ctl_Empresa empresa_config = new Ctl_Empresa();
 
 						TblEmpresas adquirienteBd = null;
