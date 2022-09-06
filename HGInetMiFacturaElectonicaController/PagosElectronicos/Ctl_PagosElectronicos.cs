@@ -1459,6 +1459,9 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				if (string.IsNullOrWhiteSpace(identificacion_obligado))
 					throw new ApplicationException("Número de identificación del obligado inválido.");
 
+				FechaInicial = FechaInicial.Date;
+
+				FechaFinal = new DateTime(FechaFinal.Year, FechaFinal.Month, FechaFinal.Day, 23, 59, 59, 999);
 
 				List<PagoElectronicoRespuestaAgrupadoPorFecha> lista_respuesta = new List<PagoElectronicoRespuestaAgrupadoPorFecha>();
 

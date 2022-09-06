@@ -460,7 +460,7 @@ apphgi.service('SrvPagos', function ($location, $q) {
 					</div>\
 					<h4>Pagos Electrónicos</h4>\
 					<hr />\
-					<table style="padding: 5px; width: 100%;" id="pnlConsulta" ng-show="PnlConsulta">\
+					<table style="padding: 5px;" id="pnlConsulta" ng-show="PnlConsulta">\
 						<tr style="padding: 5px;">\
 							<td style="padding: 5px; text-align: right;">{{EtiquetaIdentificacion}}</td>\
 							<td style="padding: 5px; text-align: right; width: 80px;">\
