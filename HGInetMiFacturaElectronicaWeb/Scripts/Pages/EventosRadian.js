@@ -8,9 +8,14 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 
     $rootScope.ConsultarEventosRadian = function (IdSeguridad, NumeroDocumento, Obligado, idEndosatario) {
         $scope.IdSeguridad = IdSeguridad;
+        id_seguridad = IdSeguridad;
         $("#IdSeguridad").text(IdSeguridad);
         $scope.NumeroDocumento = $("#NumeroDocumento").text(NumeroDocumento);
+        numero_documento = NumeroDocumento;
         $scope.Obligado = $("#Obligado").text(Obligado);
+
+        obligado = Obligado;
+
         $('#panelEndoso').hide();
         $("#tiposEndoso").dxSelectBox({ value: '' });
         $("#tiposOperacionEvento").dxSelectBox({ value: '' });
@@ -446,9 +451,9 @@ App.controller('EventosRadianController', function EventosRadianController($scop
                 return;
             }
 
-            $http.post('/api/GenerarEventoRadian?id_seguridad=' + $scope.IdSeguridad + '&tipo_evento=' + tiposEndoso + '&operacion_evento=' + tiposOperacionEvento + '&id_receptor_evento=' + idEndosatario + '&tasa_descuento=' + tasaDescuentoEndoso + '&usuario=').then(function (response) {
+            $http.post('/api/GenerarEventoRadian?id_seguridad=' + id_seguridad + '&tipo_evento=' + tiposEndoso + '&operacion_evento=' + tiposOperacionEvento + '&id_receptor_evento=' + idEndosatario + '&tasa_descuento=' + tasaDescuentoEndoso + '&usuario=').then(function (response) {
                 //alert(response.data);
-                $rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+                $rootScope.ConsultarEventosRadian(id_seguridad, numero_documento, obligado);
             }, function errorCallback(response) {
 
                 //Carga notificación de creación con opción de editar formato.
@@ -459,7 +464,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
                         text: "Aceptar",
                         onClick: function (e) {
                             myDialog.hide();
-                            $rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+                            $rootScope.ConsultarEventosRadian(id_seguridad, numero_documento, obligado);
                         }
                     }]
                 });
@@ -480,8 +485,9 @@ App.controller('EventosRadianController', function EventosRadianController($scop
         var tipoEndoso = $('#tiposEndoso').dxSelectBox('instance').option('value');
         var tipoOperacionEvento = $('#tiposOperacionEvento').dxSelectBox('instance').option('value');
         var tasaDescuentoEndoso = $('#tasaDescuentoEndoso').dxNumberBox('instance').option('value');
+        var idEndosatario = $('#idEndosatario').dxTextBox('instance').option('value');
 
-        if (!tipoEndoso || !tipoOperacionEvento || !tasaDescuentoEndoso) {
+        if (!tipoEndoso || !tipoOperacionEvento || !tasaDescuentoEndoso || !idEndosatario) {
             return false;
         } else {
             return true;
