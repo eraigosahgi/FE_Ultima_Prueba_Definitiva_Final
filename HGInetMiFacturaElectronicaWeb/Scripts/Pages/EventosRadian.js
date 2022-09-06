@@ -16,7 +16,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
         $("#tiposOperacionEvento").dxSelectBox({ value: '' });
         $("#idEndosatario").dxTextBox({ value: '' });
         $("#tasaDescuentoEndoso").dxNumberBox({ value: '' });
-        $("#razonSocialEmpresa").text("");
+        $("#razonSocialEmpresa").text('');
 
         $http.get('/api/ObtenerEventosRadian?id_seguridad=' + IdSeguridad).then(function (response) {
 
@@ -239,36 +239,65 @@ App.controller('EventosRadianController', function EventosRadianController($scop
     }
 
     // Cargar datos filtro Tipo Endoso
-    $("#tiposEndoso").dxSelectBox({
+    const tipoEndosoInstance = $("#tiposEndoso").dxSelectBox({
         placeholder: "Seleccionar...",
         displayExpr: "Texto",
         dataSource: tiposEndoso,
         onValueChanged: function (data) {
             tiposEndoso = data.value.ID;
             console.log(tiposEndoso);
+
+            // Activar botón Enviar si todos los campos están llenos
+            var camposLLenos = validarCamposFiltrosEndoso();
+            console.log(camposLLenos);
+            if (camposLLenos === true) {
+                // Activar botón de Enviar
+                $('#btnRealizarEndoso').dxButton({
+                    disabled: false,
+                    elementAttr: {
+                        title: "Realizar Endoso.",
+                        style: "cursor: default; pointer-events: initial;",
+                    },
+                });
+            }
+
         },
         elementAttr: {
             id: "tiposEndoso",
             title: "Seleccione el tipo de endoso",
             //  class: "class-name"
         }
-    });
+    }).dxSelectBox('instance');
 
     // Cargar datos filtro Tipo Operación Endoso
-    $("#tipoOperacionEvento").dxSelectBox({
+    const tiposOperacionEventoInstance = $("#tiposOperacionEvento").dxSelectBox({
         placeholder: "Seleccionar...",
         displayExpr: "Texto",
-        dataSource: tipoOperacionEvento,
+        dataSource: tiposOperacionEvento,
         onValueChanged: function (data) {
-            tipoOperacionEvento = data.value.ID;
-            console.log(tipoOperacionEvento);
+            tiposOperacionEvento = data.value.ID;
+            console.log(tiposOperacionEvento);
+
+            // Activar botón Enviar si todos los campos están llenos
+            var camposLLenos = validarCamposFiltrosEndoso();
+            console.log(camposLLenos);
+            if (camposLLenos === true) {
+                // Activar botón de Enviar
+                $('#btnRealizarEndoso').dxButton({
+                    disabled: false,
+                    elementAttr: {
+                        title: "Realizar Endoso.",
+                        style: "cursor: default; pointer-events: initial;",
+                    },
+                });
+            }
         },
         elementAttr: {
             id: "tiposOperacionEvento",
             title: "Seleccione el tipo de operación del evento",
             //    class: "class-name"
         }
-    });
+    }).dxSelectBox('instance');
 
     // Fltro Tasa de Descuento Endoso
     $("#tasaDescuentoEndoso").dxNumberBox({
@@ -287,8 +316,22 @@ App.controller('EventosRadianController', function EventosRadianController($scop
             tasaDescuentoEndoso = data.value;
             tasaDescuentoEndoso = tasaDescuentoEndoso * 100;
             console.log(tasaDescuentoEndoso);
+
+            // Activar botón Enviar si todos los campos están llenos
+            var camposLLenos = validarCamposFiltrosEndoso();
+            console.log(camposLLenos);
+            if (camposLLenos === true) {
+                // Activar botón de Enviar
+                $('#btnRealizarEndoso').dxButton({
+                    disabled: false,
+                    elementAttr: {
+                        title: "Realizar Endoso.",
+                        style: "cursor: default; pointer-events: initial;",
+                    },
+                });
+            }
         }
-    });
+    }).dxNumberBox('instance');
 
     // Campo ID Endosatario
     $("#idEndosatario").dxTextBox({
@@ -338,14 +381,19 @@ App.controller('EventosRadianController', function EventosRadianController($scop
                         razonSocialEmpresa = response["data"]["RazonSocial"];  // Obtener razón social de la empresa
                         $("#razonSocialEmpresa").text("Razón social empresa: " + razonSocialEmpresa);
 
-                        // Habilitar botón de Enviar
-                        $('#btnRealizarEndoso').dxButton({
-                            disabled: false,
-                            elementAttr: {
-                                title: "La empresa existe, puede realizar el Endoso.",
-                                style: "cursor: default; pointer-events: initial;",
-                            },
-                        });
+                        // Activar botón Enviar si todos los campos están llenos
+                        var camposLLenos = validarCamposFiltrosEndoso();
+                        console.log(camposLLenos);
+                        if (camposLLenos === true) {
+                            // Activar botón de Enviar
+                            $('#btnRealizarEndoso').dxButton({
+                                disabled: false,
+                                elementAttr: {
+                                    title: "Realizar Endoso.",
+                                    style: "cursor: default; pointer-events: initial;",
+                                },
+                            });
+                        }
                     } else {
                         console.log("La empresa con NIT " + idEndosatario + " existe pero no puede realizar Endoso.");
 
@@ -379,9 +427,28 @@ App.controller('EventosRadianController', function EventosRadianController($scop
             style: "cursor: not-allowed; pointer-events: initial;",
         },
         onClick: function (e) {
-            $http.post('/api/GenerarEventoRadian?id_seguridad=' + $scope.IdSeguridad + '&tipo_evento=' + tiposEndoso + '&operacion_evento=' + tipoOperacionEvento + '&id_receptor_evento=' + idEndosatario + '&tasa_descuento=' + tasaDescuentoEndoso + '&usuario=').then(function (response) {
+
+            if (tiposEndoso == undefined || tiposEndoso == "") {
+                DevExpress.ui.notify('Seleccione el tipo Endoso', 'error', 7000);
+
+                return;
+            }
+
+            if (tiposOperacionEvento == undefined || tiposOperacionEvento == "") {
+                DevExpress.ui.notify('Seleccione el tipo de operación', 'error', 7000);
+            
+                return;
+            }
+
+            if (tasaDescuentoEndoso == undefined || tasaDescuentoEndoso == "" || tasaDescuentoEndoso == 0.00) {
+                DevExpress.ui.notify('Ingrese la tasa de descuento', 'error', 7000);
+                
+                return;
+            }
+
+            $http.post('/api/GenerarEventoRadian?id_seguridad=' + $scope.IdSeguridad + '&tipo_evento=' + tiposEndoso + '&operacion_evento=' + tiposOperacionEvento + '&id_receptor_evento=' + idEndosatario + '&tasa_descuento=' + tasaDescuentoEndoso + '&usuario=').then(function (response) {
                 //alert(response.data);
-            //  $rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+                $rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
             }, function errorCallback(response) {
 
                 //Carga notificación de creación con opción de editar formato.
@@ -405,6 +472,22 @@ App.controller('EventosRadianController', function EventosRadianController($scop
         }
     };
 
+    // Activar botón
+    // Validar campos vacíos panel Filtros para hacer Endoso
+    function validarCamposFiltrosEndoso() {
+        
+        // Obtener valores actuales de los campos
+        var tipoEndoso = $('#tiposEndoso').dxSelectBox('instance').option('value');
+        var tipoOperacionEvento = $('#tiposOperacionEvento').dxSelectBox('instance').option('value');
+        var tasaDescuentoEndoso = $('#tasaDescuentoEndoso').dxNumberBox('instance').option('value');
+
+        if (!tipoEndoso || !tipoOperacionEvento || !tasaDescuentoEndoso) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 });
 
 // Datos para el filtro Tipo Endoso
@@ -415,7 +498,7 @@ var tiposEndoso = [
 ];
 
 // Datos para el filtro Tipo Operación Evento
-var tipoOperacionEvento = [
+var tiposOperacionEvento = [
     { ID: "0", Texto: 'Con Responsabilidad' },
     //{ ID: "1", Texto: 'Sin Responsabilidad' }
 ];
