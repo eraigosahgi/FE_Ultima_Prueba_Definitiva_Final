@@ -439,7 +439,22 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 						});
 					}
 					//debugger;
+				}, function errorCallback(response) {
+
+					$("#razonSocialEmpresa").text("La empresa con NIT " + idEndosatario + " No existe");
+
+					$('#btnRealizarEndoso').dxButton({
+						disabled: true,
+						elementAttr: {
+							title: "La empresa con NIT " + idEndosatario + " No existe",
+							//style: "cursor: pointer; pointer-events: initial;",
+						},
+					});
+
+					$('#wait2').hide();
+					
 				});
+
 			}
 
 
@@ -477,7 +492,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 			if (result.isValid) {
 
 				$('#btnRealizarEndoso').dxButton({
-					disabled: true,					
+					disabled: true,
 				});
 				//$('#wait').show();
 				//if (tiposEndoso == undefined || tiposEndoso == "") {
