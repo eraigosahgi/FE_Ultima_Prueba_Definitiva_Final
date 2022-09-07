@@ -250,7 +250,7 @@ namespace HGInetUBLv2_1
 							{
 								nota.Value = string.Format("HERRAMIENTAS DE GESTION INFORMATICA S.A.S. \"OBRANDO EN NOMBRE Y REPRESENTACION DE\" {0}", documento.DatosObligado.RazonSocial);
 								notas.Add(nota);
-								nota.Value = string.Empty;
+								nota = new NoteType();
 							}
 
 							//cbc:Note cuando el tipo de operación es “372 - Endoso sin responsabilidad del endosante”. Se debe informar el mensaje: sin mi responsabilidad u otra equivalente

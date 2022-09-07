@@ -1122,6 +1122,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 				}
 
+				tasa_descuento = tasa_descuento * 1.00M;
+
 				if (id_seguridad == null || tipo_evento == 0 || operacion_evento > 1 || tasa_descuento == 0 || string.IsNullOrEmpty(id_receptor_evento))
 					throw new ArgumentException("Algunos de los parametros no contienen información, por favor validar selección y genere de nuevo el proceso");
 
