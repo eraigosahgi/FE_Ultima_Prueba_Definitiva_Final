@@ -361,7 +361,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 
 	// Campo ID Endosatario
 	$("#idEndosatario").dxTextBox({
-		placeholder: "Ingresar ID Endosatario...",
+		placeholder: "Ingresar Identificación Endosatario",
 		validationGroup: GrupoValidarEndoso,
 		elementAttr: {
 			id: "idEndosatario",
