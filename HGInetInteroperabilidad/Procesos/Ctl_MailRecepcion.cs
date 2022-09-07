@@ -203,7 +203,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 										empresa = _empresa.Obtener(asunto_params[0]);
 
-										if (empresa == null & asunto_params[0].Length > 7)
+										if (empresa == null & asunto_params[0].Length >= 7)
 										{
 
 											Tercero empresa_emisor = new Tercero();
@@ -233,9 +233,10 @@ namespace HGInetInteroperabilidad.Procesos
 								}
 								catch (Exception excepcion)
 								{
-									mensajes.Add("Error validando el Adquiriente electrónico.");
+									mensajes.Add("Error validando el Facturador electrónico.");
 									correo_procesado = false;
 									//throw excepcion;
+									RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Sonda, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.importar, string.Format("Creacion del Facturador {0}", asunto_params[0]));
 								}
 
 								/*
