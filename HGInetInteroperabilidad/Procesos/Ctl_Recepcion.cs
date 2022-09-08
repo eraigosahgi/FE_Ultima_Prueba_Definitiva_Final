@@ -1644,7 +1644,7 @@ namespace HGInetInteroperabilidad.Procesos
 						{
 							documento_bd = Convertir(documento_obj, Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc), facturador_emisor, nombre_archivo, documento_obj.IdentificacionProveedor, contiene_pdf, contiene_anexo);
 							documento_bd.IntEnvioMail = false;
-							if (documento_bd.IntDocTipo == TipoDocumento.Factura.GetHashCode() && emision == true)
+							if (documento_bd.IntDocTipo == TipoDocumento.Factura.GetHashCode())
 							{
 								documento_bd.IntFormaPago = (documento_obj.FormaPago == 0) ? 1 : Convert.ToInt16(documento_obj.FormaPago);
 							}
