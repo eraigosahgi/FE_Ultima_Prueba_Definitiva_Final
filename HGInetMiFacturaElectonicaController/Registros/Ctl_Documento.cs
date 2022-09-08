@@ -572,6 +572,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//Convierte los registros de base de datos a objeto de servicio y los añade a la lista de retorno
 				foreach (TblDocumentos item in respuesta)
 				{
+					//Si solo estan consultando un documento se consulta los eventos que le han generado a este 
+					if (lista_documentos.Count == 1 && item.IntDocTipo == TipoDocumento.Factura.GetHashCode() && item.IntAdquirienteRecibo < CodigoResponseV2.Expresa.GetHashCode() && item.IntAdquirienteRecibo != CodigoResponseV2.Rechazado.GetHashCode() && item.IntAdquirienteRecibo != CodigoResponseV2.AprobadoTacito.GetHashCode() && item.IntFormaPago == 2 && item.IdCategoriaEstado > CategoriaEstado.EnvioDian.GetHashCode())
+					{
+						ConsultarEventosRadian(false, item.StrIdSeguridad.ToString());
+					}
 					lista_respuesta.Add(Convertir(item));
 				}
 
@@ -3620,6 +3625,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				TblEventosRadian inscripcion = null;
 
+				TblEventosRadian endoso_propiedad = null;
+
+				int ultimo_evento = doc.IntAdquirienteRecibo;
+
 				bool consulta_dian = true;
 
 				list_evento = evento.Obtener(doc.StrIdSeguridad);
@@ -3639,15 +3648,49 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					inscripcion = list_evento.Where(x => x.IntEstadoEvento == 6).FirstOrDefault();
 
+					endoso_propiedad = list_evento.Where(x => x.IntEstadoEvento == 7).FirstOrDefault();
+
 					if (rechazo != null || inscripcion != null)
 					{
 						consulta_dian = false;
+						if (rechazo != null && ultimo_evento < rechazo.IntEstadoEvento)
+							ultimo_evento = rechazo.IntEstadoEvento;
+
+						if (inscripcion != null && ultimo_evento < inscripcion.IntEstadoEvento)
+							ultimo_evento = inscripcion.IntEstadoEvento;
 					}
 
 					if ((expresa != null || tacito != null) && sonda == true)
 					{
 						consulta_dian = false;
 					}
+
+					if ((expresa != null || tacito != null) && sonda == false)
+					{
+						if (expresa != null && ultimo_evento < expresa.IntEstadoEvento)
+							ultimo_evento = expresa.IntEstadoEvento;
+
+						if (tacito != null && ultimo_evento < inscripcion.IntEstadoEvento)
+							ultimo_evento = inscripcion.IntEstadoEvento;
+					}
+
+					if ((ultimo_evento <= 1) && ((acuse != null || recibo != null)))
+					{
+						if (acuse != null && ultimo_evento < acuse.IntEstadoEvento)
+							ultimo_evento = acuse.IntEstadoEvento;
+
+						if (recibo != null && ultimo_evento < recibo.IntEstadoEvento)
+							ultimo_evento = recibo.IntEstadoEvento;
+					}
+
+					if (ultimo_evento != doc.IntAdquirienteRecibo)
+					{
+						//doc.DatAdquirienteFechaRecibo = Fecha.GetFecha();
+						doc.DatFechaActualizaEstado = Fecha.GetFecha();
+						doc.IntAdquirienteRecibo = (short)ultimo_evento;
+						//Actualizar(doc);
+					}
+
 				}
 
 				//Primero consulto que tiempo de recepcion respecto a la fecha actual
