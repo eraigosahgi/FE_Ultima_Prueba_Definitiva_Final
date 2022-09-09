@@ -6,6 +6,7 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Enumerables;
 using HGInetMiFacturaElectonicaData.Modelo;
+using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectonicaData.Objetos;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Enumerables;
@@ -363,31 +364,48 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		}
 
 		/// <summary>
-		/// Obtiene Empresa Operador(Factoring - Sistema de Negociacion)
+		/// Crea o edita Empresa Operador(Factoring - Sistema de Negociacion)
 		/// </summary>
 		/// <param name="identificacion">Identficacion del Operador(Endosatario)</param>
 		/// <returns></returns>
 		[HttpPost]
 		[Route("api/CrearEditarOperador")]
-		public IHttpActionResult CrearEditarOperador(Guid Idseguridad, string RazonSocial, string TipoIdentificacion, string Identificacion, string Email, int TipoOperador)
+		public IHttpActionResult CrearEditarOperador(Guid Idseguridad, string RazonSocial, int TipoIdentificacion, string Identificacion, short DV, string Email, int TipoOperador)
 		{
 			Sesion.ValidarSesion();
 
 			Ctl_Empresa ctl_empresa = new Ctl_Empresa();
 			TblEmpresas datos = null;
 
-			///*******Se debe Crear proceso si va a editar o crear y hacer el llenado de la informacion ncesaria para la creacion como empresa.
-			///
+			///Proceso si va a editar o crear y hacer el llenado de la informacion necesaria para la creacion como empresa.
 			if (Idseguridad == null)
 			{
+				Tercero empresa_operador = new Tercero();
+				empresa_operador.Identificacion = Identificacion;
+				empresa_operador.IdentificacionDv = DV;
+				empresa_operador.TipoIdentificacion = TipoIdentificacion;
+				empresa_operador.RazonSocial = RazonSocial;
+				empresa_operador.NombreComercial = RazonSocial;
+				empresa_operador.Email = Email;
+
+				TblEmpresas empresa = ctl_empresa.Crear(empresa_operador, false);
+
+				if (empresa.IntTipoOperador != TipoOperador)
+				{
+					empresa.IntTipoOperador = TipoOperador;
+					empresa = ctl_empresa.Actualizar(empresa);
+				}
+
+				datos = empresa;
 
 			}
 			else
 			{
-
+				datos = ctl_empresa.Obtener(Idseguridad).FirstOrDefault();
+				datos.IntTipoOperador = TipoOperador;
+				ctl_empresa.Actualizar(datos);
 			}
-			
-			datos = ctl_empresa.Obtener(Identificacion);
+
 
 			if (datos == null)
 			{
