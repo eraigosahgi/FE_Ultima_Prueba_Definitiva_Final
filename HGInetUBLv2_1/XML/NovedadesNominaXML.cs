@@ -568,9 +568,20 @@ namespace HGInetUBLv2_1
 				//	//devengado.Basico.SueldoTrabajado = 0;
 				//}
 				devengado.Teletrabajo = devengados_doc.Teletrabajo;
+				if (devengados_doc.Teletrabajo > 0)
+					devengado.TeletrabajoSpecified = true;
+
 				devengado.BonifRetiro = devengados_doc.BonifRetiro;
+				if (devengados_doc.BonifRetiro > 0)
+					devengado.BonifRetiroSpecified = true;
+
 				devengado.Indemnizacion = devengados_doc.Indemnizacion;
+				if (devengados_doc.Indemnizacion > 0)
+					devengado.IndemnizacionSpecified = true;
+
 				devengado.Reintegro = devengados_doc.Reintegro;
+				if (devengados_doc.Reintegro > 0)
+					devengado.ReintegroSpecified = true;
 
 				return devengado;
 			}
@@ -617,8 +628,13 @@ namespace HGInetUBLv2_1
 					deduccion.FondoSP = new NominaIndividualTypeDeduccionesFondoSP();
 					deduccion.FondoSP.Porcentaje = deduccion_doc.DatosFondoSP.Porcentaje;
 					deduccion.FondoSP.Deduccion = deduccion_doc.DatosFondoSP.DeduccionFSP;
+					if (deduccion_doc.DatosFondoSP.DeduccionFSP > 0)
+						deduccion.FondoSP.DeduccionSpecified = true;
+
 					deduccion.FondoSP.PorcentajeSub = deduccion_doc.DatosFondoSP.PorcentajeSub;
 					deduccion.FondoSP.DeduccionSub = deduccion_doc.DatosFondoSP.DeduccionSub;
+					if (deduccion_doc.DatosFondoSP.DeduccionSub > 0)
+						deduccion.FondoSP.DeduccionSubSpecified = true;
 				}
 
 				if (deduccion_doc.DatosSindicatos != null && deduccion_doc.DatosSindicatos.Count() > 0)
@@ -640,6 +656,8 @@ namespace HGInetUBLv2_1
 
 
 				}
+
+				deduccion.Sindicatos = new NominaIndividualTypeDeduccionesSindicato[0];
 
 				if (deduccion_doc.DatosSanciones != null && deduccion_doc.DatosSanciones.Count() > 0)
 				{
@@ -696,14 +714,40 @@ namespace HGInetUBLv2_1
 				}
 
 				deduccion.PensionVoluntaria = deduccion_doc.PensionVoluntaria;
+				if (deduccion_doc.PensionVoluntaria > 0)
+					deduccion.PensionVoluntariaSpecified = true;
+
 				deduccion.RetencionFuente = deduccion_doc.RetencionFuente;
+				if (deduccion_doc.RetencionFuente > 0)
+					deduccion.RetencionFuenteSpecified = true;
+
 				deduccion.AFC = deduccion_doc.AFC;
+				if (deduccion_doc.AFC > 0)
+					deduccion.AFCSpecified = true;
+
 				deduccion.Cooperativa = deduccion_doc.Cooperativa;
+				if (deduccion_doc.Cooperativa > 0)
+					deduccion.CooperativaSpecified = true;
+
 				deduccion.EmbargoFiscal = deduccion_doc.EmbargoFiscal;
+				if (deduccion_doc.EmbargoFiscal > 0)
+					deduccion.EmbargoFiscalSpecified = true;
+
 				deduccion.PlanComplementarios = deduccion_doc.PlanComplementarios;
+				if (deduccion_doc.PlanComplementarios > 0)
+					deduccion.PlanComplementariosSpecified = true;
+
 				deduccion.Educacion = deduccion_doc.Educacion;
-				deduccion.Reintegro = deduccion.Reintegro;
+				if (deduccion_doc.Educacion > 0)
+					deduccion.EducacionSpecified = true;
+
+				deduccion.Reintegro = deduccion_doc.Reintegro;
+				if (deduccion_doc.Reintegro > 0)
+					deduccion.ReintegroSpecified = true;
+
 				deduccion.Deuda = deduccion_doc.Deuda;
+				if (deduccion_doc.Deuda > 0)
+					deduccion.DeudaSpecified = true;
 
 				return deduccion;
 			}
