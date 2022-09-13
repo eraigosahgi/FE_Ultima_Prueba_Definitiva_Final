@@ -999,6 +999,8 @@ namespace HGInetUBLv2_1
 					devengado.Primas.Cantidad = devengados_doc.PagoPrima.Cantidad.ToString();
 					devengado.Primas.Pago = devengados_doc.PagoPrima.Pago.Pago;
 					devengado.Primas.PagoNS = devengados_doc.PagoPrima.Pago.PagoNS;
+					if (devengados_doc.PagoPrima.Pago.PagoNS > 0)
+						devengado.Primas.PagoNSSpecified = true;
 
 				}
 
@@ -1109,7 +1111,12 @@ namespace HGInetUBLv2_1
 					{
 						NominaIndividualDeAjusteTypeReemplazarDevengadosBonificacion bonificacion = new NominaIndividualDeAjusteTypeReemplazarDevengadosBonificacion();
 						bonificacion.BonificacionS = item.Pago;
+						if (item.Pago > 0)
+							bonificacion.BonificacionSSpecified = true;
+
 						bonificacion.BonificacionNS = item.PagoNS;
+						if (item.PagoNS > 0)
+							bonificacion.BonificacionNSSpecified = true;
 
 						list_bonificacion.Add(bonificacion);
 
@@ -1128,7 +1135,12 @@ namespace HGInetUBLv2_1
 					{
 						NominaIndividualDeAjusteTypeReemplazarDevengadosAuxilio novedad = new NominaIndividualDeAjusteTypeReemplazarDevengadosAuxilio();
 						novedad.AuxilioS = item.Pago;
+						if (item.Pago > 0)
+							novedad.AuxilioSSpecified = true;
+
 						novedad.AuxilioNS = item.PagoNS;
+						if (item.PagoNS > 0)
+							novedad.AuxilioNSSpecified = true;
 
 						lista.Add(novedad);
 
@@ -1165,7 +1177,13 @@ namespace HGInetUBLv2_1
 
 						NominaIndividualDeAjusteTypeReemplazarDevengadosOtroConcepto novedad = new NominaIndividualDeAjusteTypeReemplazarDevengadosOtroConcepto();
 						novedad.ConceptoS = item.PagoConcepto.Pago;
+						if (item.PagoConcepto.Pago > 0)
+							novedad.ConceptoSSpecified = true;
+
 						novedad.ConceptoNS = item.PagoConcepto.PagoNS;
+						if (item.PagoConcepto.PagoNS > 0)
+							novedad.ConceptoNSSpecified = true;
+						 
 						novedad.DescripcionConcepto = item.DescripcionConcepto;
 						lista.Add(novedad);
 
@@ -1200,7 +1218,13 @@ namespace HGInetUBLv2_1
 
 						NominaIndividualDeAjusteTypeReemplazarDevengadosBonoEPCTV novedad = new NominaIndividualDeAjusteTypeReemplazarDevengadosBonoEPCTV();
 						novedad.PagoS = item.Pago;
+						if (item.Pago > 0)
+							novedad.PagoSSpecified = true;
+
 						novedad.PagoNS = item.PagoNS;
+						if (item.PagoNS > 0)
+							novedad.PagoNSSpecified = true;
+
 						lista_BonAlim.Add(novedad);
 
 					}
@@ -1215,7 +1239,13 @@ namespace HGInetUBLv2_1
 
 						NominaIndividualDeAjusteTypeReemplazarDevengadosBonoEPCTV novedad = new NominaIndividualDeAjusteTypeReemplazarDevengadosBonoEPCTV();
 						novedad.PagoAlimentacionS = item.Pago;
+						if (item.Pago > 0)
+							novedad.PagoAlimentacionSSpecified = true;
+
 						novedad.PagoNS = item.PagoNS;
+						if (item.PagoNS > 0)
+							novedad.PagoAlimentacionNSSpecified = true;
+
 						lista.Add(novedad);
 
 					}
@@ -1244,6 +1274,8 @@ namespace HGInetUBLv2_1
 				}
 
 				devengado.Dotacion = devengados_doc.Dotacion;
+				if (devengados_doc.Dotacion > 0)
+					devengado.DotacionSpecified = true;
 
 				if (practicante == true && devengados_doc.ApoyoSostenimiento == 0)
 				{
@@ -1260,8 +1292,16 @@ namespace HGInetUBLv2_1
 
 				devengado.Teletrabajo = devengados_doc.Teletrabajo;
 				devengado.BonifRetiro = devengados_doc.BonifRetiro;
+				if (devengados_doc.BonifRetiro > 0)
+					devengado.BonifRetiroSpecified = true;
+
 				devengado.Indemnizacion = devengados_doc.Indemnizacion;
+				if (devengados_doc.Indemnizacion > 0)
+					devengado.IndemnizacionSpecified = true;
+
 				devengado.Reintegro = devengados_doc.Reintegro;
+				if (devengados_doc.Reintegro > 0)
+					devengado.ReintegroSpecified = true;
 
 				return devengado;
 			}
@@ -1307,9 +1347,20 @@ namespace HGInetUBLv2_1
 				{
 					deduccion.FondoSP = new NominaIndividualDeAjusteTypeReemplazarDeduccionesFondoSP();
 					deduccion.FondoSP.Porcentaje = deduccion_doc.DatosFondoSP.Porcentaje;
+					if (deduccion_doc.DatosFondoSP.Porcentaje > 0)
+						deduccion.FondoSP.PorcentajeSpecified = true;
+
 					deduccion.FondoSP.Deduccion = deduccion_doc.DatosFondoSP.DeduccionFSP;
+					if (deduccion_doc.DatosFondoSP.DeduccionFSP > 0)
+						deduccion.FondoSP.DeduccionSpecified = true;
+
 					deduccion.FondoSP.PorcentajeSub = deduccion_doc.DatosFondoSP.PorcentajeSub;
+					if (deduccion_doc.DatosFondoSP.PorcentajeSub > 0)
+						deduccion.FondoSP.PorcentajeSubSpecified = true;
+
 					deduccion.FondoSP.DeduccionSub = deduccion_doc.DatosFondoSP.DeduccionSub;
+					if (deduccion_doc.DatosFondoSP.DeduccionSub > 0)
+						deduccion.FondoSP.DeduccionSubSpecified = true;
 				}
 
 				if (deduccion_doc.DatosSindicatos != null && deduccion_doc.DatosSindicatos.Count() > 0)
@@ -1387,14 +1438,41 @@ namespace HGInetUBLv2_1
 				}
 
 				deduccion.PensionVoluntaria = deduccion_doc.PensionVoluntaria;
+				if (deduccion_doc.PensionVoluntaria > 0)
+					deduccion.PensionVoluntariaSpecified = true;
+
 				deduccion.RetencionFuente = deduccion_doc.RetencionFuente;
+				if (deduccion_doc.RetencionFuente > 0)
+					deduccion.RetencionFuenteSpecified = true;
+
 				deduccion.AFC = deduccion_doc.AFC;
+				if (deduccion_doc.AFC > 0)
+					deduccion.AFCSpecified = true;
+
 				deduccion.Cooperativa = deduccion_doc.Cooperativa;
+				if (deduccion_doc.Cooperativa > 0)
+					deduccion.CooperativaSpecified = true;
+
 				deduccion.EmbargoFiscal = deduccion_doc.EmbargoFiscal;
+				if (deduccion_doc.EmbargoFiscal > 0)
+					deduccion.EmbargoFiscalSpecified = true;
+
 				deduccion.PlanComplementarios = deduccion_doc.PlanComplementarios;
+				if (deduccion_doc.PlanComplementarios > 0)
+					deduccion.PlanComplementariosSpecified = true;
+
 				deduccion.Educacion = deduccion_doc.Educacion;
-				deduccion.Reintegro = deduccion.Reintegro;
+				if (deduccion_doc.Educacion > 0)
+					deduccion.EducacionSpecified = true;
+
+				deduccion.Reintegro = deduccion_doc.Reintegro;
+				if (deduccion_doc.Reintegro > 0)
+					deduccion.ReintegroSpecified = true;
+
 				deduccion.Deuda = deduccion_doc.Deuda;
+				if (deduccion_doc.Deuda > 0)
+					deduccion.DeudaSpecified = true;
+
 
 				return deduccion;
 			}
