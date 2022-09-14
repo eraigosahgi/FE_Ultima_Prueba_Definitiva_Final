@@ -661,8 +661,6 @@ namespace HGInetUBLv2_1
 
 				}
 
-				deduccion.Sindicatos = new NominaIndividualTypeDeduccionesSindicato[0];
-
 				if (deduccion_doc.DatosSanciones != null && deduccion_doc.DatosSanciones.Count() > 0)
 				{
 
