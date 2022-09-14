@@ -626,14 +626,14 @@ namespace HGInetUBLv2_1
 				if (deduccion_doc.DatosFondoSP != null)
 				{
 					deduccion.FondoSP = new NominaIndividualTypeDeduccionesFondoSP();
-					deduccion.FondoSP.Porcentaje = deduccion_doc.DatosFondoSP.Porcentaje;
+					deduccion.FondoSP.Porcentaje = decimal.Round(deduccion_doc.DatosFondoSP.Porcentaje, 2);
 					if (deduccion_doc.DatosFondoSP.Porcentaje > 0)
 						deduccion.FondoSP.PorcentajeSpecified = true;
 					deduccion.FondoSP.DeduccionSP = deduccion_doc.DatosFondoSP.DeduccionFSP;
 					if (deduccion_doc.DatosFondoSP.DeduccionFSP > 0)
 						deduccion.FondoSP.DeduccionSpecified = true;
 
-					deduccion.FondoSP.PorcentajeSub = deduccion_doc.DatosFondoSP.PorcentajeSub;
+					deduccion.FondoSP.PorcentajeSub = decimal.Round(deduccion_doc.DatosFondoSP.PorcentajeSub, 2);
 					if (deduccion_doc.DatosFondoSP.PorcentajeSub > 0)
 						deduccion.FondoSP.PorcentajeSubSpecified = true;
 					deduccion.FondoSP.DeduccionSub = deduccion_doc.DatosFondoSP.DeduccionSub;
@@ -1348,7 +1348,7 @@ namespace HGInetUBLv2_1
 				if (deduccion_doc.DatosFondoSP != null)
 				{
 					deduccion.FondoSP = new NominaIndividualDeAjusteTypeReemplazarDeduccionesFondoSP();
-					deduccion.FondoSP.Porcentaje = deduccion_doc.DatosFondoSP.Porcentaje;
+					deduccion.FondoSP.Porcentaje = decimal.Round(deduccion_doc.DatosFondoSP.Porcentaje, 2);
 					if (deduccion_doc.DatosFondoSP.Porcentaje > 0)
 						deduccion.FondoSP.PorcentajeSpecified = true;
 
@@ -1356,7 +1356,7 @@ namespace HGInetUBLv2_1
 					if (deduccion_doc.DatosFondoSP.DeduccionFSP > 0)
 						deduccion.FondoSP.DeduccionSpecified = true;
 
-					deduccion.FondoSP.PorcentajeSub = deduccion_doc.DatosFondoSP.PorcentajeSub;
+					deduccion.FondoSP.PorcentajeSub = decimal.Round(deduccion_doc.DatosFondoSP.PorcentajeSub, 2);
 					if (deduccion_doc.DatosFondoSP.PorcentajeSub > 0)
 						deduccion.FondoSP.PorcentajeSubSpecified = true;
 
