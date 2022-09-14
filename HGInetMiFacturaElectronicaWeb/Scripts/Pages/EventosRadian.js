@@ -273,14 +273,14 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		},
 		elementAttr: {
 			id: "tiposEndoso",
-			title: "Seleccione el tipo de endoso",
+			title: "Elige el tipo de endoso",
 			//  class: "class-name"
 		}
 	}).dxValidator({
 		validationGroup: GrupoValidarEndoso,
 		validationRules: [{
 			type: 'required',
-			message: 'Tipo Endoso es requerida',
+			message: 'Campo requerido',
 		}],
 	});
 
@@ -309,14 +309,14 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		},
 		elementAttr: {
 			id: "tiposOperacionEvento",
-			title: "Seleccione el tipo de operación del evento",
+			title: "Elige el tipo de operación del evento",
 			//    class: "class-name"
 		}
 	}).dxValidator({
 		validationGroup: GrupoValidarEndoso,
 		validationRules: [{
 			type: 'required',
-			message: 'Tipos de Operacion Evento es requerida',
+			message: 'Campo requerido',
 		}],
 	});
 
@@ -357,13 +357,13 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		validationGroup: GrupoValidarEndoso,
 		validationRules: [{
 			type: 'required',
-			message: 'La Tasa Descuento Endoso es requerida',
+			message: 'Campo requerido',
 		}],
 	});
 
 	// Campo ID Endosatario
 	$("#idEndosatario").dxTextBox({
-		placeholder: "Ingresar Identificación Endosatario",
+		placeholder: "Ingresar ID Endosatario",
 		validationGroup: GrupoValidarEndoso,
 		elementAttr: {
 			id: "idEndosatario",
@@ -373,8 +373,6 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		onValueChanged: function (data) {
 			idEndosatario = data.value;
 			//console.log(idEndosatario);
-
-
 
 			// Validar que el campo ID Endosatario esté lleno.
 			if (idEndosatario === '') {
@@ -399,14 +397,10 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 			if (!idEndosatario || idEndosatario.trim().length != 0) {
 				$http.get('/api/ObtenerOperador?identificacion=' + idEndosatario).then(function (response) {
 
-					//console.log(response);
-					//console.log(data);
-					//console.log(response["data"]["TipoOperador"]);
-
 					// Validar si la empresa existe
 					TipoOperador = response["data"]["TipoOperador"];            // Obtener tipo de operador
 					if (TipoOperador != 0) {
-						console.log("La empresa con NIT " + idEndosatario + " existe. Realizar Endoso...");
+					//	console.log("La empresa con NIT " + idEndosatario + " existe. Realizar Endoso...");
 
 						// Mostrar razón social empresa
 						razonSocialEmpresa = response["data"]["RazonSocial"];  // Obtener razón social de la empresa
@@ -426,56 +420,50 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 							});
 						}
 					} else {
-						console.log("La empresa con NIT " + idEndosatario + " existe pero no puede realizar Endoso.");
+					//	console.log("La empresa con NIT " + idEndosatario + " existe pero no puede realizar Endoso.");
 
 						// Mostrar mensaje
 						$("#razonSocialEmpresa").text("La empresa con NIT " + idEndosatario + " existe pero no puede realizar Endoso.");
 
-						// Ajustar botón de Enviar
+						// Deshabilitar botón Enviar
 						$('#btnRealizarEndoso').dxButton({
 							disabled: true,
 							elementAttr: {
-								title: "La empresa con NIT " + idEndosatario + " existe pero no puede realizar Endoso.",
-								//style: "cursor: pointer; pointer-events: initial;",
+								title: "La empresa existe pero no puede realizar Endoso.",
+								style: "cursor: not-allowed; pointer-events: initial;",
 							},
 						});
 					}
 					//debugger;
 				}, function errorCallback(response) {
 
-					$("#razonSocialEmpresa").text("La empresa con NIT " + idEndosatario + " No existe");
+					$("#razonSocialEmpresa").text("La empresa con NIT " + idEndosatario + " no existe.");
 
+				    // Deshabilitar botón Enviar
 					$('#btnRealizarEndoso').dxButton({
 						disabled: true,
 						elementAttr: {
-							title: "La empresa con NIT " + idEndosatario + " No existe",
-							//style: "cursor: pointer; pointer-events: initial;",
+						    title: "La empresa con NIT " + idEndosatario + " no existe.",
+						    style: "cursor: not-allowed; pointer-events: initial;",
 						},
 					});
 
 					$('#wait2').hide();
-
 				});
-
 			}
-
-
 		}
 	}).dxValidator({
 		validationGroup: GrupoValidarEndoso,
 		validationRules: [{
 			type: 'required',
-			message: 'Ingrese el NIT de la empresa que hará de Endosatario',
+			message: 'Campo requerido',
 		}],
 	});
 
-
-
 	$("#summaryEndoso").dxValidationSummary(
-		{
-			validationGroup: GrupoValidarEndoso
-		});
-
+	{
+		validationGroup: GrupoValidarEndoso
+	});
 
 	$scope.btnRealizarEndoso = {
 		text: 'Enviar',
@@ -572,6 +560,6 @@ var tiposEndoso = [
 
 // Datos para el filtro Tipo Operación Evento
 var tiposOperacionEvento = [
-    { ID: "0", Texto: 'Con Responsabilidad' },
-    { ID: "1", Texto: 'Sin Responsabilidad' }
+    { ID: "0", Texto: 'Con responsabilidad' },
+    { ID: "1", Texto: 'Sin responsabilidad' }
 ];
