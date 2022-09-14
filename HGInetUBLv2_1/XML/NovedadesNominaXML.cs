@@ -627,11 +627,15 @@ namespace HGInetUBLv2_1
 				{
 					deduccion.FondoSP = new NominaIndividualTypeDeduccionesFondoSP();
 					deduccion.FondoSP.Porcentaje = deduccion_doc.DatosFondoSP.Porcentaje;
+					if (deduccion_doc.DatosFondoSP.Porcentaje > 0)
+						deduccion.FondoSP.PorcentajeSpecified = true;
 					deduccion.FondoSP.Deduccion = deduccion_doc.DatosFondoSP.DeduccionFSP;
 					if (deduccion_doc.DatosFondoSP.DeduccionFSP > 0)
 						deduccion.FondoSP.DeduccionSpecified = true;
 
 					deduccion.FondoSP.PorcentajeSub = deduccion_doc.DatosFondoSP.PorcentajeSub;
+					if (deduccion_doc.DatosFondoSP.PorcentajeSub > 0)
+						deduccion.FondoSP.PorcentajeSubSpecified = true;
 					deduccion.FondoSP.DeduccionSub = deduccion_doc.DatosFondoSP.DeduccionSub;
 					if (deduccion_doc.DatosFondoSP.DeduccionSub > 0)
 						deduccion.FondoSP.DeduccionSubSpecified = true;
