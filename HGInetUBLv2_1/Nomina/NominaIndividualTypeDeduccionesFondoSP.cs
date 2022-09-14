@@ -46,7 +46,7 @@ public partial class NominaIndividualTypeDeduccionesFondoSP {
     
 	/// <comentarios/>
 	[System.Xml.Serialization.XmlAttributeAttribute()]
-	public decimal Deduccion {
+	public decimal DeduccionSP {
 		get {
 			return this.deduccionField;
 		}
