@@ -1,7 +1,7 @@
 ﻿//var ruta = 'http://localhost:61436/';
 //var ruta_servicios = 'https://pruebascloudservices.hginet.co';
 
-var ruta = 'https://portal.mifacturaenlinea.com.co/';
+var ruta = 'https://portal.hgidocs.co/';
 var ruta_servicios = 'https://cloudservices.hginet.co/';
 
 
@@ -455,7 +455,7 @@ apphgi.service('SrvPagos', function ($location, $q) {
 					<div id="wait" style="display: none; z-index: 9999;">\
 						<div class="modal" style="background-color: lightslategray; opacity: 0.6; display: block;"></div>\
 						<div>\
-							<img class="divImg" style="position: absolute; left: 43%; top: 50px; z-index: 9999; max-width: 25%; max-height: 25%;" src="../../Content/icons/Loading.gif" />\
+							<img class="divImg" style="position: absolute; left: 43%; top: 50px; z-index: 9999; max-width: 25%; max-height: 25%;" src="https://portal.hgidocs.co/Content/icons/Loading.gif" />\
 						</div>\
 					</div>\
 					<h4>Pagos Electrónicos</h4>\
