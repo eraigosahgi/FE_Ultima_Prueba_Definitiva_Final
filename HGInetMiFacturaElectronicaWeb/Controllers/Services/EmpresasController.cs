@@ -12,6 +12,7 @@ using HGInetMiFacturaElectronicaWeb.Seguridad;
 using LibreriaGlobalHGInet.Enumerables;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.HgiNet;
 using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.RegistroLog;
 using Newtonsoft.Json;
@@ -370,7 +371,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpPost]
 		[Route("api/CrearEditarOperador")]
-		public IHttpActionResult CrearEditarOperador(Guid Idseguridad, string RazonSocial, int TipoIdentificacion, string Identificacion, short DV, string Email, int TipoOperador)
+		public IHttpActionResult CrearEditarOperador(Guid Idseguridad, string RazonSocial, int TipoIdentificacion, string Identificacion, string Email, int TipoOperador)
 		{
 			Sesion.ValidarSesion();
 
@@ -382,7 +383,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Tercero empresa_operador = new Tercero();
 				empresa_operador.Identificacion = Identificacion;
-				empresa_operador.IdentificacionDv = DV;
+				empresa_operador.IdentificacionDv = FuncionesIdentificacion.Dv(Identificacion); ;
 				empresa_operador.TipoIdentificacion = TipoIdentificacion;
 				empresa_operador.RazonSocial = RazonSocial;
 				empresa_operador.NombreComercial = RazonSocial;
