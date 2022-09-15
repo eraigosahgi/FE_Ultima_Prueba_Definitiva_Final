@@ -84,10 +84,10 @@
 	<div id="wait" style="display: none; z-index: 9999;">
 		<div class="modal" style="background-color: white; opacity: 0.6; display: block;"></div>
 		<div>
-			<img class="divImg" style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
+			<img class="divImg" style="position: fixed;top: 40%;z-index: 9999;width: 7%;height: auto;margin: 0 auto;text-align: center;left: 0;right: 0;border-radius: 50%;padding: 4px;border: 0;-webkit-box-shadow: 0px 1px 4px 1px rgb(177 177 177 / 60%);-moz-box-shadow: 0px 1px 4px 1px rgb(177 177 177 / 60%);box-shadow: 0px 1px 4px 1px rgb(177 177 177 / 60%);" src="../../Content/icons/Loading.gif" />
 		</div>
 	</div>
-	<div class="row" style="height: 106%; background-color: white; display:none" id="pnl_general" >
+	<div class="row" style="/* height: 106%; */ background-color: white; margin: 0;" id="pnl_general" >
 		<div class="col-md-6 col-lg-8 hidden-xs hidden-sm" style="height: 100%;" id="pnl_galeria">
 			<%--<div id="galleryContainer" style="background-color: white; height: 106%;">
 			</div>--%>

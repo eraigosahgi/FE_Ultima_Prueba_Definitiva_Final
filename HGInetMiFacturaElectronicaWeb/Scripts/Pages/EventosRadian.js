@@ -5,6 +5,7 @@ var obligado;
 var idEndosatario;
 
 var GrupoValidarEndoso = "GrupoValidarEndoso";
+var formRegistrarEmpresa = "formRegistrarEmpresa";
 
 App.controller('EventosRadianController', function EventosRadianController($scope, $http, $location, $rootScope) {
 
@@ -331,7 +332,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		elementAttr: {
 			id: "tasaDescuentoEndoso",
 			title: "Ingrese el valor del descuento. Permite decimales. Ej: 7.9",
-			//    class: "class-name"
+			// class: "class-name"
 		},
 		onValueChanged: function (data) {
 			tasaDescuentoEndoso = data.value;
@@ -376,10 +377,13 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 
 			// Validar que el campo ID Endosatario esté lleno.
 			if (idEndosatario === '') {
-				console.log("No se pudo consultar la empresa porque el campo ID Endotatario está vacío.");
+				//console.log("No se pudo consultar la empresa porque el campo ID Endotatario está vacío.");
 
 				// Mostrar mensaje
-				$("#razonSocialEmpresa").text("No se pudo consultar la empresa porque el campo ID Endotatario está vacío.");
+			    $("#razonSocialEmpresa").text("No se pudo consultar la empresa porque el campo ID Endotatario está vacío.");
+
+			    // Ocultar panel para registrar empresa
+			    $('#panelCrearEmpresa').css('display', 'none');
 
 				// Ajustar botón de Enviar
 				$('#btnRealizarEndoso').dxButton({
@@ -394,7 +398,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 			}
 
 			// Consultar empresa
-			if (!idEndosatario || idEndosatario.trim().length != 0) {
+			if (!idEndosatario || idEndosatario.trim().length >= 6) {
 				$http.get('/api/ObtenerOperador?identificacion=' + idEndosatario).then(function (response) {
 
 					// Validar si la empresa existe
@@ -406,15 +410,20 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 						razonSocialEmpresa = response["data"]["RazonSocial"];  // Obtener razón social de la empresa
 						$("#razonSocialEmpresa").text("Razón social empresa: " + razonSocialEmpresa);
 
+					    // Ocultar panel para registrar empresa
+						$('#panelCrearEmpresa').css('display', 'none');
+
 						// Activar botón Enviar si todos los campos están llenos
 						var camposLLenos = validarCamposFiltrosEndoso();
 						console.log(camposLLenos);
 						if (camposLLenos === true) {
 							// Activar botón de Enviar
-							$('#btnRealizarEndoso').dxButton({
+						    $('#btnRealizarEndoso').dxButton({
+						        text: "Realizar Endoso",
+						        type: "default",
 								disabled: false,
 								elementAttr: {
-									title: "Realizar Endoso.",
+									title: "Realizar Endoso",
 									style: "cursor: pointer; pointer-events: initial;",
 								},
 							});
@@ -423,10 +432,15 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 					//	console.log("La empresa con NIT " + idEndosatario + " existe pero no puede realizar Endoso.");
 
 						// Mostrar mensaje
-						$("#razonSocialEmpresa").text("La empresa con NIT " + idEndosatario + " existe pero no puede realizar Endoso.");
+					    $("#razonSocialEmpresa").text("La empresa con NIT " + idEndosatario + " existe pero no puede realizar Endoso.");
+
+					    // Ocultar panel para registrar empresa
+					    $('#panelCrearEmpresa').css('display', 'none');
 
 						// Deshabilitar botón Enviar
 						$('#btnRealizarEndoso').dxButton({
+						    text: "Realizar Endoso",
+						    type: "default",
 							disabled: true,
 							elementAttr: {
 								title: "La empresa existe pero no puede realizar Endoso.",
@@ -437,7 +451,60 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 					//debugger;
 				}, function errorCallback(response) {
 
-					$("#razonSocialEmpresa").text("La empresa con NIT " + idEndosatario + " no existe.");
+				    // Cargar campo Número de Identificación
+				    $("#numIdentificacionEmp").dxNumberBox({
+				        placeholder: "Ingresar número de identificación",
+				        displayExpr: "Texto",
+				        value: idEndosatario,
+				        readOnly: true,
+				        disabled: true,
+				        dataSource: numIdentificacionEmp,
+				        onValueChanged: function (data) {
+				            numIdentificacionEmp = data.value;
+				            console.log(numIdentificacionEmp);
+
+				            // Activar botón si todos los campos están llenos
+				            var camposLLenosFormEmp = validarCamposRegistroEmpresa();
+				            console.log(camposLLenosFormEmp);
+				            if (camposLLenosFormEmp === true) {
+				                // Activar botón Registrar Empresa
+				                $('#btnCrearEmpresa').dxButton({
+				                    disabled: false,
+				                    elementAttr: {
+				                        title: "Registrar empresa",
+				                        style: "cursor: pointer; pointer-events: initial;",
+				                    },
+				                });
+				            } else {
+				                // Desactivar botón Registrar Empresa
+				                $('#btnCrearEmpresa').dxButton({
+				                    disabled: true,
+				                    elementAttr: {
+				                        title: "Rellene todos los campos para poder registrar la empresa",
+				                        style: "cursor: not-allowed; pointer-events: initial;",
+				                    },
+				                });
+				            }
+				        },
+				        elementAttr: {
+				            id: "numIdentificacionEmp",
+				            title: "Ingresa el número de identificación",
+				            //  class: "class-name"
+				        }
+				    }).dxValidator({
+				        validationGroup: formRegistrarEmpresa,
+				        validationRules: [{
+				            type: 'required',
+				            message: 'Campo requerido',
+				        }],
+				    });
+
+				    $("#razonSocialEmpresa").text("");
+				    $("#razonSocialEmpresa").append("La empresa con NIT " + idEndosatario + " no existe. <br>Regístrela a continuación, para poder realizar el Endoso.");
+				    //DevExpress.ui.notify("La empresa con NIT " + idEndosatario + " no existe. <br>Regístrala a continuación, para poder realizar el Endoso.", 'error', 7000);
+
+				    // Mostrar formulario para crear/registrar empresa
+				    $('#panelCrearEmpresa').css('display', 'block');
 
 				    // Deshabilitar botón Enviar
 					$('#btnRealizarEndoso').dxButton({
@@ -456,7 +523,11 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		validationGroup: GrupoValidarEndoso,
 		validationRules: [{
 			type: 'required',
-			message: 'Campo requerido',
+			message: 'ID Endosatario requerido',
+		},{
+		    type: 'stringLength',
+		    min: 6,
+		    message: 'El ID del Endosatario debe tener al menos 6 digitos',
 		}],
 	});
 
@@ -466,7 +537,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 	});
 
 	$scope.btnRealizarEndoso = {
-		text: 'Enviar',
+	    text: 'Realizar Endoso',
 		type: 'default',
 		visible: true,
 		disabled: true,
@@ -533,7 +604,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 	};
 
 	// Activar botón
-	// Validar campos vacíos panel Filtros para hacer Endoso
+	// Validar campos formulario para realizar Endoso
 	function validarCamposFiltrosEndoso() {
 
 		// Obtener valores actuales de los campos
@@ -549,6 +620,364 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		}
 	}
 
+
+    /**
+    * Panel para crear empresa
+    */
+    // Cargar campo Razón Social
+    $("#razonSocialEmp").dxTextBox({
+        placeholder: "Ingresar razón social",
+	    displayExpr: "Texto",
+	    dataSource: razonSocialEmp,
+	    onValueChanged: function (data) {
+	        razonSocialEmp = data.value;
+	        console.log(razonSocialEmp);
+
+	        // Activar botón si todos los campos están llenos
+	        var camposLLenosFormEmp = validarCamposRegistroEmpresa();
+	        console.log(camposLLenosFormEmp);
+	        if (camposLLenosFormEmp === true) {
+	            // Activar botón Registrar Empresa
+	            $('#btnCrearEmpresa').dxButton({
+	                disabled: false,
+	                elementAttr: {
+	                    title: "Registrar empresa",
+	                    style: "cursor: pointer; pointer-events: initial;",
+	                },
+	            });
+	        } else {
+	            // Desactivar botón Registrar Empresa
+	            $('#btnCrearEmpresa').dxButton({
+	                disabled: true,
+	                elementAttr: {
+	                    title: "Rellene todos los campos para poder registrar la empresa",
+	                    style: "cursor: not-allowed; pointer-events: initial;",
+	                },
+	            });
+	        }
+	    },
+	    elementAttr: {
+	        id: "razonSocialEmp",
+	        title: "Ingresa la razón social de la empresa",
+	        //  class: "class-name"
+	    }
+	}).dxValidator({
+	    validationGroup: formRegistrarEmpresa,
+	    validationRules: [{
+	        type: 'required',
+	        message: 'Razón social requerida',
+	    }],
+	});
+
+    // Cargar campo Tipo de Identificación
+    $("#tipoIdentificacionEmp").dxSelectBox({
+        placeholder: "Seleccionar...",
+        displayExpr: "Texto",
+        dataSource: tipoIdentificacionEmp,
+        onValueChanged: function (data) {
+            tipoIdentificacionEmp = data.value.ID;
+            console.log(tipoIdentificacionEmp);
+
+            // Activar botón si todos los campos están llenos
+            var camposLLenosFormEmp = validarCamposRegistroEmpresa();
+            console.log(camposLLenosFormEmp);
+            if (camposLLenosFormEmp === true) {
+                // Activar botón Registrar Empresa
+                $('#btnCrearEmpresa').dxButton({
+                    disabled: false,
+                    elementAttr: {
+                        title: "Registrar empresa",
+                        style: "cursor: pointer; pointer-events: initial;",
+                    },
+                });
+            } else {
+                // Desactivar botón Registrar Empresa
+                $('#btnCrearEmpresa').dxButton({
+                    disabled: true,
+                    elementAttr: {
+                        title: "Rellene todos los campos para poder registrar la empresa",
+                        style: "cursor: not-allowed; pointer-events: initial;",
+                    },
+                });
+            }
+        },
+        elementAttr: {
+            id: "tipoIdentificacionEmp",
+            title: "Selecciona el tipo de identificación",
+            //  class: "class-name"
+        }
+    }).dxValidator({
+        validationGroup: formRegistrarEmpresa,
+        validationRules: [{
+            type: 'required',
+            message: 'Tipo de identificación requerida',
+        }],
+    });
+
+    // Cargar campo Número de Identificación
+    $("#numIdentificacionEmp").dxNumberBox({
+        placeholder: "Ingresar número de identificación",
+        displayExpr: "Texto",
+        value: null,
+        dataSource: numIdentificacionEmp,
+        onValueChanged: function (data) {
+            numIdentificacionEmp = data.value;
+            console.log(numIdentificacionEmp);
+
+            // Activar botón si todos los campos están llenos
+            var camposLLenosFormEmp = validarCamposRegistroEmpresa();
+            console.log(camposLLenosFormEmp);
+            if (camposLLenosFormEmp === true) {
+                // Activar botón Registrar Empresa
+                $('#btnCrearEmpresa').dxButton({
+                    disabled: false,
+                    elementAttr: {
+                        title: "Registrar empresa",
+                        style: "cursor: pointer; pointer-events: initial;",
+                    },
+                });
+            } else {
+                // Desactivar botón Registrar Empresa
+                $('#btnCrearEmpresa').dxButton({
+                    disabled: true,
+                    elementAttr: {
+                        title: "Rellene todos los campos para poder registrar la empresa",
+                        style: "cursor: not-allowed; pointer-events: initial;",
+                    },
+                });
+            }
+        },
+        elementAttr: {
+            id: "numIdentificacionEmp",
+            title: "Ingresa el número de identificación",
+            //  class: "class-name"
+        }
+    }).dxValidator({
+        validationGroup: formRegistrarEmpresa,
+        validationRules: [{
+            type: 'required',
+            message: 'Número de identificación requerido',
+        }],
+    });
+
+    // Validar si el correo existe
+    //const sendRequest = function (value) {
+    //    const invalidEmail = 'test@dx-email.com';
+    //    const d = $.Deferred();
+    //    setTimeout(() => {
+    //        d.resolve(value !== invalidEmail);
+    //    }, 1000);
+    //    return d.promise();
+    //};
+
+    // Cargar campo Correo Electrónico
+    $("#correoEmp").dxTextBox({
+        placeholder: "Ingresar correo electrónico",
+        displayExpr: "Texto",
+        dataSource: correoEmp,
+        onValueChanged: function (data) {
+            correoEmp = data.value;
+            console.log(correoEmp);
+
+            // Activar botón si todos los campos están llenos
+            var camposLLenosFormEmp = validarCamposRegistroEmpresa();
+            console.log(camposLLenosFormEmp);
+            if (camposLLenosFormEmp === true) {
+                // Activar botón Registrar Empresa
+                $('#btnCrearEmpresa').dxButton({
+                    disabled: false,
+                    elementAttr: {
+                        title: "Registrar empresa",
+                        style: "cursor: pointer; pointer-events: initial;",
+                    },
+                });
+            } else {
+                // Desactivar botón Registrar Empresa
+                $('#btnCrearEmpresa').dxButton({
+                    disabled: true,
+                    elementAttr: {
+                        title: "Rellene todos los campos para poder registrar la empresa",
+                        style: "cursor: not-allowed; pointer-events: initial;",
+                    },
+                });
+            }
+        },
+        elementAttr: {
+            id: "correoEmp",
+            title: "Ingresar correo electrónico",
+            //  class: "class-name"
+        }
+    }).dxValidator({
+        name: "Correo electrónico",
+        validationGroup: formRegistrarEmpresa,
+        validationRules: [{
+            type: 'required',
+            message: 'Correo electrónico requerido',
+        },{
+            type: 'email',
+            message: 'Correo inválido',
+        }
+        //, { // Valida si el correo existe
+        //    type: 'async',
+        //    message: 'El correo ya se encuentra registrado',
+        //    validationCallback(params) {
+        //        return sendRequest(params.value);
+        //    },
+        //}
+        ],
+    });
+
+    // Cargar campo Tipo de Operador
+    $("#tipoOperadorEmp").dxSelectBox({
+        placeholder: "Seleccionar...",
+        displayExpr: "Texto",
+        dataSource: tipoOperadorEmp,
+        onValueChanged: function (data) {
+            tipoOperadorEmp = data.value.ID;
+            console.log(tipoOperadorEmp);
+
+            // Activar botón si todos los campos están llenos
+            var camposLLenosFormEmp = validarCamposRegistroEmpresa();
+            console.log(camposLLenosFormEmp);
+            if (camposLLenosFormEmp === true) {
+                // Activar botón Registrar Empresa
+                $('#btnCrearEmpresa').dxButton({
+                    disabled: false,
+                    elementAttr: {
+                        title: "Registrar empresa",
+                        style: "cursor: pointer; pointer-events: initial;",
+                    },
+                });
+            } else {
+                // Desactivar botón Registrar Empresa
+                $('#btnCrearEmpresa').dxButton({
+                    disabled: true,
+                    elementAttr: {
+                        title: "Rellene todos los campos para poder registrar la empresa",
+                        style: "cursor: not-allowed; pointer-events: initial;",
+                    },
+                });
+            }
+        },
+        elementAttr: {
+            id: "tipoOperadorEmp",
+            title: "Elige el tipo de operador",
+            //    class: "class-name"
+        }
+    }).dxValidator({
+        validationGroup: formRegistrarEmpresa,
+        validationRules: [{
+            type: 'required',
+            message: 'Tipo de operador requerido',
+        }],
+    });
+
+    $("#summaryCrearEmpresa").dxValidationSummary({
+        validationGroup: formRegistrarEmpresa
+    });
+
+    $scope.btnCrearEmpresa = {
+        text: 'Registrar empresa',
+        type: 'default',
+        visible: true,
+        disabled: true,
+        validationGroup: formRegistrarEmpresa,
+        elementAttr: {
+            id: "btnCrearEmpresa",
+            class: "btnCrearEmpresa",
+            title: "Rellene todos los campos para poder registrar la empresa",
+            style: "cursor: not-allowed; pointer-events: initial;",
+        },
+        onClick: function (e) {
+            var result = e.validationGroup.validate();
+            if (result.isValid) {
+
+                // Deshabilitar botón
+                $('#btnCrearEmpresa').dxButton({
+                    disabled: true,
+                    elementAttr: {
+                        title: "Registrando empresa",
+                        style: "cursor: not-allowed; pointer-events: initial;",
+                    },
+                });
+
+                $('#wait2').show();
+
+                // Crear/Registrar empresa
+                $http.post('/api/CrearEditarOperador?Idseguridad=' + null + '&RazonSocial=' + razonSocialEmp + '&TipoIdentificacion=' + tipoIdentificacionEmp + '&Identificacion=' + numIdentificacionEmp + '&Email=' + correoEmp + '&TipoOperador=' + tipoOperadorEmp).then(function (response) {
+                    console.log(response.data);
+
+                    $('#wait2').hide();
+                    //$rootScope.ConsultarEventosRadian(id_seguridad, numero_documento, obligado);
+
+                    // Ocultar formulario para crear/registrar empresa
+                    $('#panelCrearEmpresa').hide();
+
+                    // Limpiar campos formulario
+                    $('#razonSocialEmp').dxTextBox({ value: '' });
+                    $('#tipoIdentificacionEmp').dxSelectBox({ value: '' });
+                    $('#numIdentificacionEmp').dxNumberBox({ value: '' });
+                    $('#tipoOperadorEmp').dxSelectBox({ value: '' });
+                    $('#correoEmp').dxTextBox({ value: '' });
+
+                    // Mostrar notificación
+                    DevExpress.ui.notify('Empresa registrada exitosamente', 'success', 7000);
+
+                    // Mostrar razón social empresa
+                    razonSocialEmpresa = response["data"]["RazonSocial"];  // Obtener razón social de la empresa
+                    $("#razonSocialEmpresa").text("");
+                    $("#razonSocialEmpresa").text("Razón social empresa: " + razonSocialEmpresa);
+
+                    // Habilitar botón Realizar Endoso
+                    $('#btnRealizarEndoso').dxButton({
+                        disabled: false,
+                        elementAttr: {
+                            title: "Realizar Endoso",
+                            style: "cursor: pointer; pointer-events: initial;",
+                        },
+                    });
+
+                }, function errorCallback(response) {
+
+                    // Mostrar notificación de proceso fallido
+                    var myDialog = DevExpress.ui.dialog.custom({
+                        title: "Proceso fallido",
+                        message: response.data.ExceptionMessage,
+                        buttons: [{
+                            text: "Aceptar",
+                            onClick: function (e) {
+                                myDialog.hide();
+                                //$rootScope.ConsultarEventosRadian(id_seguridad, numero_documento, obligado);
+                            }
+                        }]
+                    });
+                    myDialog.show().done(function (dialogResult) {
+                    });
+
+                    $('#wait2').hide();                 // Ocultar loading
+                    //$('#panelCrearEmpresa').hide();     // Ocultar formulario para crear/registrar empresa
+                });
+            }
+        }
+    };
+
+    // Validar campos formulario para Registrar Empresa
+    function validarCamposRegistroEmpresa() {
+
+        // Obtener valor campos
+        var razonSocialEmp = $('#razonSocialEmp').dxTextBox('instance').option('value');
+        var tipoIdentificacionEmp = $('#tipoIdentificacionEmp').dxSelectBox('instance').option('value');
+        var numIdentificacionEmp = $('#numIdentificacionEmp').dxNumberBox('instance').option('value');
+        var tipoOperadorEmp = $('#tipoOperadorEmp').dxSelectBox('instance').option('value');
+        var correoEmp = $('#correoEmp').dxTextBox('instance').option('value');
+
+        if (!razonSocialEmp || !tipoIdentificacionEmp || !numIdentificacionEmp || !tipoOperadorEmp || !correoEmp) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 });
 
 // Datos para el filtro Tipo Endoso
@@ -562,4 +991,16 @@ var tiposEndoso = [
 var tiposOperacionEvento = [
     { ID: "0", Texto: 'Con responsabilidad' },
     { ID: "1", Texto: 'Sin responsabilidad' }
+];
+
+// Tipos de Identificación
+var tipoIdentificacionEmp = [
+    { ID: "13", Texto: 'Cédula de ciudadanía' },
+    { ID: "31", Texto: 'NIT' }
+];
+
+// Tipos de Operador
+var tipoOperadorEmp = [
+    { ID: "1", Texto: 'Factoring' },
+    { ID: "2", Texto: 'Confirming' }
 ];
