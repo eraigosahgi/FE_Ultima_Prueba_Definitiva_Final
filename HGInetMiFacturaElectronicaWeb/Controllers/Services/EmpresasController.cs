@@ -371,7 +371,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <returns></returns>
 		[HttpPost]
 		[Route("api/CrearEditarOperador")]
-		public IHttpActionResult CrearEditarOperador(Guid Idseguridad, string RazonSocial, int TipoIdentificacion, string Identificacion, string Email, int TipoOperador)
+		public IHttpActionResult CrearEditarOperador(Guid? Idseguridad, string RazonSocial, int TipoIdentificacion, string Identificacion, string Email, int TipoOperador)
 		{
 			Sesion.ValidarSesion();
 
@@ -402,7 +402,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 			else
 			{
-				datos = ctl_empresa.Obtener(Idseguridad).FirstOrDefault();
+				datos = ctl_empresa.Obtener(Idseguridad.Value).FirstOrDefault();
 				datos.IntTipoOperador = TipoOperador;
 				ctl_empresa.Actualizar(datos);
 			}
