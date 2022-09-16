@@ -209,8 +209,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					for (int i = 0; i < fila1.ItemArray.Count(); i++)
 					{
-						if (fila1.ItemArray[i].Equals("folio"))
+						if (fila1.ItemArray[i].Equals("Folio"))
 							archivo_valido = true;
+
+						string dato = fila1.ItemArray[i].ToString();
 					}
 				}
 

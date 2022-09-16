@@ -32,7 +32,7 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 			onUploaded: function (e) {
 				$('#wait2').show();
 				consultarDatos();
-				$('#wait2').hide();
+				//$('#wait2').hide();
 				if (e.request.response == true) {
 					//Carga notificación de creación con opción de editar formato.
 					var myDialog = DevExpress.ui.dialog.custom({
@@ -48,7 +48,7 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 					myDialog.show().done(function (dialogResult) {
 					});
 				}
-				$('#wait2').hide();
+				//$('#wait2').hide();
 			}
 				   ,
 			onUploadError: function (e) {
@@ -380,7 +380,7 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 	}
 
 	function consultarDatos() {
-		
+		$('#wait2').show();
 		$http.get('/api/ObtenerDocRecibidos?StrIdSeguridad_Empresa=' + id_seguridad_empresa).then(function (response) {
 			$('#wait2').hide();
 
@@ -409,7 +409,7 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 				$("#procesar").dxButton({ visible: false });
 				$('#wait2').show();
 				consultarDatos();
-				$('#wait2').hide();
+				//$('#wait2').hide();
 				//if (response.data.length > 0) {
 				//	Radian = response.data[0].Radian;
 				//}
