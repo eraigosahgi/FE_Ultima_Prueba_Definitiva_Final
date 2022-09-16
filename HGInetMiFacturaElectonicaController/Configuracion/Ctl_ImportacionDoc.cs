@@ -121,11 +121,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			if (!string.IsNullOrEmpty(ruta_importacion))
 			{
 				//Se obtiene la empresa que esta importanto el archivo
+				Ctl_Empresa _empresa = new Ctl_Empresa();
+				TblEmpresas empresa = _empresa.Obtener(IdSeguridad).FirstOrDefault();
+
+				//Se elimina datos de esta empresa en tabla
 				try
 				{
-					Ctl_Empresa _empresa = new Ctl_Empresa();
-					TblEmpresas empresa = _empresa.Obtener(IdSeguridad).FirstOrDefault();
-
 					List<TblImportacionDoc> datos = Obtener(empresa.StrIdentificacion, Operacion);
 
 					EliminarLista(datos);
@@ -138,7 +139,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				try
 				{
-					ImportarExcel(ruta_importacion);
+					ImportarExcel(ruta_importacion, empresa.StrIdentificacion, Operacion);
 				}
 				catch (Exception excepcion)
 				{
@@ -155,7 +156,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return importa_archivo;
 		}
 
-		public void ImportarExcel(string rutaArchivo)
+		public void ImportarExcel(string rutaArchivo, string empresa_importacion, int operacion)
 		{
 
 			try
@@ -294,20 +295,47 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 								if (tipo_doc < 4)
 								{
-									Ctl_Documento ctl_doc = new Ctl_Documento();
 
-									TblDocumentos doc_bd = ctl_doc.Obtener(import.StrEmpresaFacturador, Convert.ToInt64(import.IntNumero), import.StrPrefijo, tipo_doc);
+									bool consulta_doc = true;
 
-									if (doc_bd == null)
+									//0 - Documentos emitidos; 1 - Documentos Recibidos
+									if (operacion == 1)
 									{
-										import.IdProceso = 1;
-										import.StrObservaciones = "Documento No existe en Plataforma";
+										if (!import.StrEmpresaAdquiriente.Equals(empresa_importacion))
+										{
+											import.IdProceso = 2;
+											import.StrObservaciones = string.Format("Documento con nit de Recepción {0} no puede ingresar a plataforma", import.StrEmpresaAdquiriente);
+											consulta_doc = false;
+										}
 									}
 									else
 									{
-										import.IdProceso = 2;
-										import.StrObservaciones = string.Format("Documento ya existe en nuestra Plataforma, Fecha de ingreso {0}", doc_bd.DatFechaIngreso);
+										if (!import.StrEmpresaFacturador.Equals(empresa_importacion))
+										{
+											import.IdProceso = 2;
+											import.StrObservaciones = string.Format("Documento con nit de Emisión {0} no puede ingresar a plataforma", import.StrEmpresaFacturador);
+											consulta_doc = false;
+										}
 									}
+
+									if (consulta_doc == true)
+									{
+										Ctl_Documento ctl_doc = new Ctl_Documento();
+
+										TblDocumentos doc_bd = ctl_doc.Obtener(import.StrEmpresaFacturador, Convert.ToInt64(import.IntNumero), import.StrPrefijo, tipo_doc);
+
+										if (doc_bd == null)
+										{
+											import.IdProceso = 1;
+											import.StrObservaciones = "Documento No existe en Plataforma";
+										}
+										else
+										{
+											import.IdProceso = 2;
+											import.StrObservaciones = string.Format("Documento ya existe en nuestra Plataforma, Fecha de ingreso {0}", doc_bd.DatFechaIngreso);
+										}
+									}
+									
 								}
 								else
 								{
