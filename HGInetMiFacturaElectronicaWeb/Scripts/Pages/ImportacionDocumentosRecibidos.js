@@ -159,6 +159,9 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 			headerFilter: {
 				visible: true
 			},
+			filterRow: {
+				visible: true
+			},
 			"export": {
 				enabled: true,
 				fileName: "Documentos",
@@ -333,6 +336,7 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 		function validarSeleccion() {
 			var data = $("#gridDocumentos").dxDataGrid("instance").option().dataSource;
 			var lista = '';
+			total_seleccionados = 0;
 			for (var i = 0; i < data.length; i++) {
 
 				valor = false;
