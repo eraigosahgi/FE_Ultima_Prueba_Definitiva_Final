@@ -214,4 +214,7 @@
   <data name="ConsultaDocumentosRadian" xml:space="preserve">
     <value>4401</value>
   </data>
+  <data name="ImportarDocumentosRecibidos" xml:space="preserve">
+    <value>1323</value>
+  </data>
 </root>

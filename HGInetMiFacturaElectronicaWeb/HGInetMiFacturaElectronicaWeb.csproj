@@ -1948,6 +1948,7 @@
     <Content Include="Scripts\Pages\DocumentosEmisor.js" />
     <Content Include="Scripts\Pages\EventosRadian.js" />
     <Content Include="Scripts\Pages\HGIpayConsultaDocumentos.js" />
+    <Content Include="Scripts\Pages\ImportacionDocumentosRecibidos.js" />
     <Content Include="Scripts\Pages\Indicadores.js" />
     <Content Include="Scripts\Pages\ModalAsignarFormato.js" />
     <Content Include="Scripts\Pages\ModalAuditoria.js" />
@@ -2847,6 +2848,7 @@
     <Content Include="Views\Pages\GestionReportes.aspx" />
     <Content Include="Views\Pages\GestionUsuariosPagos.aspx" />
     <Content Include="Views\Pages\HGIpayConsultaDocumentos.aspx" />
+    <Content Include="Views\Pages\ImportarDocumentosRecibidos.aspx" />
     <Content Include="Views\Pages\ModalAsignarFormato.aspx" />
     <Content Include="Views\Pages\ModalComprarPlan.aspx" />
     <Content Include="Views\Pages\ModalDetalleEmpresa.aspx" />
@@ -2917,6 +2919,7 @@
     <Compile Include="Controllers\Services\EmpresaResolucionController.cs" />
     <Compile Include="Controllers\Services\EventosRadianController.cs" />
     <Compile Include="Controllers\Services\FormatosController.cs" />
+    <Compile Include="Controllers\Services\ImportacionDocController.cs" />
     <Compile Include="Controllers\Services\IndicadoresController.cs" />
     <Compile Include="Controllers\Services\InteroperabilidadController.cs" />
     <Compile Include="Controllers\Services\PagosController.cs" />
@@ -3268,6 +3271,13 @@
     </Compile>
     <Compile Include="Views\Pages\HGIpayConsultaDocumentos.aspx.designer.cs">
       <DependentUpon>HGIpayConsultaDocumentos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ImportarDocumentosRecibidos.aspx.cs">
+      <DependentUpon>ImportarDocumentosRecibidos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\ImportarDocumentosRecibidos.aspx.designer.cs">
+      <DependentUpon>ImportarDocumentosRecibidos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ModalAsignarFormato.aspx.cs">
       <DependentUpon>ModalAsignarFormato.aspx</DependentUpon>

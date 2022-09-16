@@ -295,6 +295,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1323.
+        /// </summary>
+        internal static string ImportarDocumentosRecibidos {
+            get {
+                return ResourceManager.GetString("ImportarDocumentosRecibidos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1372.
         /// </summary>
         internal static string PagosAdministracion {
