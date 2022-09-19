@@ -48,7 +48,7 @@ function ColocarEstadoRecepcion(Estado) {
 function ColocarProcesoImportacion(Estado) {
 	Descripcion = GetDescripcionEnum(ProcesoImportacion, Estado);
 	//return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : " class='badge badge-Aprobado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
-	return "<span " + ((Estado == '1') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : " class='badge badge-Entregado'   title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
+	return "<span " + ((Estado == '1') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-primary' title='" + Descripcion + "'" : " class='badge badge-Entregado'   title='" + Descripcion + "'") + " style='border-radius: 0px !important;'  >" + Descripcion + "</span>"
 }
 
 //Retorna el código html del diseño del tipo de evento de respuestas de  mailject
@@ -721,7 +721,7 @@ var ProcesoImportacion =
 [
 	{ "ID": 0, "Name": "No Aplica" },
 	{ "ID": 1, "Name": "Pendiente" },
-	{ "ID": 2, "Name": "Rechazado" },
+	{ "ID": 2, "Name": "Recibido" },
 	{ "ID": 3, "Name": "Procesado" }
 ];
 
