@@ -6517,7 +6517,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 						TimeSpan Diff_dates = fecha_actual.Subtract(fecha_fin);
 
-						if (Diff_dates.TotalDays < 91)
+						if (Diff_dates.TotalDays < 1)
 							throw new ApplicationException("No se puede sincronizar los archivos a azure");
 
 						//Se valida si es para procesar algun documento anterior del año que por alguna razon no se pudo sincronizar a Azure
