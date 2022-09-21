@@ -243,7 +243,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 											if (item_row[i].ToString().Contains("Crédito"))
 												tipo_doc = 3;
 											else if (item_row[i].ToString().Contains("Application"))
+											{
 												tipo_doc = 4;
+												i = item_row.ItemArray.Count();
+											}
+												
 											import.StrTipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc));
 											break;
 										case 1:
@@ -339,23 +343,23 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 											import.StrObservaciones = string.Format("Documento ya existe en nuestra Plataforma, Fecha de ingreso {0}", doc_bd.DatFechaIngreso);
 										}
 									}
-									
-								}
-								else
-								{
-									import.StrObservaciones = "Documento No aplica para importar a Plataforma";
-								}
 
-								//Proceso para crear item en la tabla
-								try
-								{
-									Ctl_ImportacionDoc ctl_import = new Ctl_ImportacionDoc();
-									ctl_import.Crear(import);
+									//Proceso para crear item en la tabla
+									try
+									{
+										Ctl_ImportacionDoc ctl_import = new Ctl_ImportacionDoc();
+										ctl_import.Crear(import);
+									}
+									catch (Exception excepcion)
+									{
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion, "Creando informacion del archivo de excel en BD");
+									}
+
 								}
-								catch (Exception excepcion)
-								{
-									RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion, "Creando informacion del archivo de excel en BD");
-								}
+								//else
+								//{
+								//	import.StrObservaciones = "Documento No aplica para importar a Plataforma";
+								//}
 							}
 						}
 						
