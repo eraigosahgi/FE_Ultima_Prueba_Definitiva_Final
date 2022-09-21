@@ -210,10 +210,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					for (int i = 0; i < fila1.ItemArray.Count(); i++)
 					{
-						if (fila1.ItemArray[i].Equals("Folio"))
+						string campo_mayus = fila1.ItemArray[i].ToString().ToUpper();
+						if (campo_mayus.Equals("FOLIO"))
+						{
 							archivo_valido = true;
+							i = fila1.ItemArray.Count();
+						}
+							
 
-						string dato = fila1.ItemArray[i].ToString();
 					}
 				}
 
@@ -352,10 +356,6 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								{
 									RegistroLog.EscribirLog(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion, "Creando informacion del archivo de excel en BD");
 								}
-							}
-							else
-							{
-
 							}
 						}
 						
