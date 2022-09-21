@@ -1182,6 +1182,22 @@ namespace HGInetInteroperabilidad.Procesos
 
 					if (!attach_document.Identificacionadquiriente.Equals(documento_obj.DatosAdquiriente.Identificacion))
 						throw new ArgumentException("El Adquiriente del Documento Electrónico no coincide con el del AttachDocument recibido");
+
+					// convierte el contenido de texto a xml
+					XmlReader xml_reader = XmlReader.Create(new StringReader(attach_document.DocumentoElectronico.Trim()));
+
+					XmlSerializer serializacion = null;
+
+					if (tipo_doc == TipoDocumento.Factura)
+					{
+						serializacion = new XmlSerializer(typeof(InvoiceType));
+
+						InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+
+						if (conversion.ProfileExecutionID.Value.Equals("2"))
+							throw new ArgumentException("El Documento Electrónico tiene registrado que fue enviado al ambiente de pruebas");
+
+					}
 				}
 				
 				

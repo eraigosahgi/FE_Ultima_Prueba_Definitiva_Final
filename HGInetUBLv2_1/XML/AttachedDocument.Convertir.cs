@@ -68,6 +68,9 @@ namespace HGInetUBLv2_1
 				attach_document.RespuestaDianXml = (attach_ubl.ParentDocumentLineReference != null) ? attach_ubl.ParentDocumentLineReference[0].DocumentReference.Attachment.ExternalReference.Description[0].Value.Trim() : string.Empty;
 
 				attach_document.DocumentoElectronico = attach_ubl.Attachment.ExternalReference.Description[0].Value.Trim();
+
+				if (attach_ubl.ProfileExecutionID.Value.Equals("2"))
+					throw new ArgumentException("El AttachDocument tiene registrado que es del ambiente de pruebas, validar estructura de este tipo de documento");
 			}
 			catch (Exception ex)
 			{
