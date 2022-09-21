@@ -257,6 +257,16 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 							.appendTo(container);
 					}
 				},
+				 {
+				 	caption: "Nit Facturador",
+				 	//cssClass: "hidden-xs col-md-1",
+				 	dataField: "StrEmpresaFacturador"
+				 },
+				 {
+				 	caption: "Nombre Facturador",
+				 	//cssClass: "hidden-xs col-md-1",
+				 	dataField: "StrNombreFacturador"
+				 },
 				{
 					caption: "Resultado",
 					dataField: "StrObservaciones"
@@ -273,36 +283,6 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 					dataType: "date",
 					format: "yyyy-MM-dd",
 				},
-				{
-					caption: "CUFE",
-					//cssClass: "col-xs-2 col-md-1",
-					dataField: "StrCufe"
-				},
-				 {
-				 	caption: "Nit Facturador",
-				 	//cssClass: "hidden-xs col-md-1",
-				 	dataField: "StrEmpresaFacturador"
-				 },
-				 {
-				 	caption: "Nombre Facturador",
-				 	//cssClass: "hidden-xs col-md-1",
-				 	dataField: "StrNombreFacturador"
-				 },
-				   {
-				   	dataField: "StrEstadoDian",
-				   	caption: "Estado Dian",
-				   	//cssClass: "hidden-xs col-md-1",
-				   },
-				   {
-				   	caption: "Nit Adquiriente",
-				   	//cssClass: "hidden-xs col-md-1",
-				   	dataField: "StrEmpresaAdquiriente"
-				   },
-				 {
-				 	caption: "Nombre Adquiriente",
-				 	//cssClass: "hidden-xs col-md-1",
-				 	dataField: "StrNombreAdquiriente"
-				 },
 				   {
 				   	caption: "IVA",
 				   	//cssClass: "col-xs-2 col-md-1",
@@ -321,12 +301,32 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 				   	dataField: "IntVlrIPC",
 				   	//visible: false
 				   },
+				{
+					caption: "CUFE",
+					//cssClass: "col-xs-2 col-md-1",
+					dataField: "StrCufe"
+				},
 				  {
 				  	caption: "Total",
 				  	//cssClass: "col-xs-2 col-md-1",
 				  	dataField: "IntVlrTotal",
 				  	//visible: false
 				  },
+				   {
+				   	dataField: "StrEstadoDian",
+				   	caption: "Estado Dian",
+				   	//cssClass: "hidden-xs col-md-1",
+				   },
+				   {
+				   	caption: "Nit Adquiriente",
+				   	//cssClass: "hidden-xs col-md-1",
+				   	dataField: "StrEmpresaAdquiriente"
+				   },
+				 {
+				 	caption: "Nombre Adquiriente",
+				 	//cssClass: "hidden-xs col-md-1",
+				 	dataField: "StrNombreAdquiriente"
+				 },
 
 
 			],
