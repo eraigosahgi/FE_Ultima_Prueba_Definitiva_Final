@@ -301,17 +301,17 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 				   	dataField: "IntVlrIPC",
 				   	//visible: false
 				   },
-				{
-					caption: "CUFE",
-					//cssClass: "col-xs-2 col-md-1",
-					dataField: "StrCufe"
-				},
 				  {
 				  	caption: "Total",
 				  	//cssClass: "col-xs-2 col-md-1",
 				  	dataField: "IntVlrTotal",
 				  	//visible: false
 				  },
+				{
+					caption: "CUFE",
+					//cssClass: "col-xs-2 col-md-1",
+					dataField: "StrCufe"
+				},
 				   {
 				   	dataField: "StrEstadoDian",
 				   	caption: "Estado Dian",
