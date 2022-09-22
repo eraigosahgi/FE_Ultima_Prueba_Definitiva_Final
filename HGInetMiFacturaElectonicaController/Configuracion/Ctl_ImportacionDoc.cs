@@ -278,16 +278,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 											import.StrNombreAdquiriente = item_row[i].ToString();
 											break;
 										case 10:
-											import.IntVlrIva = Convert.ToDecimal(Convert.ToDouble(item_row[i]));
+											import.IntVlrIva = Convert.ToDecimal(item_row[i]);
 											break;
 										case 11:
-											import.IntVlrIca = Convert.ToDecimal(Convert.ToDouble(item_row[i]));
+											import.IntVlrIca = Convert.ToDecimal(item_row[i]);
 											break;
 										case 12:
-											import.IntVlrIPC = Convert.ToDecimal(Convert.ToDouble(item_row[i]));
+											import.IntVlrIPC = Convert.ToDecimal(item_row[i]);
 											break;
 										case 13:
-											import.IntVlrTotal = Convert.ToDecimal(Convert.ToDouble(item_row[i]));
+											import.IntVlrTotal = Convert.ToDecimal(item_row[i]);
 											break;
 										case 14:
 											import.StrEstadoDian = item_row[i].ToString();
