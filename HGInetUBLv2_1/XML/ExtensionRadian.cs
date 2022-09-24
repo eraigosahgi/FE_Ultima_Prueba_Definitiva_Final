@@ -249,7 +249,8 @@ namespace HGInetUBLv2_1
 					root.AppendChild(nodo_name);
 
 					nodo_value = extension_sector.DocumentElement.FirstChild.ChildNodes[1].Clone();
-					nodo_value.InnerText = "00";
+					decimal pendiente = valor_fe - tasa_descuento;
+					nodo_value.InnerText = pendiente.ToString().Replace(",", "."); //"00";
 					root.AppendChild(nodo_value);
 
 					break;

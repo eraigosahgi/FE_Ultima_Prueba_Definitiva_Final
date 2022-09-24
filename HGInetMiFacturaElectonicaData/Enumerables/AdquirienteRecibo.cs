@@ -44,7 +44,15 @@ namespace HGInetMiFacturaElectonicaData
 
 		[Description("Mandato")]
 		[AmbientValue("20")]
-		Mandato = 20
+		Mandato = 20,
+
+		[Description("Pago")]
+		[AmbientValue("22")]
+		PagoFvTV = 22,
+
+		[Description("Informe pago")]
+		[AmbientValue("23")]
+		InformePago = 23
 
 	}
 

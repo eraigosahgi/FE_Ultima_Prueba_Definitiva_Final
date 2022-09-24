@@ -6,6 +6,13 @@ var idEndosatario;
 
 var GrupoValidarEndoso = "GrupoValidarEndoso";
 var formRegistrarEmpresa = "formRegistrarEmpresa";
+var GrupoValidarPago = "GrupoValidarPago";
+
+/////Valor de la Factura
+//$scope.ValorF = 0;
+
+/////Valor pagado
+//$scope.Pago = 0;
 
 App.controller('EventosRadianController', function EventosRadianController($scope, $http, $location, $rootScope) {
 
@@ -26,6 +33,11 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		$("#tasaDescuentoEndoso").dxNumberBox({ value: '' });
 		$("#razonSocialEmpresa").text('');
 
+		$('#panelPago').hide();
+		$("#tipoPago").dxSelectBox({ value: '' });
+		$scope.ValorF = 0;
+		$scope.Pago = 0;
+
 		$http.get('/api/ObtenerEventosRadian?id_seguridad=' + IdSeguridad).then(function (response) {
 
 			$("#GridEventosRadianDocumento").dxDataGrid({
@@ -41,12 +53,15 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 				},
 				onContentReady: function (e) {
 					try {
-						$("#cmdenviar").dxButton({ visible: response.data[0].Inscribir_Documento });
-						$("#cmdenviar1").dxButton({ visible: response.data[0].otros_eventos });
-						$("#cmdenviar2").dxButton({ visible: response.data[0].otros_eventos });
-						$("#cmdenviar3").dxButton({ visible: response.data[0].otros_eventos });
-						$("#cmdenviar4").dxButton({ visible: response.data[0].otros_eventos });
-						$("#cmdenviar5").dxButton({ visible: response.data[0].otros_eventos });
+						$("#cmdenviar").dxButton({ disabled: response.data[0].Inscribir_Documento });
+						$("#cmdenviar1").dxButton({ disabled: response.data[0].Endoso });
+						$("#cmdenviar2").dxButton({ disabled: response.data[0].Informe });
+						$("#cmdenviar3").dxButton({ disabled: response.data[0].Pago });
+						//$("#cmdenviar4").dxButton({ visible: response.data[0].otros_eventos });
+						//$("#cmdenviar5").dxButton({ visible: response.data[0].otros_eventos });
+						$("#ValorF").dxNumberBox({ value: response.data[0].ValorF });
+						$scope.ValorF = response.data[0].ValorF;
+						$scope.Pago = response.data[0].ValPago;
 
 					}
 					catch (err) {
@@ -54,8 +69,8 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 						$("#cmdenviar1").dxButton({ visible: false });
 						$("#cmdenviar2").dxButton({ visible: false });
 						$("#cmdenviar3").dxButton({ visible: false });
-						$("#cmdenviar4").dxButton({ visible: false });
-						$("#cmdenviar5").dxButton({ visible: false });
+						//$("#cmdenviar4").dxButton({ visible: false });
+						//$("#cmdenviar5").dxButton({ visible: false });
 					}
 				},
 				columns: [
@@ -117,7 +132,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 			$("#cmdenviar").dxButton({
 				text: "Inscripción TV",
 				type: "default",
-				visible: false,
+				disabled: true,
 				onClick: function () {
 					$('#wait2').show();
 					$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
@@ -151,90 +166,108 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 			$("#cmdenviar1").dxButton({
 				text: "Endoso",
 				type: "default",
-				visible: false,
+				disabled: true,
 				onClick: function () {
 					$("#panelEndoso").toggle();
 				}
 			});
 
 			$("#cmdenviar2").dxButton({
-				text: "Aval",
+				text: "Informe Pago",
 				type: "default",
-				visible: false,
+				disabled: true,
 				onClick: function () {
+					$('#wait2').show();
+					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=23' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+					$http.post('/api/GenerarEventoRadian?id_seguridad=' + $scope.IdSeguridad + '&tipo_evento=23' + '&operacion_evento=0' + '&id_receptor_evento=0' + '&tasa_descuento=0' + '&usuario=').then(function (response) {
+						//alert(response.data);
+						$('#wait2').show();
+						$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+						$('#wait2').hide();
+					}, function errorCallback(response) {
+						$('#wait2').hide();
+						//Carga notificación de creación con opción de editar formato.
+						var myDialog = DevExpress.ui.dialog.custom({
+							title: "Proceso Falló",
+							message: response.data.ExceptionMessage,
+							buttons: [{
+								text: "Aceptar",
+								onClick: function (e) {
+									myDialog.hide();
+									$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+								}
+							}]
+						});
+						myDialog.show().done(function (dialogResult) {
+						});
 
-					MensajeEventoRadian();
-					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-					//	//alert(response.data);
-					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-					//});
+						$('#wait2').hide();
+					});
 				}
 			});
 
 			$("#cmdenviar3").dxButton({
-				text: "Mandato",
-				type: "default",
-				visible: false,
-				onClick: function () {
-					MensajeEventoRadian();
-					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-					//	//alert(response.data);
-					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-					//});
-				}
-			});
-
-			$("#cmdenviar4").dxButton({
-				text: "Limitación",
-				type: "default",
-				visible: false,
-				onClick: function () {
-					MensajeEventoRadian();
-					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-					//	//alert(response.data);
-					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-					//});
-				}
-			});
-
-			$("#cmdenviar5").dxButton({
-				text: "Transferencia Derecho",
-				type: "default",
-				visible: false,
-				onClick: function () {
-					MensajeEventoRadian();
-					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-					//	//alert(response.data);
-					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-					//});
-				}
-			});
-
-			$("#cmdenviar6").dxButton({
-				text: "Informe Pago",
-				type: "default",
-				visible: false,
-				onClick: function () {
-					MensajeEventoRadian();
-					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-					//	//alert(response.data);
-					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-					//});
-				}
-			});
-
-			$("#cmdenviar7").dxButton({
 				text: "Pago",
 				type: "default",
-				visible: false,
+				disabled: true,
 				onClick: function () {
-					MensajeEventoRadian();
-					//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
-					//	//alert(response.data);
-					//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
-					//});
+					$("#ValorF").dxNumberBox({ readOnly: true });
+					$("#panelPago").toggle();
+					//MensajeEventoRadian();
 				}
 			});
+
+			//$("#cmdenviar4").dxButton({
+			//	text: "Limitación",
+			//	type: "default",
+			//	visible: false,
+			//	onClick: function () {
+			//		MensajeEventoRadian();
+			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+			//		//	//alert(response.data);
+			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+			//		//});
+			//	}
+			//});
+
+			//$("#cmdenviar5").dxButton({
+			//	text: "Transferencia Derecho",
+			//	type: "default",
+			//	visible: false,
+			//	onClick: function () {
+			//		MensajeEventoRadian();
+			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+			//		//	//alert(response.data);
+			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+			//		//});
+			//	}
+			//});
+
+			//$("#cmdenviar6").dxButton({
+			//	text: "Informe Pago",
+			//	type: "default",
+			//	visible: false,
+			//	onClick: function () {
+			//		MensajeEventoRadian();
+			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+			//		//	//alert(response.data);
+			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+			//		//});
+			//	}
+			//});
+
+			//$("#cmdenviar7").dxButton({
+			//	text: "Pago",
+			//	type: "default",
+			//	visible: false,
+			//	onClick: function () {
+			//		MensajeEventoRadian();
+			//		//$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=6' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+			//		//	//alert(response.data);
+			//		//	$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+			//		//});
+			//	}
+			//});
 
 
 
@@ -315,6 +348,67 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		}
 	}).dxValidator({
 		validationGroup: GrupoValidarEndoso,
+		validationRules: [{
+			type: 'required',
+			message: 'Campo requerido',
+		}],
+	});
+
+	// Cargar datos filtro Tipo Operación Endoso
+	$("#tipoPago").dxSelectBox({
+		placeholder: "Seleccionar...",
+		displayExpr: "Texto",
+		dataSource: tipoPago,
+		onValueChanged: function (data) {
+			tipoPago = data.value.ID;
+			//console.log(tiposOperacionEvento);
+
+			if (tipoPago == 0)
+			{
+				$("#Pago").dxNumberBox({ readOnly: true });
+				$("#Pago").dxNumberBox({ value: $scope.ValorF });
+				$("#Pago").dxNumberBox({ readOnly: true });
+			} else {
+				$("#Pago").dxNumberBox({ readOnly: false });
+				$("#Pago").dxNumberBox({ value: "" });
+				$("#Pago").dxNumberBox({ readOnly: false });
+			}
+
+			// Activar botón Enviar si todos los campos están llenos
+			var camposLLenos = validarCamposPago();
+			console.log(camposLLenos);
+
+			if (camposLLenos === true) {
+				// Activar botón de Enviar
+				$('#btnRealizarPago').dxButton({
+					disabled: false,
+					elementAttr: {
+						title: "Realizar Pago.",
+						style: "cursor: pointer; pointer-events: initial;",
+					},
+				});
+			}
+			else
+			{
+				// Deshabilitar botón Enviar
+				$('#btnRealizarPago').dxButton({
+					text: "Realizar Pago",
+					type: "default",
+					disabled: true,
+					elementAttr: {
+						title: "Debe ingresar una Operacion de Evento y un valor de Pago.",
+						style: "cursor: not-allowed; pointer-events: initial;",
+					},
+				});
+			}
+		},
+		elementAttr: {
+			id: "tipoPago",
+			title: "Elige el tipo de pago del documento",
+			//    class: "class-name"
+		}
+	}).dxValidator({
+		validationGroup: GrupoValidarPago,
 		validationRules: [{
 			type: 'required',
 			message: 'Campo requerido',
@@ -536,6 +630,11 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		validationGroup: GrupoValidarEndoso
 	});
 
+	$("#summaryPago").dxValidationSummary(
+	{
+		validationGroup: GrupoValidarPago
+	});
+
 	$scope.btnRealizarEndoso = {
 	    text: 'Realizar Endoso',
 		type: 'default',
@@ -603,6 +702,56 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		}
 	};
 
+	$scope.btnRealizarPago = {
+		text: 'Realizar Evento Pago',
+		type: 'default',
+		visible: true,
+		disabled: true,
+		validationGroup: GrupoValidarPago,
+		elementAttr: {
+			id: "btnRealizarPago",
+			class: "btnRealizarPago",
+			title: "Para realizar el evento de pago primero debe seleccionar la operacion y si es parcial ingresar el valor pagado.",
+			style: "cursor: not-allowed; pointer-events: initial;",
+		},
+		onClick: function (e) {
+			var result = e.validationGroup.validate();
+			if (result.isValid) {
+
+				$('#btnRealizarPago').dxButton({
+					disabled: true,
+				});
+				
+
+				$('#wait2').show();
+				$http.post('/api/GenerarEventoRadian?id_seguridad=' + id_seguridad + '&tipo_evento=22' + '&operacion_evento=' + tipoPago + '&id_receptor_evento=' + '&tasa_descuento=' + $scope.Pago + '&usuario=').then(function (response) {
+					//alert(response.data);
+					$('#wait2').hide();
+					$rootScope.ConsultarEventosRadian(id_seguridad, numero_documento, obligado);
+				}, function errorCallback(response) {
+
+					//Carga notificación de creación con opción de editar formato.
+					var myDialog = DevExpress.ui.dialog.custom({
+						title: "Proceso fallido",
+						message: response.data.ExceptionMessage,
+						buttons: [{
+							text: "Aceptar",
+							onClick: function (e) {
+								myDialog.hide();
+								$rootScope.ConsultarEventosRadian(id_seguridad, numero_documento, obligado);
+							}
+						}]
+					});
+					myDialog.show().done(function (dialogResult) {
+					});
+
+					$('#wait2').hide();
+					$('#panelPago').hide();
+				});
+			}
+		}
+	};
+
 	// Activar botón
 	// Validar campos formulario para realizar Endoso
 	function validarCamposFiltrosEndoso() {
@@ -614,6 +763,20 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 		var idEndosatario = $('#idEndosatario').dxTextBox('instance').option('value');
 
 		if (!tipoEndoso || !tipoOperacionEvento || !tasaDescuentoEndoso || !idEndosatario) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	// Validar campos formulario para realizar Pago
+	function validarCamposPago() {
+
+		// Obtener valores actuales de los campos
+		var tipoPago = $('#tipoPago').dxSelectBox('instance').option('value');
+		var Valor_pago = $('#Pago').dxNumberBox('instance').option('value');
+
+		if (!tipoPago || !Valor_pago) {
 			return false;
 		} else {
 			return true;
@@ -978,6 +1141,88 @@ App.controller('EventosRadianController', function EventosRadianController($scop
         }
     }
 
+
+	//Valido el monto Total menos el monto pagado
+
+	$("#Pago").dxNumberBox({
+    	format: "$ #,##0.##",
+    	validationGroup: "ValidarPago",
+    	onValueChanged: function (data) {
+    		$scope.Pago = data.value;
+
+    		// Activar botón Enviar si todos los campos están llenos
+    		var camposLLenos = validarCamposPago();
+
+    		if ($scope.Pago > 0 && camposLLenos == true)
+    		{
+    			// Activar botón de Enviar
+    			$('#btnRealizarPago').dxButton({
+    				disabled: false,
+    				elementAttr: {
+    					title: "Realizar Pago.",
+    					style: "cursor: pointer; pointer-events: initial;",
+    				},
+    			});
+    		}
+    	}
+    })
+	.dxValidator({
+		validationRules: [{
+			type: "required",
+			message: "Debe Indicar el monto pagado"
+		},
+		{
+			type: 'custom', validationCallback: function (options) {
+				if (validar()) {
+					options.rule.message = "El monto pagado no puede ser mayor al valor de la Factura";
+					return false;
+				} else { return true; }
+			}
+		},
+		{
+			type: 'custom', validationCallback: function (options) {
+				if (validarMayorACero()) {
+					options.rule.message = "El monto pagado debe ser mayor a cero(0)";
+					return false;
+				} else { return true; }
+			}
+		}
+
+
+		, {
+			type: 'pattern',
+			pattern: '^[0-9-.]+$',
+			message: 'No debe Incluir puntos(.) ni caracteres especiales'
+		}
+		, {
+			type: "numeric",
+			message: "El monto a pagar debe ser numérico"
+		}]
+	});
+	//Valida que el Monto a Pagar no sea Mayor al monto pendiente
+    function validar() {
+    	if ($scope.Pago > $scope.ValorF) {
+    		return true;
+    	}
+    	return false;
+    }
+
+	//Valida que el Monto a Pagar no sea Mayor al monto pendiente
+    function validarMayorACero() {
+    	if ($scope.Pago < 1) {
+    		return true;
+    	}
+    	return false;
+    }
+
+    $("#ValorF").dxNumberBox({
+    	format: "$ #,##0.##",
+    	validationGroup: "ValidarPago",
+    	onValueChanged: function (data) {
+    		$scope.Pago = data.value;
+    	}
+    });
+
 });
 
 // Datos para el filtro Tipo Endoso
@@ -1003,4 +1248,10 @@ var tipoIdentificacionEmp = [
 var tipoOperadorEmp = [
     { ID: "1", Texto: 'Factoring' },
     { ID: "2", Texto: 'Confirming' }
+];
+
+// Datos para el filtro Tipo de pago
+var tipoPago = [
+    { ID: "0", Texto: 'Total' },
+    { ID: "1", Texto: 'Parcial' }
 ];

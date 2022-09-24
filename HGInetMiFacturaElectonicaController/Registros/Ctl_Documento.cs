@@ -2979,9 +2979,22 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//se consulta si el evento que se va hacer ya existe en plataforma
 				TblEventosRadian evento_enviar = list_evento.Where(x => x.IntEstadoEvento == id_evento).FirstOrDefault();
 
-				if (evento_enviar == null)
+				CodigoResponseV2 cod_acuse = Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(id_evento);
+
+				bool generar_evento = true;
+
+				if (evento_enviar != null && cod_acuse == CodigoResponseV2.EndosoPp)
 				{
-					CodigoResponseV2 cod_acuse = Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(id_evento);
+					generar_evento = false;
+				}
+
+				if (cod_acuse == CodigoResponseV2.PagoFvTV && (doc.IntVlrTotal - (doc.IntValorPagar + tasa_descuento) > 0))
+				{
+					generar_evento = false;
+				}
+
+				if (generar_evento == true)
+				{
 					try
 					{
 						resultado = Ctl_Documento.ConvertirAcuse(doc, Emisor, Receptor, (short)cod_acuse.GetHashCode(), "", false, operacion_evento, tasa_descuento);
@@ -2994,8 +3007,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 					}
 					evento_enviar = EnviarAcuse(resultado, Emisor, Receptor, doc, (short)cod_acuse.GetHashCode(), ref respuesta_error_dian);
-					//if (evento_enviar != null)
-					//	evento_procesado_DIAN = true;
+					
+					if (evento_enviar != null && cod_acuse == CodigoResponseV2.PagoFvTV)
+					{
+						doc.IntValorPagar = tasa_descuento;
+						Actualizar(doc);
+					}
 
 					//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
 					if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))

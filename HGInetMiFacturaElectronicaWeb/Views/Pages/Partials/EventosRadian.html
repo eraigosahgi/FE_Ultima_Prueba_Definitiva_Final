@@ -164,6 +164,50 @@
                                     <!-- /FILTROS DE PARA HACER ENDOSO -->
 									<br />
 
+									<br />
+									<!-- FILTROS DE PARA REPORTAR EL PAGO -->
+									<div class="row">
+										<div class="col-md-12">
+											<div id="panelPago" class="panel panel-white" style="display: none;">
+												<div class="panel-heading">
+													<h6 class="panel-title">Filtros para reportar el Pago<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>
+												</div>
+												<div class="panel-body">
+													<div class="col-lg-12">
+														<div class="row">
+															<div class="dx-fieldset">
+																<div class="col-md-3" style="margin-top: 1%">
+																	<i class="icon-file-openoffice"></i>
+																	<label>Operación Evento:</label>
+																	<div id="tipoPago"></div>
+																</div>
+																<div class="col-md-3" style="margin-top: 1%">
+																	<i class="icon-files-empty"></i>
+																	<label>Valor Factura:</label>
+																	<div id="ValorF"></div>
+																</div>
+																<div class="col-md-3" style="margin-top: 1%">
+																	<i class="dx-icon-user"></i>
+																	<label>Pago:</label>
+																	<div id="Pago"></div>
+																</div>
+																<div class="col-lg-12 text-center">
+																	<br>
+
+																	<div data-dx-button="btnRealizarPago"></div>
+																</div>
+															</div>
+														</div>
+
+													</div>
+													<p data-ng-bind-html="message" class="ng-binding"></p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- /FILTROS DE PARA REPORTAR EL PAGO -->
+									<br />
+
 									<div class="demo-container">
 										<div id="GridEventosRadianDocumento"></div>
 									</div>

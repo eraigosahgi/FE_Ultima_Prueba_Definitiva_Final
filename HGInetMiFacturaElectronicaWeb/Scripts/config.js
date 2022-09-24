@@ -678,7 +678,9 @@ var AdquirienteRecibo =
 	{ "ID": 5, "Name": "Aceptación Expresa" },
 	{ "ID": 6, "Name": "Título Valor" },
 	{ "ID": 7, "Name": "Endoso" },
-	{ "ID": 20, "Name": "Mandato" }
+	{ "ID": 20, "Name": "Mandato" },
+	{ "ID": 22, "Name": "Pago" },
+	{ "ID": 23, "Name": "Informe Pago" }
 ];
 
 

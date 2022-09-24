@@ -478,7 +478,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					MensajeEnvio = d.MensajeEnvio,// DescripcionMensajeEmail(Convert.ToInt16(d.MensajeEnvio)),
 					d.EnvioMail,
 					d.Radian,
-					TituloValor = (d.IntAdquirienteRecibo == 7) ? "Endoso" : (d.IntAdquirienteRecibo == 6) ? "Titulo Valor" : (d.IntAdquirienteRecibo == 5) || (d.IntAdquirienteRecibo == 3) ? "Aceptado" : "Documento Electrónico"
+					TituloValor = (d.IntAdquirienteRecibo == 23) ? "Informe Pago" : (d.IntAdquirienteRecibo == 22) ? "Pago" : (d.IntAdquirienteRecibo == 7) ? "Endoso" : (d.IntAdquirienteRecibo == 6) ? "Titulo Valor" : (d.IntAdquirienteRecibo == 5) || (d.IntAdquirienteRecibo == 3) ? "Aceptado" : "Documento Electrónico"
 				});
 
 				return Ok(retorno);
@@ -1122,14 +1122,47 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 				}
 
-				tasa_descuento = tasa_descuento * 1.00M;
-
-				if (id_seguridad == null || tipo_evento == 0 || operacion_evento > 1 || tasa_descuento == 0 || string.IsNullOrEmpty(id_receptor_evento))
-					throw new ArgumentException("Algunos de los parametros no contienen información, por favor validar selección y genere de nuevo el proceso");
-
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
 				List<TblDocumentos> datos = new List<TblDocumentos>();
+
+				CodigoResponseV2 cod_acuse = Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.CodigoResponseV2>(tipo_evento);
+
+				if (cod_acuse == CodigoResponseV2.InformePago)
+				{
+					TblDocumentos docbd = ctl_documento.ObtenerDocumento(id_seguridad);
+
+					//consulto que tiempo por vencer tiene la factura respecto a la fecha actual
+					TimeSpan porvencer = Fecha.GetFecha().Subtract(docbd.DatFechaVencDocumento);
+
+					if (porvencer.Days > -3)
+						throw new ArgumentException("Para resgistrar este evento se puede hacer hasta 3 dias antes del vencimiento de la factura");
+
+					id_receptor_evento = docbd.StrEmpresaAdquiriente;
+				}
+
+				if (cod_acuse == CodigoResponseV2.PagoFvTV)
+				{
+					TblDocumentos docbd = ctl_documento.ObtenerDocumento(id_seguridad);
+
+					id_receptor_evento = docbd.StrEmpresaAdquiriente;
+
+					//**Para identificar quien genera el evento
+					//if (docbd.StrEmpresaFacturador.Equals(id_receptor_evento))
+					//{
+					//	id_receptor_evento = docbd.StrEmpresaAdquiriente;
+					//}
+					//else if (docbd.StrEmpresaAdquiriente.Equals(id_receptor_evento))
+					//{
+					//	id_receptor_evento = docbd.StrEmpresaFacturador;
+					//}
+
+				}
+
+				tasa_descuento = tasa_descuento * 1.00M;
+
+				if ((cod_acuse == CodigoResponseV2.EndosoPp) && (id_seguridad == null || tipo_evento == 0 || operacion_evento > 1 || tasa_descuento == 0 || string.IsNullOrEmpty(id_receptor_evento)))
+					throw new ArgumentException("Algunos de los parametros no contienen información, por favor validar selección y genere de nuevo el proceso");
 
 				string respuesta_error_dian = string.Empty;
 
