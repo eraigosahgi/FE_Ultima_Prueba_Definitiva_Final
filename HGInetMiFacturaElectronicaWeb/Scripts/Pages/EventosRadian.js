@@ -1153,7 +1153,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
     		// Activar botón Enviar si todos los campos están llenos
     		var camposLLenos = validarCamposPago();
 
-    		if ($scope.Pago > 0 && camposLLenos == true)
+    		if ($scope.Pago > 0 && camposLLenos == true && validar() == false)
     		{
     			// Activar botón de Enviar
     			$('#btnRealizarPago').dxButton({
