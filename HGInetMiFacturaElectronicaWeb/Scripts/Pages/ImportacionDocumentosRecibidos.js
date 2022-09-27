@@ -14,7 +14,6 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 		visible: false,
 		type: "default",
 		onClick: function (e) {
-			$('#wait2').show();
 			ProcesarDocumentos();
 		} 
 	});
@@ -408,26 +407,47 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 
 	function ProcesarDocumentos() {
 		if (total_seleccionados > 0) {
-			$http.post('/api/ProcesarDocs?lista_documentos=' + $scope.documentos + '&Operacion=1').then(function (response) {
-				
-				$("#procesar").dxButton({ visible: false });
-				$('#wait2').show();
-				consultarDatos();
-				//$('#wait2').hide();
-				//if (response.data.length > 0) {
-				//	Radian = response.data[0].Radian;
-				//}
-				//$("#gridDocumentos").dxDataGrid({
-				//	dataSource: response.data,
-				//	paging: {
-				//		pageSize: 20,
-				//		enabled: true
-				//	}
-				//});
 
-			}, function errorCallback(response) {
-				$('#wait2').hide();
-				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			var myDialog = DevExpress.ui.dialog.custom({
+				title: "¿Desea procesar los documentos?",
+				messageHtml: "Señor(a) Usuario, debe tener en cuenta que procesar los documentos de este listado no contaran con los archivos XML y PDF en nuestra Plataforma, no podra validar que contiene el documento para posterior conversión a compra." + "</br></br>Si desea continuar con el proceso presione 'Aceptar'",
+				position: { my: "center", at: "center", align: "center" },
+				buttons: [{
+					text: "Aceptar",
+					onClick: function (e) {
+						$('#wait2').show();
+						$http.post('/api/ProcesarDocs?lista_documentos=' + $scope.documentos + '&Operacion=1').then(function (response) {
+
+							$("#procesar").dxButton({ visible: false });
+							$('#wait2').show();
+							consultarDatos();
+							//$('#wait2').hide();
+							//if (response.data.length > 0) {
+							//	Radian = response.data[0].Radian;
+							//}
+							//$("#gridDocumentos").dxDataGrid({
+							//	dataSource: response.data,
+							//	paging: {
+							//		pageSize: 20,
+							//		enabled: true
+							//	}
+							//});
+
+						}, function errorCallback(response) {
+							$('#wait2').hide();
+							DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+						});
+					}
+				},
+				{
+					text: "Cancelar",
+					onClick: function (e) {
+						$('#wait2').hide();
+						myDialog.hide();
+					}
+				}]
+			});
+			myDialog.show().done(function (dialogResult) {
 			});
 			
 		}
