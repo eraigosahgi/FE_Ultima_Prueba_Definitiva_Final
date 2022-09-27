@@ -202,12 +202,26 @@ namespace HGInetUBLv2_1
 							documento.DatosObligado.RazonSocial = rz_obligado;
 						}
 
+						string dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
+
+						if (!documento.DatosObligado.IdentificacionDv.Equals(dv_obligado))
+						{
+							documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+						}
+
 						//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
 						string rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
 						if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
 						{
 							documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
+						}
+
+						string dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
+
+						if (!documento.DatosAdquiriente.IdentificacionDv.Equals(dv_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+						{
+							documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
 						}
 
 					}
