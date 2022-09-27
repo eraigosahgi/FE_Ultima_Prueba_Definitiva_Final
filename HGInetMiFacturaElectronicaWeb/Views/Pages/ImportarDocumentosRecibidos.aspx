@@ -62,14 +62,13 @@
 		<!-- DATOS -->
 		<div class="col-md-12">
 			<div class="panel panel-white">
-				<div class="panel-heading">
+				<div class="panel-heading" style="padding-bottom: 40px;">
 					 <div class ="col-md-10">
 						<h6 class="panel-title ">Datos</h6>
 					 </div>
 					
 					<div class ="col-md-2">
-						<div style="float: right; margin-right: 2%; margin-top: -20px;">
-
+						<div style="float: right; margin-right: 2%; margin-top: -8px;">
 							<div id="procesar"></div>
 						</div>
 					</div>

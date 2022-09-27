@@ -408,12 +408,16 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 	function ProcesarDocumentos() {
 		if (total_seleccionados > 0) {
 
+		    //DevExpress.ui.dialog.alert('<span class="dx-icon-home icon"></span> Home</a>', 'Title');
 			var myDialog = DevExpress.ui.dialog.custom({
 				title: "¿Desea procesar los documentos?",
-				messageHtml: "Señor(a) Usuario, debe tener en cuenta que procesar los documentos de este listado no contaran con los archivos XML y PDF en nuestra Plataforma, no podra validar que contiene el documento para posterior conversión a compra." + "</br></br>Si desea continuar con el proceso presione 'Aceptar'",
-				position: { my: "center", at: "center", align: "center" },
+				messageHtml: "Señor(a) Usuario, La funcionalidad principal de esta opción, es conciliar las diferencias entre la DIAN y nuestra plataforma. El proceso correcto, es enviar los documentos a la siguiente dirección de correo: recepcion@hgidocs.co, esta opción se debe hacer solo, si no es posible el contacto con su proveedor." + "<br></br><b>IMPORTANTE:</b> Si se importa de esta forma, debe tener en cuenta que no contará con los archivos XML y PDF, por lo que no será posible validar la información y posteriormente no podrá convertir este documento en una compra electrónica.</br></br>Si desea continuar con el proceso presione 'Aceptar'.",
+				//position: { my: "center", at: "center", align: "center" },
+				width: 580,
 				buttons: [{
-					text: "Aceptar",
+				    text: "Aceptar",
+				    activeStateEnabled: true,
+				    focusStateEnabled: false,
 					onClick: function (e) {
 						$('#wait2').show();
 						$http.post('/api/ProcesarDocs?lista_documentos=' + $scope.documentos + '&Operacion=1').then(function (response) {
@@ -440,7 +444,13 @@ App.controller('ImportarDocumentosRecibidosController', function ImportarDocumen
 					}
 				},
 				{
-					text: "Cancelar",
+				    text: "Cancelar",
+				    elementAttr: {
+				        id: "BtnProcesarDocumentosAceptar",
+				        //class: "btn procesarDocumentos aceptar"
+				    },
+				    stylingMode: 'contained',
+				    type: "default",
 					onClick: function (e) {
 						$('#wait2').hide();
 						myDialog.hide();
