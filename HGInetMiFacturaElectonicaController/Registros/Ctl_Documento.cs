@@ -3356,11 +3356,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					break;
 			}
 
-			doc_acuse.IdAcuse = string.Format("{0}{1}{2}", doc_acuse.CodigoRespuesta, Fecha.GetFecha().ToString("ss"), doc.IntNumero);
+			doc_acuse.IdAcuse = string.Format("{0}{1}", doc_acuse.CodigoRespuesta, doc.IntNumero);
 
 			if (reenvio == true)
 			{
-				doc_acuse.IdAcuse = string.Format("{0}{1}", doc_acuse.CodigoRespuesta, doc_acuse.IdAcuse);
+				doc_acuse.IdAcuse = string.Format("{0}{1}{2}", doc_acuse.CodigoRespuesta, Fecha.GetFecha().ToString("ss"), doc_acuse.IdAcuse);
 			}
 			doc_acuse.IdSeguridad = doc.StrIdSeguridad.ToString();
 			doc_acuse.Documento = doc.IntNumero;

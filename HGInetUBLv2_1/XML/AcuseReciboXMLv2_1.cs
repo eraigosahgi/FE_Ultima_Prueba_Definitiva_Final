@@ -204,7 +204,7 @@ namespace HGInetUBLv2_1
 
 						string dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
-						if (!documento.DatosObligado.IdentificacionDv.Equals(dv_obligado))
+						if (!documento.DatosObligado.IdentificacionDv.ToString().Equals(dv_obligado))
 						{
 							documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
 						}
@@ -219,7 +219,7 @@ namespace HGInetUBLv2_1
 
 						string dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
-						if (!documento.DatosAdquiriente.IdentificacionDv.Equals(dv_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+						if (!documento.DatosAdquiriente.IdentificacionDv.ToString().Equals(dv_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
 						{
 							documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
 						}
