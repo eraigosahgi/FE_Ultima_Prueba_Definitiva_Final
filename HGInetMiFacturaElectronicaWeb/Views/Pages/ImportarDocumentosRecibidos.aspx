@@ -7,7 +7,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 	<%--<script src="../../Scripts/Pages/ModalConsultaEmpresas.js?vjs20220824"></script>--%>
-	<script src="../../Scripts/Pages/ImportacionDocumentosRecibidos.js?vjs20220919"></script>
+	<script src="../../Scripts/Pages/ImportacionDocumentosRecibidos.js?vjs20220928"></script>
 
 	<!-- CONTENEDOR PRINCIPAL -->
 	<div data-ng-app="App" data-ng-controller="ImportarDocumentosRecibidosController">
