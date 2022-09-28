@@ -157,8 +157,9 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
-
+				//Se comenta por que se detecta que un documento que no tiene Razon social la DIAN no recibe el evento, mientras que si lo hace con la info que se tiene en plataforma
 				#region Obtiene Documento Electronico Original
+
 				//Se obtiene la informacion del XMl de la Factura para tomar los datos correctos 
 				string contenido_xml_Fe = Archivo.ObtenerContenido(documento_factura.StrUrlArchivoUbl);
 
@@ -213,13 +214,14 @@ namespace HGInetUBLv2_1
 
 						try
 						{
+							// caso - 682919
 							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-							rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+							//rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
-							if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
-							{
-								documento.DatosObligado.RazonSocial = rz_obligado;
-							}
+							//if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
+							//{
+							//	documento.DatosObligado.RazonSocial = rz_obligado;
+							//}
 
 							dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
@@ -229,12 +231,12 @@ namespace HGInetUBLv2_1
 							}
 
 							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-							rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+							//rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
-							if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
-							{
-								documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
-							}
+							//if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+							//{
+							//	documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
+							//}
 
 							dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
@@ -270,12 +272,12 @@ namespace HGInetUBLv2_1
 						try
 						{
 							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-							rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+							//rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
-							if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
-							{
-								documento.DatosObligado.RazonSocial = rz_obligado;
-							}
+							//if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
+							//{
+							//	documento.DatosObligado.RazonSocial = rz_obligado;
+							//}
 
 							dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
@@ -285,12 +287,12 @@ namespace HGInetUBLv2_1
 							}
 
 							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-							rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+							//rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
-							if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
-							{
-								documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
-							}
+							//if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+							//{
+							//	documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
+							//}
 
 							dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
@@ -325,12 +327,12 @@ namespace HGInetUBLv2_1
 						try
 						{
 							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-							rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+							//rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
-							if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
-							{
-								documento.DatosObligado.RazonSocial = rz_obligado;
-							}
+							//if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
+							//{
+							//	documento.DatosObligado.RazonSocial = rz_obligado;
+							//}
 
 							dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
@@ -340,12 +342,12 @@ namespace HGInetUBLv2_1
 							}
 
 							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-							rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+							//rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
 
-							if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
-							{
-								documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
-							}
+							//if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+							//{
+							//	documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
+							//}
 
 							dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
@@ -361,7 +363,7 @@ namespace HGInetUBLv2_1
 						}
 					}
 
-				}
+				} 
 
 				#endregion
 
