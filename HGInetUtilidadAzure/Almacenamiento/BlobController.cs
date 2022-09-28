@@ -1,4 +1,5 @@
 ﻿using LibreriaGlobalHGInet.General;
+using LibreriaGlobalHGInet.RegistroLog;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Shared.Protocol;
@@ -37,7 +38,7 @@ namespace HGInetUtilidadAzure.Almacenamiento
 		/// Opciones para la petición de blobs sobre Microsoft Azure
 		/// </summary>
 		private BlobRequestOptions OpcionesBlob = null;
-		
+
 		/// <summary>
 		/// Constructor del controlador
 		/// </summary>
@@ -50,7 +51,7 @@ namespace HGInetUtilidadAzure.Almacenamiento
 			System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
 			this.DatosCuenta = CloudStorageAccount.Parse(conexion_azure);
-			
+
 			this.ClienteBlob = this.DatosCuenta.CreateCloudBlobClient();
 
 			if (!string.IsNullOrEmpty(contenedor))
@@ -68,11 +69,11 @@ namespace HGInetUtilidadAzure.Almacenamiento
 		public void Set()
 		{
 			ServiceProperties serviceProperties = this.ClienteBlob.GetServiceProperties((BlobRequestOptions)null, (OperationContext)null);
-			
+
 			serviceProperties.Cors = new CorsProperties();
-			
+
 			IList<CorsRule> corsRules = serviceProperties.Cors.CorsRules;
-			
+
 			CorsRule corsRule = new CorsRule();
 			corsRule.AllowedHeaders = (IList<string>)new List<string>() { "*" };
 			corsRule.ExposedHeaders = (IList<string>)new List<string>() { "*" };
@@ -82,7 +83,7 @@ namespace HGInetUtilidadAzure.Almacenamiento
 			int num2 = 3600;
 			corsRule.MaxAgeInSeconds = num2;
 			corsRules.Add(corsRule);
-			
+
 			this.ClienteBlob.SetServiceProperties(serviceProperties, (BlobRequestOptions)null, (OperationContext)null);
 		}
 
@@ -92,10 +93,10 @@ namespace HGInetUtilidadAzure.Almacenamiento
 		/// <param name="blockBlobReference">datos del blob</param>
 		/// <param name="extension">extensión del archivo blob</param>
 		private void SetBlobPropiedades(CloudBlockBlob blockBlobReference, string extension, Dictionary<string, string> metadata)
-		{			
+		{
 			// asigna el tipo de contenido al archivo
 			if (extension != string.Empty)
-			{	// obtiene el tipo de contenido
+			{   // obtiene el tipo de contenido
 				string contentType = WebHtml.TipoContenido(extension.ToLower());
 
 				if (contentType != string.Empty)
@@ -104,7 +105,8 @@ namespace HGInetUtilidadAzure.Almacenamiento
 
 			// asigna la metadata al archivo
 			foreach (var meta in metadata)
-			{	blockBlobReference.Metadata.Add(meta.Key, meta.Value);
+			{
+				blockBlobReference.Metadata.Add(meta.Key, meta.Value);
 			}
 		}
 
@@ -212,7 +214,7 @@ namespace HGInetUtilidadAzure.Almacenamiento
 					swriter.Write(source);
 					swriter.Flush();
 					writer.Position = 0;
-			
+
 					// retorna la url del archivo
 					return this.Enviar(swriter.BaseStream, extension, metadata, nombre);
 				}
@@ -254,7 +256,7 @@ namespace HGInetUtilidadAzure.Almacenamiento
 				blockBlobReference.UploadFromByteArray(buffer, index, length, (AccessCondition)null, (BlobRequestOptions)null, (OperationContext)null);
 				blockBlobReference.SetStandardBlobTierAsync(StandardBlobTier.Cool);
 			}
-			
+
 			// retorna la url del archivo
 			return blockBlobReference.Uri.ToString();
 		}
@@ -303,12 +305,12 @@ namespace HGInetUtilidadAzure.Almacenamiento
 		/// <param name="instantaneas">indica si sólo elimina instantáneas</param>
 		public void Eliminar(string nombre, bool instantaneas = false)
 		{
-			
+
 			// si no envía nombre se asigna uno
 			if (string.IsNullOrEmpty(nombre))
 				throw new ApplicationException("Indique un nombre válido.");
-			
-				// valida el nombre del blob
+
+			// valida el nombre del blob
 			NameValidator.ValidateBlobName(nombre);
 
 			// obtiene la referencia al archivo
@@ -321,6 +323,38 @@ namespace HGInetUtilidadAzure.Almacenamiento
 				blockBlobReference.Delete(DeleteSnapshotsOption.IncludeSnapshots);
 		}
 
+		/// <summary>
+		/// Descarga un Blob tipo texto y lo retorna en string para serializar
+		/// </summary>
+		/// <param name="extension">debe ser .xml</param>
+		/// <param name="nombre">nombre del archivo</param>
+		/// <returns></returns>
+		public string LecturaBlob(string extension, string nombre)
+		{
+			string lectura = string.Empty;
 
+			try
+			{
+				// valida el nombre del blob
+				NameValidator.ValidateBlobName(nombre);
+
+				// obtiene la referencia al archivo
+				CloudBlockBlob blockBlobReference = this.ContenedorBlob.GetBlockBlobReference(string.Format("{0}{1}", (object)nombre, (object)extension));
+
+
+				if (!blockBlobReference.Exists())
+				{
+					lectura = blockBlobReference.DownloadText();
+				}
+
+			}
+			catch (Exception exception)
+			{
+				RegistroLog.EscribirLog(exception, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.consulta);
+			}
+
+			return lectura;
+
+		}
 	}
 }

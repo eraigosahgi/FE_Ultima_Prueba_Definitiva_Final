@@ -2,6 +2,7 @@
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetUBLv2_1.DianListas;
+using HGInetUtilidadAzure.Almacenamiento;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
@@ -157,77 +158,207 @@ namespace HGInetUBLv2_1
 				#endregion
 
 
-				#region Obtiene Factura Original
+				#region Obtiene Documento Electronico Original
 				//Se obtiene la informacion del XMl de la Factura para tomar los datos correctos 
 				string contenido_xml_Fe = Archivo.ObtenerContenido(documento_factura.StrUrlArchivoUbl);
 
+				if (documento_factura.StrUrlArchivoUbl.Contains("blob") && string.IsNullOrWhiteSpace(contenido_xml_Fe))
+				{
+					AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+
+					string nombre_contenedor = string.Format("files-hgidocs-{0}", documento_factura.DatFechaIngreso.Year);
+
+					BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+
+					contenido_xml_Fe = contenedor.LecturaBlob(Path.GetExtension(documento_factura.StrUrlArchivoUbl), Path.GetFileNameWithoutExtension(documento_factura.StrUrlArchivoUbl));
+				}
+				
 				string doc_prefijo_bd = string.Format("{0}{1}", documento.Prefijo, documento.Documento.ToString());
-
-				Factura documento_obj = new Factura();
-
-				string tipo_factura = string.Empty;
 
 				// valida el contenido del archivo
 				if (!string.IsNullOrWhiteSpace(contenido_xml_Fe))
 				{
+
 					// convierte el contenido de texto a xml
 					XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml_Fe));
 
 					// convierte el objeto de acuerdo con el tipo de documento
-					XmlSerializer serializacion1 = new XmlSerializer(typeof(InvoiceType));
+					XmlSerializer serializacion = null;
 
-					InvoiceType conversion = (InvoiceType)serializacion1.Deserialize(xml_reader);
+					string rz_obligado = string.Empty;
+					string dv_obligado = string.Empty;
+					string rz_adquiriente = string.Empty;
+					string dv_adquiriente = string.Empty;
 
-					//documento_obj = FacturaXMLv2_1.Convertir(conversion, null);
-
-					//documento.Prefijo = (documento_obj.Prefijo == documento.Prefijo) ? documento.Prefijo : documento_obj.Prefijo;
-					//documento.Documento = (documento_obj.Documento == documento.Documento) ? documento.Documento : documento_obj.Documento;
-					string doc_prefijo = conversion.ID.Value;
-
-					if (!doc_prefijo.Equals(doc_prefijo_bd))
+					if (documento_factura.IntDocTipo == TipoDocumento.Factura.GetHashCode())
 					{
-						doc_prefijo_bd = doc_prefijo;
+						//Factura documento_obj = new Factura();
+
+						//string tipo_factura = string.Empty;
+
+						// convierte el objeto de acuerdo con el tipo de documento
+						serializacion = new XmlSerializer(typeof(InvoiceType));
+
+						InvoiceType conversion = (InvoiceType)serializacion.Deserialize(xml_reader);
+
+						string doc_prefijo = conversion.ID.Value;
+
+						if (!doc_prefijo.Equals(doc_prefijo_bd))
+						{
+							doc_prefijo_bd = doc_prefijo;
+						}
+
+						if (conversion.InvoiceTypeCode != null && !conversion.InvoiceTypeCode.Value.Equals(documento.TipoDocumento))
+							documento.TipoDocumento = conversion.InvoiceTypeCode.Value;
+
+						try
+						{
+							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
+							rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+
+							if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
+							{
+								documento.DatosObligado.RazonSocial = rz_obligado;
+							}
+
+							dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
+
+							if (!documento.DatosObligado.IdentificacionDv.ToString().Equals(dv_obligado))
+							{
+								documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+							}
+
+							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
+							rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+
+							if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+							{
+								documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
+							}
+
+							dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
+
+							if (!documento.DatosAdquiriente.IdentificacionDv.ToString().Equals(dv_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+							{
+								documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
+							}
+
+						}
+						catch (Exception)
+						{
+
+						}
+
 					}
-
-					if (conversion.InvoiceTypeCode != null && !conversion.InvoiceTypeCode.Value.Equals(documento.TipoDocumento))
-						documento.TipoDocumento = conversion.InvoiceTypeCode.Value;
-
-					try
+					else if (documento_factura.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode())
 					{
-						//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-						string rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+						// convierte el objeto de acuerdo con el tipo de documento
+						serializacion = new XmlSerializer(typeof(CreditNoteType));
 
-						if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
+						CreditNoteType conversion = (CreditNoteType)serializacion.Deserialize(xml_reader);
+
+						string doc_prefijo = conversion.ID.Value;
+
+						if (!doc_prefijo.Equals(doc_prefijo_bd))
 						{
-							documento.DatosObligado.RazonSocial = rz_obligado;
+							doc_prefijo_bd = doc_prefijo;
 						}
 
-						string dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
+						//if (conversion.InvoiceTypeCode != null && !conversion.InvoiceTypeCode.Value.Equals(documento.TipoDocumento))
+						//	documento.TipoDocumento = conversion.InvoiceTypeCode.Value;
 
-						if (!documento.DatosObligado.IdentificacionDv.ToString().Equals(dv_obligado))
+						try
 						{
-							documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
+							rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+
+							if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
+							{
+								documento.DatosObligado.RazonSocial = rz_obligado;
+							}
+
+							dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
+
+							if (!documento.DatosObligado.IdentificacionDv.ToString().Equals(dv_obligado))
+							{
+								documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+							}
+
+							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
+							rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+
+							if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+							{
+								documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
+							}
+
+							dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
+
+							if (!documento.DatosAdquiriente.IdentificacionDv.ToString().Equals(dv_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+							{
+								documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
+							}
+
 						}
-
-						//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
-						string rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
-
-						if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+						catch (Exception)
 						{
-							documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
+
 						}
-
-						string dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
-
-						if (!documento.DatosAdquiriente.IdentificacionDv.ToString().Equals(dv_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
-						{
-							documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
-						}
-
 					}
-					catch (Exception)
+					else if (documento_factura.IntDocTipo == TipoDocumento.NotaDebito.GetHashCode())
 					{
-					  
+						// convierte el objeto de acuerdo con el tipo de documento
+						serializacion = new XmlSerializer(typeof(DebitNoteType));
+
+						DebitNoteType conversion = (DebitNoteType)serializacion.Deserialize(xml_reader);
+
+						string doc_prefijo = conversion.ID.Value;
+
+						if (!doc_prefijo.Equals(doc_prefijo_bd))
+						{
+							doc_prefijo_bd = doc_prefijo;
+						}
+
+						//if (conversion.InvoiceTypeCode != null && !conversion.InvoiceTypeCode.Value.Equals(documento.TipoDocumento))
+						//	documento.TipoDocumento = conversion.InvoiceTypeCode.Value;
+
+						try
+						{
+							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
+							rz_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+
+							if (!documento.DatosObligado.RazonSocial.Equals(rz_obligado))
+							{
+								documento.DatosObligado.RazonSocial = rz_obligado;
+							}
+
+							dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
+
+							if (!documento.DatosObligado.IdentificacionDv.ToString().Equals(dv_obligado))
+							{
+								documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+							}
+
+							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
+							rz_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().RegistrationName.Value;
+
+							if (!documento.DatosAdquiriente.RazonSocial.Equals(rz_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+							{
+								documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
+							}
+
+							dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
+
+							if (!documento.DatosAdquiriente.IdentificacionDv.ToString().Equals(dv_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
+							{
+								documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
+							}
+
+						}
+						catch (Exception)
+						{
+
+						}
 					}
 
 				}
