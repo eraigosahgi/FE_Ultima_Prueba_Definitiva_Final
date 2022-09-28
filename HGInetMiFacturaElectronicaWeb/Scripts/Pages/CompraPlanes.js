@@ -78,6 +78,7 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 		$scope.cantidad = Desde;
 		$scope.tipo_documento = 0;
 		$scope.Valor_Total = Desde * Valor_Unit;
+		$scope.codigo_Plan = Plan;
 
 		$("#txtPlan").dxTextBox({
 			value: Plan,

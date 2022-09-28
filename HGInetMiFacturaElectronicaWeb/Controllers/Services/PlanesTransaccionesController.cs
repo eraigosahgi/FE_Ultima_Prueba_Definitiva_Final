@@ -580,13 +580,41 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpPost]
 		[Route("api/ComprarPlan")]
-		public IHttpActionResult ComprarPlan(int cantidad, decimal valor_unit, decimal valor_total, int tipo_doc)
+		public IHttpActionResult ComprarPlan(int cantidad, decimal valor_unit, decimal valor_total, int tipo_doc, int codigo_plan)
 		{
 			try
 			{
 				//RegistroLog.EscribirLog(new ApplicationException("Llega a la API"), MensajeCategoria.Servicio, MensajeTipo.Exito, MensajeAccion.lectura, "Llega a la API");
 
 				Sesion.ValidarSesion();
+
+				//Obtengo el plan adquirido para crearlo con el valor correcto
+				try
+				{
+					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+					string ruta_json = string.Format("{0}\\{1}", plataforma_datos.RutaDmsFisica, Constantes.nombre_json_planes);
+					//string objeto = Constantes.obj_json_Planes;
+
+					//List<ObjListaPlanes> objeto_planes = new List<ObjListaPlanes>();
+					string objeto = System.IO.File.ReadAllText(ruta_json).ToString();
+					ObjListaPlanes objeto_planes = JsonConvert.DeserializeObject<ObjListaPlanes>(objeto);
+
+					ObjPlan plan_adquirido = objeto_planes.Plan.Where(x => x.Idplan == codigo_plan).FirstOrDefault();
+
+					if (cantidad >= plan_adquirido.desde && cantidad <= plan_adquirido.hasta)
+					{
+						decimal valor_plan = cantidad * plan_adquirido.valor;
+
+						if (valor_plan != valor_total)
+							valor_total = valor_plan;
+					}
+					
+				}
+				catch (Exception)
+				{
+
+				}
 
 				string Facturador = Sesion.DatosEmpresa.StrIdentificacion;
 

@@ -18,7 +18,7 @@ GestionCompraPlanesApp.controller('ModalComprarPlanController', function ModalCo
 
 	function GuardarCompra() {
 		
-		$http.post('/api/ComprarPlan?cantidad=' + $scope.cantidad + '&valor_unit=' + $scope.Valor_Unit + '&valor_total=' + $scope.Valor_Total + '&tipo_doc=' + $scope.tipo_documento).then(function (response) {
+		$http.post('/api/ComprarPlan?cantidad=' + $scope.cantidad + '&valor_unit=' + $scope.Valor_Unit + '&valor_total=' + $scope.Valor_Total + '&tipo_doc=' + $scope.tipo_documento + '&codigo_plan=' + $scope.codigo_Plan).then(function (response) {
 			$("#wait").hide();
 			try {
 
