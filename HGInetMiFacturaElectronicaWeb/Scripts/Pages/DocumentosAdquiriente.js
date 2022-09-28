@@ -411,8 +411,13 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
                        },
                       {
                       	caption: "Estado Evento",
-                      	cssClass: "hidden-xs col-md-1",
+                      	//cssClass: "hidden-xs col-md-1",
                       	dataField: "IntAdquirienteRecibo",
+                      	lookup: {
+                      		dataSource: AdquirienteRecibo,
+                      		displayExpr: "Name",
+                      		valueExpr: "ID"
+                      	},
                       	cellTemplate: function (container, options) {
 
                       		$("<div>")
