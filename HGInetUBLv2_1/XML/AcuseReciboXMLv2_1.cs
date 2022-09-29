@@ -163,7 +163,7 @@ namespace HGInetUBLv2_1
 				//Se obtiene la informacion del XMl de la Factura para tomar los datos correctos 
 				string contenido_xml_Fe = Archivo.ObtenerContenido(documento_factura.StrUrlArchivoUbl);
 
-				if (documento_factura.StrUrlArchivoUbl.Contains("blob") && string.IsNullOrWhiteSpace(contenido_xml_Fe))
+				if (!string.IsNullOrWhiteSpace(documento_factura.StrUrlArchivoUbl) && documento_factura.StrUrlArchivoUbl.Contains("blob") && string.IsNullOrWhiteSpace(contenido_xml_Fe))
 				{
 					AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
 
