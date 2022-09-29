@@ -1151,7 +1151,7 @@ namespace HGInetInteroperabilidad.Procesos
 					CodigoResponseV2 cod_respuestaDian = Enumeracion.GetValueFromAmbiente<CodigoResponseV2>(doc_acuse_Dian.CodigoRespuesta);
 
 					if (!cod_respuestaDian.Equals(CodigoResponseV2.ValidadoDian))
-						throw new ArgumentException("El Documento Electrónico no esta validado por la DIAN");
+						throw new ArgumentException(string.Format("El Documento Electrónico no esta validado por la DIAN, el application response indica: {0}", Enumeracion.GetDescription(cod_respuestaDian)));
 
 					//if (!attach_document.CufeDocumentoElectronico.Equals(doc_acuse_Dian.CufeDocumento))
 					//	throw new ArgumentException("El CUFE del Documento Electrónico no coincide con la respuesta de la DIAN recibida en el AttachDocument");
@@ -1441,7 +1441,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-					RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
+					RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
 
 					throw new ApplicationException(mensaje);
 				}

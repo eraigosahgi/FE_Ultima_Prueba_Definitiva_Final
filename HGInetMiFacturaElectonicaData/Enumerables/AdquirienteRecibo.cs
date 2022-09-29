@@ -104,6 +104,10 @@ namespace HGInetMiFacturaElectonicaData
 		[AmbientValue("02")]
 		ValidadoDian = 10,
 
+		[Description("“Documento Rechazado por la DIAN")]
+		[AmbientValue("04")]
+		RechazadoDian = 11,
+
 		[Description("Aval")]
 		[AmbientValue("035")]
 		Aval = 12,
