@@ -904,7 +904,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 						//ReEnviarCorreoError(ruta_archi_mail, mensajes);
 
-						RechazarCorreo(mensajes, ruta_archi_mail, false, emision);
+						RechazarCorreo(mensajes, ruta_archi_mail, true, emision);
 
 					}
 					catch (Exception e)
