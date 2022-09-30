@@ -4056,9 +4056,31 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			// lee el archivo XML en UBL desde la ruta pública
 			string contenido_xml = Archivo.ObtenerContenido(objetoBd.StrUrlArchivoUbl);
 
+			if (!string.IsNullOrWhiteSpace(objetoBd.StrUrlArchivoUbl) && objetoBd.StrUrlArchivoUbl.Contains("hgidocs.blob") && string.IsNullOrWhiteSpace(contenido_xml))
+			{
+				AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+
+				string nombre_contenedor = string.Format("files-hgidocs-{0}", objetoBd.DatFechaIngreso.Year);
+
+				BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+
+				contenido_xml = contenedor.LecturaBlob(Path.GetExtension(objetoBd.StrUrlArchivoUbl), Path.GetFileNameWithoutExtension(objetoBd.StrUrlArchivoUbl));
+			}
+
 			if (evento_radian == true)
 			{
 				contenido_xml = Archivo.ObtenerContenido(objetoBd.StrUrlAcuseUbl);
+
+				if (!string.IsNullOrWhiteSpace(objetoBd.StrUrlArchivoUbl) && objetoBd.StrUrlAcuseUbl.Contains("hgidocs.blob") && string.IsNullOrWhiteSpace(contenido_xml))
+				{
+					AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+
+					string nombre_contenedor = string.Format("files-hgidocs-{0}", objetoBd.DatFechaIngreso.Year);
+
+					BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+
+					contenido_xml = contenedor.LecturaBlob(Path.GetExtension(objetoBd.StrUrlArchivoUbl), Path.GetFileNameWithoutExtension(objetoBd.StrUrlArchivoUbl));
+				}
 			}
 
 			// valida el contenido del archivo
@@ -4987,6 +5009,17 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 										string texto_xml = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
 
+										if (!string.IsNullOrWhiteSpace(documento.StrUrlArchivoUbl) && documento.StrUrlArchivoUbl.Contains("hgidocs.blob") && string.IsNullOrWhiteSpace(texto_xml))
+										{
+											AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+
+											string nombre_contenedor = string.Format("files-hgidocs-{0}", documento.DatFechaIngreso.Year);
+
+											BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+
+											texto_xml = contenedor.LecturaBlob(Path.GetExtension(documento.StrUrlArchivoUbl), Path.GetFileNameWithoutExtension(documento.StrUrlArchivoUbl));
+										}
+
 										texto_xml = texto_xml.Replace(documento_obj.Cune, documento.StrCufe);
 										documento_result.DocumentoXml = new StringBuilder(texto_xml);
 
@@ -5012,6 +5045,17 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									{
 
 										string texto_xml = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
+
+										if (!string.IsNullOrWhiteSpace(documento.StrUrlArchivoUbl) && documento.StrUrlArchivoUbl.Contains("hgidocs.blob") && string.IsNullOrWhiteSpace(texto_xml))
+										{
+											AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+
+											string nombre_contenedor = string.Format("files-hgidocs-{0}", documento.DatFechaIngreso.Year);
+
+											BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+
+											texto_xml = contenedor.LecturaBlob(Path.GetExtension(documento.StrUrlArchivoUbl), Path.GetFileNameWithoutExtension(documento.StrUrlArchivoUbl));
+										}
 
 										texto_xml = texto_xml.Replace(documento_obj.Cune, documento.StrCufe);
 										documento_result.DocumentoXml = new StringBuilder(texto_xml);

@@ -13,6 +13,8 @@ using LibreriaGlobalHGInet.General;
 using System.Xml;
 using System.IO;
 using HGInetDIANServicios.DianWSValidacionPrevia;
+using HGInetMiFacturaElectonicaData;
+using HGInetUtilidadAzure.Almacenamiento;
 
 namespace HGInetUBLv2_1
 {
@@ -118,6 +120,17 @@ namespace HGInetUBLv2_1
 
 				// lee el archivo XML en UBL desde la ruta pública
 				string contenido_xml = Archivo.ObtenerContenido(documentoBd.StrUrlArchivoUbl);
+
+				if (!string.IsNullOrWhiteSpace(documentoBd.StrUrlArchivoUbl) && documentoBd.StrUrlArchivoUbl.Contains("hgidocs.blob") && string.IsNullOrWhiteSpace(contenido_xml))
+				{
+					AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+
+					string nombre_contenedor = string.Format("files-hgidocs-{0}", documentoBd.DatFechaIngreso.Year);
+
+					BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+
+					contenido_xml = contenedor.LecturaBlob(Path.GetExtension(documentoBd.StrUrlArchivoUbl), Path.GetFileNameWithoutExtension(documentoBd.StrUrlArchivoUbl));
+				}
 
 				if (evento_radian > 0)
 				{

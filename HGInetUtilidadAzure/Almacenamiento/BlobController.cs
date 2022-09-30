@@ -6,9 +6,7 @@ using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace HGInetUtilidadAzure.Almacenamiento
 {
@@ -327,7 +325,7 @@ namespace HGInetUtilidadAzure.Almacenamiento
 		/// Descarga un Blob tipo texto y lo retorna en string para serializar
 		/// </summary>
 		/// <param name="extension">debe ser .xml</param>
-		/// <param name="nombre">nombre del archivo</param>
+		/// <param name="nombre">nombre del archivo sin extension</param>
 		/// <returns></returns>
 		public string LecturaBlob(string extension, string nombre)
 		{
@@ -342,11 +340,52 @@ namespace HGInetUtilidadAzure.Almacenamiento
 				CloudBlockBlob blockBlobReference = this.ContenedorBlob.GetBlockBlobReference(string.Format("{0}{1}", (object)nombre, (object)extension));
 
 
-				if (!blockBlobReference.Exists())
+				if (blockBlobReference.Exists())
 				{
 					lectura = blockBlobReference.DownloadText();
 				}
 
+			}
+			catch (Exception exception)
+			{
+				RegistroLog.EscribirLog(exception, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.consulta);
+			}
+
+			return lectura;
+
+		}
+
+		/// <summary>
+		/// Descarga un Blob y lo retorna en base64 para serializar
+		/// </summary>
+		/// <param name="extension">puede ser .pdf o .zip</param>
+		/// <param name="nombre">nombre del archivo sin extension</param>
+		/// <returns></returns>
+		public byte[] LecturaBlobBase64(string extension, string nombre)
+		{
+			byte[] lectura = null;
+
+			try
+			{
+				// valida el nombre del blob
+				NameValidator.ValidateBlobName(nombre);
+
+				// obtiene la referencia al archivo
+				CloudBlockBlob blockBlobReference = this.ContenedorBlob.GetBlockBlobReference(string.Format("{0}{1}", (object)nombre, (object)extension));
+
+				if (blockBlobReference.Exists())
+				{
+					using (MemoryStream stream = new MemoryStream())
+					{
+						using (AutoResetEvent waitHandle = new AutoResetEvent(false))
+						{
+							IAsyncResult result = blockBlobReference.BeginDownloadToStream(stream, null, null, null, ar => waitHandle.Set(), null);
+							waitHandle.WaitOne();
+							blockBlobReference.EndDownloadToStream(result);
+							lectura = stream.ToArray();
+						}
+					}
+				}
 			}
 			catch (Exception exception)
 			{

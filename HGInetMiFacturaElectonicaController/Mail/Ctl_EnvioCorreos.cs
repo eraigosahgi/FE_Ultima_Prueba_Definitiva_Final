@@ -9,6 +9,7 @@ using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectonicaData.ModeloServicio.General;
 using HGInetUBL;
+using HGInetUtilidadAzure.Almacenamiento;
 using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
@@ -1011,6 +1012,54 @@ namespace HGInetMiFacturaElectonicaController
 
 							bool archivo_attach = Archivo.ValidarExistencia(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo));
 
+							//Variable que indica si el adjunto lo toma del blob
+							bool zip_attach_blob = false;
+
+							//Validacion del archivo como blob
+							if (!string.IsNullOrWhiteSpace(documento.StrUrlArchivoUbl) && documento.StrUrlArchivoUbl.Contains("hgidocs.blob") && reenvio_documento == true && archivo_attach == false)
+							{
+								try
+								{
+									Ctl_AlmacenamientoDocs ctl_alm = new Ctl_AlmacenamientoDocs();
+									List<TblAlmacenamientoDocs> list_docs_alm = ctl_alm.Obtener(documento.StrIdSeguridad);
+
+									//valido si tengo guardado el zip del attach con el PDF como blob
+									if (list_docs_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIPAttached.GetHashCode())).FirstOrDefault() != null)
+									{
+										string nombre = Path.GetFileName(documento.StrUrlArchivoUbl);
+
+										TblAlmacenamientoDocs zip_attach = list_docs_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIPAttached.GetHashCode())).FirstOrDefault();
+
+										AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+
+										string nombre_contenedor = string.Format("files-hgidocs-{0}", documento.DatFechaIngreso.Year);
+
+										BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+
+										byte[] bytes_zip_blob = contenedor.LecturaBlobBase64(Path.GetExtension(zip_attach.StrUrlActual), Path.GetFileNameWithoutExtension(zip_attach.StrUrlActual));
+
+										string zip_blob = Convert.ToBase64String(bytes_zip_blob);
+										//string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
+
+										if (!string.IsNullOrEmpty(zip_blob))
+										{
+											Adjunto adjunto = new Adjunto();
+											adjunto.ContenidoB64 = zip_blob;
+											adjunto.Nombre = Path.GetFileName(zip_attach.StrUrlActual);
+											archivos.Add(adjunto);
+										}
+
+										archivo_attach = true;
+										zip_attach_blob = true;
+									}
+								}
+								catch (Exception exception)
+								{
+									RegistroLog.EscribirLog(exception, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Enviando mail del Facturador {0}, Documento {1} y Descargando Zip-attach como Blob", documento.StrEmpresaFacturador, documento.IntNumero));
+								}
+
+							}
+
 							//if (archivo_attach == false)
 							//{
 							//	archivo_attach = Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo.Replace("xml", "zip")));
@@ -1043,7 +1092,7 @@ namespace HGInetMiFacturaElectonicaController
 							// ruta del zip
 							string ruta_zip = string.Format(@"{0}\{1}.zip", carpeta_xml, nombre_archivo);
 
-							if (attached == true && documento.IntVersionDian == 2)
+							if (attached == true && documento.IntVersionDian == 2 && zip_attach_blob == false)
 							{
 
 								//Proceso para agregar la respuesta de la DIAN

@@ -6,6 +6,7 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetUtilidadAzure.Almacenamiento;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
@@ -96,6 +97,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				// lee el archivo XML en UBL desde la ruta pública
 				string contenido_xml = Archivo.ObtenerContenido(documento.StrUrlArchivoUbl);
+
+				if (!string.IsNullOrWhiteSpace(documento.StrUrlArchivoUbl) && documento.StrUrlArchivoUbl.Contains("hgidocs.blob") && string.IsNullOrWhiteSpace(contenido_xml))
+				{
+					AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+
+					string nombre_contenedor = string.Format("files-hgidocs-{0}", documento.DatFechaIngreso.Year);
+
+					BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+
+					contenido_xml = contenedor.LecturaBlob(Path.GetExtension(documento.StrUrlArchivoUbl), Path.GetFileNameWithoutExtension(documento.StrUrlArchivoUbl));
+				}
 
 				// valida el contenido del archivo
 				if (string.IsNullOrWhiteSpace(contenido_xml))
