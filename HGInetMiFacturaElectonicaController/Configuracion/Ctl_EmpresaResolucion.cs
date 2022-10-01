@@ -244,7 +244,15 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					if (empresaBd.IntHabilitacion == Habilitacion.Produccion.GetHashCode() && empresaBd.IntManejaPagoE == true)
 					{
-						TblEmpresasResoluciones tbl_resolucion_comercio = ObtenerResoluciones(empresaBd.StrIdentificacion, "*").Where(x => x.ComercioConfigId != null && x.StrPrefijo.Equals(item.Prefijo)).First();
+						TblEmpresasResoluciones tbl_resolucion_comercio = null;
+						try
+						{
+							tbl_resolucion_comercio = ObtenerResoluciones(empresaBd.StrIdentificacion, "*").Where(x => x.ComercioConfigId != null && x.StrPrefijo.Equals(item.Prefijo)).First();
+						}
+						catch (Exception excepcion)
+						{
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Consultando resolucion y la empresa {0} maneja pagos y resolucion {1}", empresaBd.StrIdentificacion, tbl_resolucion.StrNumResolucion));
+						}
 						if (tbl_resolucion_comercio != null)
 						{
 							tbl_resolucion.ComercioConfigId = tbl_resolucion_comercio.ComercioConfigId;
