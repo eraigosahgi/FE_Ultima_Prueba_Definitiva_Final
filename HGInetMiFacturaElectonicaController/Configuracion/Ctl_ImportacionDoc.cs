@@ -14,6 +14,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using static HGInetMiFacturaElectonicaController.Configuracion.Ctl_PlanesTransacciones;
@@ -329,6 +330,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 									if (consulta_doc == true)
 									{
 										Ctl_Documento ctl_doc = new Ctl_Documento();
+
+										Match numero_doc = Regex.Match(import.IntNumero, "\\d+");
+
+										Match pref = Regex.Match(import.IntNumero, "\\D+");
+
+										if (!numero_doc.Value.Equals(import.IntNumero) && !string.IsNullOrWhiteSpace(numero_doc.Value))
+											import.IntNumero = numero_doc.Value;
+
+										if (!pref.Value.Equals(import.StrPrefijo) && !string.IsNullOrWhiteSpace(pref.Value))
+											import.StrPrefijo = pref.Value;
 
 										TblDocumentos doc_bd = ctl_doc.Obtener(import.StrEmpresaFacturador, Convert.ToInt64(import.IntNumero), import.StrPrefijo, tipo_doc);
 
