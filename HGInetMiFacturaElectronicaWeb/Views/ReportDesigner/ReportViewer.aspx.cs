@@ -86,11 +86,16 @@ namespace HGInetMiFacturaElectronicaWeb.Views.ReportDesigner
 
 						try
 						{
+							//Se valida si es nota soporte para entonces colocar el formato generico
+							if (Documento.TipoOperacion == 3)
+							{
+								Documento.DocumentoFormato.Codigo = 9;
+							}
 							datos_formato = clase_formatos.ObtenerFormato(Documento.DocumentoFormato.Codigo, Documento.DatosObligado.Identificacion, TipoFormato.FormatoPDF.GetHashCode(), tipo_doc);
 						}
 						catch (Exception)
 						{
-							
+
 							//lblresultado.Text = "Asegurese de tener formato asociado";
 							//ASPxWebDocumentViewerWeb.Visible = false;
 						}
