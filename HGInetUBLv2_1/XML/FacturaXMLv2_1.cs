@@ -2319,7 +2319,8 @@ namespace HGInetUBLv2_1
 							
 						}
 
-						if (tipo_factura.Equals("11") && string.IsNullOrEmpty(InvoiceLineType1.ID.schemeID) && DocDet.DatosMandatario == null)
+						//Se valida si es una Factura de tipo Mandato para ingresar en el detalle si es ingreso propio
+						if (tipo_operacion != 3 && tipo_factura.Equals("11") && string.IsNullOrEmpty(InvoiceLineType1.ID.schemeID) && DocDet.DatosMandatario == null)
 						{
 							InvoiceLineType1.ID.schemeID = "0";
 						}
