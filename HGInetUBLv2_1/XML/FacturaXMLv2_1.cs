@@ -679,7 +679,7 @@ namespace HGInetUBLv2_1
 				string resp = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(documento.DatosObligado.Responsabilidades, ";");
 				if (resp.Contains("O-15") == true)
 					autoretenedor = true;
-				facturaXML.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.Moneda, autoretenedor, documento.DatosObligado.Identificacion.ToString(), documento.TipoOperacion);
+				facturaXML.InvoiceLine = ObtenerDetalleDocumento(documento.DocumentoDetalles.ToList(), documento.Moneda, autoretenedor, documento.DatosObligado.Identificacion.ToString(), documento.TipoOperacion, facturaXML.CustomizationID.Value);
 				#endregion
 
 				#region	facturaXML.TaxTotal - Impuesto y Impuesto Retenido
@@ -1493,7 +1493,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="DocumentoDetalle">Datos del detalle del documento</param>
 		/// <returns>Objeto de tipo InvoiceLineType1</returns>
-		private static InvoiceLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string moneda, bool Autoretenedor, string identificiacion_Obligado, int tipo_operacion)
+		private static InvoiceLineType[] ObtenerDetalleDocumento(List<DocumentoDetalle> documentoDetalle, string moneda, bool Autoretenedor, string identificiacion_Obligado, int tipo_operacion, string tipo_factura)
 		{
 			try
 			{
@@ -2317,6 +2317,11 @@ namespace HGInetUBLv2_1
 								InvoiceLineType1.ID.schemeID = DocDet.TipoIngresoMandato.ToString();
 							}
 							
+						}
+
+						if (tipo_factura.Equals("11") && string.IsNullOrEmpty(InvoiceLineType1.ID.schemeID) && DocDet.DatosMandatario == null)
+						{
+							InvoiceLineType1.ID.schemeID = "0";
 						}
 
 
