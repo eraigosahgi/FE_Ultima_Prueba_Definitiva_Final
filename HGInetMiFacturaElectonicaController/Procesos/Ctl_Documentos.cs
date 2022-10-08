@@ -1309,7 +1309,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						//if ((subtotal_calculado != Docdet.ValorSubtotal) && Docdet.ProductoGratis == false)
 								throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no está bien formado, según calculos generados por valor{2}", "ValorSubTotal", Docdet.ValorSubtotal, subtotal_calculado));
 
-						if (Docdet.CalculaIVA == 0 || tipo_operacion == 3)
+						//Si es documento soporte y no tiene que calcule iVA se le pone que calcula asi llegue 0
+						if (tipo_operacion == 3 && Docdet.CalculaIVA != 0)
+							Docdet.CalculaIVA = 0;
+
+						if (Docdet.CalculaIVA == 0)
 						{
 							//Se redondea en el valor medio hacia arriba ej: 121.5 redondeado = 122
 							//if (decimal.Round((Docdet.ValorSubtotal * (Docdet.IvaPorcentaje / 100)), 2) == Docdet.IvaValor)
