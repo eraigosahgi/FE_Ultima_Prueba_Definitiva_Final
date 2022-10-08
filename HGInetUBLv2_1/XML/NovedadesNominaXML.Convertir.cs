@@ -521,8 +521,9 @@ namespace HGInetUBLv2_1
 				if (obj.FondoSP != null)
 				{
 					deduccion_doc.DatosFondoSP = new FondoSP();
+					//NominaIndividualTypeDeducciones pr = new NominaIndividualTypeDeducciones();
 					deduccion_doc.DatosFondoSP.Porcentaje = obj.FondoSP.Porcentaje;
-					deduccion_doc.DatosFondoSP.DeduccionFSP = obj.FondoSP.Deduccion;
+					deduccion_doc.DatosFondoSP.DeduccionFSP = obj.FondoSP.DeduccionSP;
 					deduccion_doc.DatosFondoSP.PorcentajeSub = obj.FondoSP.PorcentajeSub;
 					deduccion_doc.DatosFondoSP.DeduccionSub = obj.FondoSP.DeduccionSub;
 
