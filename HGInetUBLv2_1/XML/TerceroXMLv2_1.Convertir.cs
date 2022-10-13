@@ -20,7 +20,7 @@ namespace HGInetUBLv2_1
 			try
 			{
 				obligado.Identificacion = empresa.Party.PartyTaxScheme.FirstOrDefault().CompanyID.Value;
-				obligado.IdentificacionDv = Convert.ToInt16(empresa.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID);
+				obligado.IdentificacionDv = !string.IsNullOrWhiteSpace(empresa.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID) ? Convert.ToInt16(empresa.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID) : 0;
 				obligado.TipoIdentificacion = Convert.ToInt16(empresa.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName);
 				obligado.TipoPersona = Convert.ToInt16(empresa.AdditionalAccountID.FirstOrDefault().Value);
 				obligado.RegimenFiscal = empresa.Party.PartyTaxScheme.FirstOrDefault().TaxLevelCode.listName;
@@ -95,6 +95,7 @@ namespace HGInetUBLv2_1
 				adquiriente.Identificacion = cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.Value;
 				if (!string.IsNullOrEmpty(cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID))
 					adquiriente.IdentificacionDv = Convert.ToInt16(cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID);
+
 				adquiriente.TipoIdentificacion = Convert.ToInt16(cliente.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName);
 				adquiriente.TipoPersona = Convert.ToInt16(cliente.AdditionalAccountID.FirstOrDefault().Value);
 
