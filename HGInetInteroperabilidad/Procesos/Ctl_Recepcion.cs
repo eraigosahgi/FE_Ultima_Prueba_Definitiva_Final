@@ -1563,6 +1563,24 @@ namespace HGInetInteroperabilidad.Procesos
 						nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento_obj.Documento.ToString(), documento_obj.DatosObligado.Identificacion, TipoDocumento.NotaDebito, documento_obj.Prefijo);
 
 					}
+					else
+					{
+						try
+						{
+							List<string> mensajes = new List<string>();
+							mensajes.Add("El Attached Document no cumple con la estructura indicada por la DIAN en el Anexo técnico, se esperaba un XML-UBL tipo Invoice, CreditNoteType o DebitNote en su contenido");
+
+							//ReEnviarCorreoError(ruta_archi_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
+
+						}
+						catch (Exception e)
+						{
+						}
+
+						throw new ApplicationException("El Attached Document no cumple con la estructura indicada por la DIAN en el Anexo técnico, se esperaba un XML-UBL tipo Invoice, CreditNoteType o DebitNote en su contenido");
+					}
 
 					//Creacion Facturador Emisor del documento 
 					TblEmpresas facturador_emisor = new TblEmpresas();
