@@ -1463,7 +1463,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 					//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-					RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
+					RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
 
 					throw new ApplicationException(string.Format("Error validando el Facturador receptor Detalle: {0}", excepcion.Message));
 				}
