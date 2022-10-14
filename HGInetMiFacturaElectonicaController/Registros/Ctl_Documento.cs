@@ -3536,6 +3536,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				
 				respuesta = Ctl_Documentos.UblFirmar(empresa_firma, doc, ref respuesta, ref resultado);
+
+				//si hay problemas con el firmado genera mensaje para mostrar al usuario
+				if (respuesta.Error != null)
+					throw new ApplicationException(string.Format("Se genera inconsistencia en el firmado del evento {0}", respuesta.Error.Mensaje));
+
 			}
 			else
 			{
