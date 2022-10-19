@@ -3380,7 +3380,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			if (doc_acuse.DatosObligado.TipoIdentificacion != 31)
 			{
 				doc_acuse.DatosObligado.TipoIdentificacion = 31;
-				doc_acuse.DatosObligado.IdentificacionDv = LibreriaGlobalHGInet.HgiNet.FuncionesIdentificacion.Dv(adquiriente.StrIdentificacion);
+				doc_acuse.DatosObligado.IdentificacionDv = LibreriaGlobalHGInet.HgiNet.FuncionesIdentificacion.Dv(facturador.StrIdentificacion);
 			}
 
 			//---Ambiente de la DIAN al que se va enviar el documento: 1 - Produccion, 2 - Pruebas

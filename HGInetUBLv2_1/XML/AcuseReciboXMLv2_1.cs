@@ -186,6 +186,8 @@ namespace HGInetUBLv2_1
 					// convierte el objeto de acuerdo con el tipo de documento
 					XmlSerializer serializacion = null;
 
+					string TI_obligado = string.Empty;
+					string TI_Adquiriente = string.Empty;
 					string rz_obligado = string.Empty;
 					string dv_obligado = string.Empty;
 					string rz_adquiriente = string.Empty;
@@ -222,12 +224,20 @@ namespace HGInetUBLv2_1
 							//{
 							//	documento.DatosObligado.RazonSocial = rz_obligado;
 							//}
-
+							TI_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName;
 							dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
 							if (!documento.DatosObligado.IdentificacionDv.ToString().Equals(dv_obligado))
 							{
-								documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+								try
+								{
+									documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+								}
+								catch (Exception)
+								{
+									documento.DatosObligado.TipoIdentificacion = string.IsNullOrWhiteSpace(TI_obligado) ? 13 : Convert.ToInt32(TI_obligado);
+									documento.DatosObligado.IdentificacionDv = -1;
+								}
 							}
 
 							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
@@ -238,11 +248,20 @@ namespace HGInetUBLv2_1
 							//	documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
 							//}
 
+							TI_Adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName;
 							dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
 							if (!documento.DatosAdquiriente.IdentificacionDv.ToString().Equals(dv_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
 							{
-								documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
+								try
+								{
+									documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
+								}
+								catch (Exception)
+								{
+									documento.DatosAdquiriente.TipoIdentificacion = string.IsNullOrWhiteSpace(TI_Adquiriente) ? 13 : Convert.ToInt32(TI_Adquiriente);
+									documento.DatosAdquiriente.IdentificacionDv = -1;
+								}
 							}
 
 						}
@@ -279,11 +298,20 @@ namespace HGInetUBLv2_1
 							//	documento.DatosObligado.RazonSocial = rz_obligado;
 							//}
 
+							TI_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName;
 							dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
 							if (!documento.DatosObligado.IdentificacionDv.ToString().Equals(dv_obligado))
 							{
-								documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+								try
+								{
+									documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+								}
+								catch (Exception)
+								{
+									documento.DatosObligado.TipoIdentificacion = string.IsNullOrWhiteSpace(TI_obligado) ? 13 : Convert.ToInt32(TI_obligado);
+									documento.DatosObligado.IdentificacionDv = -1;
+								}
 							}
 
 							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
@@ -294,11 +322,20 @@ namespace HGInetUBLv2_1
 							//	documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
 							//}
 
+							TI_Adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName;
 							dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
 							if (!documento.DatosAdquiriente.IdentificacionDv.ToString().Equals(dv_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
 							{
-								documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
+								try
+								{
+									documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
+								}
+								catch (Exception)
+								{
+									documento.DatosAdquiriente.TipoIdentificacion = string.IsNullOrWhiteSpace(TI_Adquiriente) ? 13 : Convert.ToInt32(TI_Adquiriente);
+									documento.DatosAdquiriente.IdentificacionDv = -1;
+								}
 							}
 
 						}
@@ -334,11 +371,20 @@ namespace HGInetUBLv2_1
 							//	documento.DatosObligado.RazonSocial = rz_obligado;
 							//}
 
+							TI_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName;
 							dv_obligado = conversion.AccountingSupplierParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
 							if (!documento.DatosObligado.IdentificacionDv.ToString().Equals(dv_obligado))
 							{
-								documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+								try
+								{
+									documento.DatosObligado.IdentificacionDv = Convert.ToInt32(dv_obligado);
+								}
+								catch (Exception)
+								{
+									documento.DatosObligado.TipoIdentificacion = string.IsNullOrWhiteSpace(TI_obligado) ? 13 : Convert.ToInt32(TI_obligado);
+									documento.DatosObligado.IdentificacionDv = -1;
+								}
 							}
 
 							//Se valida que la razon social del documento original sea igual al que se va a llenar en el evento
@@ -349,11 +395,20 @@ namespace HGInetUBLv2_1
 							//	documento.DatosAdquiriente.RazonSocial = rz_adquiriente;
 							//}
 
+							TI_Adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeName;
 							dv_adquiriente = conversion.AccountingCustomerParty.Party.PartyTaxScheme.FirstOrDefault().CompanyID.schemeID;
 
 							if (!documento.DatosAdquiriente.IdentificacionDv.ToString().Equals(dv_adquiriente) && !tipo_acuse.Equals(CodigoResponseV2.EndosoPp))
 							{
-								documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
+								try
+								{
+									documento.DatosAdquiriente.IdentificacionDv = Convert.ToInt32(dv_adquiriente);
+								}
+								catch (Exception)
+								{
+									documento.DatosAdquiriente.TipoIdentificacion = string.IsNullOrWhiteSpace(TI_Adquiriente) ? 13 : Convert.ToInt32(TI_Adquiriente);
+									documento.DatosAdquiriente.IdentificacionDv = -1;
+								}
 							}
 
 						}
@@ -1012,7 +1067,7 @@ namespace HGInetUBLv2_1
                 //---Validar si es NIT
                 CompanyID.Value = tercero.Identificacion.ToString();
                 //---Si es Nit debe star bien calculado
-                CompanyID.schemeID = tercero.IdentificacionDv.ToString();
+                CompanyID.schemeID = (!tercero.IdentificacionDv.Equals(-1)) ? tercero.IdentificacionDv.ToString() : string.Empty;
                 //----//Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN 5.2.1)
                 CompanyID.schemeName = tercero.TipoIdentificacion.ToString();
 				if (tercero.TipoIdentificacion.Equals(31))
@@ -1101,7 +1156,7 @@ namespace HGInetUBLv2_1
 					{
 						PowerOfAttorneyType mandante = new PowerOfAttorneyType();
 						mandante.ID = new IDType();
-						mandante.ID.schemeID = tercero.IdentificacionDv.ToString();
+						mandante.ID.schemeID = (!tercero.IdentificacionDv.Equals(-1)) ? tercero.IdentificacionDv.ToString() : string.Empty;
 						mandante.ID.schemeName = tercero.TipoIdentificacion.ToString();
 						mandante.ID.Value = tercero.Identificacion;
 
