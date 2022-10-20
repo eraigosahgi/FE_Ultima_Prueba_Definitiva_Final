@@ -636,7 +636,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					ObjPlanTransacciones.StrEmpresaFacturador = Sesion.DatosEmpresa.StrIdentificacion;
 					ObjPlanTransacciones.DocumentoRef = "-1";
 
-                    //Se valida si el numero de documento comprados es mayor a 4999 para no asignarle vencimiento
+                    //Se valida si el numero de documentos comprados es mayor a 4999 para no asignarle vencimiento al plan comprado
                     if (ObjPlanTransacciones.IntNumTransaccCompra >= 5000)
                     {
                         ObjPlanTransacciones.IntMesesVence = 0;

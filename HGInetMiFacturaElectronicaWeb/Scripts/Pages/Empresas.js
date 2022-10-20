@@ -385,7 +385,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 		$("#Radian").dxCheckBox({
 			name: "Radian",
-			//text: "Radian",
+			text: "RADIAN",
+			value: false,
 			onValueChanged: function (data) {
 				Datos_Radian = (data.value == true) ? 1 : 0;
 				if (Datos_CertFirma == 0 && Datos_Radian == 1 && Datos_Habilitacion == 99) {
@@ -1932,18 +1933,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#txtSerial").dxTextBox({ readOnly: true });
 				}
 
-				try {
-					if (Datos_Radian == 1) {
-						$("#Radian").dxCheckBox({ value: true });
-						if (Datos_CertFirma == 0 && Datos_Habilitacion == 99) {
-							$('#PanelRepresentante').show();
-						}
-					}
-					else {
-						$('#PanelRepresentante').hide();
-					}
-				} catch (e) { }
-
 				//Proceso de validación de Correo****************************
 				//Si la Empresa esta activa, no hago validaciones de ningún tipo
 
@@ -2043,6 +2032,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 							$("#Interoperabilidad").dxCheckBox({ value: true });
 						}
 					} catch (e) { }
+
+                    //Check Radian
+				    try {
+				        if (Datos_Radian == 1) {
+				            $("#Radian").dxCheckBox({ value: true });
+				            if (Datos_CertFirma == 0 && Datos_Habilitacion == 99) {
+				                $('#PanelRepresentante').show();
+				            }
+				        }
+				        else {
+				            $('#PanelRepresentante').hide();
+				        }
+				    } catch (e) { }
 
 					//Certificado
 					try {

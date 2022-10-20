@@ -96,14 +96,14 @@
 										</div>
 									</div>
 
-								<div class="col-md-6" style="z-index: 9;">
+<%--								<div class="col-md-6" style="z-index: 9;">
 										<label style="margin: 0px; margin-left: 0px; margin-top: 16px">RADIAN:</label>
 										<div class="col-md-12" style="z-index: 9; margin-top: 1%; margin-left: 30px">
-											<div id="Radian"></div>
-											<div id="tooltip_Radian">Indica si la empresa genera eventos de las facturas en la DIAN</div>
+											<div id="Radia"></div>
+											<div id="tooltip_Radia">Indica si la empresa genera eventos de las facturas en la DIAN</div>
 										</div>
 
-									</div>
+									</div>--%>
 
 								<div class="col-md-12 text-left" style="z-index: 8;">
 									<label style="margin-top: 16px; padding-top: 1%;">
@@ -310,10 +310,10 @@
 									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
 										<div id="Interoperabilidad" style="margin-top: 1%"></div>
 										<div id="tooltip_Interoper">Indica si la empresa procesa documentos de un proveedor diferente a HGI</div>
-									<%--<br />
+									<br />
 									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
 										<div id="Radian" style="margin-top: 1%"></div>
-										<div id="tooltip_Radian">Indica si la empresa genera eventos de las facturas en la DIAN</div>--%>
+										<div id="tooltip_Radian">Indica si la empresa genera eventos de las facturas en la DIAN</div>
 								</div>
 
 								<%--<div class="col-md-12  text-center" style="z-index: 9;">

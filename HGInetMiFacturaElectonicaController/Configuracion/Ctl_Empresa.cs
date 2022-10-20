@@ -485,10 +485,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntEnvioMailRecepcion = empresa.IntEnvioMailRecepcion;
 					EmpresaActualiza.IntVersionDian = empresa.IntVersionDian;
 					EmpresaActualiza.IntTimeout = empresa.IntTimeout;
+                    
 
-					EmpresaActualiza.IntDebug = empresa.IntDebug;
+                    EmpresaActualiza.IntDebug = empresa.IntDebug;
 					EmpresaActualiza.IntInteroperabilidad = empresa.IntInteroperabilidad;
-					EmpresaActualiza.StrSerialCloudServices = empresa.StrSerialCloudServices;
+                    EmpresaActualiza.IntRadian = empresa.IntRadian;
+                    EmpresaActualiza.StrSerialCloudServices = empresa.StrSerialCloudServices;
 					EmpresaActualiza.IntTipoPlan = empresa.IntTipoPlan;
 					EmpresaActualiza.IntCompraPlan = empresa.IntTipoPlan == 0 ? true : false;
 
@@ -529,8 +531,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 
 				}
-
-				EmpresaActualiza.IntRadian = empresa.IntRadian;
+				
 
 				if (EmpresaActualiza.IntAcuseTacito == null)
 					EmpresaActualiza.IntAcuseTacito = 0;
