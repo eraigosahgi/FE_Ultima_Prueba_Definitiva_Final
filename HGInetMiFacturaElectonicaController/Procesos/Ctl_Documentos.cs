@@ -918,7 +918,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							List<Anticipo> list_ant = documento.Anticipos;
 							if (!list_ant.Sum(v1 => v1.Valor).Equals(documento.ValorAnticipo))
 							{
-								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria de los Anticipos con valor {2}", "ValorAnticipo", documento.ValorAnticipo));
+								throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria de los Anticipos con valor {2}", "ValorAnticipo", documento.ValorAnticipo, list_ant.Sum(v => v.Valor)));
 							}
 							else
 							{

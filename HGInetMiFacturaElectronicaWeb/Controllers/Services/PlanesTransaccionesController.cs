@@ -635,7 +635,18 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					ObjPlanTransacciones.StrObservaciones = "Pendiente por Facturar";
 					ObjPlanTransacciones.StrEmpresaFacturador = Sesion.DatosEmpresa.StrIdentificacion;
 					ObjPlanTransacciones.DocumentoRef = "-1";
-					ObjPlanTransacciones.IntMesesVence = 12;
+
+                    //Se valida si el numero de documento comprados es mayor a 4999 para no asignarle vencimiento
+                    if (ObjPlanTransacciones.IntNumTransaccCompra >= 5000)
+                    {
+                        ObjPlanTransacciones.IntMesesVence = 0;
+                    }
+                    else
+                    {
+                        ObjPlanTransacciones.IntMesesVence = 12;
+                    }
+                    
+					
 					ObjPlanTransacciones.IntTipoDocumento = tipo_doc;
 
 					if (tipo_doc > 0)
