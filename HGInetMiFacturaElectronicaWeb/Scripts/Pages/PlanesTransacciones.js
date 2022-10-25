@@ -16,16 +16,16 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 	var StrIdSeguridad = location.search.split('IdSeguridad=')[1];
 
 	var codigo_facturador = "",
-           numero_documento = "",
-           estado_dian = "",
-           estado_recibo = "",
-           fecha_inicio = "",
-           fecha_fin = "",
-           Datos_Email = true,
+		   numero_documento = "",
+		   estado_dian = "",
+		   estado_recibo = "",
+		   fecha_inicio = "",
+		   fecha_fin = "",
+		   Datos_Email = true,
 		   Datos_Vence = true,
 		   Datos_editfecha = false,
 		   Datos_FechaVence = "",
-           codigo_adquiriente = "";
+		   codigo_adquiriente = "";
 
 	$scope.Vence = true;
 	$scope.editfecha = false;
@@ -88,13 +88,13 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 	});
 
 	var Datos_TiposProceso = "",
-        codigo_empresa = "",
-        Datos_T_compra = "",
-        Datos_valor_plan = "",
-        Datos_E_Plan = "",
+		codigo_empresa = "",
+		Datos_T_compra = "",
+		Datos_valor_plan = "",
+		Datos_E_Plan = "",
 		datos_empresa_asociada = "",
 		Datos_obsrvaciones = "",
-    	Datos_TipoDoc = 0;
+		Datos_TipoDoc = 0;
 
 
 	//Define los campos del Formulario  
@@ -135,12 +135,12 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					}
 				}
 			}
-            ).dxValidator({
-            	validationRules: [{
-            		type: "required",
-            		message: "Debe indicar el tipo de proceso."
-            	}]
-            });
+			).dxValidator({
+				validationRules: [{
+					type: "required",
+					message: "Debe indicar el tipo de proceso."
+				}]
+			});
 
 
 
@@ -163,12 +163,12 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					Datos_TiposDoc = data.value.ID;
 				}
 			}
-            ).dxValidator({
-            	validationRules: [{
-            		type: "required",
-            		message: "Debe indicar el tipo de documento que descontara la plataforma."
-            	}]
-            });
+			).dxValidator({
+				validationRules: [{
+					type: "required",
+					message: "Debe indicar el tipo de documento que descontara la plataforma."
+				}]
+			});
 
 
 
@@ -226,35 +226,35 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				Datos_T_compra = data.value;
 			}
 		})
-        .dxValidator({
-        	validationRules: [{
-        		type: "stringLength",
-        		max: 10,
-        		message: "El número de transacciones no puede mayor a 10 digitos"
-        	}, {
-        		type: "required",
-        		message: "Debe indicar la cantidad de transacciones del plan."
-        	}, {
-        		type: "numeric",
-        		message: "El campo sólo debe contener números."
-        	}, {
-        		type: 'pattern',
-        		pattern: '^[0-9]+$',
-        		message: 'No debe Incluir puntos(.) ni caracteres especiales'
-        	},
-            {
-            	type: 'custom', validationCallback: function (options) {
-            		if ((Datos_TiposProceso == 1 || Datos_TiposProceso == 2) && Datos_T_compra < 1) {
-            			options.rule.message = "Debe Indicar la cantidad de transacciones";
-            			return false;
-            		} else {
-            			return true;
-            		}
-            	}
-            }
+		.dxValidator({
+			validationRules: [{
+				type: "stringLength",
+				max: 10,
+				message: "El número de transacciones no puede mayor a 10 digitos"
+			}, {
+				type: "required",
+				message: "Debe indicar la cantidad de transacciones del plan."
+			}, {
+				type: "numeric",
+				message: "El campo sólo debe contener números."
+			}, {
+				type: 'pattern',
+				pattern: '^[0-9]+$',
+				message: 'No debe Incluir puntos(.) ni caracteres especiales'
+			},
+			{
+				type: 'custom', validationCallback: function (options) {
+					if ((Datos_TiposProceso == 1 || Datos_TiposProceso == 2) && Datos_T_compra < 1) {
+						options.rule.message = "Debe Indicar la cantidad de transacciones";
+						return false;
+					} else {
+						return true;
+					}
+				}
+			}
 
-        	]
-        });
+			]
+		});
 
 
 		//Campo Valor plan
@@ -264,19 +264,19 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				Datos_valor_plan = data.value;
 			}
 		})
-        .dxValidator({
-        	validationRules: [{
-        		type: "required",
-        		message: "Debe indicar el valor del plan."
-        	}, {
-        		type: "numeric",
-        		message: "El campo sólo debe contener números."
-        	}, {
-        		type: 'pattern',
-        		pattern: '^[0-9]+$',
-        		message: 'No debe Incluir puntos(.) ni caracteres especiales'
-        	}]
-        });
+		.dxValidator({
+			validationRules: [{
+				type: "required",
+				message: "Debe indicar el valor del plan."
+			}, {
+				type: "numeric",
+				message: "El campo sólo debe contener números."
+			}, {
+				type: 'pattern',
+				pattern: '^[0-9]+$',
+				message: 'No debe Incluir puntos(.) ni caracteres especiales'
+			}]
+		});
 
 
 		//Selección Estado de plan
@@ -315,7 +315,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 		$("#form1").on("submit", function (e) {
 			GuardarPlan();
 			e.preventDefault
-                ();
+				();
 		});
 
 	});
@@ -328,11 +328,12 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 		onValueChanged: function (data) {
 			Datos_Vence = data.value;
 			if (Datos_Vence) {
-				$scope.Vence = true;
-				$('#panelfechaVencimiento').show();
+			    $scope.Vence = true;
+			    $('#panelfechaVencimiento').show();
 			} else {
 				$scope.Vence = false;
 				$('#panelfechaVencimiento').hide();
+
 			}
 		}
 	});
@@ -398,6 +399,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 	};
 
 	function GuardarPlan() {
+	    Datos_FechaVence = new Date(now).toISOString();
 		if (txt_hgi_Facturador != null && txt_hgi_Facturador != "") {
 
 			try {
@@ -599,12 +601,12 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 	var now = new Date();
 
 	var codigo_facturador = "",
-           numero_documento = "",
-           estado_dian = "",
-           estado_recibo = "",
-           fecha_inicio = "",
-           fecha_fin = "",
-           codigo_adquiriente = "";
+		   numero_documento = "",
+		   estado_dian = "",
+		   estado_recibo = "",
+		   fecha_inicio = "",
+		   fecha_fin = "",
+		   codigo_adquiriente = "";
 
 	var estado = "";
 
@@ -676,7 +678,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 					//Formatos personalizados a las columnas en este caso para el monto
 					onCellPrepared: function (options) {
 						var fieldData = options.value,
-                            fieldHtml = "";
+							fieldHtml = "";
 						try {
 							if (options.columnIndex == 6) {//Columna de valor Total
 								if (fieldData) {
@@ -706,145 +708,145 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
 						}
 					}
-                    , loadPanel: {
-                    	enabled: true
-                    }
-                      , allowColumnResizing: true
-                 , columns: [
-                     {
-                     	width: 50,
-                     	cellTemplate: function (container, options) {
-                     		$("<div style='text-align:center'>")
+					, loadPanel: {
+						enabled: true
+					}
+					  , allowColumnResizing: true
+				 , columns: [
+					 {
+						width: 50,
+						cellTemplate: function (container, options) {
+							$("<div style='text-align:center'>")
 								.append($("<a target='_blank' class='icon-file-eye' onClick=ConsultarDetalle('" + options.data.id + "')  ><a taget=_self style='margin-left:20%;' class='icon-pencil3' title='Editar' href='GestionPlanesTransacciones.aspx?IdSeguridad=" + options.data.id + "'>"))
 								.appendTo(container);
-                     	}
-                     },
-                     {
-                     	caption: "Fecha",
-                     	dataField: "Fecha",
-                     	dataType: "date",
-                     	format: "yyyy-MM-dd HH:mm"
-                     },
+						}
+					 },
+					 {
+						caption: "Fecha",
+						dataField: "Fecha",
+						dataType: "date",
+						format: "yyyy-MM-dd HH:mm"
+					 },
 
-                 {
-                 	caption: "Doc. Facturador",
-                 	dataField: "Facturador"
-                 },
+				 {
+					caption: "Doc. Facturador",
+					dataField: "Facturador"
+				 },
 					 ,
-                      {
+					  {
 
-                      	caption: "Empresa Compra",
-                      	dataField: "EmpresaFacturador"
-                      },
-                     {
+						caption: "Empresa Compra",
+						dataField: "EmpresaFacturador"
+					  },
+					 {
 
-                     	caption: "Transacciones",
-                     	dataField: "TCompra"
-                     },
-                      {
+						caption: "Transacciones",
+						dataField: "TCompra"
+					 },
+					  {
 
-                      	caption: "Valor",
-                      	dataField: "Valor"
-                      },
-                     {
+						caption: "Valor",
+						dataField: "Valor"
+					  },
+					 {
 
-                     	caption: "Procesadas",
-                     	dataField: "TProcesadas"
-                     }
-                     ,
-                     {
-
-                     	caption: "Saldo",
-                     	dataField: "Saldo"
-                     }
+						caption: "Procesadas",
+						dataField: "TProcesadas"
+					 }
 					 ,
-                     {
+					 {
 
-                     	caption: "DocRef",
-                     	dataField: "DocRef"
-                     }
+						caption: "Saldo",
+						dataField: "Saldo"
+					 }
+					 ,
+					 {
+
+						caption: "DocRef",
+						dataField: "DocRef"
+					 }
 
 					 //, {
-                     //	caption: "Porcentaje %",
-                     //	width: 100,
-                     //	cellTemplate: function (container, options) {
+					 //	caption: "Porcentaje %",
+					 //	width: 100,
+					 //	cellTemplate: function (container, options) {
 
-                     //		$("<div style='text-align:center'>")
+					 //		$("<div style='text-align:center'>")
 					 //   		.append($("<div class='bullet hgi_" + options.data.id + "'></div>"))
 					 //   		.appendTo(container);
-                     //	}
+					 //	}
 
 					 //}
 
-                 , {
-                 	dataField: "Porcentaje",
-                 	caption: "Porcentaje %",
-                 	alignment: "right",
-                 	width: 100,
-                 	cellTemplate: CrearGraficoBarra,
-                 	cssClass: "bullet"
-                 },
+				 , {
+					dataField: "Porcentaje",
+					caption: "Porcentaje %",
+					alignment: "right",
+					width: 100,
+					cellTemplate: CrearGraficoBarra,
+					cssClass: "bullet"
+				 },
 					 , {
 
-					 	caption: "Empresa",
-					 	dataField: "Empresa",
-					 	visible: false
+						caption: "Empresa",
+						dataField: "Empresa",
+						visible: false
 					 },
-                     {
+					 {
 
-                     	caption: "Usuario",
-                     	dataField: "Usuario",
-                     	visible: false
-                     }
-                     ,
-                     {
-
-                     	caption: "Tipo",
-                     	dataField: "Tipoproceso"
-                     }
+						caption: "Usuario",
+						dataField: "Usuario",
+						visible: false
+					 }
 					 ,
-                     {
+					 {
 
-                     	caption: "TipoDoc",
-                     	dataField: "TipoDoc"
-                     }
-                     ,
-                      {
+						caption: "Tipo",
+						dataField: "Tipoproceso"
+					 }
+					 ,
+					 {
 
-                      	caption: 'Estado',
-                      	dataField: 'Estado',
-                      	cellTemplate: function (container, options) {
-                      		$("<div style='text-align:center'>")
+						caption: "TipoDoc",
+						dataField: "TipoDoc"
+					 }
+					 ,
+					  {
+
+						caption: 'Estado',
+						dataField: 'Estado',
+						cellTemplate: function (container, options) {
+							$("<div style='text-align:center'>")
 								.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
 								.appendTo(container);
-                      	}
-                      }
-                 ], summary: {
-                 	groupItems: [{
-                 		column: "Valor",
-                 		summaryType: "sum",
-                 		displayFormat: " {0} Total ",
-                 		valueFormat: "currency"
-                 	}]
+						}
+					  }
+				 ], summary: {
+					groupItems: [{
+						column: "Valor",
+						summaryType: "sum",
+						displayFormat: " {0} Total ",
+						valueFormat: "currency"
+					}]
 
-                    , totalItems: [{
-                    	column: "Valor",
-                    	summaryType: "sum",
-                    	customizeText: function (data) {
-                    		return fNumber.go(data.value).replace("$-", "-$");
-                    	}
-                    }, {
-                    	column: "TCompra",
-                    	summaryType: "sum",
-                    	valueFormat: 'fixedPoint',
-                    	displayFormat: '{0}'
+					, totalItems: [{
+						column: "Valor",
+						summaryType: "sum",
+						customizeText: function (data) {
+							return fNumber.go(data.value).replace("$-", "-$");
+						}
+					}, {
+						column: "TCompra",
+						summaryType: "sum",
+						valueFormat: 'fixedPoint',
+						displayFormat: '{0}'
 
-                    }
-                    ]
-                 }
-                    , filterRow: {
-                    	visible: true
-                    }
+					}
+					]
+				 }
+					, filterRow: {
+						visible: true
+					}
 				});
 
 
@@ -996,8 +998,8 @@ function BuscarID(miArray, ID) {
 }
 
 var EstadosPlanes =
-    [
-        { ID: 1, Texto: 'Inhabilitar' },
-        { ID: 0, Texto: 'Habilitar' },
+	[
+		{ ID: 1, Texto: 'Inhabilitar' },
+		{ ID: 0, Texto: 'Habilitar' },
 
-    ];
+	];
