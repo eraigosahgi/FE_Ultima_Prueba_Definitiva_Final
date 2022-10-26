@@ -398,8 +398,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 		}
 	};
 
-	function GuardarPlan() {
-	    Datos_FechaVence = new Date(now).toISOString();
+	function GuardarPlan() {   
 		if (txt_hgi_Facturador != null && txt_hgi_Facturador != "") {
 
 			try {
@@ -430,6 +429,10 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			return false;
 		}
 
+		if (Datos_FechaVence == null) {
+		    Datos_FechaVence = FVence.toISOString();
+		}
+        
 		var data = $.param({
 			IntTipoProceso: Datos_TiposProceso,
 			StrEmpresa: codigo_facturador,
@@ -448,7 +451,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			TipoDoc: Datos_TiposDoc,
 			editfecha: Datos_editfecha
 		});
-
+        
 		var IdActualizar = (StrIdSeguridad) ? '&' + $.param({ StrIdSeguridad: StrIdSeguridad, Editar: true }) : '';
 
 		$("#wait").show();
