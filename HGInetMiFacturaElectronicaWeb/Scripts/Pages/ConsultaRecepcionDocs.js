@@ -244,14 +244,19 @@ App.controller('RecepcionCorreoController', function RecepcionCorreoController($
 				visible: true
 			}
 				, columns: [
-					
-				{
+
+                {
+                    caption: "Id Seguridad",
+                    dataField: "StrId",
+                    visible: false
+                },
+                {
 					caption: "Fecha Recepción",
 					dataField: "DatFechaRegistro",
 					dataType: "date",
 					format: "yyyy-MM-dd HH:mm:ss",
 
-				},
+				},            				
 					{
 						caption: "Fecha Correo",
 						dataField: "DatFechaCorreo",
