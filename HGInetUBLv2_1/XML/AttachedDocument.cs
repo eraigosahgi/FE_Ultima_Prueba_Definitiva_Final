@@ -192,6 +192,70 @@ namespace HGInetUBLv2_1
 				// lee el archivo XML en UBL desde la ruta pública
 				string contenido_xml_app = Archivo.ObtenerContenido(documentoBd.StrUrlArchivoUbl.Replace("FacturaEDian", "FacturaEConsultaDian"));
 
+				//Se valida y si no tiene contenido se trata de buscar en la respuesta del servicio
+				if (string.IsNullOrEmpty(contenido_xml_app))
+				{
+					
+					try
+					{
+						string nombre_archivo_resp = NombramientoArchivo.ObtenerZip(documentoBd.IntNumero.ToString(), obligado.Identificacion, TipoDocumento.Factura, documentoBd.StrPrefijo);
+						string nombre_app = Path.GetFileNameWithoutExtension(documentoBd.StrUrlArchivoUbl);
+
+						XmlDocument xDoc = new XmlDocument();
+
+						xDoc.Load(documentoBd.StrUrlArchivoUbl.Replace(nombre_app, nombre_archivo_resp));
+
+						XmlNodeList xAttach = xDoc.GetElementsByTagName("DianResponse");
+
+						string appbase64 = string.Empty;
+
+						foreach (XmlNode child in xAttach)
+						{
+							appbase64 = child["XmlBase64Bytes"].InnerText;
+						}
+
+						if (!string.IsNullOrEmpty(appbase64))
+						{
+							byte [] archivo_recu = Convert.FromBase64String(appbase64);
+
+							contenido_xml_app = Encoding.UTF8.GetString(archivo_recu);
+
+							//Se guarda esta respuesta en la ruta para que quede disponible en plataforma
+							try
+							{
+								PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+								Uri url_ruta = new Uri(documentoBd.StrUrlArchivoUbl.Replace("FacturaEDian", "FacturaEConsultaDian"));
+								string ruta_p = url_ruta.LocalPath;
+
+								string carpeta_xml = string.Format("{0}{1}", plataforma.RutaDmsFisica, ruta_p.Replace("/", "\\"));
+								
+								FileStream fs = null;
+								Directorio.CrearDirectorio(carpeta_xml);
+								using (fs = new FileStream(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_app),
+									FileMode.Create, FileAccess.ReadWrite))
+								{
+									BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
+									bw.Write(appbase64);
+									bw.Close();
+									fs.Close();
+								}
+							}
+							catch (Exception)
+							{
+
+							}
+						}
+
+					}
+					catch (Exception ex)
+					{
+						
+					}
+
+
+				}
+
 				if (evento_radian > 0)
 				{
 					string nombre_evento = Path.GetFileNameWithoutExtension(url_evento);
