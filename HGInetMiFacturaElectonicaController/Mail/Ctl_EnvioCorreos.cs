@@ -1015,7 +1015,7 @@ namespace HGInetMiFacturaElectonicaController
 							//Variable que indica si el adjunto lo toma del blob
 							bool zip_attach_blob = false;
 
-							if (documento.StrUrlArchivoUbl.Contains("hgidocs.blob") && reenvio_documento == true)
+							if (archivo_attach == false && documento.StrUrlArchivoUbl.Contains("hgidocs.blob") && reenvio_documento == true)
 							{
 								try
 								{
@@ -1048,12 +1048,17 @@ namespace HGInetMiFacturaElectonicaController
 
 										archivo_attach = true;
 										zip_attach_blob = true;
+
 									}
 									else
 									{
 										archivo_attach = false;
 										zip_attach_blob = false;
 									}
+
+									mensaje = mensaje.Replace("{Anexos}", "");
+									mensaje = mensaje.Replace("{ObservacionAnexos}", "");
+									mensaje = mensaje.Replace("{UrlAnexos}", "");
 								}
 								catch (Exception exception)
 								{
