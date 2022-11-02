@@ -741,6 +741,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			int Categoria = CategoriaEstado.ValidadoDian.GetHashCode();
 
+			//Se actualiza el estado de acuse antes de mostrar en plataforma
+			ActualizarAcuseAdquiriente(identificacion_facturador, identificacion_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date, tipo_filtro_fecha);
+
 			List<ObjDocumentos> respuesta = new List<ObjDocumentos>();
 
 
@@ -862,6 +865,85 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 
 			return respuesta;
+		}
+
+
+		public void ActualizarAcuseAdquiriente(string identificacion_facturador, string identificacion_adquiente, string numero_documento, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_filtro_fecha)
+		{
+			try
+			{
+				List<TblDocumentos> respuesta = new List<TblDocumentos>();
+
+				int Categoria = CategoriaEstado.ValidadoDian.GetHashCode();
+
+				if (numero_documento.Equals("*"))
+				{
+					context.Configuration.LazyLoadingEnabled = false;
+
+					respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()//.Include("TblEmpresasResoluciones").AsNoTracking()
+								 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+								 where (empresa.StrIdentificacion.Equals(identificacion_adquiente) || identificacion_adquiente.Equals("*"))
+											&& (datos.StrEmpresaFacturador.Equals(identificacion_facturador) || identificacion_facturador.Equals("*"))
+											//&& (datos.IntAdquirienteRecibo == cod_estado_recibo || estado_recibo.Equals("*"))
+											&& ((datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin) || tipo_filtro_fecha == 2)
+											&& ((datos.DatFechaDocumento >= fecha_inicio && datos.DatFechaDocumento <= fecha_fin) || tipo_filtro_fecha == 1)
+											&& (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
+											&& (datos.IdCategoriaEstado == Categoria)
+											&& (datos.IntDocTipo < 10)
+								 orderby datos.IntNumero descending
+								 select datos).ToList();
+
+
+				}
+				else
+				{
+					var listaDocumetos = Coleccion.ConvertirStringlong(numero_documento);
+
+					context.Configuration.LazyLoadingEnabled = false;
+
+					respuesta = (from datos in context.TblDocumentos.Include("TblEmpresasFacturador").AsNoTracking()//.Include("TblEmpresasResoluciones").AsNoTracking()
+								 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+								 where (empresa.StrIdentificacion.Equals(identificacion_adquiente))
+								 && (datos.StrEmpresaFacturador.Equals(identificacion_facturador) || identificacion_facturador.Equals("*"))
+								 && (listaDocumetos.Contains(datos.IntNumero))
+								 && (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == true || (datos.TblEmpresasFacturador.IntEnvioMailRecepcion == false && datos.IdCategoriaEstado == Categoria))
+								 && (datos.IntDocTipo < 10)
+								 orderby datos.IntNumero descending
+								 select datos).ToList();
+
+				}
+
+				Ctl_EventosRadian ctl_evento = new Ctl_EventosRadian();
+
+				foreach (TblDocumentos documento in respuesta)
+				{
+					List<TblEventosRadian> list_evento = ctl_evento.Obtener(documento.StrIdSeguridad);
+
+					TblEventosRadian ultimo_evento = list_evento.OrderByDescending(x => x.IntEstadoEvento).FirstOrDefault();
+
+					TblEventosRadian rechazo = list_evento.Where(x => x.IntEstadoEvento == 2).FirstOrDefault();
+
+					TblEventosRadian tacito = list_evento.Where(x => x.IntEstadoEvento == 3).FirstOrDefault();
+
+					if (rechazo != null)
+						ultimo_evento = rechazo;
+
+					if (tacito != null && ultimo_evento.IntEstadoEvento == 4)
+						ultimo_evento = tacito;
+
+					if (ultimo_evento != null && documento.IntAdquirienteRecibo != ultimo_evento.IntEstadoEvento && ultimo_evento.IntEstadoEvento < 6)
+					{
+						documento.IntAdquirienteRecibo = ultimo_evento.IntEstadoEvento;
+						documento.DatAdquirienteFechaRecibo = ultimo_evento.DatFechaEvento;
+
+						Actualizar(documento);
+					}
+				}
+			}
+			catch (Exception exception)
+			{
+				RegistroLog.EscribirLog(exception, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion, string.Format("Error Actualizando acuses del Adquiriente {0}, en las fechas ini {1} - Fin {2} , numero doc {3}", identificacion_adquiente, fecha_inicio, fecha_fin, numero_documento));
+			}
 		}
 
 
