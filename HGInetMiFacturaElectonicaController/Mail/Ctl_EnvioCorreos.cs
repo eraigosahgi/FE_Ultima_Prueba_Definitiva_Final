@@ -1015,8 +1015,7 @@ namespace HGInetMiFacturaElectonicaController
 							//Variable que indica si el adjunto lo toma del blob
 							bool zip_attach_blob = false;
 
-							//Validacion del archivo como blob
-							if (!string.IsNullOrWhiteSpace(documento.StrUrlArchivoUbl) && documento.StrUrlArchivoUbl.Contains("hgidocs.blob") && reenvio_documento == true && archivo_attach == false)
+							if (documento.StrUrlArchivoUbl.Contains("hgidocs.blob") && reenvio_documento == true)
 							{
 								try
 								{
@@ -1026,8 +1025,6 @@ namespace HGInetMiFacturaElectonicaController
 									//valido si tengo guardado el zip del attach con el PDF como blob
 									if (list_docs_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIPAttached.GetHashCode())).FirstOrDefault() != null)
 									{
-										string nombre = Path.GetFileName(documento.StrUrlArchivoUbl);
-
 										TblAlmacenamientoDocs zip_attach = list_docs_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIPAttached.GetHashCode())).FirstOrDefault();
 
 										AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
@@ -1036,9 +1033,9 @@ namespace HGInetMiFacturaElectonicaController
 
 										BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
 
-										byte[] bytes_zip_blob = contenedor.LecturaBlobBase64(Path.GetExtension(zip_attach.StrUrlActual), Path.GetFileNameWithoutExtension(zip_attach.StrUrlActual));
+										byte [] bytes_applications = contenedor.LecturaBlobBase64(Path.GetExtension(zip_attach.StrUrlActual), Path.GetFileNameWithoutExtension(zip_attach.StrUrlActual));
 
-										string zip_blob = Convert.ToBase64String(bytes_zip_blob);
+										string zip_blob = Convert.ToBase64String(bytes_applications);
 										//string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
 
 										if (!string.IsNullOrEmpty(zip_blob))
@@ -1052,27 +1049,26 @@ namespace HGInetMiFacturaElectonicaController
 										archivo_attach = true;
 										zip_attach_blob = true;
 									}
+									else
+									{
+										archivo_attach = false;
+										zip_attach_blob = false;
+									}
 								}
 								catch (Exception exception)
 								{
 									RegistroLog.EscribirLog(exception, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Enviando mail del Facturador {0}, Documento {1} y Descargando Zip-attach como Blob", documento.StrEmpresaFacturador, documento.IntNumero));
 								}
-
 							}
-
-							//if (archivo_attach == false)
-							//{
-							//	archivo_attach = Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, nombre_archivo.Replace("xml", "zip")));
-							//}
 
 							bool attached = false;
 
 							//Se agrega validacion por ajustes en el namespace de los documentos electronicos
-							DateTime fecha_valid = new DateTime(2021, 5, 10, 0, 0, 0);
-							if (reenvio_documento == true && documento.DatFechaIngreso.Date <= fecha_valid.Date)
-								archivo_attach = false;
+							//DateTime fecha_valid = new DateTime(2021, 5, 10, 0, 0, 0);
+							//if (reenvio_documento == true && documento.DatFechaIngreso.Date <= fecha_valid.Date)
+							//	archivo_attach = false;
 
-							if (archivo_attach == false && documento.IntVersionDian == 2)
+							if (archivo_attach == false && documento.IntVersionDian == 2 && zip_attach_blob == false)
 							{
 								if (documento_obj != null)
 								{
@@ -1092,58 +1088,69 @@ namespace HGInetMiFacturaElectonicaController
 							// ruta del zip
 							string ruta_zip = string.Format(@"{0}\{1}.zip", carpeta_xml, nombre_archivo);
 
-							if (attached == true && documento.IntVersionDian == 2 && zip_attach_blob == false)
+							if (attached == true && documento.IntVersionDian == 2)
 							{
 
 								//Proceso para agregar la respuesta de la DIAN
 								try
 								{
-									if (Archivo.ValidarExistencia(ruta_zip))
-										Archivo.Borrar(ruta_zip);
 
-									// genera la compresión del archivo en zip
-									using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
+									if (reenvio_documento == false && zip_attach_blob == false)
 									{
-										archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo), string.Format("{0}.xml", nombre_archivo));
+										if (Archivo.ValidarExistencia(ruta_zip))
+											Archivo.Borrar(ruta_zip);
 
-										if (contiene_pdf == true)
+										// genera la compresión del archivo en zip
+										using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
 										{
-											string nombre_pdf = Path.GetFileName(documento.StrUrlArchivoPdf);
-											archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_xml, nombre_pdf), Path.GetFileName(nombre_pdf));
-										}
+											archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo), string.Format("{0}.xml", nombre_archivo));
 
-										//Proceso para los anexos
-										if (documento.StrUrlAnexo != null)
-										{
-											if (!string.IsNullOrEmpty(documento.StrUrlAnexo))
+											if (contiene_pdf == true)
 											{
-												mensaje = mensaje.Replace("{Anexos}", "Anexos");
-												mensaje = mensaje.Replace("{ObservacionAnexos}", documento.StrObservacionAnexo);
-												mensaje = mensaje.Replace("{UrlAnexos}", documento.StrUrlAnexo);
+												string nombre_pdf = Path.GetFileName(documento.StrUrlArchivoPdf);
+												archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_xml, nombre_pdf), Path.GetFileName(nombre_pdf));
+											}
 
-												if (documento.IntPesoAnexo > 0)
+											//Proceso para los anexos
+											if (documento.StrUrlAnexo != null)
+											{
+												if (!string.IsNullOrEmpty(documento.StrUrlAnexo))
 												{
-													byte[] bytes_anexo = Archivo.ObtenerWeb(documento.StrUrlAnexo);
+													mensaje = mensaje.Replace("{Anexos}", "Anexos");
+													mensaje = mensaje.Replace("{ObservacionAnexos}", documento.StrObservacionAnexo);
+													mensaje = mensaje.Replace("{UrlAnexos}", documento.StrUrlAnexo);
 
-													string ruta_fisica_anexo = Convert.ToBase64String(bytes_anexo);
-
-													string nombre_anexo = Path.GetFileName(documento.StrUrlAnexo);
-
-													if (!string.IsNullOrEmpty(ruta_fisica_anexo))
+													if (documento.IntPesoAnexo > 0)
 													{
-														// ruta física del xml
-														string carpeta_anexo = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
-														carpeta_anexo = string.Format(@"{0}\{1}", carpeta_anexo, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAnexos);
+														byte[] bytes_anexo = Archivo.ObtenerWeb(documento.StrUrlAnexo);
 
-														archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_anexo, nombre_anexo), Path.GetFileName(nombre_anexo));
+														string ruta_fisica_anexo = Convert.ToBase64String(bytes_anexo);
 
-														//Adjunto adjunto = new Adjunto();
-														//adjunto.ContenidoB64 = ruta_fisica_anexo;
-														//adjunto.Nombre = nombre_anexo;
-														//archivos.Add(adjunto);
+														string nombre_anexo = Path.GetFileName(documento.StrUrlAnexo);
+
+														if (!string.IsNullOrEmpty(ruta_fisica_anexo))
+														{
+															// ruta física del xml
+															string carpeta_anexo = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
+															carpeta_anexo = string.Format(@"{0}\{1}", carpeta_anexo, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEAnexos);
+
+															archive.CreateEntryFromFile(string.Format(@"{0}\{1}", carpeta_anexo, nombre_anexo), Path.GetFileName(nombre_anexo));
+
+															//Adjunto adjunto = new Adjunto();
+															//adjunto.ContenidoB64 = ruta_fisica_anexo;
+															//adjunto.Nombre = nombre_anexo;
+															//archivos.Add(adjunto);
+														}
 													}
-												}
 
+												}
+												else
+												{
+													mensaje = mensaje.Replace("{Anexos}", "");
+													mensaje = mensaje.Replace("{ObservacionAnexos}", "");
+													mensaje = mensaje.Replace("{UrlAnexos}", "");
+
+												}
 											}
 											else
 											{
@@ -1152,46 +1159,38 @@ namespace HGInetMiFacturaElectonicaController
 												mensaje = mensaje.Replace("{UrlAnexos}", "");
 
 											}
+
+											archive.Dispose();
+										}
+
+										byte[] bytes_applications = null;
+
+										if (!string.IsNullOrEmpty(documento.StrUrlArchivoZip))
+										{
+											string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoZip);
+											bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
 										}
 										else
 										{
-											mensaje = mensaje.Replace("{Anexos}", "");
-											mensaje = mensaje.Replace("{ObservacionAnexos}", "");
-											mensaje = mensaje.Replace("{UrlAnexos}", "");
+											bytes_applications = Archivo.ObtenerBytes(ruta_zip);
+										}
+
+										string ruta_fisica_appl = Convert.ToBase64String(bytes_applications);
+
+										string nombre_xml_app = string.Format("{0}.zip", nombre_archivo);
+
+										if (!string.IsNullOrEmpty(ruta_fisica_appl))
+										{
+											Adjunto adjunto = new Adjunto();
+											adjunto.ContenidoB64 = ruta_fisica_appl;
+											adjunto.Nombre = nombre_xml_app;
+											archivos.Add(adjunto);
 
 										}
 
-										archive.Dispose();
-
+										if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo)))
+											Archivo.Borrar(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo));
 									}
-
-									byte[] bytes_applications = null;
-
-									if (!string.IsNullOrEmpty(documento.StrUrlArchivoZip))
-									{
-										string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoZip);
-										bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
-									}
-									else
-									{
-										bytes_applications = Archivo.ObtenerBytes(ruta_zip);
-									}
-
-									string ruta_fisica_appl = Convert.ToBase64String(bytes_applications);
-
-									string nombre_xml_app = string.Format("{0}.zip", nombre_archivo);
-
-									if (!string.IsNullOrEmpty(ruta_fisica_appl))
-									{
-										Adjunto adjunto = new Adjunto();
-										adjunto.ContenidoB64 = ruta_fisica_appl;
-										adjunto.Nombre = nombre_xml_app;
-										archivos.Add(adjunto);
-
-									}
-
-									if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo)))
-										Archivo.Borrar(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo));
 
 								}
 								catch (Exception excepcion)

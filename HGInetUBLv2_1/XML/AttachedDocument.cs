@@ -198,20 +198,27 @@ namespace HGInetUBLv2_1
 					
 					try
 					{
-						string nombre_archivo_resp = NombramientoArchivo.ObtenerZip(documentoBd.IntNumero.ToString(), obligado.Identificacion, TipoDocumento.Factura, documentoBd.StrPrefijo);
 						string nombre_app = Path.GetFileNameWithoutExtension(documentoBd.StrUrlArchivoUbl);
-
-						XmlDocument xDoc = new XmlDocument();
-
-						xDoc.Load(documentoBd.StrUrlArchivoUbl.Replace(nombre_app, nombre_archivo_resp));
-
-						XmlNodeList xAttach = xDoc.GetElementsByTagName("DianResponse");
 
 						string appbase64 = string.Empty;
 
-						foreach (XmlNode child in xAttach)
+						if (!documentoBd.StrUrlArchivoUbl.Contains("hgidocs.blob"))
 						{
-							appbase64 = child["XmlBase64Bytes"].InnerText;
+							string nombre_archivo_resp = NombramientoArchivo.ObtenerZip(documentoBd.IntNumero.ToString(), obligado.Identificacion, TipoDocumento.Factura, documentoBd.StrPrefijo);
+
+							XmlDocument xDoc = new XmlDocument();
+
+							xDoc.Load(documentoBd.StrUrlArchivoUbl.Replace(nombre_app, nombre_archivo_resp));
+
+							if (xDoc != null)
+							{
+								XmlNodeList xAttach = xDoc.GetElementsByTagName("DianResponse");
+
+								foreach (XmlNode child in xAttach)
+								{
+									appbase64 = child["XmlBase64Bytes"].InnerText;
+								}
+							}
 						}
 
 						if (!string.IsNullOrEmpty(appbase64))
