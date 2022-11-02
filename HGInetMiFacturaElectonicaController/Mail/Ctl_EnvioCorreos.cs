@@ -1170,7 +1170,7 @@ namespace HGInetMiFacturaElectonicaController
 
 										byte[] bytes_applications = null;
 
-										if (!string.IsNullOrEmpty(documento.StrUrlArchivoZip))
+										if (!string.IsNullOrEmpty(documento.StrUrlArchivoZip) && !documento.StrUrlArchivoUbl.Contains("hgidocs.blob"))
 										{
 											string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoZip);
 											bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
