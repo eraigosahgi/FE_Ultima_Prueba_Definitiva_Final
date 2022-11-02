@@ -1100,7 +1100,7 @@ namespace HGInetMiFacturaElectonicaController
 								try
 								{
 
-									if (reenvio_documento == false && zip_attach_blob == false)
+									if (zip_attach_blob == false)
 									{
 										if (Archivo.ValidarExistencia(ruta_zip))
 											Archivo.Borrar(ruta_zip);
