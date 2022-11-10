@@ -273,7 +273,7 @@ App.controller('RecepcionCorreoController', function RecepcionCorreoController($
 						dataField: "IntProceso",
 						cssClass: "hidden-xs col-md-1",
 						lookup: {
-							dataSource: EstadoProcesoRecepcion,
+							dataSource: TipoProcesoRecepcion,
 							displayExpr: "Name",
 							valueExpr: "ID"
 						},
@@ -394,10 +394,17 @@ var TiposFiltroFecha =
     { ID: "2", Texto: 'Fecha Documento' }
     ];
 
-var EstadoProcesoRecepcion =
+var TipoProcesoRecepcion =
 [
 { "ID": 0, "Name": "Recepción" },
 { "ID": 1, "Name": "Emisión" },
+];
+
+var EstadoProcesoRecepcion =
+[
+{ "ID": 1, "Name": "Rechazado" },
+{ "ID": 2, "Name": "Recibido" },
+{ "ID": 3, "Name": "Procesado" },
 ];
 
 
