@@ -465,7 +465,7 @@ namespace HGInetInteroperabilidad.Procesos
 				{
 					try
 					{
-						string url_sonda = "https://tasks.mifacturaenlinea.com.co/Views/Pages/SondaProcesarCorreo.aspx";
+						string url_sonda = "https://tasks.hgidocs.co/Views/Pages/SondaProcesarCorreo.aspx";
 						var request = (HttpWebRequest)WebRequest.Create(url_sonda);
 						request.GetResponse();
 					}
