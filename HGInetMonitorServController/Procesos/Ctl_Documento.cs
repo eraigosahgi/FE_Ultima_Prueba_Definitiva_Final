@@ -118,9 +118,9 @@ namespace HGInetMonitorServController.Procesos
 
 			string objeto = Constantes.ObjetoJson;
 
-			int sitios_disponibles = 6;
+			int sitios_disponibles = 26;
 
-			for (int i = 1; i <= sitios_disponibles; i++)
+			for (int i = 21; i <= sitios_disponibles; i++)
 			{
 
 				#region Leyendo archivo no funcional
@@ -215,7 +215,7 @@ namespace HGInetMonitorServController.Procesos
 
 				if (i == sitios_disponibles && ruta_hgi == true)
 				{
-					i = 0;
+					i = 20;
 					ruta_hgi = false;
 				}
 
