@@ -3450,7 +3450,18 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			doc_acuse.MvoRespuesta = motivo_rechazo;
 			doc_acuse.Fecha = Convert.ToDateTime(doc.DatAdquirienteFechaRecibo);
 
-			doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<HGInetMiFacturaElectonicaData.DocumentTypeV2>(doc.IntDocTipo));
+			doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DocumentTypeV2>(doc.IntDocTipo));
+
+			//Regla: AAH09, Se agrega validacion si es Factura de exportacion o contingecia para poner en el evento el mismo tipodocumento del original
+			if ( doc.IntDocTipo == TipoDocumento.Factura.GetHashCode() && doc.IntTipoOperacion == TipoOperacion.FacturaContingencia.GetHashCode())
+			{
+				doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoOperacion>(doc.IntTipoOperacion));
+			}
+			if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode() && doc.IntTipoOperacion == TipoOperacion.FacturaExportacion.GetHashCode())
+			{
+				doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoOperacion>(doc.IntTipoOperacion));
+			}
+
 			doc_acuse.DatosAdquiriente = Ctl_Empresa.Convertir(adquiriente);
 			if (doc_acuse.DatosAdquiriente.TipoIdentificacion != 31)
 			{

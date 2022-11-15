@@ -19,6 +19,12 @@ namespace HGInetMiFacturaElectonicaData
 		[Description("91")]
 		NotaCredito = 3,
 
+		[Description("03")]
+		FacturaContingencia = 4,
+
+		[Description("02")]
+		FacturaExportacion = 5,
+
 	}
 
 	public enum TipoOperacion

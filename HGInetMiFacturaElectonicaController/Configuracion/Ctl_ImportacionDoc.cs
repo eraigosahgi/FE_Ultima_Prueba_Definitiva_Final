@@ -248,8 +248,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 												tipo_doc = 4;
 												i = item_row.ItemArray.Count();
 											}
-												
+
 											import.StrTipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc));
+
+											if (item_row[i].ToString().Contains("contingencia") || item_row[i].ToString().Contains("exportación"))
+											{
+												import.StrTipodoc = item_row[i].ToString();
+											}
+
 											break;
 										case 1:
 											import.StrCufe = item_row[i].ToString();
@@ -591,6 +597,16 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				tbl_documento.StrProveedorReceptor = "888888888";
 				tbl_documento.StrProveedorEmisor = "888888888";
 				tbl_documento.IntVersionDian = 2;
+
+				if (documento_obj.StrTipodoc.Contains("contingencia"))
+				{
+					tbl_documento.IntTipoOperacion = TipoOperacion.FacturaContingencia.GetHashCode();
+				}
+
+				if (documento_obj.StrTipodoc.Contains("exporta"))
+				{
+					tbl_documento.IntTipoOperacion = TipoOperacion.FacturaExportacion.GetHashCode();
+				}
 
 
 				return tbl_documento;
