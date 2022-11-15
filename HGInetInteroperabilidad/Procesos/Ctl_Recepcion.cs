@@ -1295,7 +1295,7 @@ namespace HGInetInteroperabilidad.Procesos
 					}
 					else
 					{
-						AlmacenarArchivo(string.Format(@"{0}\{1}", ruta_archivo, item.Name), string.Format(@"{0}{1}", nombre_archivo.Replace("fv", "attach"), item.Extension), facturador_emisor);
+						AlmacenarArchivo(string.Format(@"{0}\{1}", ruta_archivo, item.Name), string.Format(@"{0}{1}", nombre_archivo.Replace("fv", "ad"), item.Extension), facturador_emisor);
 					}
 
 				}
