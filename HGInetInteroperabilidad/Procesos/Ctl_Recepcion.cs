@@ -721,18 +721,23 @@ namespace HGInetInteroperabilidad.Procesos
 
 					//Valida que si exista el archivo en la ruta
 					if (!Directorio.ValidarExistenciaArchivoUrl(url_ppal_zip))
-						url_ppal_zip = null;
+						url_ppal_zip = string.Empty;
 				}
 
-				string url_ppal_pdf = string.Empty;
 				// url pública del pdf
-				if (archivo_pdf == true)
+				string url_ppal_pdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
+
+				//Valida que si exista el archivo en la ruta
+				if (!Directorio.ValidarExistenciaArchivoUrl(url_ppal_pdf))
 				{
-					url_ppal_pdf = string.Format(@"{0}{1}/{2}.pdf", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
-					//Valida que si exista el archivo en la ruta
-					if (!Directorio.ValidarExistenciaArchivoUrl(url_ppal_pdf))
-						url_ppal_pdf = null;
+					string carpeta_fisica = string.Format(@"{0}/{1}/{2}/", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, facturador_emisor.StrIdSeguridad);
+					string ruta_fisica = string.Format(@"{0}{1}/{2}.pdf", carpeta_fisica, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
+
+					if (!Archivo.ValidarExistencia(ruta_fisica))
+						url_ppal_pdf = string.Empty;
 				}
+					
+
 				//Generacion del tracking
 				Guid tracking = Guid.NewGuid();
 
@@ -1278,19 +1283,19 @@ namespace HGInetInteroperabilidad.Procesos
 
 				foreach (var item in archivos)
 				{
-					if (item.Extension.Equals(".pdf"))
+					if (item.Extension.ToLowerInvariant().Equals(".pdf"))
 					{
 						AlmacenarArchivo(string.Format(@"{0}\{1}", ruta_archivo, item.Name), string.Format(@"{0}{1}", nombre_archivo, item.Extension), facturador_emisor);
 						contiene_pdf = true;
 					}
-					else if (item.Extension.Equals(".zip"))
+					else if (item.Extension.ToLowerInvariant().Equals(".zip"))
 					{
 						AlmacenarArchivo(string.Format(@"{0}\{1}", ruta_archivo, item.Name), string.Format(@"{0}{1}", nombre_archivo, item.Extension), facturador_emisor, false, true);
 						contiene_anexo = true;
 					}
 					else
 					{
-						AlmacenarArchivo(string.Format(@"{0}\{1}", ruta_archivo, item.Name), string.Format(@"{0}{1}", nombre_archivo.Replace("face", "attach"), item.Extension), facturador_emisor);
+						AlmacenarArchivo(string.Format(@"{0}\{1}", ruta_archivo, item.Name), string.Format(@"{0}{1}", nombre_archivo.Replace("fv", "attach"), item.Extension), facturador_emisor);
 					}
 
 				}
