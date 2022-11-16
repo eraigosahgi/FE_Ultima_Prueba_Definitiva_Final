@@ -239,7 +239,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\DianResultadoTransacciones\configuration91.svcinfo" />
+    <None Include="Service References\DianResultadoTransacciones\configuration91.svcinfo">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DianResultadoTransacciones\configuration.svcinfo" />
@@ -254,7 +256,9 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\DianWSValidacionPrevia\configuration91.svcinfo" />
+    <None Include="Service References\DianWSValidacionPrevia\configuration91.svcinfo">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DianWSValidacionPrevia\configuration.svcinfo" />

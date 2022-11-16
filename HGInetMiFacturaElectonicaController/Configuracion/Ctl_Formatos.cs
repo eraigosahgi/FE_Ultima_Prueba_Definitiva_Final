@@ -372,10 +372,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				}
 
 
-				//Almacena la auditoría del proceso.
-				Ctl_FormatosAudit clase_auditoria = new Ctl_FormatosAudit();
-				clase_auditoria.Crear(datos_formato.IntCodigoFormato, datos_formato.StrEmpresa, datos_formato.StrIdSeguridad, tipo_proceso, usuario_solicitante.StrIdSeguridad, string.Format("{0}. {1}", des_proceso, observaciones));
+                //Almacena la auditoría del proceso.
+                try
+                {
+                    Ctl_FormatosAudit clase_auditoria = new Ctl_FormatosAudit();
+                    clase_auditoria.Crear(datos_formato.IntCodigoFormato, datos_formato.StrEmpresa, datos_formato.StrIdSeguridad, tipo_proceso, usuario_solicitante.StrIdSeguridad, string.Format("{0}. {1}", des_proceso, observaciones));
 
+                }
+                catch (Exception)
+                {
+                    
+                }
 				//Actualiza el registro en base de datos.
 				TblFormatos datos_respuesta = Actualizar(datos_formato);
 
@@ -705,12 +712,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				if (lista_difusion.Count > 0)
 				{
-					List<MensajeEnvio> respuesta_envio = clase_correos.EnviarNotificacionProcesosFormato(empresa_autenticada, datos_empresa_formato, datos_formato, datos_usuario, observaciones_solicitud, tipo_proceso, lista_difusion);
+                    try
+                    {
+                        List<MensajeEnvio> respuesta_envio = clase_correos.EnviarNotificacionProcesosFormato(empresa_autenticada, datos_empresa_formato, datos_formato, datos_usuario, observaciones_solicitud, tipo_proceso, lista_difusion);
 
-					Ctl_AlertasHistAudit clase_audit_alerta = new Ctl_AlertasHistAudit();
-					string mensaje_audit = string.Format("{0} {1}", observaciones_solicitud, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso.GetHashCode())));
+                        Ctl_AlertasHistAudit clase_audit_alerta = new Ctl_AlertasHistAudit();
+                        string mensaje_audit = string.Format("{0} {1}", observaciones_solicitud, Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TiposProceso>(tipo_proceso.GetHashCode())));
 
-					clase_audit_alerta.Crear(datos_alerta.IntIdAlerta, empresa_autenticada.StrIdSeguridad, empresa_autenticada.StrIdentificacion, Newtonsoft.Json.JsonConvert.SerializeObject(respuesta_envio), datos_alerta.IntTipo, Guid.Empty, mensaje_audit);
+                        clase_audit_alerta.Crear(datos_alerta.IntIdAlerta, empresa_autenticada.StrIdSeguridad, empresa_autenticada.StrIdentificacion, Newtonsoft.Json.JsonConvert.SerializeObject(respuesta_envio), datos_alerta.IntTipo, Guid.Empty, mensaje_audit);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
 				}
 
 				return true;
