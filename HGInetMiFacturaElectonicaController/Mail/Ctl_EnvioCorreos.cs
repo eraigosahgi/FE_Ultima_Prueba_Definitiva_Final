@@ -1095,7 +1095,10 @@ namespace HGInetMiFacturaElectonicaController
 							//if (reenvio_documento == true && documento.DatFechaIngreso.Date <= fecha_valid.Date)
 							//	archivo_attach = false;
 
-							if (archivo_attach == false && documento.IntVersionDian == 2 && zip_attach_blob == false )
+							// ruta del zip
+							string ruta_zip = string.Format(@"{0}\{1}.zip", carpeta_xml, nombre_archivo);
+
+							if (archivo_attach == false && documento.IntVersionDian == 2 && zip_attach_blob == false && !Archivo.ValidarExistencia(ruta_zip))
 							{
 								if (documento_obj != null)
 								{
@@ -1111,9 +1114,6 @@ namespace HGInetMiFacturaElectonicaController
 							{
 								attached = true;
 							}
-
-							// ruta del zip
-							string ruta_zip = string.Format(@"{0}\{1}.zip", carpeta_xml, nombre_archivo);
 
 							if (attached == true && documento.IntVersionDian == 2)
 							{
@@ -1153,13 +1153,17 @@ namespace HGInetMiFacturaElectonicaController
 										}
 										else
 										{
-											generar_att_zip = false;
+											if (Archivo.ValidarExistencia(ruta_zip))
+											{
+												generar_att_zip = false;
+											}
+											
 										}
 
-										if (reenvio_documento == true && Archivo.ValidarExistencia(ruta_zip))
-										{
-											Archivo.Borrar(ruta_zip);
-										}
+										//if (reenvio_documento == true && Archivo.ValidarExistencia(ruta_zip))
+										//{
+										//	Archivo.Borrar(ruta_zip);
+										//}
 
 										if (generar_att_zip == true)
 										{
