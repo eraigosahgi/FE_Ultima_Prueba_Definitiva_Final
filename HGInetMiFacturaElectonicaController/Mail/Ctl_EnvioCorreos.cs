@@ -1179,7 +1179,7 @@ namespace HGInetMiFacturaElectonicaController
 												}
 
 												//Se adjunta al zip el attach en xml
-												archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo), Path.GetFileName(nombre_archivo));
+												archive.CreateEntryFromFile(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo), string.Format("{0}.xml", nombre_archivo));
 
 												//Proceso para los anexos
 												if (documento.StrUrlAnexo != null)
