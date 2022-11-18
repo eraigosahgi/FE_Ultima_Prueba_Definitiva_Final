@@ -6944,9 +6944,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					{
 						string ruta_resp_dian = url_resp_dian_original.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian);
 						archivo_memoria = Archivo.ObtenerContenido(ruta_resp_dian);
+						string nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(item.IntNumero.ToString(), item.StrEmpresaFacturador, TipoDocumento.AcuseRecibo, item.StrPrefijo);//nombre_xml.Replace("face", "attach");
+
 						if (!string.IsNullOrEmpty(archivo_memoria))
 						{
-							ruta_blob_resp_dian = contenedor.Enviar(archivo_memoria, Path.GetExtension(ruta_resp_dian), metadata_acuse, Path.GetFileNameWithoutExtension(ruta_resp_dian));
+							ruta_blob_resp_dian = contenedor.Enviar(archivo_memoria, Path.GetExtension(ruta_resp_dian), metadata_acuse, nombre_archivo);
 							//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.XMLRESPDIAN.GetHashCode(), ruta_resp_dian, ruta_blob_resp_dian, buscar_faltantes);
 							try
 							{
