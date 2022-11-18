@@ -246,7 +246,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 											else if (item_row[i].ToString().Contains("Application"))
 											{
 												tipo_doc = 4;
-												i = item_row.ItemArray.Count();
+												i = item_row.ItemArray.Count()-1;
 											}
 
 											import.StrTipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc));
@@ -373,10 +373,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 									}
 
 								}
-								//else
-								//{
-								//	import.StrObservaciones = "Documento No aplica para importar a Plataforma";
-								//}
+								else
+								{
+									import.StrObservaciones = "Documento No aplica para importar a Plataforma";
+								}
 							}
 						}
 						
