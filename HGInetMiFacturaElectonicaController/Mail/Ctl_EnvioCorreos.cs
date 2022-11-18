@@ -1003,6 +1003,11 @@ namespace HGInetMiFacturaElectonicaController
 							}
 
 							bool generar_attach = true;
+
+							byte[] bytes_applications = null;
+
+							bool generar_att_zip = true;
+
 							// ruta física del xml
 							string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa_obligado.StrIdSeguridad.ToString());
 							carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
@@ -1043,9 +1048,9 @@ namespace HGInetMiFacturaElectonicaController
 
 											BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
 
-											byte[] bytes_applications = contenedor.LecturaBlobBase64(Path.GetExtension(zip_attach.StrUrlActual), Path.GetFileNameWithoutExtension(zip_attach.StrUrlActual));
+											byte[] bytes_applications_b = contenedor.LecturaBlobBase64(Path.GetExtension(zip_attach.StrUrlActual), Path.GetFileNameWithoutExtension(zip_attach.StrUrlActual));
 
-											string zip_blob = Convert.ToBase64String(bytes_applications);
+											string zip_blob = Convert.ToBase64String(bytes_applications_b);
 											//string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
 
 											if (!string.IsNullOrEmpty(zip_blob))
@@ -1069,9 +1074,13 @@ namespace HGInetMiFacturaElectonicaController
 									else
 									{
 										string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoZip);
-										byte[] bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
+										bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
 										if (bytes_applications != null)
+										{
 											archivo_attach = true;
+											generar_att_zip = false;
+										}
+											
 
 
 									}
@@ -1124,9 +1133,6 @@ namespace HGInetMiFacturaElectonicaController
 
 									if (zip_attach_blob == false)
 									{
-										byte[] bytes_applications = null;
-
-										bool generar_att_zip = true;
 
 										if (!Archivo.ValidarExistencia(string.Format(@"{0}\{1}", carpeta_xml, Path.GetFileName(documento.StrUrlArchivoPdf))) && documento.DatFechaIngreso < fecha_cambio_ser)
 										{
@@ -1245,7 +1251,8 @@ namespace HGInetMiFacturaElectonicaController
 										}
 										else
 										{
-											bytes_applications = Archivo.ObtenerBytes(ruta_zip);
+											if  (bytes_applications == null && Archivo.ValidarExistencia(ruta_zip))
+												bytes_applications = Archivo.ObtenerBytes(ruta_zip);
 
 											//string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoZip);
 											//bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
