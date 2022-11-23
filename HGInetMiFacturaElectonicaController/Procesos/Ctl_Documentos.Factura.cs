@@ -573,12 +573,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Se actualiza el estado del documento en BD para que lo envien de nuevo
 				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
 
-				if ((numero_documento != null) && (item_respuesta.IdProceso > (short) ProcesoEstado.Recepcion.GetHashCode() || item_respuesta.IdProceso < (short) ProcesoEstado.EnvioZip.GetHashCode()))
+				if ((numero_documento != null) && (item_respuesta.IdProceso > (short)ProcesoEstado.Recepcion.GetHashCode() && item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode()))
 				{
 					numero_documento.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 					numero_documento = num_doc.Actualizar(numero_documento);
 					if (string.IsNullOrEmpty(item_respuesta.Error.Mensaje))
 						item_respuesta.Error.Mensaje = "Se presentó inconsistencia al procesar el documento, enviar de nuevo el documento";
+
+					item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
+					item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
 				}
 
 				item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
