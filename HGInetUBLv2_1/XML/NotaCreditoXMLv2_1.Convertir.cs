@@ -275,8 +275,8 @@ namespace HGInetUBLv2_1
 								else
 								{
 									CampoValor campo = new CampoValor();
-									campo.Descripcion = item.Name.Value;
-									campo.Valor = item.Value.Value;
+									campo.Descripcion = (item.Name != null) && !string.IsNullOrEmpty(item.Name.Value) ? item.Name.Value : string.Empty;
+									campo.Valor = (item.Value != null) && !string.IsNullOrEmpty(item.Value.Value) ? item.Value.Value : string.Empty;
 									detalle.CamposAdicionales.Add(campo);
 								}
 
