@@ -27,8 +27,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 	public class AuditoriasController : ApiController
 	{
 		[HttpGet]
-		[Route("Api/AuditoriaDocumento")]
-		public IHttpActionResult AuditoriaDocumento(string id_seguridad_doc)
+		[Route("Api/AuditoriaDocumento_old")]
+		public IHttpActionResult AuditoriaDocumento_old(string id_seguridad_doc)
 		{
 			try
 			{
@@ -77,6 +77,31 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}).ToList();
 
 				return Ok(datos_retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
+
+		[HttpGet]
+		[Route("Api/AuditoriaDocumento")]
+		public IHttpActionResult AuditoriaDocumento(string id_seguridad_doc)
+		{
+			try
+			{
+				
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				//Obtiene los datos del documento en la base de datos.
+				TblDocumentos datos_doc = ctl_documento.ObtenerPorIdSeguridad(new Guid(id_seguridad_doc)).FirstOrDefault();
+
+				string ruta = string.Format("{0}",   datos_doc.StrCufe);
+
+				return Ok(ruta);
 			}
 			catch (Exception excepcion)
 			{
