@@ -248,6 +248,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		Datos_ComercioConfigId = "",
 		Datos_ComercioConfigDescrip = "";
 
+	$('#PanelRepresentante').hide();
 
 	//Define los campos del Formulario  
 	function CargarFormulario() {
@@ -390,7 +391,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			onValueChanged: function (data) {
 				Datos_Radian = (data.value == true) ? 1 : 0;
 				if (Datos_CertFirma == 0 && Datos_Radian == 1 && Datos_Habilitacion == 99) {
-					$('#PanelRepresentante').show();
+					//$('#PanelRepresentante').show();
+					DevExpress.ui.notify("Para activar RADIAN, debe tener certificado digital propio", 'error', 10000);
+					$("#Radian").dxCheckBox({ value: false });
 				}
 				else {
 					$('#PanelRepresentante').hide();
