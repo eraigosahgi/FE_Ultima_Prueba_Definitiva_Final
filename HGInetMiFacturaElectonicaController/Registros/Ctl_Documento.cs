@@ -6670,14 +6670,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							j = mes;
 						}
 
-						DateTime fecha_fin = new DateTime(anyo, j, 1).AddMonths(1).AddDays(-1);
+						DateTime fecha_fin = new DateTime(anyo, j, 1,23,59,59).AddMonths(1).AddDays(-1);
 
 						DateTime fecha_actual = Fecha.GetFecha();
-
-						TimeSpan Diff_dates = fecha_actual.Subtract(fecha_fin);
-
-						if (Diff_dates.TotalDays < 1)
-							throw new ApplicationException("No se puede sincronizar los archivos a azure");
 
 						//Se valida si es para procesar algun documento anterior del año que por alguna razon no se pudo sincronizar a Azure
 						if (buscar_faltantes == false)
@@ -6693,15 +6688,21 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							for (int i = 0; i <= diasmes; i++)
 							{
 								DateTime fecha_proceso = fecha_inicio;
+
 								if (i > 0 && i < diasmes)
 									fecha_proceso = new DateTime(fecha_inicio.Year, fecha_inicio.Month, fecha_inicio.Day, 0, 0, 0).AddDays(i);//fecha_inicio.AddDays(i);
 
 
 								if (i == diasmes || fecha_proceso.Day == diasmes)
-								{
+								{	
 									fecha_proceso = fecha_fin;
 									i = diasmes;
 								}
+
+								TimeSpan Diff_dates = fecha_actual.Subtract(fecha_proceso);
+
+								if (Diff_dates.TotalDays < 1)
+									throw new ApplicationException("No se puede sincronizar los archivos a azure");
 
 								//va hacer el recorrido por hora
 								for (int h = 0; h < 24; h++)
