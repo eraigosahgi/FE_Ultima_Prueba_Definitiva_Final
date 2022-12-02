@@ -303,7 +303,7 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 							Email.StrResultadoProceso = Email.StrResultadoProceso.Replace("[", "").Replace("]", "");
 							dynamic datos = JsonConvert.DeserializeObject(Email.StrResultadoProceso);
 
-							datos_retorno = email.ConsultarCorreo((long)datos.MessageID);
+							datos_retorno = email.ConsultarCorreo((string)datos.MessageID);
 							//Si ya tengo una respuesta se la asigno a este 
 							if (MailPlataforma.EmailEnviado == null && datos_retorno.Estado != null)
 							{

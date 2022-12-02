@@ -5558,7 +5558,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							foreach (TblProcesoCorreo item in list_correos)
 							{
-								datos_retorno = email.ConsultarCorreo(Convert.ToInt64(item.StrIdMensaje));
+								datos_retorno = email.ConsultarCorreo(item.StrIdMensaje);
 
 								if (datos_retorno != null && !string.IsNullOrEmpty(datos_retorno.Estado))
 								{

@@ -76,6 +76,7 @@ namespace HGInetMiFacturaElectonicaController
 
 				//Obtengo a la ruta de plataforma de servicio
 				ruta_envio = ObtenerUrl();
+				//ruta_envio = "";
 				if (string.IsNullOrEmpty(ruta_envio))
 					ruta_envio = plataforma.RutaHginetMail;
 
@@ -901,13 +902,13 @@ namespace HGInetMiFacturaElectonicaController
 							{
 								mensaje = mensaje.Replace("Para continuar con el proceso debes realizar el acuse de recibo {PSETexto}:", "");
 							}
-								  
+
 							string boton_acuse = "<td style='border:2px solid #b0afaf;border-radius:3px;color:#ffffff;cursor:auto;padding:10px 25px;' align='center' valign='middle' bgcolor='#040461'><a href='" + ruta_acuse + "' style='text-decoration:none;background:#040461;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:17px;font-weight:normal;line-height:120%;text-transform:none;margin:0px;' target='_blank'>Ver Documentos</a></td>";
 
 							mensaje = mensaje.Replace("{Acuse}", boton_acuse);
 
 						}
-						
+
 
 						bool IdPago = false;
 
@@ -1080,12 +1081,12 @@ namespace HGInetMiFacturaElectonicaController
 											archivo_attach = true;
 											generar_att_zip = false;
 										}
-											
+
 
 
 									}
 
-									
+
 
 									mensaje = mensaje.Replace("{Anexos}", "");
 									mensaje = mensaje.Replace("{ObservacionAnexos}", "");
@@ -1163,7 +1164,7 @@ namespace HGInetMiFacturaElectonicaController
 											{
 												generar_att_zip = false;
 											}
-											
+
 										}
 
 										//if (reenvio_documento == true && Archivo.ValidarExistencia(ruta_zip))
@@ -1251,12 +1252,12 @@ namespace HGInetMiFacturaElectonicaController
 										}
 										else
 										{
-											if  (bytes_applications == null && Archivo.ValidarExistencia(ruta_zip))
+											if (bytes_applications == null && Archivo.ValidarExistencia(ruta_zip))
 												bytes_applications = Archivo.ObtenerBytes(ruta_zip);
 
 											//string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoZip);
 											//bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
-												
+
 										}
 
 										string ruta_fisica_appl = Convert.ToBase64String(bytes_applications);
@@ -1390,11 +1391,12 @@ namespace HGInetMiFacturaElectonicaController
 									{
 										//Si no trae ID es por que esta en la lista de bloqueados y no se envio a Mailjet, ya se tiene en lista de bloqueados
 										//Se gestiona y se informa al Facturador
-										if (item.MessageID == 0)
+										//if (item.MessageID == 0)
+										if (string.IsNullOrEmpty(item.MessageID))
 										{
 											try
 											{
-												
+
 												string estado_correo = Enumeracion.GetDescription(LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked);
 												if (interoperabilidad == false)
 												{
@@ -1456,7 +1458,7 @@ namespace HGInetMiFacturaElectonicaController
 
 
 								}
-								
+
 							}
 							catch (Exception e)
 							{
@@ -1914,7 +1916,7 @@ namespace HGInetMiFacturaElectonicaController
 				}
 				else
 				{
-					asunto = string.Format("{0};{1};{2};{3};{4};{5}", "evento",documento.IntNumero, adquiriente.StrIdentificacion, adquiriente.StrRazonSocial, numero_evento, cod_acuse);
+					asunto = string.Format("{0};{1};{2};{3};{4};{5}", "evento", documento.IntNumero, adquiriente.StrIdentificacion, adquiriente.StrRazonSocial, numero_evento, cod_acuse);
 				}
 
 				//string asunto = "Respuesta Acuse de Recibo";
@@ -2046,7 +2048,7 @@ namespace HGInetMiFacturaElectonicaController
 								archive.Dispose();
 							}
 
-							
+
 
 							if (string.IsNullOrEmpty(ruta_zip))
 								throw new ApplicationException("No se encontró ruta de archivo zip");
@@ -2081,9 +2083,9 @@ namespace HGInetMiFacturaElectonicaController
 							}
 						}
 
-						
 
-						
+
+
 						// envía el correo electrónico
 						respuesta_email = EnviarEmail(documento.StrIdSeguridad.ToString(), false, mensaje, asunto, true, remitente, correos_destino, null, null, "", "", archivos);
 
@@ -2972,7 +2974,7 @@ namespace HGInetMiFacturaElectonicaController
 		/// </summary>
 		/// <param name="MessageID">Id del Mensaje retornado por la plataforma de Mailjet</param>
 		/// <returns></returns>
-		public MensajeResumen ConsultarCorreo(long MessageID)
+		public MensajeResumen ConsultarCorreo(string MessageID)
 		{
 
 			MensajeResumen datos_retorno = new MensajeResumen();
@@ -2982,6 +2984,7 @@ namespace HGInetMiFacturaElectonicaController
 			//Obtengo a la ruta de plataforma de servicio
 			string ruta_envio = string.Empty;
 			ruta_envio = ObtenerUrl();
+			//ruta_envio = "";
 			if (string.IsNullOrEmpty(ruta_envio))
 				ruta_envio = plataforma_datos.RutaHginetMail;
 
@@ -3513,24 +3516,24 @@ namespace HGInetMiFacturaElectonicaController
 
 
 							}
-							
+
 						}
 
 						mensaje = mensaje.Replace("{Titulo}", titulo);
 						mensaje = mensaje.Replace("{TablaHtml}", detalle);
-						
+
 						if (Proceso != 4)
 						{
 							mensaje = mensaje.Replace("{Estado}", (Resultado) ? "Recibido" : "No Recibido");
 							mensaje = mensaje.Replace("{Proceso}", (Proceso == 0) ? "Desconocido" : (Proceso == 1) ? "Envío" : (Proceso == 2) ? "Consulta" : (Proceso == 3) ? "Interoperabilidad" : "Envio Documentos");
 							mensaje = mensaje.Replace("{Facturador}", facturador.StrRazonSocial);
 							mensaje = mensaje.Replace("{Documento}", Documento);
-							
+
 						}
 						else
 						{
 							mensaje = mensaje.Replace("A continuación se muestra la lista de inconsistencias", string.Format("Hola {0},", facturador.StrRazonSocial));
-							mensaje = mensaje.Replace("del Documento: {Documento} correspondiente al Facturador: {Facturador}", string.Format("{0} {1}",ListaNotificacion[0], ListaNotificacion[1]));
+							mensaje = mensaje.Replace("del Documento: {Documento} correspondiente al Facturador: {Facturador}", string.Format("{0} {1}", ListaNotificacion[0], ListaNotificacion[1]));
 							mensaje = mensaje.Replace("<!--<tr><td", "<tr><td");
 							mensaje = mensaje.Replace("</tr>-->", "</tr>");
 							if (tipo_asunto == 4)

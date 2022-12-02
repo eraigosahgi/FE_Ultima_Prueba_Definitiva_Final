@@ -92,14 +92,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			try
 			{
-				
+
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
 				//Obtiene los datos del documento en la base de datos.
 				TblDocumentos datos_doc = ctl_documento.ObtenerPorIdSeguridad(new Guid(id_seguridad_doc)).FirstOrDefault();
 
-				string ruta = string.Format("{0}",   datos_doc.StrCufe);
+				string ruta = string.Format("{0}", datos_doc.StrCufe);
 
 				return Ok(ruta);
 			}
@@ -151,7 +151,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 				MensajeResumen datos_retorno = new MensajeResumen();
 
-				datos_retorno = email.ConsultarCorreo((long)datos.MessageID);
+				datos_retorno = email.ConsultarCorreo((string)datos.MessageID);
 
 
 				return Ok(datos_retorno);
@@ -184,7 +184,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					{
 						Ctl_OpcionesUsuario _opciones = new Ctl_OpcionesUsuario();
 						var datos = _opciones.ObtenerPermiso(usuario, empresa, 1347); //Permiso de auditoria
-						//Validamos si tiene el permiso de auditoria
+																					  //Validamos si tiene el permiso de auditoria
 						if (datos != null)
 						{
 							//luego retornamos el permiso de gestión
@@ -193,7 +193,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					}
 				}
 				catch (Exception)
-				{}
+				{ }
 
 				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
 

@@ -117,7 +117,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					MensajeResumen datos_retorno = null;
 					
 					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-					datos_retorno = email.ConsultarCorreo(Convert.ToInt64(StrIdMensaje));
+					datos_retorno = email.ConsultarCorreo(StrIdMensaje);
 
 					TblDocumentos doc = documento.ObtenerPorIdSeguridad(StrIdSeguridadDoc, true).FirstOrDefault();
 
