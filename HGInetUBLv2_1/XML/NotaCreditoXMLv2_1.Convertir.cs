@@ -42,9 +42,36 @@ namespace HGInetUBLv2_1
 
 					Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
 
-					nota_credito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+					string last_pre = string.Empty;
+					string numero = string.Empty;
+					string prefijo = string.Empty;
 
-					nota_credito_obj.Prefijo = pref.Value.ToString();
+					//Se valida que posicion tiene la ultima letra del prefijo para poder sacar lo que corresponde a valor y a prefijo
+					if (pref.Length > 1)
+					{
+						last_pre = pref.Value.Substring(pref.Length - 1);
+					}
+					else
+					{
+						last_pre = pref.Value;
+					}
+
+					if (!string.IsNullOrWhiteSpace(last_pre))
+					{
+						int pos_las = nota_credito_ubl.ID.Value.ToString().LastIndexOf(last_pre) + 1;
+						numero = nota_credito_ubl.ID.Value.Substring(pos_las);
+						prefijo = nota_credito_ubl.ID.Value.Substring(0, nota_credito_ubl.ID.Value.Length - numero.Length);
+
+					}
+					else
+					{
+						numero = numero_doc.Value;
+						prefijo = pref.Value;
+					}
+
+					nota_credito_obj.Documento = Convert.ToInt64(numero);
+
+					nota_credito_obj.Prefijo = prefijo;
 				}
 
 				//Se obtiene el proveedor Emisor del documento

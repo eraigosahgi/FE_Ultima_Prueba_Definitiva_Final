@@ -41,10 +41,39 @@ namespace HGInetUBLv2_1
 				//Documento con Prefijo
 				Match numero_doc = Regex.Match(attach_ubl.ParentDocumentID.Value, "\\d+");
 
+				Match pref = Regex.Match(attach_ubl.ParentDocumentID.Value, "\\D+");
+				string last_pre = string.Empty;
+				string numero = string.Empty;
+				string prefijo = string.Empty;
+
+				//Se valida que posicion tiene la ultima letra del prefijo para poder sacar lo que corresponde a valor y a prefijo
+				if (pref.Length > 1)
+				{
+					last_pre = pref.Value.Substring(pref.Length - 1);	
+				}
+				else
+				{
+					last_pre = pref.Value;
+				}
+
+				if (!string.IsNullOrWhiteSpace(last_pre))
+				{
+					int pos_las = attach_ubl.ParentDocumentID.Value.ToString().LastIndexOf(last_pre) + 1;
+					numero = attach_ubl.ParentDocumentID.Value.Substring(pos_las);
+					prefijo = attach_ubl.ParentDocumentID.Value.Substring(0, attach_ubl.ParentDocumentID.Value.Length - numero.Length);
+
+				}
+				else
+				{
+					numero = numero_doc.Value;
+					prefijo = pref.Value;
+				}
+				
+
 				try
 				{
-					attach_document.Documento = Convert.ToInt64(numero_doc.Value);
-					attach_document.Prefijo = attach_ubl.ParentDocumentID.Value.Substring(0, attach_ubl.ParentDocumentID.Value.Length - attach_document.Documento.ToString().Length);
+					attach_document.Documento = Convert.ToInt64(numero);
+					attach_document.Prefijo = prefijo;//attach_ubl.ParentDocumentID.Value.Substring(0, attach_ubl.ParentDocumentID.Value.Length - attach_document.Documento.ToString().Length);
 				}
 				catch (Exception)
 				{
