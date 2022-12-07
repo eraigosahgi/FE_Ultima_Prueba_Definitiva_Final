@@ -418,14 +418,17 @@
         <EntityType Name="TblProcesoCorreo">
           <Key>
             <PropertyRef Name="StrIdSeguridadDoc" />
+            <PropertyRef Name="StrIdSeguridad" />
           </Key>
           <Property Name="StrIdSeguridadDoc" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DatFecha" Type="datetime" Nullable="false" />
           <Property Name="IntEnvioMail" Type="bit" Nullable="false" />
           <Property Name="StrIdMensaje" Type="varchar" MaxLength="50" />
           <Property Name="IntValidadoMail" Type="bit" Nullable="false" />
           <Property Name="DatFechaValidado" Type="datetime" />
           <Property Name="StrMailEnviado" Type="varchar" MaxLength="100" />
+          <Property Name="IntEventoResp" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TblRegistroRecepcion">
           <Key>
@@ -1059,7 +1062,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
           </AssociationSet>
-          <EntitySet Name="TblProcesoCorreo" EntityType="Modelo.TblProcesoCorreo" />
           <EntitySet Name="TblUsuariosPagos" EntityType="Modelo.TblUsuariosPagos" />
           <EntitySet Name="QryAdquirientes" EntityType="Modelo.QryAdquirientes" />
           <EntitySet Name="QryDocumentosSaldo" EntityType="Modelo.QryDocumentosSaldo" />
@@ -1111,6 +1113,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           </AssociationSet>
           <EntitySet Name="TblRegistroRecepcion" EntityType="Modelo.TblRegistroRecepcion" />
           <EntitySet Name="TblImportacionDoc" EntityType="Modelo.TblImportacionDoc" />
+          <EntitySet Name="TblProcesoCorreo" EntityType="Modelo.TblProcesoCorreo" />
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
           <Key>
@@ -1636,18 +1639,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="TblProcesoCorreo">
-          <Key>
-            <PropertyRef Name="StrIdSeguridadDoc" />
-          </Key>
-          <Property Name="StrIdSeguridadDoc" Type="Guid" Nullable="false" />
-          <Property Name="DatFecha" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IntEnvioMail" Type="Boolean" Nullable="false" />
-          <Property Name="StrIdMensaje" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IntValidadoMail" Type="Boolean" Nullable="false" />
-          <Property Name="DatFechaValidado" Type="DateTime" Precision="3" />
-          <Property Name="StrMailEnviado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="TblUsuariosPagos">
           <Key>
             <PropertyRef Name="StrEmpresaFacturador" />
@@ -1980,6 +1971,21 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="IntVlrTotal" Type="Decimal" Nullable="false" Precision="17" Scale="2" />
           <Property Name="StrEstadoDian" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrGrupo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TblProcesoCorreo">
+          <Key>
+            <PropertyRef Name="StrIdSeguridadDoc" />
+            <PropertyRef Name="StrIdSeguridad" />
+          </Key>
+          <Property Name="StrIdSeguridadDoc" Type="Guid" Nullable="false" />
+          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+          <Property Name="DatFecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IntEnvioMail" Type="Boolean" Nullable="false" />
+          <Property Name="StrIdMensaje" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IntValidadoMail" Type="Boolean" Nullable="false" />
+          <Property Name="DatFechaValidado" Type="DateTime" Precision="3" />
+          <Property Name="StrMailEnviado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IntEventoResp" Type="Int32" Nullable="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2322,19 +2328,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TblProcesoCorreo">
-            <EntityTypeMapping TypeName="Modelo.TblProcesoCorreo">
-              <MappingFragment StoreEntitySet="TblProcesoCorreo">
-                <ScalarProperty Name="StrMailEnviado" ColumnName="StrMailEnviado" />
-                <ScalarProperty Name="DatFechaValidado" ColumnName="DatFechaValidado" />
-                <ScalarProperty Name="IntValidadoMail" ColumnName="IntValidadoMail" />
-                <ScalarProperty Name="StrIdMensaje" ColumnName="StrIdMensaje" />
-                <ScalarProperty Name="IntEnvioMail" ColumnName="IntEnvioMail" />
-                <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
-                <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TblUsuariosPagos">
             <EntityTypeMapping TypeName="Modelo.TblUsuariosPagos">
               <MappingFragment StoreEntitySet="TblUsuariosPagos">
@@ -2520,6 +2513,21 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
                 <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
                 <ScalarProperty Name="IdProceso" ColumnName="IdProceso" />
                 <ScalarProperty Name="IdSeguridad" ColumnName="IdSeguridad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblProcesoCorreo">
+            <EntityTypeMapping TypeName="Modelo.TblProcesoCorreo">
+              <MappingFragment StoreEntitySet="TblProcesoCorreo">
+                <ScalarProperty Name="IntEventoResp" ColumnName="IntEventoResp" />
+                <ScalarProperty Name="StrMailEnviado" ColumnName="StrMailEnviado" />
+                <ScalarProperty Name="DatFechaValidado" ColumnName="DatFechaValidado" />
+                <ScalarProperty Name="IntValidadoMail" ColumnName="IntValidadoMail" />
+                <ScalarProperty Name="StrIdMensaje" ColumnName="StrIdMensaje" />
+                <ScalarProperty Name="IntEnvioMail" ColumnName="IntEnvioMail" />
+                <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
+                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+                <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

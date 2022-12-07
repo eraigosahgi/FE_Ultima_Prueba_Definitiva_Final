@@ -15,11 +15,13 @@ namespace HGInetMiFacturaElectonicaData.Modelo
     public partial class TblProcesoCorreo
     {
         public System.Guid StrIdSeguridadDoc { get; set; }
+        public System.Guid StrIdSeguridad { get; set; }
         public System.DateTime DatFecha { get; set; }
         public bool IntEnvioMail { get; set; }
         public string StrIdMensaje { get; set; }
         public bool IntValidadoMail { get; set; }
         public Nullable<System.DateTime> DatFechaValidado { get; set; }
         public string StrMailEnviado { get; set; }
+        public int IntEventoResp { get; set; }
     }
 }
