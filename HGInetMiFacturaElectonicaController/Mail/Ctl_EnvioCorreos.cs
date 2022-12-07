@@ -1358,13 +1358,37 @@ namespace HGInetMiFacturaElectonicaController
 										}
 
 									}
-									else if (correo_doc.IntEnvioMail == true)
+									else if (correo_doc.IntEnvioMail == true && string.IsNullOrEmpty(correo_doc.StrIdMensaje))
 									{
 										correo_doc.IntEnvioMail = false;
 									}
-									else
+									else if (reenvio_documento == true)
 									{
 										correo_doc.IntEnvioMail = true;
+
+										if (documento.IntEstadoEnvio == (short)EstadoEnvio.NoEntregado.GetHashCode())
+										{
+											try
+											{
+												correo_doc.StrIdMensaje = respuesta_email.FirstOrDefault().Data.FirstOrDefault().MessageID.ToString();
+												correo_doc.StrMailEnviado = respuesta_email.FirstOrDefault().Data.FirstOrDefault().Email;
+												correo_doc.DatFecha = Fecha.GetFecha();
+												correo_doc.IntValidadoMail = false;
+											}
+											catch (Exception excepcion)
+											{
+												Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error asiganando el MessageID y Email");
+												correo_doc.IntEnvioMail = false;
+											}
+
+											documento.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
+											documento.IntMensajeEnvio = (short)LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Sent.GetHashCode();
+											//documento.DatFechaActualizaEstado = Fecha.GetFecha();
+
+											//Actualiza tabla de documentos con el estado
+											Ctl_Documento _doc = new Ctl_Documento();
+											_doc.Actualizar(documento);
+										}
 									}
 
 									//Actualizo tabla de correos
@@ -1487,6 +1511,12 @@ namespace HGInetMiFacturaElectonicaController
 					clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, empresa_obligado.StrIdentificacion, proceso, TipoRegistro.Proceso, procedencia, usuario, "No fue posible el envio del documento, favor validar con el Adquiriente ó hacer el reenvío del documento desde nuestra Plataforma ", string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
 				}
 				catch (Exception) { }
+
+				documento.IntEstadoEnvio = (short)EstadoEnvio.NoEntregado.GetHashCode();
+				documento.IntMensajeEnvio = (short)LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked.GetHashCode();
+
+				Ctl_Documento _doc = new Ctl_Documento();
+				_doc.Actualizar(documento);
 
 				//if (respuesta_email == null || respuesta_email.Count == 0)
 				//{

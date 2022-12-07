@@ -36,7 +36,7 @@ function ColocarColorRadian(Estado, Descripcion, IdSeguridad, Documento, Obligad
 function ColocarEstadoEmail(Estado, Descripcion, DescEstado, IdSeguridad) {
 	Descripcion = GetDescripcionEnum(EstadoEnvio, Estado);
 	DescEstado = GetDescripcionEnum(EstadoEnvio, Estado);
-	return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Bloqueado'  title='" + Descripcion + "'" : " class='badge badge-Entregado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;' target='_blank' data-toggle='modal' data-target='#modal_audit_documento' onClick=AuditoriaMail('" + IdSeguridad + "')>" + DescEstado + "</span>"
+	return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : " class='badge badge-Entregado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;' target='_blank' data-toggle='modal' data-target='#modal_audit_documento' onClick=AuditoriaMail('" + IdSeguridad + "')>" + DescEstado + "</span>"
 }
 
 function ColocarEstadoRecepcion(Estado) {
@@ -693,7 +693,7 @@ var EstadoEnvio =
 	{ "ID": 2, "Name": "Entregado" },
 	{ "ID": 3, "Name": "No Entregado" },
 	{ "ID": 4, "Name": "Leído" },
-	{ "ID": 5, "Name": "Validar con Adquiriente" }
+	{ "ID": 5, "Name": "No Entregado" }
 ];
 
 

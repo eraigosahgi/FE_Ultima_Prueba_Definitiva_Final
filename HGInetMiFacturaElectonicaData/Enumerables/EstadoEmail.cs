@@ -33,7 +33,7 @@ namespace HGInetMiFacturaElectonicaData
 		[Description("Leído")]
 		Leido = 4,
 
-		[Description("Validar con Adquiriente")]
+		[Description("No Entregado")]
 		Desconocido = 5,
 
 	}

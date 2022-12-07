@@ -312,6 +312,54 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				//Obtiene los datos del documento en la base de datos.
 				TblDocumentos datos_doc = ctl_documento.ObtenerPorIdSeguridad(new Guid(id_seguridad_doc)).FirstOrDefault();
 
+				//[691671] - Se agrega proceso para actualizar estado del mail en el documento cuando se vea auditoria del correo.
+				try
+				{
+					if (datos_doc.IntEstadoEnvio == (short)EstadoEnvio.NoEntregado.GetHashCode() || datos_doc.IntEstadoEnvio != (short)EstadoEnvio.Leido.GetHashCode())
+					{
+						short mejor_estado = datos_doc.IntEstadoEnvio;
+
+						foreach (TblAuditDocumentos item in ListaEmail)
+						{
+							string respuesta = item.StrResultadoProceso.Replace("[", "").Replace("]", "");
+							dynamic datos = JsonConvert.DeserializeObject(respuesta);
+
+							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+							MensajeResumen datos_resumen = new MensajeResumen();
+
+							datos_resumen = email.ConsultarCorreo((string)datos.MessageID);
+
+							if (datos_resumen.IdResultado == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeIdResultado.Enviado.GetHashCode() || datos_resumen.IdResultado == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeIdResultado.Entregado.GetHashCode())
+							{
+								short estado_mail = (short)Enumeracion.GetValueFromDescription<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado>(datos_resumen.Estado);
+
+								if (estado_mail == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Clicked.GetHashCode() || estado_mail == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Opened.GetHashCode())
+								{
+									mejor_estado = (short)EstadoEnvio.Leido.GetHashCode();
+								}
+								else if (estado_mail <= LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Sent.GetHashCode())
+								{
+									mejor_estado = (short)EstadoEnvio.Entregado.GetHashCode();
+								}
+
+							}
+						}
+
+						if (mejor_estado != datos_doc.IntEstadoEnvio)
+						{
+							datos_doc.IntEstadoEnvio = mejor_estado;
+							datos_doc.DatFechaActualizaEstado = Fecha.GetFecha();
+							ctl_documento.Actualizar(datos_doc);
+						}
+
+					}
+				}
+				catch (Exception excepcion)
+				{
+					LibreriaGlobalHGInet.RegistroLog.RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, string.Format("Se presenta incosistencia actualizando estado del mail en el documento {0}", datos_doc.StrIdSeguridad));
+
+				}
+
 				var datos_retorno = ListaEmail.Select(d => new
 				{
 					StrIdSeguridad = d.StrIdSeguridad,
