@@ -17,8 +17,8 @@ namespace HGInetMiFacturaElectronicaAudit.Controladores
 		{
 			try
 			{
-				db.Set<TblLog>().Add(Log);
-				db.SaveChanges();
+				//db.Set<TblLog>().Add(Log);
+				//db.SaveChanges();
 
 				return Log;
 			}
