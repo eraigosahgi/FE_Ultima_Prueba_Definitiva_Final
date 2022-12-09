@@ -31,28 +31,31 @@
 										<div class="panel-body">
 
 											<div class="row">
-
-												<div class="col-sm-4" style="background-color: #F3F3F3;">
-													<asp:Label runat="server" Style="vertical-align: inherit;"><b>IdSeguridad:</b></asp:Label>
-												</div>
-												<div class="col-sm-8">
-													<asp:Label runat="server" Style="vertical-align: inherit;">{{IdSeguridad}}</asp:Label>
-												</div>
-
-												<div class="col-sm-4" style="background-color: #F3F3F3;">
-													<asp:Label runat="server" Style="vertical-align: inherit;"><b>Número Documento:</b></asp:Label>
-												</div>
-												<div class="col-sm-8">
-													<asp:Label runat="server" Style="vertical-align: inherit;">{{NumeroDocumento}}</asp:Label>
+												<div class="col-md-12">
+													<div class="col-sm-4" style="background-color: #F3F3F3;">
+														<asp:Label runat="server" Style="vertical-align: inherit;"><b>IdSeguridad:</b></asp:Label>
+													</div>												
+													<div class="col-sm-8">
+														<asp:Label runat="server" Style="vertical-align: inherit;">{{IdSeguridad}}</asp:Label>
+													</div>
 												</div>
 
-												<div class="col-sm-4" style="background-color: #F3F3F3;">
-													<asp:Label runat="server" Style="vertical-align: inherit;"><b>Identificación Obligado:</b></asp:Label>
+												<div class="col-md-12">
+													<div class="col-sm-4" style="background-color: #F3F3F3;">
+														<asp:Label runat="server" Style="vertical-align: inherit;"><b>Número Documento:</b></asp:Label>
+													</div>												
+													<div class="col-sm-8">
+														<asp:Label runat="server" Style="vertical-align: inherit;">{{NumeroDocumento}}</asp:Label>
+													</div>
 												</div>
-												<div class="col-sm-8">
-													<asp:Label runat="server" Style="vertical-align: inherit;">{{Obligado}}</asp:Label>
+												<div class="col-md-12">
+													<div class="col-sm-4" style="background-color: #F3F3F3;">
+														<asp:Label runat="server" Style="vertical-align: inherit;"><b>Identificación Obligado:</b></asp:Label>
+													</div>												
+													<div class="col-sm-8">
+														<asp:Label runat="server" Style="vertical-align: inherit;">{{Obligado}}</asp:Label>
+													</div>
 												</div>
-
 											</div>
 											<br />
 
