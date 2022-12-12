@@ -73,13 +73,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					mensajes = email.NotificacionDocumento(documentoBd, documento_obj.DatosEmpleador.Telefono, documento_obj.DatosTrabajador.Email, respuesta.IdPeticion.ToString(), Procedencia.Plataforma, "", ProcesoEstado.EnvioEmailAcuse, obligado.StrRazonSocial);
 					documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
+					respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
+					respuesta.DescripcionEstadoEnvioMail = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoEnvio>(respuesta.IdEstadoEnvioMail));
+					documentoBd.IntEnvioMail = true;
 				}
 				
 				//Actualiza la respuesta del envio del correo en TblDocumentos
 				respuesta.FechaUltimoProceso = Fecha.GetFecha();
-				respuesta.IdEstadoEnvioMail = (short)EstadoEnvio.Enviado.GetHashCode();
-				respuesta.DescripcionEstadoEnvioMail = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoEnvio>(respuesta.IdEstadoEnvioMail));
-				documentoBd.IntEnvioMail = true;
 				//documentoBd.IntEstadoEnvio = (short)respuesta.IdEstadoEnvioMail;
 				documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 			}

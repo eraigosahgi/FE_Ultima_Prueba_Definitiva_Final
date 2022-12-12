@@ -752,9 +752,16 @@ App.controller('EnvioEmailController', function EnvioEmailController($scope, $ht
 				$('#wait').show();
 				$http.get('/api/Documentos?id_seguridad=' + id_seguridad + '&email=' + email_destino + '&Usuario=' + UsuarioSession).then(function (responseEnvio) {
 					$('#wait').hide();
-					var respuesta = responseEnvio.data;
 
-					if (respuesta) {
+					var mensaje = 'Ocurrió un error en el envío del e-mail.';
+					var envio_exitoso = true;
+
+					if (responseEnvio.data[0].Error != null) {
+						mensaje = responseEnvio.data[0].Error.ErrorMessage;
+						envio_exitoso = false;
+					}
+
+					if (envio_exitoso == true) {
 						swal({
 							title: 'Proceso Éxitoso',
 							text: 'El e-mail ha sido enviado con éxito.',
@@ -766,15 +773,16 @@ App.controller('EnvioEmailController', function EnvioEmailController($scope, $ht
 						});
 					} else {
 						swal({
-							title: 'Error',
-							text: 'Ocurrió un error en el envío del e-mail.',
-							type: 'Error',
+							title: 'Proceso Fallido',
+							text: mensaje,
+							type: 'error',
 							confirmButtonColor: '#66BB6A',
 							confirmButtonTex: 'Aceptar',
 							animation: 'pop',
 							html: true,
 						});
 					}
+
 					$('input:text[name=EmailDestino]').val("");
 					$('#btncerrarModal').click();
 				}, function errorCallback(response) {

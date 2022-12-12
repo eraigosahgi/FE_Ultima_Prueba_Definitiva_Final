@@ -1330,6 +1330,120 @@ namespace HGInetMiFacturaElectonicaController
 							try
 							{
 								Ctl_ProcesosCorreos proceso_correo = new Ctl_ProcesosCorreos();
+
+								int cont = 0;
+
+								bool correo_enviado = false;
+								bool actualizar_doc = false;
+
+								foreach (MensajeEnvioItem item in respuesta_email.FirstOrDefault().Data)
+								{
+									TblProcesoCorreo correo_env = null;
+									if (cont == 0 && reenvio_documento == false)
+									{
+										correo_env = proceso_correo.Obtener(documento.StrIdSeguridad);
+									}
+
+									if (cont > 0 || correo_env == null)
+									{
+										correo_env = proceso_correo.Crear(documento.StrIdSeguridad);
+									}
+									
+									try
+									{
+										correo_env.IntEnvioMail = true;
+
+										//Se valida si no esta bloqueado el correo
+										if (item.MessageID != null && !string.IsNullOrEmpty(item.MessageID.ToString()))
+										{
+											correo_env.StrIdMensaje = item.MessageID.ToString();
+											correo_enviado = true;
+										}
+										else
+										{
+											try
+											{
+
+
+												string estado_correo = Enumeracion.GetDescription(LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked);
+												if (interoperabilidad == false && reenvio_documento == false)
+												{
+													List<MensajeEnvio> notificacion = NotificacionCorreofacturador(documento, empresa_adquiriente.StrTelefono, item.Email, estado_correo, documento.StrIdSeguridad.ToString());
+												}
+
+											}
+											catch (Exception excepcion)
+											{
+												Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error actualizando el documento cuando el correo esta bloqueado");
+											}
+
+											correo_env.IntValidadoMail = true;
+											correo_env.DatFechaValidado = Fecha.GetFecha();
+											correo_env.IntEventoResp = LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked.GetHashCode();
+										}
+										
+										correo_env.StrMailEnviado = item.Email;
+
+										//Actualizo tabla de correos
+										correo_env = proceso_correo.Actualizar(correo_env);
+									}
+									catch (Exception excepcion)
+									{
+										Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error asiganando el MessageID y Email");
+										correo_env.IntEnvioMail = false;
+									}
+
+									if (reenvio_documento == true && item.MessageID != null && !string.IsNullOrEmpty(item.MessageID.ToString()))
+									{
+										if (documento.IntEstadoEnvio == (short)EstadoEnvio.NoEntregado.GetHashCode())
+										{
+
+											documento.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
+											documento.IntMensajeEnvio = (short)LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Processed.GetHashCode();
+											//documento.DatFechaActualizaEstado = Fecha.GetFecha();
+											actualizar_doc = true;
+										}
+										correo_enviado = true;
+
+									}
+									else if (reenvio_documento == true && item.MessageID == null && documento.IntEstadoEnvio != (short)EstadoEnvio.NoEntregado.GetHashCode())
+									{
+										correo_enviado = true;
+									}
+
+									//Se hace el registro del evento de recepcion del documento siempre y cuando el correo no presente bloqueo y el adquiriente sea cliente de HGI
+									if ((plataforma.RutaPublica.Contains("habilitacion") || plataforma.RutaPublica.Contains("localhost")) && correo_env.IntEnvioMail == true && adquiriente_hgi == true && empresa_obligado.IntRadian == true && empresa_obligado.StrIdentificacion.Equals(empresa_adquiriente.StrIdentificacion) && reenvio_documento == false && cont == 0)
+									{
+										Ctl_EventosRadian evento = new Ctl_EventosRadian();
+										Task envio_acuse = evento.ProcesoCrearAcuseRecibo(correo_env.StrIdMensaje, documento.StrIdSeguridad);
+									}
+
+									cont++;
+								}
+
+								if (reenvio_documento == false && correo_enviado == true)
+								{
+									documento.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
+									documento.IntMensajeEnvio = (short)LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Processed.GetHashCode();
+									//documento.DatFechaActualizaEstado = Fecha.GetFecha();
+									actualizar_doc = true;
+
+								}
+								else if (correo_enviado == false)
+								{
+									documento.IntEstadoEnvio = (short)EstadoEnvio.NoEntregado.GetHashCode();
+									documento.IntMensajeEnvio = (short)LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked.GetHashCode();
+									actualizar_doc = true;
+								}
+
+								//Actualiza tabla de documentos con el estado
+								if (actualizar_doc == true)
+								{
+									Ctl_Documento _doc = new Ctl_Documento();
+									_doc.Actualizar(documento);
+								}
+
+								/*
 								TblProcesoCorreo correo_doc = proceso_correo.Obtener(documento.StrIdSeguridad);
 								if (correo_doc == null)
 									correo_doc = proceso_correo.Crear(documento.StrIdSeguridad);
@@ -1345,17 +1459,7 @@ namespace HGInetMiFacturaElectonicaController
 
 										correo_doc.IntEnvioMail = true;
 
-										//obtengo el primer MessageID
-										try
-										{
-											correo_doc.StrIdMensaje = respuesta_email.FirstOrDefault().Data.FirstOrDefault().MessageID.ToString();
-											correo_doc.StrMailEnviado = respuesta_email.FirstOrDefault().Data.FirstOrDefault().Email;
-										}
-										catch (Exception excepcion)
-										{
-											Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error asiganando el MessageID y Email");
-											correo_doc.IntEnvioMail = false;
-										}
+										
 
 									}
 									else if (correo_doc.IntEnvioMail == true && string.IsNullOrEmpty(correo_doc.StrIdMensaje))
@@ -1386,20 +1490,15 @@ namespace HGInetMiFacturaElectonicaController
 											//documento.DatFechaActualizaEstado = Fecha.GetFecha();
 
 											//Actualiza tabla de documentos con el estado
-											Ctl_Documento _doc = new Ctl_Documento();
-											_doc.Actualizar(documento);
+											//Ctl_Documento _doc = new Ctl_Documento();
+											//_doc.Actualizar(documento);
 										}
 									}
 
 									//Actualizo tabla de correos
 									correo_doc = proceso_correo.Actualizar(correo_doc);
 
-									//Se hace el registro del evento de recepcion del documento siempre y cuando el correo no presente bloqueo y el adquiriente sea cliente de HGI
-									if ((plataforma.RutaPublica.Contains("habilitacion") || plataforma.RutaPublica.Contains("localhost")) && correo_doc.IntEnvioMail == true && adquiriente_hgi == true && empresa_obligado.IntRadian == true && empresa_obligado.StrIdentificacion.Equals(empresa_adquiriente.StrIdentificacion))
-									{
-										Ctl_EventosRadian evento = new Ctl_EventosRadian();
-										Task envio_acuse = evento.ProcesoCrearAcuseRecibo(correo_doc.StrIdMensaje, documento.StrIdSeguridad);
-									}
+									
 								}
 								else if (reenvio_documento == false)
 								{
@@ -1418,27 +1517,7 @@ namespace HGInetMiFacturaElectonicaController
 										//if (item.MessageID == 0)
 										if (string.IsNullOrEmpty(item.MessageID))
 										{
-											try
-											{
-
-												string estado_correo = Enumeracion.GetDescription(LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked);
-												if (interoperabilidad == false)
-												{
-													List<MensajeEnvio> notificacion = NotificacionCorreofacturador(documento, empresa_adquiriente.StrTelefono, item.Email, estado_correo, documento.StrIdSeguridad.ToString());
-												}
-												//else
-												//{
-												//	List<MensajeEnvio> notificacion = NotificacionCorreofacturador(documento, empresa_adquiriente.StrTelefono, empresa_adquiriente.StrMailAdmin, estado_correo, documento.StrIdSeguridad.ToString());
-												//}
-
-											}
-											catch (Exception excepcion)
-											{
-												Ctl_Log.Guardar(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, "Error actualizando el documento cuando el correo esta bloqueado");
-											}
-
-											correo_doc.IntValidadoMail = true;
-											correo_doc.DatFechaValidado = Fecha.GetFecha();
+											
 
 										}
 										else
@@ -1473,15 +1552,12 @@ namespace HGInetMiFacturaElectonicaController
 										documento.DatFechaActualizaEstado = Fecha.GetFecha();
 									}
 
-									//Actualizo tabla de correos
-									correo_doc = proceso_correo.Actualizar(correo_doc);
-
 									//Actualiza tabla de documentos con el estado
-									Ctl_Documento _doc = new Ctl_Documento();
-									_doc.Actualizar(documento);
+									//Ctl_Documento _doc = new Ctl_Documento();
+									//_doc.Actualizar(documento);
+								  
 
-
-								}
+								}	 */
 
 							}
 							catch (Exception e)

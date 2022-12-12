@@ -2916,6 +2916,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Services\AlertasController.cs" />
     <Compile Include="Controllers\Services\AuditoriasController.cs" />
+    <Compile Include="Controllers\Services\CorreosController.cs" />
     <Compile Include="Controllers\Services\EmpresaResolucionController.cs" />
     <Compile Include="Controllers\Services\EventosRadianController.cs" />
     <Compile Include="Controllers\Services\FormatosController.cs" />

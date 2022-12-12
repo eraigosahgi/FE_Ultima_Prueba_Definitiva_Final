@@ -13,6 +13,8 @@ using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta;
 using LibreriaGlobalHGInet.RegistroLog;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using System.Data.Entity.SqlServer;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail;
+using LibreriaGlobalHGInet.ObjetosComunes.Mensajeria;
 
 namespace HGInetMiFacturaElectonicaController
 {
@@ -137,10 +139,31 @@ namespace HGInetMiFacturaElectonicaController
 
 			var datos = (from item in context.TblProcesoCorreo
 				where item.StrIdSeguridadDoc.Equals(IdSeguridadDoc)
+				&& (item.StrIdMensaje == null	|| string.IsNullOrEmpty(item.StrIdMensaje))
 				select item).FirstOrDefault();
 			return datos;
 		}
 
+		public List<TblProcesoCorreo> ObtenerTodos(Guid IdSeguridadDoc, bool LazyLoading = true)
+		{
+
+			context.Configuration.LazyLoadingEnabled = LazyLoading;
+
+			var datos = (from item in context.TblProcesoCorreo
+						 where item.StrIdSeguridadDoc.Equals(IdSeguridadDoc)
+						 select item).ToList();
+			return datos;
+		}
+
+		public TblProcesoCorreo ObtenerPorIdMensaje(string IdMensaje)
+		{
+			context.Configuration.LazyLoadingEnabled = false;
+
+			var datos = (from item in context.TblProcesoCorreo
+						 where item.StrIdMensaje.Equals(IdMensaje)
+						 select item).FirstOrDefault();
+			return datos;
+		}
 
 		/// <summary>
 		/// Crea el documento en la tabla de Correos para ser enviado
@@ -153,6 +176,7 @@ namespace HGInetMiFacturaElectonicaController
 			correo.StrIdSeguridadDoc = IdSeguridadDoc;
 			correo.DatFecha = Fecha.GetFecha();
 			correo.IntEnvioMail = false;
+			correo.StrIdSeguridad = Guid.NewGuid();
 
 			correo = this.Add(correo);
 
@@ -237,6 +261,63 @@ namespace HGInetMiFacturaElectonicaController
 				throw excepcion;
 			}
 
+		}
+
+		/// <summary>
+		/// Actualiza el correo en tabla segun respuesta del proveedor de Email(SendGrid)
+		/// </summary>
+		/// <param name="Correo">Objeto de informacion del correo enviado</param>
+		public void ActualizarCorreo(MensajeResumen Correo)
+		{
+			try
+			{
+				if (string.IsNullOrEmpty(Correo.id_mensaje))
+					throw new ApplicationException("Id del mensaje vacío");
+
+				TblProcesoCorreo tbl_correo = ObtenerPorIdMensaje(Correo.id_mensaje);
+
+				Ctl_Documento ctl_doc = new Ctl_Documento();
+
+				TblDocumentos doc_bd = ctl_doc.ObtenerPorIdSeguridad(tbl_correo.StrIdSeguridadDoc, false).FirstOrDefault();
+
+				if (MensajeIdResultado.Entregado.GetHashCode().Equals(Correo.IdResultado))
+				{
+					doc_bd.IntEstadoEnvio = (short)Correo.IdEstado;
+					doc_bd.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(Correo.Estado);
+					doc_bd.DatFechaActualizaEstado = Fecha.GetFecha();
+
+				}
+				else if (MensajeIdResultado.NoEntregado.GetHashCode().Equals(Correo.IdResultado))
+				{
+					doc_bd.IntEstadoEnvio = (short)EstadoEnvio.NoEntregado.GetHashCode();
+					doc_bd.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(Correo.Estado);
+					doc_bd.DatFechaActualizaEstado = (string.IsNullOrEmpty(Correo.Estado)) ? Fecha.GetFecha() : Correo.Recibido;
+					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+					List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(doc_bd, doc_bd.TblEmpresasAdquiriente.StrTelefono, tbl_correo.StrMailEnviado, Correo.Estado, tbl_correo.StrIdSeguridadDoc.ToString());
+
+				}
+				else
+				{
+					doc_bd.IntEstadoEnvio = (short)Correo.IdEstado;
+					doc_bd.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(Correo.Estado);
+					doc_bd.DatFechaActualizaEstado = (string.IsNullOrEmpty(Correo.Estado)) ? Fecha.GetFecha() : Correo.Recibido;
+				}
+
+				tbl_correo.DatFechaValidado = doc_bd.DatFechaActualizaEstado;
+				tbl_correo.IntEventoResp = doc_bd.IntMensajeEnvio;
+				tbl_correo.IntValidadoMail = true;
+
+				ctl_doc.Actualizar(doc_bd);
+
+				Actualizar(tbl_correo);
+
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion, "Inconsistencia actualizando correo desde plataforma intermedia");
+
+				throw excepcion;
+			}
 		}
 
 
