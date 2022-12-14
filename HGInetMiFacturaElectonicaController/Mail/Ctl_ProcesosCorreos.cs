@@ -309,6 +309,7 @@ namespace HGInetMiFacturaElectonicaController
 				tbl_correo.DatFechaValidado = doc_bd.DatFechaActualizaEstado;
 				tbl_correo.IntEventoResp = doc_bd.IntMensajeEnvio;
 				tbl_correo.IntValidadoMail = true;
+				doc_bd.IntEnvioMail = true;
 
 				ctl_doc.Actualizar(doc_bd);
 
