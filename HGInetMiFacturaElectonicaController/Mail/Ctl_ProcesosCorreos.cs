@@ -151,7 +151,7 @@ namespace HGInetMiFacturaElectonicaController
 
 			var datos = (from item in context.TblProcesoCorreo
 						 where item.StrIdSeguridadDoc.Equals(IdSeguridadDoc)
-						 select item).ToList();
+						 select item).OrderBy(x => x.DatFecha).ToList();
 			return datos;
 		}
 
@@ -275,6 +275,9 @@ namespace HGInetMiFacturaElectonicaController
 					throw new ApplicationException("Id del mensaje vacío");
 
 				TblProcesoCorreo tbl_correo = ObtenerPorIdMensaje(Correo.id_mensaje);
+
+				if (tbl_correo == null)
+					throw new ApplicationException("Id del mensaje no existe en plataforma");
 
 				Ctl_Documento ctl_doc = new Ctl_Documento();
 

@@ -268,8 +268,8 @@ App.controller('ModalAuditDocumentoController', function ModalAuditDocumentoCont
 													format: "yyyy-MM-dd HH:mm:ss",
 												},
 												{
-													dataField: "Tipo Proceso",
-													caption: "TipoEvento",
+													dataField: "TipoEvento",
+													caption: "Tipo Proceso",
 													cellTemplate: function (container, options) {
 														$("<div>").append($(ControlTipoEventoMail(options.data.TipoEvento))).appendTo(container);
 													}

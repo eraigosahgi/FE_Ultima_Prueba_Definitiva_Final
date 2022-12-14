@@ -54,8 +54,9 @@ function ColocarProcesoImportacion(Estado) {
 //Retorna el código html del diseño del tipo de evento de respuestas de  mailject
 function ControlTipoEventoMail(TipoEvento) {
 	return "<span " +
-	  ((TipoEvento == 'Enviado') ? " class='badge bg-grey-300' title='" + TipoEvento + "'"
-	: (TipoEvento == 'Entregado') ? " class='badge bg-grey-600'  title='" + TipoEvento + "'"
+	  ((TipoEvento == 'Enviado') ? " class='badge bg-green-300' title='Entregado'"
+	: (TipoEvento == 'Entregado') ? " class='badge bg-green-300'  title='" + TipoEvento + "'"
+	: (TipoEvento == 'Procesado') ? " class='badge bg-green-300'  title='" + TipoEvento + "'"
 	: (TipoEvento == 'Abierto') ? " class='badge bg-green-300'  title='" + TipoEvento + "'"
 	: (TipoEvento == 'Presionó') ? " class='badge bg-green-700'  title='" + TipoEvento + "'"
 	: (TipoEvento == 'Bloqueado') ? " class='badge bg-slate-800'  title='" + TipoEvento + "'"
@@ -64,7 +65,8 @@ function ControlTipoEventoMail(TipoEvento) {
 	+ " style='border-radius: 0px !important;'>"
 	+ "<i " +
 	 ((TipoEvento == 'Enviado') ? " class='icon-upload4'"
-	 : (TipoEvento == 'Entregado') ? " class='icon-checkmark4'"
+	 : (TipoEvento == 'Procesado') ? " class='icon-upload4'"
+	: (TipoEvento == 'Entregado') ? " class='icon-checkmark4'"
 	: (TipoEvento == 'Abierto') ? " class='icon-mail-read'"
 	: (TipoEvento == 'Presionó') ? " class='icon-cursor2'"
 	: (TipoEvento == 'Bloqueado') ? " class='icon-blocked'"

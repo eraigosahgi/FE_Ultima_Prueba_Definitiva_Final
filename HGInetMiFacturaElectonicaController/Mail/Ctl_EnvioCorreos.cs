@@ -1341,7 +1341,7 @@ namespace HGInetMiFacturaElectonicaController
 									TblProcesoCorreo correo_env = null;
 									if (cont == 0 && reenvio_documento == false)
 									{
-										correo_env = proceso_correo.Obtener(documento.StrIdSeguridad);
+										correo_env = proceso_correo.Obtener(documento.StrIdSeguridad, false);
 									}
 
 									if (cont > 0 || correo_env == null)

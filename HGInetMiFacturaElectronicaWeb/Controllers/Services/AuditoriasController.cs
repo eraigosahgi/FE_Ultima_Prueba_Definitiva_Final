@@ -302,9 +302,24 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				//Realiza la consulta de los datos en la base de datos.
 				List<TblAuditDocumentos> ListaEmail = clase_audit_doc.ObtenerDocumentoMail(Guid.Parse(id_seguridad_doc));
 
+				Ctl_ProcesosCorreos ctl_correo = new Ctl_ProcesosCorreos();
+
+				List<TblProcesoCorreo> ListaCorreoTbl = null;
+
+				bool correo_tbl = false;
+
 				if (ListaEmail == null)
 				{
-					return NotFound();
+					ListaCorreoTbl = ctl_correo.ObtenerTodos(Guid.Parse(id_seguridad_doc), false);
+
+					if (ListaCorreoTbl != null)
+					{
+						correo_tbl = true;
+					}
+					else
+					{
+						return NotFound();
+					}
 				}
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
@@ -319,29 +334,58 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					{
 						short mejor_estado = datos_doc.IntEstadoEnvio;
 
-						foreach (TblAuditDocumentos item in ListaEmail)
+						if (correo_tbl == false)
 						{
-							string respuesta = item.StrResultadoProceso.Replace("[", "").Replace("]", "");
-							dynamic datos = JsonConvert.DeserializeObject(respuesta);
-
-							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-							MensajeResumen datos_resumen = new MensajeResumen();
-
-							datos_resumen = email.ConsultarCorreo((string)datos.MessageID);
-
-							if (datos_resumen.IdResultado == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeIdResultado.Enviado.GetHashCode() || datos_resumen.IdResultado == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeIdResultado.Entregado.GetHashCode())
+							foreach (TblAuditDocumentos item in ListaEmail)
 							{
-								short estado_mail = (short)Enumeracion.GetValueFromDescription<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado>(datos_resumen.Estado);
+								string respuesta = item.StrResultadoProceso.Replace("[", "").Replace("]", "");
+								dynamic datos = JsonConvert.DeserializeObject(respuesta);
 
-								if (estado_mail == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Clicked.GetHashCode() || estado_mail == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Opened.GetHashCode())
-								{
-									mejor_estado = (short)EstadoEnvio.Leido.GetHashCode();
-								}
-								else if (estado_mail <= LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Sent.GetHashCode())
-								{
-									mejor_estado = (short)EstadoEnvio.Entregado.GetHashCode();
-								}
+								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+								MensajeResumen datos_resumen = new MensajeResumen();
 
+								datos_resumen = email.ConsultarCorreo((string)datos.MessageID);
+
+								if (datos_resumen.IdResultado == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeIdResultado.Enviado.GetHashCode() || datos_resumen.IdResultado == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeIdResultado.Entregado.GetHashCode())
+								{
+									short estado_mail = (short)Enumeracion.GetValueFromDescription<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado>(datos_resumen.Estado);
+
+									if (estado_mail == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Clicked.GetHashCode() || estado_mail == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Opened.GetHashCode())
+									{
+										mejor_estado = (short)EstadoEnvio.Leido.GetHashCode();
+									}
+									else if (estado_mail <= LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Sent.GetHashCode())
+									{
+										mejor_estado = (short)EstadoEnvio.Entregado.GetHashCode();
+									}
+
+								}
+							}
+						}
+						else
+						{
+							foreach (TblProcesoCorreo item in ListaCorreoTbl)
+							{
+
+								Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+								MensajeResumen datos_resumen = new MensajeResumen();
+
+								datos_resumen = email.ConsultarCorreo(item.StrIdMensaje);
+
+								if (datos_resumen.IdResultado == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeIdResultado.Enviado.GetHashCode() || datos_resumen.IdResultado == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeIdResultado.Entregado.GetHashCode())
+								{
+									short estado_mail = (short)Enumeracion.GetValueFromDescription<LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado>(datos_resumen.Estado);
+
+									if (estado_mail == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Clicked.GetHashCode() || estado_mail == LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Opened.GetHashCode())
+									{
+										mejor_estado = (short)EstadoEnvio.Leido.GetHashCode();
+									}
+									else if (estado_mail <= LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Sent.GetHashCode())
+									{
+										mejor_estado = (short)EstadoEnvio.Entregado.GetHashCode();
+									}
+
+								}
 							}
 						}
 
@@ -360,33 +404,75 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				}
 
-				var datos_retorno = ListaEmail.Select(d => new
+				if (correo_tbl == false)
 				{
-					StrIdSeguridad = d.StrIdSeguridad,
-					StrIdPeticion = d.StrIdPeticion,
-					DatFecha = d.DatFecha.ToString("yyyy-MM-dd HH:mm:ss.fff"),
-					StrObligado = d.StrObligado,
-					IntIdEstado = d.IntIdEstado,
-					StrDesEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(d.IntIdEstado)),
-					IntIdProceso = d.IntIdProceso,
-					StrDesProceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(d.IntIdProceso)),
-					IntTipoRegistro = d.IntTipoRegistro,
-					IntIdProcesadoPor = d.IntIdProcesadoPor,
-					StrDesProcesadoPor = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<Procedencia>(d.IntIdProcesadoPor)),
-					StrRealizadoPor = d.StrRealizadoPor,
-					StrDesRealizadoPor = (!string.IsNullOrWhiteSpace(d.StrRealizadoPor)) ? NombreUsuario(new Guid(d.StrRealizadoPor)) : string.Empty,
-					StrMensaje = d.StrMensaje,
-					StrResultadoProceso = d.StrResultadoProceso,
-					StrPrefijo = d.StrPrefijo,
-					StrNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.StrNumero),
-					//Asigna las rutas de los archivos a las propiedades de retorno, estas se obtiene de la consulta del documento a la bd.
-					RutaXml = (datos_doc != null) ? datos_doc.StrUrlArchivoUbl : string.Empty,
-					RutaPdf = (datos_doc != null) ? datos_doc.StrUrlArchivoPdf : string.Empty,
-					RutaXmlAcuse = (datos_doc != null) ? datos_doc.StrUrlAcuseUbl : string.Empty,
-					TipoDocumento = (datos_doc != null) ? Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(datos_doc.IntDocTipo)) : "Documento",
-				}).ToList();
+					var datos_retorno = ListaEmail.Select(d => new
+					{
+						StrIdSeguridad = d.StrIdSeguridad,
+						StrIdPeticion = d.StrIdPeticion,
+						DatFecha = d.DatFecha.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+						StrObligado = d.StrObligado,
+						IntIdEstado = d.IntIdEstado,
+						StrDesEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(d.IntIdEstado)),
+						IntIdProceso = d.IntIdProceso,
+						StrDesProceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(d.IntIdProceso)),
+						IntTipoRegistro = d.IntTipoRegistro,
+						IntIdProcesadoPor = d.IntIdProcesadoPor,
+						StrDesProcesadoPor = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<Procedencia>(d.IntIdProcesadoPor)),
+						StrRealizadoPor = d.StrRealizadoPor,
+						StrDesRealizadoPor = (!string.IsNullOrWhiteSpace(d.StrRealizadoPor)) ? NombreUsuario(new Guid(d.StrRealizadoPor)) : string.Empty,
+						StrMensaje = d.StrMensaje,
+						StrResultadoProceso = d.StrResultadoProceso,
+						StrPrefijo = d.StrPrefijo,
+						StrNumero = string.Format("{0}{1}", (d.StrPrefijo == null) ? "" : (!d.StrPrefijo.Equals("0")) ? d.StrPrefijo : "", d.StrNumero),
+						//Asigna las rutas de los archivos a las propiedades de retorno, estas se obtiene de la consulta del documento a la bd.
+						RutaXml = (datos_doc != null) ? datos_doc.StrUrlArchivoUbl : string.Empty,
+						RutaPdf = (datos_doc != null) ? datos_doc.StrUrlArchivoPdf : string.Empty,
+						RutaXmlAcuse = (datos_doc != null) ? datos_doc.StrUrlAcuseUbl : string.Empty,
+						TipoDocumento = (datos_doc != null) ? Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(datos_doc.IntDocTipo)) : "Documento",
+					}).ToList();
 
-				return Ok(datos_retorno);
+					return Ok(datos_retorno);
+				}
+				else
+				{
+					LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta.MensajeEnvioItem data_correo = null;
+
+					var datos_retorno = ListaCorreoTbl.Select(d => new
+					{
+						StrIdSeguridad = d.StrIdSeguridadDoc,
+						StrIdPeticion = d.StrIdSeguridad,
+						DatFecha = d.DatFecha.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+						StrObligado = datos_doc.StrEmpresaFacturador,
+						IntIdEstado = datos_doc.IdCategoriaEstado,
+						StrDesEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(datos_doc.IdCategoriaEstado)),
+						IntIdProceso = datos_doc.IntIdEstado,
+						StrDesProceso = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<ProcesoEstado>(datos_doc.IntIdEstado)),
+						IntTipoRegistro = 1,
+						IntIdProcesadoPor = 1,
+						StrDesProcesadoPor = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<Procedencia>(1)),
+						StrRealizadoPor = string.Empty,
+						StrDesRealizadoPor = string.Empty,
+						StrMensaje = string.Empty,
+						StrResultadoProceso = JsonConvert.SerializeObject(data_correo = new LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.Respuesta.MensajeEnvioItem
+						{
+							Email = d.StrMailEnviado,
+							MessageID = d.StrIdMensaje,
+							MessageUUID = new Guid(),
+						}),
+						StrPrefijo = datos_doc.StrPrefijo,
+						StrNumero = string.Format("{0}{1}", (datos_doc.StrPrefijo == null) ? "" : (!datos_doc.StrPrefijo.Equals("0")) ? datos_doc.StrPrefijo : "", datos_doc.IntNumero),
+						//Asigna las rutas de los archivos a las propiedades de retorno, estas se obtiene de la consulta del documento a la bd.
+						RutaXml = (datos_doc != null) ? datos_doc.StrUrlArchivoUbl : string.Empty,
+						RutaPdf = (datos_doc != null) ? datos_doc.StrUrlArchivoPdf : string.Empty,
+						RutaXmlAcuse = (datos_doc != null) ? datos_doc.StrUrlAcuseUbl : string.Empty,
+						TipoDocumento = (datos_doc != null) ? Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(datos_doc.IntDocTipo)) : "Documento",
+					}).ToList();
+
+					return Ok(datos_retorno);
+				}
+
+				
 			}
 			catch (Exception excepcion)
 			{
