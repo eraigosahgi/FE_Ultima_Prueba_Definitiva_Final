@@ -312,7 +312,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					ListaCorreoTbl = ctl_correo.ObtenerTodos(Guid.Parse(id_seguridad_doc));
 
-					if (ListaCorreoTbl != null)
+					if (ListaCorreoTbl != null || ListaEmail.Count > 0)
 					{
 						correo_tbl = true;
 					}
