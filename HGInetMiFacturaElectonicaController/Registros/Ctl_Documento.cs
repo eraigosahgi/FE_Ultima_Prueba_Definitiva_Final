@@ -5827,7 +5827,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				catch (Exception) { }
 
-				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Error enviando correo desde la Sonda");
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+
+				//Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Error enviando correo desde la Sonda");
 
 				throw excepcion;
 			}

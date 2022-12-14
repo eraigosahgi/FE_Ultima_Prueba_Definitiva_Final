@@ -324,5 +324,30 @@ namespace HGInetMiFacturaElectonicaController
 		}
 
 
+		public async Task AsyncActualizarCorreo(MensajeResumen Correo)
+		{
+			try
+			{
+				var Tarea = TareaActualizarCorreo(Correo);
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+			}
+
+		}
+
+		public async Task TareaActualizarCorreo(MensajeResumen Correo)
+		{
+			await Task.Factory.StartNew(() =>
+			{
+
+				ActualizarCorreo(Correo);
+
+			});
+		}
+
+
 	}
 }

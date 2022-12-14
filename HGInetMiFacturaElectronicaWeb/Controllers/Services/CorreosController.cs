@@ -22,7 +22,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Ctl_ProcesosCorreos proceso = new Ctl_ProcesosCorreos();
 
-				proceso.ActualizarCorreo(Correo);
+				//proceso.ActualizarCorreo(Correo);
+				var Tarea1 = proceso.AsyncActualizarCorreo(Correo);
 
 				return Ok();
 			}
