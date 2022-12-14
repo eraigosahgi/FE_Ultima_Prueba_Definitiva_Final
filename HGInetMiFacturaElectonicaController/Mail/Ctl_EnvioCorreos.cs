@@ -1425,6 +1425,7 @@ namespace HGInetMiFacturaElectonicaController
 								{
 									documento.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
 									documento.IntMensajeEnvio = (short)LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Processed.GetHashCode();
+									documento.IntEnvioMail = true;
 									//documento.DatFechaActualizaEstado = Fecha.GetFecha();
 									actualizar_doc = true;
 
@@ -1433,6 +1434,7 @@ namespace HGInetMiFacturaElectonicaController
 								{
 									documento.IntEstadoEnvio = (short)EstadoEnvio.NoEntregado.GetHashCode();
 									documento.IntMensajeEnvio = (short)LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.MensajeEstado.Blocked.GetHashCode();
+									documento.IntEnvioMail = true;
 									actualizar_doc = true;
 								}
 
