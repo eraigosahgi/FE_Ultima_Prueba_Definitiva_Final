@@ -120,6 +120,14 @@ namespace HGInetMiFacturaElectonicaController
 					emails.Add(destino);
 
 					// Reply-To
+					//***Se agrega validacion para que solo pueda responder al primer remitente
+					if (correo_remitente.Email.Contains(","))
+					{
+						List<string> List_rem = Coleccion.ConvertirLista(correo_remitente.Email);
+						correo_remitente.Email = List_rem[0];
+					}
+
+
 					Destinatario respuesta = new Destinatario()
 					{
 						Email = correo_remitente.Email,
@@ -1074,8 +1082,20 @@ namespace HGInetMiFacturaElectonicaController
 									}
 									else
 									{
-										string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoZip);
-										bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
+
+										//Si es un documento emitido por nosotros este archivo lo tenemos, si es de otro proveedor no lo tenemos
+										if (!string.IsNullOrEmpty(documento.StrUrlArchivoZip))
+										{
+											string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoZip);
+											bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoZip.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
+										}
+										else
+										{
+											string nombre_cambio = Path.GetFileName(documento.StrUrlArchivoUbl);
+											bytes_applications = Archivo.ObtenerWeb(documento.StrUrlArchivoUbl.Replace(nombre_cambio, string.Format("{0}.zip", nombre_archivo)));
+										}
+
+										
 										if (bytes_applications != null)
 										{
 											archivo_attach = true;
