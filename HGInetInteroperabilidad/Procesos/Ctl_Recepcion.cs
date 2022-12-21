@@ -1,4 +1,5 @@
-﻿using HGInetInteroperabilidad.Objetos;
+﻿using HGInetDIANServicios;
+using HGInetInteroperabilidad.Objetos;
 using HGInetMiFacturaElectonicaController;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.Properties;
@@ -1146,7 +1147,7 @@ namespace HGInetInteroperabilidad.Procesos
 		}
 
 
-		public static void Validaciones(Attached attach_document, Acuse doc_acuse_Dian, object objeto_doc, TipoDocumento tipo_doc)
+		public static void Validaciones(Attached attach_document, Acuse doc_acuse_Dian, object objeto_doc, TipoDocumento tipo_doc, ref bool validar_dian)
 		{
 
 			try
@@ -1180,6 +1181,12 @@ namespace HGInetInteroperabilidad.Procesos
 					{
 						if (!attach_document.CufeDocumentoElectronico.Equals(documento_obj.Cufe))
 							throw new ArgumentException("El CUFE del Documento Electrónico no coincide con el AttachDocument recibido");
+					}
+
+					if (!string.Format("{0}{1}", doc_acuse_Dian.Prefijo, doc_acuse_Dian.Documento).Equals(string.Format("{0}{1}", documento_obj.Prefijo, documento_obj.Documento)))
+					{
+						if (!doc_acuse_Dian.CufeDocumento.Equals(documento_obj.Cufe))
+							validar_dian = true;
 					}
 
 					//if (!attach_document.IdentificacionFacturador.Equals(documento_obj.DatosObligado.Identificacion))
@@ -1433,10 +1440,12 @@ namespace HGInetInteroperabilidad.Procesos
 
 				Acuse doc_acuse_Dian = documento_acuse;
 
+				bool validar_doc_dian = false;
+
 				//Validaciones del Attach
 				try
 				{
-					Validaciones(attach_document, doc_acuse_Dian, null, TipoDocumento.Attached);
+					Validaciones(attach_document, doc_acuse_Dian, null, TipoDocumento.Attached, ref validar_doc_dian);
 				}
 				catch (Exception excepcion)
 				{
@@ -1500,7 +1509,7 @@ namespace HGInetInteroperabilidad.Procesos
 						//Validaciones del objeto
 						try
 						{
-							Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.Factura);
+							Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.Factura, ref validar_doc_dian);
 						}
 						catch (Exception excepcion)
 						{
@@ -1525,7 +1534,7 @@ namespace HGInetInteroperabilidad.Procesos
 						//Validaciones del objeto
 						try
 						{
-							Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaCredito);
+							Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaCredito, ref validar_doc_dian);
 						}
 						catch (Exception excepcion)
 						{
@@ -1550,7 +1559,7 @@ namespace HGInetInteroperabilidad.Procesos
 						//Validaciones del objeto
 						try
 						{
-							Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaDebito);
+							Validaciones(attach_document, doc_acuse_Dian, documento_obj, TipoDocumento.NotaDebito, ref validar_doc_dian);
 						}
 						catch (Exception excepcion)
 						{
@@ -1687,13 +1696,42 @@ namespace HGInetInteroperabilidad.Procesos
 							{
 								documento_bd.IntFormaPago = (documento_obj.FormaPago == 0) ? 1 : Convert.ToInt16(documento_obj.FormaPago);
 							}
-							
-
 						}
 						catch (Exception excepcion)
 						{
 							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
 							throw new ApplicationException(string.Format("Error al convertir objeto {0} Detalle: {1}", documento_obj.Documento, excepcion.Message));
+						}
+
+						try
+						{
+							if (validar_doc_dian == true)
+							{
+								DocumentoRespuesta resp = new DocumentoRespuesta();
+
+								HGInetMiFacturaElectonicaController.Procesos.Ctl_Documentos.Consultar(documento_bd, facturador_receptor, ref resp, string.Empty, 0 , false);
+
+								// valida si la Respuesta de la DIAN es correcta, siginifica que tiene eventos
+								if (resp.EstadoDian != null && resp.EstadoDian.EstadoDocumento != EstadoDocumentoDian.Aceptado.GetHashCode())
+									throw new ArgumentException(string.Format("El CUFE {0} del Documento Electrónico recibido en el AttachDocument no existe en la DIAN", documento_bd.StrCufe));
+								else if (resp.EstadoDian != null && resp.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode())
+									throw new ArgumentException(string.Format("El CUFE {0} del Documento Electrónico recibido en el AttachDocument no se pudo validar en la DIAN", documento_bd.StrCufe));
+								else if (resp.EstadoDian == null)
+									throw new ArgumentException("El CUFE del Documento Electrónico no coincide con la respuesta de la DIAN recibida en el AttachDocument y no fue posible consultar el documento en la DIAN");
+
+							}
+						}
+						catch (Exception excepcion)
+						{
+							string mensaje = string.Format("Error validando el XMl-UBL del documento recibido Detalle: {0}", excepcion.Message);
+							List<string> mensajes = new List<string>();
+							mensajes.Add(mensaje);
+
+							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
+
+							throw new ApplicationException(mensaje);
 						}
 
 						//Valida Proveedor Emisor

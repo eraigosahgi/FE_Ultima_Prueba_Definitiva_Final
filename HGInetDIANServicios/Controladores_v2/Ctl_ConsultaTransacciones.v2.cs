@@ -86,6 +86,13 @@ namespace HGInetDIANServicios
 							{
 								consulta.StatusCode = "00";
 							}
+						}//Se agrega Validacion cuando se esta consultando
+						else if (consulta != null && consulta.StatusCode.Equals("66") && proceso_acuse == false)
+						{
+							if (consulta.IsValid == false)
+							{
+								consulta.StatusCode = "99";
+							}
 						}
 
 						resultado = new List<DianResponse>();

@@ -196,7 +196,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="empresa">Obligado a facturar</param>
 		/// <param name="respuesta">Objeto de respuesta</param>
 		/// <returns>Segun la respuesta de la DIAN cambia el estado del documento</returns>
-		public static DocumentoRespuesta Consultar(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string id_validacion_previa = "", int proceso_acuse = 0)
+		public static DocumentoRespuesta Consultar(TblDocumentos documentoBd, TblEmpresas empresa, ref DocumentoRespuesta respuesta, string id_validacion_previa = "", int proceso_acuse = 0, bool actualizar_doc = true)
 		{
 
 			DateTime fecha_actual = Fecha.GetFecha();
@@ -322,7 +322,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				// proceso para validar la respuesta de la DIAN
-				respuesta = ValidarRespuestaConsulta(resultado_doc, documentoBd, empresa, respuesta, archivo_xml, doc_tipo);
+				respuesta = ValidarRespuestaConsulta(resultado_doc, documentoBd, empresa, respuesta, archivo_xml, doc_tipo, actualizar_doc);
 
 				return respuesta;
 			}
@@ -345,7 +345,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="respuesta"></param>
 		/// <param name="archivo_xml"></param>
 		/// <returns></returns>
-		public static DocumentoRespuesta ValidarRespuestaConsulta(ConsultaDocumento resultado_doc, TblDocumentos documentoBd, TblEmpresas empresa, DocumentoRespuesta respuesta, string archivo_xml, TipoDocumento tipo_doc)
+		public static DocumentoRespuesta ValidarRespuestaConsulta(ConsultaDocumento resultado_doc, TblDocumentos documentoBd, TblEmpresas empresa, DocumentoRespuesta respuesta, string archivo_xml, TipoDocumento tipo_doc, bool actualizar_doc = true)
 		{
 
 			DateTime fecha_actual = Fecha.GetFecha();
@@ -456,7 +456,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta.Error.Mensaje = string.Format("Documento rechazado DIAN: {0} - Validar las siguientes inconsistencias de la DIAN: {1} ", resultado_doc.EstadoDianDescripcion, resultado_doc.Mensaje);
 					}
 
-					if (tipo_doc != TipoDocumento.AcuseRecibo)
+
+					//cuando es de recepcion no se debe actualizar el documento por que aun no existe en BD.
+					if (tipo_doc != TipoDocumento.AcuseRecibo && actualizar_doc == true)
 					{
 						//Actualiza Documento en Base de Datos
 						documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
