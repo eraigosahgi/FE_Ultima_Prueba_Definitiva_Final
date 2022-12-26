@@ -40,13 +40,16 @@ namespace HGInetUBLv2_1
 				}
 				else
 				{
-					Match numero_doc = Regex.Match(nota_debito_ubl.ID.Value, "\\d+");
+					//Match numero_doc = Regex.Match(nota_debito_ubl.ID.Value, "\\d+");
 
-					Match pref = Regex.Match(nota_debito_ubl.ID.Value, "\\D+");
+					//Match pref = Regex.Match(nota_debito_ubl.ID.Value, "\\D+");
 
-					nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+					//nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
 
-					nota_debito_obj.Prefijo = pref.Value.ToString();
+					//nota_debito_obj.Prefijo = pref.Value.ToString();
+
+					nota_debito_obj.Prefijo = nota_debito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
+					nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value.ToString().Substring(nota_debito_obj.Prefijo.Length));
 				}
 
 				//Se obtiene el proveedor Emisor del documento

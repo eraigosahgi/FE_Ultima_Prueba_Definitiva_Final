@@ -38,40 +38,49 @@ namespace HGInetUBLv2_1
 				}
 				else
 				{
-					Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
+					//Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
 
-					Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
+					//Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
 
-					string last_pre = string.Empty;
-					string numero = string.Empty;
-					string prefijo = string.Empty;
+					//string last_pre = string.Empty;
 
 					//Se valida que posicion tiene la ultima letra del prefijo para poder sacar lo que corresponde a valor y a prefijo
-					if (pref.Length > 1)
-					{
-						last_pre = pref.Value.Substring(pref.Length - 1);
-					}
-					else
-					{
-						last_pre = pref.Value;
-					}
+					//if (pref.Length > 1)
+					//{
+					//	last_pre = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
+					//}
+					//else
+					//{
+					//	last_pre = pref.Value;
+					//}
 
-					if (!string.IsNullOrWhiteSpace(last_pre))
+					//if (!string.IsNullOrWhiteSpace(last_pre))
+					//{
+					//	int pos_las = nota_credito_ubl.ID.Value.ToString().LastIndexOf(last_pre) + 1;
+					//	numero = nota_credito_ubl.ID.Value.Substring(pos_las);
+					//	prefijo = nota_credito_ubl.ID.Value.Substring(0, nota_credito_ubl.ID.Value.Length - numero.Length);
+
+					//}
+					//else
+					//{
+					//	numero = numero_doc.Value;
+					//	prefijo = pref.Value;
+					//}
+
+					try
 					{
-						int pos_las = nota_credito_ubl.ID.Value.ToString().LastIndexOf(last_pre) + 1;
-						numero = nota_credito_ubl.ID.Value.Substring(pos_las);
-						prefijo = nota_credito_ubl.ID.Value.Substring(0, nota_credito_ubl.ID.Value.Length - numero.Length);
+						//string prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
+						//string numero = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
+
+						nota_credito_obj.Prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
+						nota_credito_obj.Documento = Convert.ToInt64(nota_credito_ubl.ID.Value.ToString().Substring(nota_credito_obj.Prefijo.Length));
 
 					}
-					else
+					catch (Exception ex)
 					{
-						numero = numero_doc.Value;
-						prefijo = pref.Value;
+						string mensaje = string.Format("Se presento inconsistencia Obteniedo el numero y prefijo de la Nota Credito. Detalle: {0}", ex.Message);
+						throw new ApplicationException(mensaje, ex.InnerException);
 					}
-
-					nota_credito_obj.Documento = Convert.ToInt64(numero);
-
-					nota_credito_obj.Prefijo = prefijo;
 				}
 
 				//Se obtiene el proveedor Emisor del documento
