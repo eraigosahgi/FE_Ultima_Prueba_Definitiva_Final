@@ -314,7 +314,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										List<FormatoCampo> CamposPredeterminados = new List<FormatoCampo>();
 										FormatoCampo formato = new FormatoCampo();
 										formato.Ubicacion = "campo2";
-										formato.Valor = string.Format("Resolución No {0}, Fecha: {1}, del No.{2} {3} al {4} {5}, vigencia: 12 meses", resolucion.StrNumResolucion, resolucion.DatFechaVigenciaDesde.ToString("yyyy-MM-dd"), resolucion.StrPrefijo, resolucion.IntRangoInicial, resolucion.StrPrefijo, resolucion.IntRangoFinal);
+										int meses_vigencia = Math.Abs((resolucion.DatFechaVigenciaDesde.Month - resolucion.DatFechaVigenciaHasta.Month) + 12 * (resolucion.DatFechaVigenciaDesde.Year - resolucion.DatFechaVigenciaHasta.Year));
+										formato.Valor = string.Format("Resolución No {0}, Fecha: {1}, del No.{2} {3} al {4} {5}, vigencia: {6} meses", resolucion.StrNumResolucion, resolucion.DatFechaVigenciaDesde.ToString("yyyy-MM-dd"), resolucion.StrPrefijo, resolucion.IntRangoInicial, resolucion.StrPrefijo, resolucion.IntRangoFinal, meses_vigencia);
 										if (documento_obj.DocumentoFormato.CamposPredeterminados == null)
 										{
 											CamposPredeterminados.Add(formato);
