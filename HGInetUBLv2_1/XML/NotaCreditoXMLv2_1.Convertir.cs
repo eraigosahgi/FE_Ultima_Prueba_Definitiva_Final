@@ -72,8 +72,8 @@ namespace HGInetUBLv2_1
 						//string prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
 						//string numero = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
 
-						nota_credito_obj.Prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
-						nota_credito_obj.Documento = Convert.ToInt64(nota_credito_ubl.ID.Value.ToString().Substring(nota_credito_obj.Prefijo.Length));
+						nota_credito_obj.Prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme != null ? nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value : string.Empty;
+						nota_credito_obj.Documento = !string.IsNullOrEmpty(nota_credito_obj.Prefijo) ? Convert.ToInt64(nota_credito_ubl.ID.Value.ToString().Substring(nota_credito_obj.Prefijo.Length)) : Convert.ToInt64(nota_credito_ubl.ID.Value);
 
 					}
 					catch (Exception ex)
