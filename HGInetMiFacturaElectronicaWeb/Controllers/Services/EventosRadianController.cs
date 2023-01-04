@@ -34,10 +34,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				bool endoso = true;
 				bool informe_pago = true;
 				bool pago = true;
+				bool tacito = false;
 				//bool otros_eventos = false;
 
 				decimal valor_factura = 0.00M;
 				decimal valor_pagado = 0.00M;
+
+				TblEventosRadian evento_reciboM = eventos.Where(x => x.IntEstadoEvento == CodigoResponseV2.Aceptado.GetHashCode()).FirstOrDefault();
 
 				TblEventosRadian evento_tacito = eventos.Where(x => x.IntEstadoEvento == CodigoResponseV2.AprobadoTacito.GetHashCode()).FirstOrDefault();
 
@@ -54,6 +57,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				if ((evento_tacito != null || evento_expresa != null) && evento_inscripcion == null)
 				{
 					inscribir_documento = false;
+				}
+
+				if (evento_tacito == null && evento_expresa == null && evento_reciboM != null)
+				{
+					tacito = true;
 				}
 
 				if (evento_inscripcion != null && (evento_endoso == null || evento_informeP == null || evento_pago == null))
@@ -140,6 +148,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var retorno = eventos.Select(d => new
 				{
+					Tacito = tacito,
 					Inscribir_Documento = inscribir_documento,
 					Endoso = endoso,
 					Informe = informe_pago,

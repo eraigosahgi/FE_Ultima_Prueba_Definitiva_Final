@@ -5,12 +5,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 	<!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20221212"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20221212"></script>
-	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20221212"></script>
-	<script src="../../Scripts/Pages/DocumentosObligado.js?vjs20221212"></script>
-	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs20221212"></script>
-	<script src="../../Scripts/Pages/EventosRadian.js?vjs20221212"></script>
+	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20230104"></script>
+	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20230104"></script>
+	<script src="../../Scripts/Services/SrvDocumentos.js?vjs20230104"></script>
+	<script src="../../Scripts/Pages/DocumentosObligado.js?vjs20230104"></script>
+	<script src="../../Scripts/Pages/ModalAuditoria.js?vjs20230104"></script>
+	<script src="../../Scripts/Pages/EventosRadian.js?vjs20230104"></script>
 	<div data-ng-app="App">
 
 		<!-- CONTENEDOR PRINCIPAL -->

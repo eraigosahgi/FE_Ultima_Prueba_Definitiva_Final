@@ -53,6 +53,19 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 				},
 				onContentReady: function (e) {
 					try {
+						if (response.data[0].Tacito == true)
+						{
+							$("#cmdenviar0").dxButton({ disabled: false });
+							$("#cmdenviar").dxButton({ visible: false });
+							$("#cmdenviar1").dxButton({ visible: false });
+							$("#cmdenviar2").dxButton({ visible: false });
+							$("#cmdenviar3").dxButton({ visible: false });
+						}
+						else
+						{
+							$("#cmdenviar0").dxButton({ disabled: true });
+							$("#cmdenviar0").dxButton({ visible: false });
+						}
 						$("#cmdenviar").dxButton({ disabled: response.data[0].Inscribir_Documento });
 						$("#cmdenviar1").dxButton({ disabled: response.data[0].Endoso });
 						$("#cmdenviar2").dxButton({ disabled: response.data[0].Informe });
@@ -65,6 +78,7 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 
 					}
 					catch (err) {
+						$("#cmdenviar0").dxButton({ visible: false });
 						$("#cmdenviar").dxButton({ visible: false });
 						$("#cmdenviar1").dxButton({ visible: false });
 						$("#cmdenviar2").dxButton({ visible: false });
@@ -126,7 +140,38 @@ App.controller('EventosRadianController', function EventosRadianController($scop
 			});
 
 
+			$("#cmdenviar0").dxButton({
+				text: "Acuse Tácito",
+				type: "default",
+				disabled: true,
+				onClick: function () {
+					$('#wait2').show();
+					$http.post('/api/Documentos?id_seguridad=' + $scope.IdSeguridad + '&estado=3' + '&motivo_rechazo=' + '&usuario=').then(function (response) {
+						//alert(response.data);
+						$('#wait2').show();
+						$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+						$('#wait2').hide();
+					}, function errorCallback(response) {
+						$('#wait2').hide();
+						//Carga notificación de creación con opción de editar formato.
+						var myDialog = DevExpress.ui.dialog.custom({
+							title: "Proceso Falló",
+							message: response.data.ExceptionMessage,
+							buttons: [{
+								text: "Aceptar",
+								onClick: function (e) {
+									myDialog.hide();
+									$rootScope.ConsultarEventosRadian(IdSeguridad, NumeroDocumento, Obligado);
+								}
+							}]
+						});
+						myDialog.show().done(function (dialogResult) {
+						});
 
+						$('#wait2').hide();
+					});
+				}
+			});
 
 
 			$("#cmdenviar").dxButton({

@@ -29,7 +29,14 @@ function ColocarEstadoAcuseAdmin(Estado, Descripcion, IdSeguridad, Documento, Ob
 }
 
 function ColocarColorRadian(Estado, Descripcion, IdSeguridad, Documento, Obligado) {
-	return "<span " + ((Estado == '0') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-primary'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : (Estado == '7') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : " class='badge badge-Aprobado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;' target='_blank' data-toggle='modal' data-target='#modal_eventos_radian' onClick=ConsultarEventosRadian('" + IdSeguridad + "','" + Documento + "','" + Obligado + "')  >" + Descripcion + "</span>"
+	if (Estado != 4) {
+		return "<span " + ((Estado == '0') ? " class='badge badge-Aprobado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-primary'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : (Estado == '7') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : " class='badge badge-Aprobado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;' target='_blank' data-toggle='modal' data-target='#modal_eventos_radian' onClick=ConsultarEventosRadian('" + IdSeguridad + "','" + Documento + "','" + Obligado + "')  >" + Descripcion + "</span>"
+	}
+	else
+	{
+		Descripcion = GetDescripcionEnum(AdquirienteRecibo, Estado);
+		return "<span " + ((Estado == '0') ? " class='badge badge-Entregado'  title='" + Descripcion + "'" : (Estado == '1') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '2') ? " class='badge badge-Rechazado'  title='" + Descripcion + "'" : (Estado == '3') ? " class='badge badge-Leído'  title='" + Descripcion + "'" : (Estado == '4') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '5') ? " class='badge badge-Leído'   title='" + Descripcion + "'" : (Estado == '6') ? " class='badge badge-Aprobado'   title='" + Descripcion + "'" : " class='badge badge-Aprobado'  title='" + Descripcion + "'") + " style='border-radius: 0px !important;' target='_blank' data-toggle='modal' data-target='#modal_eventos_radian' onClick=ConsultarEventosRadian('" + IdSeguridad + "','" + Documento + "','" + Obligado + "')  >" + Descripcion + "</span>"
+	}
 }
 
 

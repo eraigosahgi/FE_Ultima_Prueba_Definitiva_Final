@@ -522,9 +522,19 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				   	},
 				   	cellTemplate: function (container, options) {
 
-				   		$("<div>")
-							.append($(ColocarEstadoAcuseObligado(options.data.IntAdquirienteRecibo, options.data.IntAdquirienteRecibo)))
-							.appendTo(container);
+				   		if (options.data.IntAdquirienteRecibo != 4)
+				   		{
+				   			$("<div>")
+						   .append($(ColocarEstadoAcuseObligado(options.data.IntAdquirienteRecibo, options.data.IntAdquirienteRecibo)))
+						   .appendTo(container);
+				   		}
+				   		else
+				   		{
+				   			$("<a>")
+								.append($(ColocarColorRadian(options.data.IntAdquirienteRecibo, options.data.TituloValor, options.data.StrIdSeguridad, options.data.NumeroDocumento, codigo_facturador)))
+								.appendTo(container);
+				   		}
+				   		
 				   	}
 				   },
 				  {
