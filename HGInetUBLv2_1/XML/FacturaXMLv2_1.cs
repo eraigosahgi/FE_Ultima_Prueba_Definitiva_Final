@@ -90,6 +90,16 @@ namespace HGInetUBLv2_1
 				{
 				}
 
+				try
+				{
+					if (documento.TipoOperacion == 4)
+					{
+						facturaXML.CustomizationID.Value = "12";
+					}
+				}
+				catch (Exception)
+				{
+				}
 
 				#region Contingencia-Dia Sin Iva
 				//Fechas Dia Sin IVA
@@ -119,7 +129,7 @@ namespace HGInetUBLv2_1
 				}
 
 				facturaXML.ProfileID = new ProfileIDType();
-				if (documento.TipoOperacion < 3)
+				if (documento.TipoOperacion != 3)
 					facturaXML.ProfileID.Value = "DIAN 2.1: Factura Electrónica de Venta";
 				else
 					facturaXML.ProfileID.Value = "DIAN 2.1: documento soporte en adquisiciones efectuadas a no obligados a facturar.";
@@ -353,7 +363,7 @@ namespace HGInetUBLv2_1
 
 				#region período al que aplica el documento
 				// <cac:InvoicePeriod>
-				if (documento.TipoOperacion < 3)
+				if (documento.TipoOperacion != 3)
 				{
 					PeriodType PeriodType = new PeriodType()
 					{
@@ -457,7 +467,7 @@ namespace HGInetUBLv2_1
 
 				/*** QUEMADO ***/
 				//---Validar persona autorizada por el emisor a descargar el documento desde la base de datos de la DIAN
-				if (documento.TipoOperacion < 3)
+				if (documento.TipoOperacion != 3)
 				{
 					#region facturaXML.TaxRepresentativeParty - Grupo con informaciones que definen una persona autorizada por el emisor a descargar el documento desde la base de datos de la DIAN 
 					PartyType TaxRepresentativeParty = new PartyType();
@@ -476,7 +486,7 @@ namespace HGInetUBLv2_1
 				}
 
 				#region facturaXML.AccountingSupplierParty - Información del obligado a facturaXMLr
-				if (documento.TipoOperacion < 3)
+				if (documento.TipoOperacion != 3)
 					facturaXML.AccountingSupplierParty = TerceroXML.ObtenerObligado(documento.DatosObligado, documento.Prefijo);
 				else
 				{
@@ -500,7 +510,7 @@ namespace HGInetUBLv2_1
 				51 o documento equivalente y, que tratándose de la facturaXML electrónica, 
 			    la recibe, rechaza, cuando
 				52 sea del caso, y conserva para su posterior exhibición*/
-				if (documento.TipoOperacion < 3)
+				if (documento.TipoOperacion != 3)
 					facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosAdquiriente);
 				else
 					facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosObligado);
@@ -645,7 +655,7 @@ namespace HGInetUBLv2_1
 				//---Validar Se llena con informacion del ejemplo Factura Genericas
 				#region PaymentExchangeRate - Conversión de divisas: cac:PaymentExchangeRate 
 
-				if (documento.TipoOperacion < 3)
+				if (documento.TipoOperacion != 3)
 				{
 					ExchangeRateType PaymentExchangeRate = new ExchangeRateType();
 					//---5.3.3. Moneda (ISO 4217):
@@ -2236,7 +2246,7 @@ namespace HGInetUBLv2_1
 
 						#region Campos Adicionales
 
-						if (DocDet.CamposAdicionales != null)
+						if (DocDet.CamposAdicionales != null && !tipo_factura.Equals("12"))
 						{
 							CampoValor marca = DocDet.CamposAdicionales.Where(d => d.Descripcion.Equals("MARCA")).FirstOrDefault();
 
@@ -2282,6 +2292,30 @@ namespace HGInetUBLv2_1
 							}
 							Item.AdditionalItemProperty = Property.ToArray();
 						}
+						else if (tipo_factura.Equals("12"))//***Informacion del Sector de transporte
+						{
+							List<ItemPropertyType> Property = new List<ItemPropertyType>();
+							InvoiceLineType1.ID.schemeID = "0";
+							foreach (CampoValor Campos in DocDet.CamposAdicionales)
+							{
+								ItemPropertyType campo = new ItemPropertyType();
+								campo.Name = new NameType1();
+								campo.Name.Value = Campos.Descripcion;
+								campo.Value = new ValueType();
+								campo.Value.Value = Campos.Valor;
+								if (Campos.Descripcion.Equals("03"))
+								{
+									campo.ValueQuantity = new ValueQuantityType();
+									campo.ValueQuantity.unitCode = InvoicedQuantity.unitCode;
+									campo.ValueQuantity.Value = InvoicedQuantity.Value;
+									InvoiceLineType1.ID.schemeID = "1";
+								}
+								Property.Add(campo);
+							}
+							Item.AdditionalItemProperty = Property.ToArray();
+
+
+						} 
 
 						#endregion
 

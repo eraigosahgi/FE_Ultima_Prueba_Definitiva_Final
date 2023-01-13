@@ -1321,7 +1321,7 @@ namespace HGInetUBLv2_1
 
 					#region Campos Adicionales
 
-					if (DocDet.CamposAdicionales != null)
+					if (DocDet.CamposAdicionales != null && tipo_operacion != 4)
 					{
 						CampoValor marca = DocDet.CamposAdicionales.Where(d => d.Descripcion.Equals("MARCA")).FirstOrDefault();
 
@@ -1389,6 +1389,30 @@ namespace HGInetUBLv2_1
 							ModelName[0] = Model;
 							Item.ModelName = ModelName;
 						}
+
+					}
+
+					if (tipo_operacion.Equals(4))//***Informacion del Sector de transporte
+					{
+						List<ItemPropertyType> Property = new List<ItemPropertyType>();
+						CreditNoteLine.ID.schemeID = "0";
+						foreach (CampoValor Campos in DocDet.CamposAdicionales)
+						{
+							ItemPropertyType campo = new ItemPropertyType();
+							campo.Name = new NameType1();
+							campo.Name.Value = Campos.Descripcion;
+							campo.Value = new ValueType();
+							campo.Value.Value = Campos.Valor;
+							if (Campos.Descripcion.Equals("03"))
+							{
+								campo.ValueQuantity = new ValueQuantityType();
+								campo.ValueQuantity.unitCode = CreditedQuantity.unitCode;
+								campo.ValueQuantity.Value = CreditedQuantity.Value;
+								CreditNoteLine.ID.schemeID = "1";
+							}
+							Property.Add(campo);
+						}
+						Item.AdditionalItemProperty = Property.ToArray();
 
 					}
 
