@@ -1402,12 +1402,12 @@ namespace HGInetUBLv2_1
 							campo.Name = new NameType1();
 							campo.Name.Value = Campos.Descripcion;
 							campo.Value = new ValueType();
-							campo.Value.Value = Campos.Valor;
+							campo.Value.Value = Math.Floor(Convert.ToDecimal(Campos.Valor)).ToString();
 							if (Campos.Descripcion.Equals("03"))
 							{
 								campo.ValueQuantity = new ValueQuantityType();
 								campo.ValueQuantity.unitCode = CreditedQuantity.unitCode;
-								campo.ValueQuantity.Value = CreditedQuantity.Value;
+								campo.ValueQuantity.Value = Math.Floor(CreditedQuantity.Value);
 								CreditNoteLine.ID.schemeID = "1";
 							}
 							Property.Add(campo);

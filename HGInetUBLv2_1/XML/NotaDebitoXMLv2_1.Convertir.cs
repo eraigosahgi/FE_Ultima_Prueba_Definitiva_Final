@@ -49,7 +49,7 @@ namespace HGInetUBLv2_1
 					//nota_debito_obj.Prefijo = pref.Value.ToString();
 
 					nota_debito_obj.Prefijo = nota_debito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
-					nota_debito_obj.Documento = Convert.ToInt64(nota_debito_ubl.ID.Value.ToString().Substring(nota_debito_obj.Prefijo.Length));
+					nota_debito_obj.Documento = !string.IsNullOrEmpty(nota_debito_obj.Prefijo) ? Convert.ToInt64(nota_debito_ubl.ID.Value.ToString().Substring(nota_debito_obj.Prefijo.Length)) : Convert.ToInt64(nota_debito_ubl.ID.Value);
 				}
 
 				//Se obtiene el proveedor Emisor del documento

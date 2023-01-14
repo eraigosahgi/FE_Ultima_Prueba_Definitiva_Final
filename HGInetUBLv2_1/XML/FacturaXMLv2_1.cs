@@ -2302,12 +2302,12 @@ namespace HGInetUBLv2_1
 								campo.Name = new NameType1();
 								campo.Name.Value = Campos.Descripcion;
 								campo.Value = new ValueType();
-								campo.Value.Value = Campos.Valor;
+								campo.Value.Value = Math.Floor(Convert.ToDecimal(Campos.Valor)).ToString();
 								if (Campos.Descripcion.Equals("03"))
 								{
 									campo.ValueQuantity = new ValueQuantityType();
 									campo.ValueQuantity.unitCode = InvoicedQuantity.unitCode;
-									campo.ValueQuantity.Value = InvoicedQuantity.Value;
+									campo.ValueQuantity.Value = Math.Floor(InvoicedQuantity.Value);
 									InvoiceLineType1.ID.schemeID = "1";
 								}
 								Property.Add(campo);
