@@ -34,7 +34,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 	}
 	//Sin Angularjs
 	PagarDocumento = function (documento, monto) {
-		$scope.Monto = $("#txtSaldo_" + documento).dxNumberBox("instance").option().value;
+		$scope.Monto = jQuery("#txtSaldo_" + documento).dxNumberBox("instance").option().value;
 		InicicarPago(documento, monto);
 	}
 	//Con Angularjs
@@ -45,8 +45,8 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 	function Consultar(ValorIdentificacion, ValorDocumento) {
 
 		$scope.lista_pagos = [];
-		$('#tblPagos').hide();
-		$.ajax({
+		jQuery('#tblPagos').hide();
+		jQuery.ajax({
 			url: ruta + '/api/ConsultarPagosFueraPlataforma?IdSeguridad=' + $scope.serial + '&identificacion=' + ValorIdentificacion + '&documento=' + ValorDocumento + '&prefijo=' + $scope.Prefijo,
 			success: function (respuesta) {
 
@@ -55,12 +55,12 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 
 				if (!$scope.$$phase) $scope.$apply();
 
-				$('#tblPagos').show();
-				$("#mensajeError").text("");
+				jQuery('#tblPagos').show();
+				jQuery("#mensajeError").text("");
 
 			},
 			error: function (error) {
-				$("#mensajeError").text(error.responseText);
+				jQuery("#mensajeError").text(error.responseText);
 			}
 		});
 
@@ -71,8 +71,8 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 
 		var forma_pago = 0;
 		var UsuarioSession = '';
-		var alto_pantalla = $(window).height() - 10;
-		var ancho_pantalla = $(window).width() - 10;
+		var alto_pantalla = jQuery(window).height() - 10;
+		var ancho_pantalla = jQuery(window).width() - 10;
 
 		var Vpago = window.open("", "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
 		if (Vpago == null || Vpago == undefined) {
@@ -81,27 +81,27 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 			//DevExpress.ui.notify({ message: "Se Inicia el pago", position: { my: "center top", at: "center top" } }, "success", 6000);
 			if (idseg != null && idseg != undefined) {
 				$scope.EnProceso = true;
-				$('#btnpagar').hide();
-				$.ajax({
+				jQuery('#btnpagar').hide();
+				jQuery.ajax({
 					url: ruta + '/api/Documentos?strIdSeguridad=' + idseg + '&tipo_pago=0&registrar_pago=true&valor_pago=' + $scope.Monto + '&usuario=' + UsuarioSession + '&IntPagoFormaPago=' + forma_pago,
 					success: function (response) {
 
-						var alto_pantalla = $(window).height() - 10;
-						var ancho_pantalla = $(window).width() - 10;
+						var alto_pantalla = jQuery(window).height() - 10;
+						var ancho_pantalla = jQuery(window).width() - 10;
 
 						//Inicializo la variable en uno(1) cuando guardo el pago ya que luego debo consultar unas tres veces al servidor
 						$scope.NumVerificacion = 1;
 						//Ruta servicio
 						var RutaServicio = ruta_servicios + "/Views/Pago.aspx?IdSeguridad=";
 						$scope.Idregistro = response.IdRegistro;
-						//$("#modal_PagoEmbebido").modal("show");
+						//jQuery("#modal_PagoEmbebido").modal("show");
 
-						//$("#Pago_Embed").attr("src", RutaServicio + response.data.Ruta);
+						//jQuery("#Pago_Embed").attr("src", RutaServicio + response.data.Ruta);
 						var Vpago2 = window.open(RutaServicio + response.Ruta, "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
 
 					}, error: function () {
 						console.log("No se ha podido obtener la información");
-						$('#btnpagar').show();
+						jQuery('#btnpagar').show();
 					}
 				});
 			}
@@ -125,20 +125,21 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 
 	function ConsultarDocumentos() {
 		var ValidarGestionPagos = "ValidarGestionPagos";
-		$("#summary_Pagos").dxValidationSummary(
-		{
-			validationGroup: ValidarGestionPagos
-		});
-
+		try {
+			jQuery("#summary_Pagos").dxValidationSummary(
+			{
+				validationGroup: ValidarGestionPagos
+			});
+		} catch (e) { }
 		//Limpiar Errores
-		$("#mensajeError").text("");
+		jQuery("#mensajeError").text("");
 
-		$.ajax({
+		jQuery.ajax({
 			url: ruta + '/api/ConsultarPagosFueraPlataforma?IdSeguridad=' + $scope.serial + '&identificacion=' + $scope.Identificacion + '&documento=' + $scope.Documento + '&prefijo=' + $scope.Prefijo,
 			success: function (respuesta) {
 
-				$('#wait').hide();
-				$("#gridDocumentos").dxDataGrid({
+				jQuery('#wait').hide();
+				jQuery("#gridDocumentos").dxDataGrid({
 					dataSource: respuesta,
 					paging: {
 						enabled: false,
@@ -147,9 +148,9 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 					onContentReady: function (options) {
 						try {
 							if (options.component._options.dataSource.length == 1) {
-								$("#gridDocumentos").dxDataGrid("columnOption", "Seleccionar", "visible", false);
+								jQuery("#gridDocumentos").dxDataGrid("columnOption", "Seleccionar", "visible", false);
 							} else {
-								$("#gridDocumentos").dxDataGrid("columnOption", "Seleccionar", "visible", true);
+								jQuery("#gridDocumentos").dxDataGrid("columnOption", "Seleccionar", "visible", true);
 							}
 						} catch (e) {
 						}
@@ -176,7 +177,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 				   	caption: "Seleccionar",
 				   	cssClass: "col-md-1 col-xs-2",
 				   	cellTemplate: function (container, options) {
-				   		$('<div id="chkSaldo_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
+				   		jQuery('<div id="chkSaldo_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
 				   			name: "chkSaldo_" + options.data.StrIdSeguridad,
 				   			onValueChanged: function (data) {
 				   				validarSeleccion();
@@ -211,7 +212,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 				   	//disabled: !data.habilitar_documento,
 				   	cellTemplate: function (container, options) {
 
-				   		$('<div id="txtSaldo_' + options.data.StrIdSeguridad + '"></div>').dxNumberBox({
+				   		jQuery('<div id="txtSaldo_' + options.data.StrIdSeguridad + '"></div>').dxNumberBox({
 				   			value: options.data.Saldo,
 				   			name: "txtSaldo_" + options.data.StrIdSeguridad,
 				   			disabled: (options.data.PagosParciales == 1) ? false : true,
@@ -261,8 +262,8 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 					   				var boton_pagar = '<div  id="btnpagar" ' + click + ' target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" class="dx-button dx-button-success dx-button-mode-contained dx-widget dx-button-has-icon dx-button-has-text" role="button" aria-label="Pagar" tabindex="10012"><div class="dx-button-content"><i class="dx-icon dx-icon-money"></i><span class="dx-button-text">Pagar</span></div></div>'
 					   				var imagen = "";
 					   				imagen = boton_pagar;
-					   				$("<div>")
-									.append($(imagen))
+					   				jQuery("<div>")
+									.append(jQuery(imagen))
 									 .appendTo(container);
 					   			}
 					   		} else {
@@ -270,8 +271,8 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 					   			var boton_pagar = '<div  ' + click + ' target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" class="dx-button dx-button-default dx-button-mode-contained dx-widget dx-button-has-icon dx-button-has-text" role="button" aria-label="Ver" tabindex="10012"><div class="dx-button-content"><i class="dx-icon dx-icon-money"></i><span class="dx-button-text">Ver</span></div></div>'
 					   			var imagen = "";
 					   			imagen = boton_pagar;
-					   			$("<div>")
-								.append($(imagen))
+					   			jQuery("<div>")
+								.append(jQuery(imagen))
 								 .appendTo(container);
 					   		}
 					   	}
@@ -281,7 +282,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 
 				});
 			}, error: function (error) {
-				$("#mensajeError").text(error.responseText);
+				jQuery("#mensajeError").text(error.responseText);
 			}
 		});
 
@@ -289,8 +290,8 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 		ConsultarDetallesPago = function (IdRegistroPago, IdSeguridadDoc) {
 
 			var ruta_redireccion = ruta_servicios + "/Views/DetallesPagoE.aspx?IdSeguridadPago=" + IdSeguridadDoc + "&IdSeguridadRegistro=" + IdRegistroPago;
-			var alto_pantalla = $(window).height();
-			var ancho_pantalla = $(window).width();
+			var alto_pantalla = jQuery(window).height();
+			var ancho_pantalla = jQuery(window).width();
 
 			var x = (screen.width / 2) - (ancho_pantalla / 2);
 			//Ajustar verticalmente
@@ -300,7 +301,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 
 
 
-		$("#multipagos").dxButton({
+		jQuery("#multipagos").dxButton({
 			text: "Pagar",
 			type: "success",
 			icon: 'money',
@@ -309,8 +310,8 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 			onClick: function (e) {
 				var result = e.validationGroup.validate();
 				if (result.isValid) {
-					var alto_pantalla = $(window).height() - 10;
-					var ancho_pantalla = $(window).width() - 10;
+					var alto_pantalla = jQuery(window).height() - 10;
+					var ancho_pantalla = jQuery(window).width() - 10;
 
 					var Vpago = window.open("", "Pagos", "top:10px, width=" + ancho_pantalla + "px,height=" + alto_pantalla + "px;");
 					if (Vpago == null || Vpago == undefined) {
@@ -318,7 +319,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 					} else {
 
 						///Pago Multiple
-						$.ajax({
+						jQuery.ajax({
 							url: ruta + '/api/PagoMultiple?lista_documentos=' + $scope.documentos + '&valor_pago=' + $scope.total,
 							success: function (respuesta) {
 
@@ -337,11 +338,11 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 							error: function (error) {
 								if (error != undefined) {
 									DevExpress.ui.notify(error.responseJSON.ExceptionMessage, 'error', 6000);
-									$("#button").dxButton({ visible: true });
+									jQuery("#button").dxButton({ visible: true });
 
 
 									if (error.responseJSON.ExceptionMessage == 'Documento ya no esta disponible') {
-										$('#modal_Pagos_Electronicos').modal('hide')
+										jQuery('#modal_Pagos_Electronicos').modal('hide')
 									}
 
 								}
@@ -356,7 +357,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 	}
 
 	function validarSeleccion() {
-		var data = $("#gridDocumentos").dxDataGrid("instance").option().dataSource;
+		var data = jQuery("#gridDocumentos").dxDataGrid("instance").option().dataSource;
 		var lista = '';
 		var total_a_pagar = 0;
 		var total_seleccionados = 0;
@@ -365,7 +366,7 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 		var comercio_actual = "";
 		for (var i = 0; i < data.length; i++) {
 
-			var valor = $("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
+			var valor = jQuery("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
 			if (valor) {
 				if (comercio_actual != "") {
 					if (comercio_actual != data[i].IdComercio) {
@@ -387,17 +388,17 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 		}
 
 		if (total_seleccionados > 0) {
-			$("#gridDocumentos").dxDataGrid("columnOption", "Pago", "visible", false);
-			//$("#gridDocumentos").dxDataGrid("columnOption", "Saldo", "visible", true);
+			jQuery("#gridDocumentos").dxDataGrid("columnOption", "Pago", "visible", false);
+			//jQuery("#gridDocumentos").dxDataGrid("columnOption", "Saldo", "visible", true);
 
 
 			for (var i = 0; i < data.length; i++) {
 
 				var valor_seleccionado = 0;
-				var seleccion = $("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
+				var seleccion = jQuery("#chkSaldo_" + data[i].StrIdSeguridad).dxCheckBox("instance").option().value;
 				if (seleccion) {
 					lista += (lista) ? ',' : '';
-					valor_seleccionado = $("#txtSaldo_" + data[i].StrIdSeguridad).dxNumberBox("instance").option().value;
+					valor_seleccionado = jQuery("#txtSaldo_" + data[i].StrIdSeguridad).dxNumberBox("instance").option().value;
 					lista += "{Documento: '" + data[i].StrIdSeguridad + "',Valor: '" + valor_seleccionado.toString().replace(",", ".") + "'}";
 					total_a_pagar += valor_seleccionado;
 				}
@@ -409,24 +410,24 @@ apphgi.controller('myCtrl', function ($scope, SrvPagos) {
 		} else {
 			$scope.documentos = "Ningun Documento Por Procesar";
 			$scope.total = 0;
-			$("#gridDocumentos").dxDataGrid("columnOption", "Pago", "visible", true);
-			//$("#gridDocumentos").dxDataGrid("columnOption", "Saldo", "visible", false);
-			$("#multipagos").dxButton({ visible: false });
+			jQuery("#gridDocumentos").dxDataGrid("columnOption", "Pago", "visible", true);
+			//jQuery("#gridDocumentos").dxDataGrid("columnOption", "Saldo", "visible", false);
+			jQuery("#multipagos").dxButton({ visible: false });
 		}
 
 
 
 		if (total_a_pagar > 0) {
 			if (comercios_direfentes) {
-				$('#Total_a_Pagar').text("");
-				$("#multipagos").dxButton({ visible: false });
+				jQuery('#Total_a_Pagar').text("");
+				jQuery("#multipagos").dxButton({ visible: false });
 			} else {
-				$('#Total_a_Pagar').text("Total: " + fNumber.go(total_a_pagar).replace("$-", "-$"));
-				$("#multipagos").dxButton({ visible: true });
+				jQuery('#Total_a_Pagar').text("Total: " + fNumber.go(total_a_pagar).replace("$-", "-$"));
+				jQuery("#multipagos").dxButton({ visible: true });
 			}
 		} else {
-			$('#Total_a_Pagar').text("");
-			$("#multipagos").dxButton({ visible: false });
+			jQuery('#Total_a_Pagar').text("");
+			jQuery("#multipagos").dxButton({ visible: false });
 		}
 
 	}
@@ -445,6 +446,7 @@ apphgi.service('SrvPagos', function ($location, $q) {
 		var panel_pago = '<link href="' + ruta + '/Content/dx.hgi.css" rel="stylesheet" />\
 			<script src="'+ ruta + '/Scripts/config.js"></script>\
 			<script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>\
+			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>\
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">\
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>\
 			<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />\
@@ -455,12 +457,12 @@ apphgi.service('SrvPagos', function ($location, $q) {
 					<div id="wait" style="display: none; z-index: 9999;">\
 						<div class="modal" style="background-color: lightslategray; opacity: 0.6; display: block;"></div>\
 						<div>\
-							<img class="divImg" style="position: absolute; left: 43%; top: 50px; z-index: 9999; max-width: 25%; max-height: 25%;" src="https://portal.hgidocs.co/Content/icons/Loading.gif" />\
+							<img class="divImg" style="position: absolute; left: 43%; top: 50px; z-index: 9999; max-width: 25%; max-height: 25%;" src="../../Content/icons/Loading.gif" />\
 						</div>\
 					</div>\
 					<h4>Pagos Electrónicos</h4>\
 					<hr />\
-					<table style="padding: 5px;" id="pnlConsulta" ng-show="PnlConsulta">\
+					<table style="padding: 5px; " id="pnlConsulta" ng-show="PnlConsulta">\
 						<tr style="padding: 5px;">\
 							<td style="padding: 5px; text-align: right;">{{EtiquetaIdentificacion}}</td>\
 							<td style="padding: 5px; text-align: right; width: 80px;">\
@@ -524,7 +526,7 @@ apphgi.service('SrvPagos', function ($location, $q) {
 							</div>';
 
 		//Impresión de campos
-		return $.when().then(function () {
+		return jQuery.when().then(function () {
 			return panel_pago + ventana_modal;
 		});
 	}
