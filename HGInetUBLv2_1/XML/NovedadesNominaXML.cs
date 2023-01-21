@@ -220,12 +220,12 @@ namespace HGInetUBLv2_1
 						if (devengados_doc.Vacaciones.Where(x => x.Tipo.Equals(2)) != null)
 						{
 							cont = 0;
-							cant_vac = devengados_doc.Vacaciones.Where(x => x.Tipo.Equals(1)).Count();
+							cant_vac = devengados_doc.Vacaciones.Where(x => x.Tipo.Equals(2)).Count();
 
 							if (cant_vac > 0)
 							{
 								devengado.Vacaciones.VacacionesCompensadas = new NominaIndividualTypeDevengadosVacacionesVacacionesCompensadas[cant_vac];
-								foreach (NovedadGeneral item in devengados_doc.Vacaciones.Where(x => x.Tipo.Equals(1)))
+								foreach (NovedadGeneral item in devengados_doc.Vacaciones.Where(x => x.Tipo.Equals(2)))
 								{
 									NominaIndividualTypeDevengadosVacacionesVacacionesCompensadas vacacion = new NominaIndividualTypeDevengadosVacacionesVacacionesCompensadas();
 									vacacion.Cantidad = item.Cantidad.ToString();
@@ -548,6 +548,8 @@ namespace HGInetUBLv2_1
 				}
 
 				devengado.Dotacion = devengados_doc.Dotacion;
+				if (devengados_doc.Dotacion > 0)
+					devengado.DotacionSpecified = true;
 
 				if (devengados_doc.ApoyoSostenimiento > 0)
 				{
@@ -971,12 +973,12 @@ namespace HGInetUBLv2_1
 						if (devengados_doc.Vacaciones.Where(x => x.Tipo.Equals(2)) != null)
 						{
 							cont = 0;
-							cant_vac = devengados_doc.Vacaciones.Where(x => x.Tipo.Equals(1)).Count();
+							cant_vac = devengados_doc.Vacaciones.Where(x => x.Tipo.Equals(2)).Count();
 
 							if (cant_vac > 0)
 							{
 								devengado.Vacaciones.VacacionesCompensadas = new NominaIndividualDeAjusteTypeReemplazarDevengadosVacacionesVacacionesCompensadas[cant_vac];
-								foreach (NovedadGeneral item in devengados_doc.Vacaciones.Where(x => x.Tipo.Equals(1)))
+								foreach (NovedadGeneral item in devengados_doc.Vacaciones.Where(x => x.Tipo.Equals(2)))
 								{
 									NominaIndividualDeAjusteTypeReemplazarDevengadosVacacionesVacacionesCompensadas vacacion = new NominaIndividualDeAjusteTypeReemplazarDevengadosVacacionesVacacionesCompensadas();
 									vacacion.Cantidad = item.Cantidad.ToString();
