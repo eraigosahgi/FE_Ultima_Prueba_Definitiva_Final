@@ -115,7 +115,7 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						Email = Constantes.EmailRemitente,
 						Nombre = correo_remitente.Nombre,
-						Tipo = 0
+						Tipo = LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.TipoDestinatario.Desde
 					};
 					emails.Add(destino);
 
@@ -132,7 +132,7 @@ namespace HGInetMiFacturaElectonicaController
 					{
 						Email = correo_remitente.Email,
 						Nombre = correo_remitente.Nombre,
-						Tipo = 4
+						Tipo = LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.TipoDestinatario.Responder
 					};
 					emails.Add(respuesta);
 
@@ -145,7 +145,7 @@ namespace HGInetMiFacturaElectonicaController
 							{
 								Email = item.Email,
 								Nombre = item.Nombre,
-								Tipo = 1
+								Tipo = LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.TipoDestinatario.Para
 							};
 							emails.Add(mail);
 						}
@@ -160,7 +160,7 @@ namespace HGInetMiFacturaElectonicaController
 							{
 								Email = item.Email,
 								Nombre = item.Nombre,
-								Tipo = 2
+								Tipo = LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.TipoDestinatario.Copia
 							};
 							emails.Add(mail);
 						}
@@ -175,7 +175,7 @@ namespace HGInetMiFacturaElectonicaController
 							{
 								Email = item.Email,
 								Nombre = item.Nombre,
-								Tipo = 3
+								Tipo = LibreriaGlobalHGInet.ObjetosComunes.Mensajeria.Mail.TipoDestinatario.CopiaOculta
 							};
 							emails.Add(mail);
 						}
