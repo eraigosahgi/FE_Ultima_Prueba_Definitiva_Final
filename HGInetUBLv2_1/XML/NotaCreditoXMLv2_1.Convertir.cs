@@ -40,7 +40,7 @@ namespace HGInetUBLv2_1
 				{
 					//Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
 
-					//Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
+					Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
 
 					//string last_pre = string.Empty;
 
@@ -73,6 +73,12 @@ namespace HGInetUBLv2_1
 						//string numero = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
 
 						nota_credito_obj.Prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme != null ? nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value : string.Empty;
+
+                        if (nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme == null && pref.Length > 1)
+                        {
+                            nota_credito_obj.Prefijo = pref.Value;
+                        }
+
 						nota_credito_obj.Documento = !string.IsNullOrEmpty(nota_credito_obj.Prefijo) ? Convert.ToInt64(nota_credito_ubl.ID.Value.ToString().Substring(nota_credito_obj.Prefijo.Length)) : Convert.ToInt64(nota_credito_ubl.ID.Value);
 
 					}
@@ -304,20 +310,20 @@ namespace HGInetUBLv2_1
 							detalle.CamposAdicionales = new List<CampoValor>();
 							foreach (ItemPropertyType item in nota_credito_ubl.CreditNoteLine[i].Item.AdditionalItemProperty)
 							{
-								if (item.Name.Value.Equals("Item Oculto para Impresion"))
-								{
-									detalle.OcultarItem = Convert.ToInt16(item.Value.Value);
-								}
-								else
-								{
-									CampoValor campo = new CampoValor();
-									campo.Descripcion = (item.Name != null) && !string.IsNullOrEmpty(item.Name.Value) ? item.Name.Value : string.Empty;
-									campo.Valor = (item.Value != null) && !string.IsNullOrEmpty(item.Value.Value) ? item.Value.Value : string.Empty;
-									detalle.CamposAdicionales.Add(campo);
-								}
+                                if ((item.Name.Value != null) && (item.Name.Value.Equals("Item Oculto para Impresion")))
+                                {
+                                    detalle.OcultarItem = Convert.ToInt16(item.Value.Value);
+                                }
+                                else
+                                {
+                                    CampoValor campo = new CampoValor();
+                                    campo.Descripcion = (item.Name != null) && !string.IsNullOrEmpty(item.Name.Value) ? item.Name.Value : string.Empty;
+                                    campo.Valor = (item.Value != null) && !string.IsNullOrEmpty(item.Value.Value) ? item.Value.Value : string.Empty;
+                                    detalle.CamposAdicionales.Add(campo);
+                                }
 
-							}
-						}
+                            }
+                        }
 
 						if (nota_credito_ubl.CreditNoteLine[i].AllowanceCharge != null)
 						{
