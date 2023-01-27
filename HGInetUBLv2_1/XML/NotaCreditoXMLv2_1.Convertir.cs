@@ -74,7 +74,7 @@ namespace HGInetUBLv2_1
 
 						nota_credito_obj.Prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme != null ? nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value : string.Empty;
 
-                        if (nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme == null && pref.Length > 1)
+                        if (nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme == null && pref.Length > 0)
                         {
                             nota_credito_obj.Prefijo = pref.Value;
                         }
