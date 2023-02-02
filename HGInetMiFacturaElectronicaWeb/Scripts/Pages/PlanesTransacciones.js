@@ -532,15 +532,15 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				if (Datos_E_Plan == 2) {
 					$scope.consumido = true;
 				} else {
-					$("#EstadoPlan").dxRadioGroup({ value: EstadosPlanes[BuscarID(EstadosPlanes, Datos_E_Plan)] });
+				    $("#EstadoPlan").dxRadioGroup({ value: EstadosPlanes[BuscarID(EstadosPlanes, Datos_E_Plan)] });
 				}
 
 				if (Datos_obsrvaciones != null) {
 					$("#txtObservaciones").dxTextArea({ value: Datos_obsrvaciones });
 				}
 
-				$("#CantidadTransacciones").dxNumberBox({ readOnly: true });
-				$("#ValorPlan").dxNumberBox({ readOnly: true });
+				//$("#CantidadTransacciones").dxNumberBox({ readOnly: true });
+				//$("#ValorPlan").dxNumberBox({ readOnly: true });
 				$('#SelecionarEmpresa').hide();
 				$("#TipoProceso").dxRadioGroup({ readOnly: true });
 				$("#DocRef").dxNumberBox({ value: Datos_DocRef });

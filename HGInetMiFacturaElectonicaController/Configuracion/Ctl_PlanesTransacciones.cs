@@ -107,8 +107,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			Ptransaccion.IntNumTransaccCompra = datos_plan.IntNumTransaccCompra;
 			Ptransaccion.IntValor = datos_plan.IntValor;
 			Ptransaccion.IntEstado = datos_plan.IntEstado;
-			Ptransaccion.StrObservaciones = datos_plan.StrObservaciones;
-			Ptransaccion.StrEmpresaFacturador = datos_plan.StrEmpresaFacturador.Trim();
+			Ptransaccion.StrObservaciones = datos_plan.StrObservaciones + "\nMODIFICACIÓN: " + Fecha.GetFecha() +" - USUARIO: " + datos_plan.StrUsuario;
+            Ptransaccion.StrEmpresaFacturador = datos_plan.StrEmpresaFacturador.Trim();
 			Ptransaccion.DocumentoRef = datos_plan.DocumentoRef;
 			Ptransaccion.IntMesesVence = datos_plan.IntMesesVence;
 			Ptransaccion.DatFechaVencimiento = datos_plan.DatFechaVencimiento;
@@ -116,8 +116,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			Ptransaccion.IntTipoDocumento = datos_plan.IntTipoDocumento;
 
 			if (Ptransaccion.IntMesesVence > 0 && Ptransaccion.DatFechaInicio != null)
-			{
-				Ptransaccion.DatFechaVencimiento = Ptransaccion.DatFechaInicio.Value.AddMonths(Ptransaccion.IntMesesVence);
+			{                
+		        Ptransaccion.DatFechaVencimiento = Ptransaccion.DatFechaInicio.Value.AddMonths(Ptransaccion.IntMesesVence);                
 			}
 
 			Ptransaccion = this.Edit(Ptransaccion);

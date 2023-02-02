@@ -98,7 +98,7 @@
 										<div class="col-md-6">
 											<div class="dx-field-label" style="font-size: 14px;">Estado:<strom style="color: red;">*</strom></div>
 
-											<div class="dx-field-value" data-ng-hide="consumido">
+											<div class="dx-field-value">
 												<div id="EstadoPlan" style="margin-left: -4%;"></div>
 											</div>
 
