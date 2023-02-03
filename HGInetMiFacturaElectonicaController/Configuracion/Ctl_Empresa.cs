@@ -1581,15 +1581,29 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// </summary>
 		/// <param name="identificacion">Identificacion de Obligado o Adquiriente</param>
 		/// <returns></returns>
-		public List<TblEmpresas> ObtenerEmpresaAcuse()
+		public List<TblEmpresas> ObtenerEmpresaAcuse(bool sonda = false)
 		{
 			context.Configuration.LazyLoadingEnabled = false;
 
-			var datos = (from item in context.TblEmpresas
-						 where item.IntAcuseTacito >= 72
+			List<TblEmpresas> datos = null;
+
+			if (sonda == false)
+			{
+				datos = (from item in context.TblEmpresas
+							 where item.IntAcuseTacito >= 72
+							 select item).ToList();
+
+				
+			}
+			else
+			{
+				datos = (from item in context.TblEmpresas
+						 where item.IntAcuseTacito >= 72 && item.IntRadian == true
 						 select item).ToList();
+			}
 
 			return datos;
+
 		}
 
 		#region Configuracion de Comercios
