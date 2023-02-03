@@ -38,48 +38,54 @@ namespace HGInetUBLv2_1
 				}
 				else
 				{
-					//Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
+                    //Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
 
-					Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\D+");
+                    //Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
 
-					//string last_pre = string.Empty;
+                    string documento = string.Empty;
 
-					//Se valida que posicion tiene la ultima letra del prefijo para poder sacar lo que corresponde a valor y a prefijo
-					//if (pref.Length > 1)
-					//{
-					//	last_pre = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
-					//}
-					//else
-					//{
-					//	last_pre = pref.Value;
-					//}
+                    MatchCollection matches = Regex.Matches(nota_credito_ubl.ID.Value, "\\d+");
 
-					//if (!string.IsNullOrWhiteSpace(last_pre))
-					//{
-					//	int pos_las = nota_credito_ubl.ID.Value.ToString().LastIndexOf(last_pre) + 1;
-					//	numero = nota_credito_ubl.ID.Value.Substring(pos_las);
-					//	prefijo = nota_credito_ubl.ID.Value.Substring(0, nota_credito_ubl.ID.Value.Length - numero.Length);
+                    foreach (Match match in matches)
+                    {
+                       documento = match.Value;
+                    }
 
-					//}
-					//else
-					//{
-					//	numero = numero_doc.Value;
-					//	prefijo = pref.Value;
-					//}
+                    //string last_pre = string.Empty;
 
-					try
-					{
-						//string prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
-						//string numero = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
+                    //Se valida que posicion tiene la ultima letra del prefijo para poder sacar lo que corresponde a valor y a prefijo
+                    //if (pref.Length > 1)
+                    //{
+                    //	last_pre = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
+                    //}
+                    //else
+                    //{
+                    //	last_pre = pref.Value;
+                    //}
 
-						nota_credito_obj.Prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme != null ? nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value : string.Empty;
+                    //if (!string.IsNullOrWhiteSpace(last_pre))
+                    //{
+                    //	int pos_las = nota_credito_ubl.ID.Value.ToString().LastIndexOf(last_pre) + 1;
+                    //	numero = nota_credito_ubl.ID.Value.Substring(pos_las);
+                    //	prefijo = nota_credito_ubl.ID.Value.Substring(0, nota_credito_ubl.ID.Value.Length - numero.Length);
 
-                        if (nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme == null && pref.Length > 0)
-                        {
-                            nota_credito_obj.Prefijo = pref.Value;
-                        }
+                    //}
+                    //else
+                    //{
+                    //	numero = numero_doc.Value;
+                    //	prefijo = pref.Value;
+                    //}
 
-						nota_credito_obj.Documento = !string.IsNullOrEmpty(nota_credito_obj.Prefijo) ? Convert.ToInt64(nota_credito_ubl.ID.Value.ToString().Substring(nota_credito_obj.Prefijo.Length)) : Convert.ToInt64(nota_credito_ubl.ID.Value);
+                  
+                        //string prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
+                        //string numero = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
+                                      
+                        
+                    try
+                    {
+                        nota_credito_obj.Prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme == null || nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID == null ? string.Empty : nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
+
+                        nota_credito_obj.Documento = !string.IsNullOrEmpty(nota_credito_obj.Prefijo.ToString()) ? Convert.ToInt64(nota_credito_ubl.ID.Value) : long.Parse(documento);
 
 					}
 					catch (Exception ex)
@@ -178,7 +184,8 @@ namespace HGInetUBLv2_1
 						if (item.ID.Value != null)
 						{
 							adicional.Documento = item.ID.Value;
-							adicional.CodigoReferencia = item.DocumentTypeCode.Value;
+                            adicional.CodigoReferencia = item.DocumentTypeCode == null ? string.Empty : item.DocumentTypeCode.Value;
+                            //adicional.CodigoReferencia = item.DocumentTypeCode.Value;
 						}
 						nota_credito_obj.DocumentosReferencia.Add(adicional);
 					}
