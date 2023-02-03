@@ -57,7 +57,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				context.Configuration.LazyLoadingEnabled = LazyLoading;
 
 				datos = (from item in context.TblAlmacenamientoDocs
-												   //where item.DatFechaRegistroDoc.Year == anyo
+												  where item.DatFechaRegistroDoc.Year == anyo
 											   select item).OrderByDescending(x => x.DatFechaSincronizacion).Take(1).FirstOrDefault();
 
 				

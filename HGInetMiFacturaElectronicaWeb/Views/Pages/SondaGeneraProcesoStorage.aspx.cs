@@ -27,10 +27,16 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			if (Request.QueryString["Faltante"] != null)
 				bool.TryParse(Request.QueryString["Faltante"], out buscar_faltantes);
 
+			int mes = 1;
+
+			//Se envia Mes para que tome los documetos que corresponde
+			if (Request.QueryString["Mes"] != null)
+				Int32.TryParse(Request.QueryString["Mes"], out mes);
+
 
 			Ctl_Documento ctl_documento = new Ctl_Documento();
 
-			var Tarea1 = ctl_documento.SondaProcesoStorage(anyo, buscar_faltantes);
+			var Tarea1 = ctl_documento.SondaProcesoStorage(anyo, buscar_faltantes, mes);
 			lblResultado.Text = string.Format("Termino");
 
 		}

@@ -1670,7 +1670,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				if (codigo_facturador.Equals("*"))
 				{
-					facturadores = _empresa.ObtenerEmpresaAcuse();
+					facturadores = _empresa.ObtenerEmpresaAcuse(sonda);
 				}
 				else
 				{
@@ -6604,11 +6604,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// Sonda para importar los archivos de los documentos a Azure y actualizarlo en la BD
 		/// </summary>
 		/// <returns></returns>
-		public async Task SondaProcesoStorage(int anyo, bool buscar_faltantes)
+		public async Task SondaProcesoStorage(int anyo, bool buscar_faltantes, int mes)
 		{
 			try
 			{
-				var Tarea = TareaProcesoStorage(anyo, buscar_faltantes);
+				var Tarea = TareaProcesoStorage(anyo, buscar_faltantes, mes);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -6619,7 +6619,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 
-		public async Task TareaProcesoStorage(int anyo, bool buscar_faltantes)
+		public async Task TareaProcesoStorage(int anyo, bool buscar_faltantes, int mes_faltante)
 		{
 			await Task.Factory.StartNew(() =>
 			{
@@ -6628,6 +6628,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 
 					int mes = 1;
+					if (mes_faltante != 1)
+						mes = mes_faltante;
 					int dia = 1;
 					int hora = 1;
 					int min = 1;
@@ -6636,32 +6638,6 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					//se obtiene el ultimo registro sincronizado a Azure segun año que se este procesando
 					Ctl_AlmacenamientoDocs almacenamiento = new Ctl_AlmacenamientoDocs();
-					TblAlmacenamientoDocs ultimo_registro = almacenamiento.ObtenerUltimoSincronizado(anyo);
-
-					try
-					{
-						RegistroLog.EscribirLog(new ApplicationException("Obtiene el ultimo registro sincronizado"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Doc : {0} - Fecha_doc: {1} - Fecha_sincro: {2} - Numero: {3}", ultimo_registro.StrIdSeguridadDoc.ToString(), ultimo_registro.DatFechaRegistroDoc.ToString(""), ultimo_registro.DatFechaSincronizacion.ToString(), ultimo_registro.TblDocumentos.IntNumero));
-
-					}
-					catch (Exception)
-					{
-					 
-					}
-
-					if (buscar_faltantes == false)
-					{
-						if (ultimo_registro != null)
-						{
-							if (ultimo_registro.DatFechaRegistroDoc.Year == anyo)
-							{
-								mes = ultimo_registro.DatFechaRegistroDoc.Month;
-								dia = ultimo_registro.DatFechaRegistroDoc.Day;
-								hora = ultimo_registro.DatFechaRegistroDoc.Hour;
-								min = ultimo_registro.DatFechaRegistroDoc.Minute;
-							}
-
-						}
-					}
 
 					DateTime fecha_inicio = new DateTime(anyo, 1, 1);
 
@@ -6672,13 +6648,47 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							j = mes;
 						}
 
-						DateTime fecha_fin = new DateTime(anyo, j, 1,23,59,59).AddMonths(1).AddDays(-1);
+						DateTime fecha_fin = new DateTime(anyo, j, 1, 23, 59, 59).AddMonths(1).AddDays(-1);
 
 						DateTime fecha_actual = Fecha.GetFecha();
 
 						//Se valida si es para procesar algun documento anterior del año que por alguna razon no se pudo sincronizar a Azure
 						if (buscar_faltantes == false)
 						{
+							TblAlmacenamientoDocs ultimo_registro = almacenamiento.ObtenerUltimoSincronizado(anyo);
+
+							try
+							{
+								RegistroLog.EscribirLog(new ApplicationException("Obtiene el ultimo registro sincronizado"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Doc : {0} - Fecha_doc: {1} - Fecha_sincro: {2}", ultimo_registro.StrIdSeguridadDoc.ToString(), ultimo_registro.DatFechaRegistroDoc.ToString(""), ultimo_registro.DatFechaSincronizacion.ToString()));
+
+							}
+							catch (Exception)
+							{
+
+							}
+
+							if (ultimo_registro != null)
+							{
+								if (ultimo_registro.DatFechaRegistroDoc.Year == anyo)
+								{
+									mes = ultimo_registro.DatFechaRegistroDoc.Month;
+									dia = ultimo_registro.DatFechaRegistroDoc.Day;
+									hora = ultimo_registro.DatFechaRegistroDoc.Hour;
+									min = ultimo_registro.DatFechaRegistroDoc.Minute;
+								}
+
+							}
+
+							try
+							{
+								RegistroLog.EscribirLog(new ApplicationException("Obtiene el ultimo registro sincronizado"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Doc : {0} - Fecha_doc: {1} - Fecha_sincro: {2} - Numero: {3}", ultimo_registro.StrIdSeguridadDoc.ToString(), ultimo_registro.DatFechaRegistroDoc.ToString(""), ultimo_registro.DatFechaSincronizacion.ToString(), ultimo_registro.TblDocumentos.IntNumero));
+
+							}
+							catch (Exception)
+							{
+
+							}
+
 							int diasmes = DateTime.DaysInMonth(anyo, j);
 
 							if (ultimo_registro.DatFechaRegistroDoc.Month == j)
@@ -6696,14 +6706,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
 								if (i == diasmes || fecha_proceso.Day == diasmes)
-								{	
+								{
 									fecha_proceso = fecha_fin;
 									i = diasmes;
 								}
 
 								TimeSpan Diff_dates = fecha_actual.Subtract(fecha_proceso);
 
-								if (Diff_dates.TotalDays < 1)
+								if (Diff_dates.TotalDays < 60)
 									throw new ApplicationException("No se puede sincronizar los archivos a azure");
 
 								//va hacer el recorrido por hora
@@ -6735,8 +6745,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										context.Configuration.LazyLoadingEnabled = false;
 
 										datos = (from doc in context.TblDocumentos
-												where (doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
-												select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+												 where (doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+												 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
 
 										if ((datos == null || datos.Count == 0) && fecha_fin_consulta.Hour == 23)
 										{
@@ -6762,7 +6772,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									}
 									catch (Exception)
 									{
-									
+
 									}
 									if (datos != null && datos.Count > 0)
 									{
@@ -6771,61 +6781,238 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								}
 
 							}
+
+							//Se envia notificacion a tic para indicar que termino de importar el rango especificado
+							//List<string> mensajes = new List<string>();
+							//mensajes.Add(string.Format("Termino de subir Archivos a Azure: Año: {0} - Fecha terminacion: {1}", anyo, Fecha.GetFecha()));
+							//try
+							//{
+							//	Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+							//	email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
+							//}
+							//catch (Exception)
+							//{ }
 						}
 						else
 						{
-							fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+							fecha_inicio = new DateTime(anyo, j, 1);
+
+							//fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+							//if (mes_faltante != 1 && j == mes)
+							//{
+							//	j = mes_faltante;
+							//	dia = 1;
+
+							//	fecha_inicio = new DateTime(anyo, j, dia);
+							//	//fecha_fin = new DateTime(anyo, j, dia, 23, 59, 59, 999);
+							//}
 
 							context.Configuration.LazyLoadingEnabled = false;
 
-							List<TblDocumentos> datos = (from doc in context.TblDocumentos
-														 where (doc.StrUrlArchivoUbl.Contains("files") && doc.DatFechaIngreso >= fecha_inicio && doc.DatFechaIngreso <= fecha_fin)
-														 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+							//List<TblDocumentos> datos = null;
 
-							try
+							//try
+							//{
+							//	datos = (from doc in context.TblDocumentos
+							//			where ((doc.StrUrlArchivoUbl.Contains("mifactura") || doc.StrUrlArchivoUbl.Contains("archivos")) && doc.DatFechaIngreso >= fecha_inicio && doc.DatFechaIngreso <= fecha_fin)
+							//			select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+
+							//}
+							//catch (Exception excepcion)
+							//{
+							//	RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Error obteniendo documentos faltantes");
+							//	throw excepcion;
+							//}
+
+							int diasmes = DateTime.DaysInMonth(anyo, j);
+
+							for (int i = 0; i <= diasmes; i++)
 							{
-								RegistroLog.EscribirLog(new ApplicationException("Resultado de consulta documentos faltantes segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Resultado de consulta de los documentos en bd con fecha_inicio {0} - Fecha_Fin {1} y cantidad {2}", fecha_inicio.ToString(), fecha_fin.ToString(), datos.Count));
+								DateTime fecha_proceso = fecha_inicio;
 
-							}
-							catch (Exception)
-							{
+								//if (ultimo_registro != null && i <= ultimo_registro.DatFechaRegistroDoc.Day && j <= ultimo_registro.DatFechaRegistroDoc.Month)
+								//{
+								//	if (ultimo_registro.DatFechaRegistroDoc.Year == anyo)
+								//	{
+								//		i = ultimo_registro.DatFechaRegistroDoc.Day;
+								//	}
+								//}
 
+								if (i > 0 && i < diasmes)
+									fecha_proceso = new DateTime(fecha_inicio.Year, fecha_inicio.Month, fecha_inicio.Day, 0, 0, 0).AddDays(i);//fecha_inicio.AddDays(i);
+
+
+								if (i == diasmes || fecha_proceso.Day == diasmes)
+								{
+									fecha_proceso = fecha_fin;
+									i = diasmes;
+								}
+
+								//va hacer el recorrido por hora
+								for (int h = 0; h < 24; h++)
+								{
+									fecha_proceso = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 0, 0);
+
+									List<TblDocumentos> datos = null;
+
+									DateTime fecha_fin_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 59, 59, 999);
+
+									try
+									{
+										RegistroLog.EscribirLog(new ApplicationException("Consulta documento segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Consultando los documentos en bd con fecha proceso {0}", fecha_proceso.ToString()));
+
+										if (fecha_proceso.Hour == 23 && fecha_proceso.Minute == 59)
+										{
+											fecha_fin_consulta = new DateTime(fecha_proceso.Year, fecha_proceso.Month, fecha_proceso.Day, h, 59, 59, 999).AddHours(3);
+										}
+
+										context.Configuration.LazyLoadingEnabled = false;
+
+										datos = (from doc in context.TblDocumentos
+												 where ((doc.StrUrlArchivoUbl.Contains("mifactura") || doc.StrUrlArchivoUbl.Contains("archivos")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+												 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+
+										if ((datos == null || datos.Count == 0) && fecha_fin_consulta.Hour == 23)
+										{
+											fecha_fin_consulta.AddHours(3);
+
+											datos = (from doc in context.TblDocumentos
+													 where ((doc.StrUrlArchivoUbl.Contains("mifactura") || doc.StrUrlArchivoUbl.Contains("archivos")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+													 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+										}
+
+
+										//datos = ObtenerAdmin("*", "*", "*", "*", "*", fecha_proceso, fecha_proceso, 0, 2, 1, 30000).OrderBy(x => x.DatFechaIngreso).ToList();
+									}
+									catch (Exception excepcion)
+									{
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Consultando los documentos en bd con fecha proceso {0} y fecha fin {1}", fecha_proceso.ToString(), fecha_fin_consulta.ToString()));
+									}
+
+									try
+									{
+										RegistroLog.EscribirLog(new ApplicationException("Resultado de consulta documento segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Resultado de consulta de los documentos en bd con fecha proceso {0} - fecha fin {1} y cantidad {2}", fecha_proceso.ToString(), fecha_fin_consulta.ToString(), datos.Count));
+
+									}
+									catch (Exception)
+									{
+
+									}
+									if (datos != null && datos.Count > 0)
+									{
+										foreach (TblDocumentos item in datos)
+										{
+											if (item.StrUrlArchivoUbl.Contains("mifactura"))
+											{
+												item.StrUrlArchivoUbl = item.StrUrlArchivoUbl.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+											}
+
+											if (item.StrUrlArchivoPdf.Contains("mifactura"))
+											{
+												item.StrUrlArchivoPdf = item.StrUrlArchivoPdf.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+											}
+
+											if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoZip) && item.StrUrlArchivoZip.Contains("mifactura"))
+											{
+												item.StrUrlArchivoZip = item.StrUrlArchivoZip.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+											}
+
+											if (!string.IsNullOrWhiteSpace(item.StrUrlAcuseUbl) && item.StrUrlAcuseUbl.Contains("mifactura"))
+											{
+												item.StrUrlAcuseUbl = item.StrUrlAcuseUbl.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+											}
+
+											if (!string.IsNullOrWhiteSpace(item.StrUrlAnexo) && item.StrUrlAnexo.Contains("mifactura"))
+											{
+												item.StrUrlAnexo = item.StrUrlAnexo.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+											}
+
+
+
+										}
+
+										GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
+
+									}
+								}
 							}
 
-							if (datos != null && datos.Count > 0)
-							{
-								GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
-							}
+							//try
+							//{
+							//	RegistroLog.EscribirLog(new ApplicationException("Resultado de consulta documentos faltantes segun los parametros de fecha"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Resultado de consulta de los documentos en bd con fecha_inicio {0} - Fecha_Fin {1} y cantidad {2}", fecha_inicio.ToString(), fecha_fin.ToString(), datos.Count));
+
+							//}
+							//catch (Exception)
+							//{
+
+							//}
+
+							//if (datos != null && datos.Count > 0)
+							//{
+							//	foreach (TblDocumentos item in datos)
+							//	{
+							//		if (item.StrUrlArchivoUbl.Contains("mifactura"))
+							//		{
+							//			item.StrUrlArchivoUbl = item.StrUrlArchivoUbl.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+							//		}
+
+							//		if (item.StrUrlArchivoPdf.Contains("mifactura"))
+							//		{
+							//			item.StrUrlArchivoPdf = item.StrUrlArchivoPdf.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+							//		}
+
+							//		if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoZip) && item.StrUrlArchivoZip.Contains("mifactura"))
+							//		{
+							//			item.StrUrlArchivoZip = item.StrUrlArchivoZip.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+							//		}
+
+							//		if (!string.IsNullOrWhiteSpace(item.StrUrlAcuseUbl) && item.StrUrlAcuseUbl.Contains("mifactura"))
+							//		{
+							//			item.StrUrlAcuseUbl = item.StrUrlAcuseUbl.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+							//		}
+
+							//		if (!string.IsNullOrWhiteSpace(item.StrUrlAnexo) && item.StrUrlAnexo.Contains("mifactura"))
+							//		{
+							//			item.StrUrlAnexo = item.StrUrlAnexo.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+							//		}
+
+
+
+							//	}
+							//	GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
+
+							//	//Se envia notificacion a tic para indicar que termino de importar el rango especificado
+							//	List<string> mensajes = new List<string>();
+							//	mensajes.Add(string.Format("Termino de subir Archivos Faltantes a Azure: Año: {0} - Fecha terminacion: {1}", anyo, Fecha.GetFecha()));
+							//	try
+							//	{
+							//		Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+							//		email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
+							//	}
+							//	catch (Exception)
+							//	{ }
+
+							//}
+
+
 						}
 
 					}
 
+					//Se envia notificacion a tic para indicar que termino de importar el rango especificado
+					List<string> mensajes = new List<string>();
 					if (buscar_faltantes == false)
-					{
-						//Se envia notificacion a tic para indicar que termino de importar el rango especificado
-						List<string> mensajes = new List<string>();
 						mensajes.Add(string.Format("Termino de subir Archivos a Azure: Año: {0} - Fecha terminacion: {1}", anyo, Fecha.GetFecha()));
-						try
-						{
-							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-							email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
-						}
-						catch (Exception)
-						{ }
-					}
 					else
-					{
-						//Se envia notificacion a tic para indicar que termino de importar el rango especificado
-						List<string> mensajes = new List<string>();
 						mensajes.Add(string.Format("Termino de subir Archivos Faltantes a Azure: Año: {0} - Fecha terminacion: {1}", anyo, Fecha.GetFecha()));
-						try
-						{
-							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-							email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, Constantes.EmailCopiaOculta, 2);
-						}
-						catch (Exception)
-						{ }
+					try
+					{
+						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+						email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, "jzea.hgi@gmail.com", 2);
 					}
+					catch (Exception)
+					{ }
 
 				}
 				catch (Exception excepcion)
@@ -6900,6 +7087,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							actualizarbd_doc = true;
 						}
 					}
+					else if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.XML.GetHashCode())).FirstOrDefault() != null && !item.StrUrlArchivoUbl.Contains("hgidocs.blob"))
+					{
+						url_resp_dian_original = item.StrUrlArchivoUbl;
+						item.StrUrlArchivoUbl = list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.XML.GetHashCode())).FirstOrDefault().StrUrlActual;
+						actualizarbd_doc = true;
+					}
 				}
 				catch (Exception excepcion)
 				{
@@ -6933,6 +7126,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							item.StrUrlAcuseUbl = ruta_blob_acuse;
 							actualizarbd_doc = true;
 						}
+					}
+					else if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.XMLACUSE.GetHashCode())).FirstOrDefault() != null && !string.IsNullOrEmpty(item.StrUrlAcuseUbl) && !item.StrUrlAcuseUbl.Contains("hgidocs.blob"))
+					{
+						item.StrUrlAcuseUbl = list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.XMLACUSE.GetHashCode())).FirstOrDefault().StrUrlActual;
+						actualizarbd_doc = true;
 					}
 				}
 				catch (Exception excepcion)
@@ -6993,6 +7191,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							item.StrUrlArchivoPdf = ruta_blob_pdf;
 							actualizarbd_doc = true;
 						}
+						else if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.PDF.GetHashCode())).FirstOrDefault() != null && !string.IsNullOrEmpty(item.StrUrlArchivoPdf) && !item.StrUrlArchivoPdf.Contains("hgidocs.blob"))
+						{
+							item.StrUrlArchivoPdf = list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.PDF.GetHashCode())).FirstOrDefault().StrUrlActual;
+							actualizarbd_doc = true;
+						}
 					}
 				}
 				catch (Exception excepcion)
@@ -7023,6 +7226,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							item.StrUrlArchivoZip = ruta_blob_zip;
 							actualizarbd_doc = true;
 						}
+					}
+					else if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIP.GetHashCode())).FirstOrDefault() != null && !string.IsNullOrEmpty(item.StrUrlArchivoZip) && !item.StrUrlArchivoZip.Contains("hgidocs.blob"))
+					{
+						item.StrUrlArchivoZip = list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIP.GetHashCode())).FirstOrDefault().StrUrlActual;
+						actualizarbd_doc = true;
 					}
 				}
 				catch (Exception excepcion)
@@ -7085,6 +7293,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							actualizarbd_doc = true;
 						}
 					}
+					else if (list_alm.Count >= 0 && list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIPAnexo.GetHashCode())).FirstOrDefault() != null && !string.IsNullOrEmpty(item.StrUrlAnexo) && !item.StrUrlAnexo.Contains("hgidocs.blob"))
+					{
+						item.StrUrlAnexo = list_alm.Where(x => x.IntConsecutivo.Equals(TipoArchivoStorage.ZIPAnexo.GetHashCode())).FirstOrDefault().StrUrlActual;
+						actualizarbd_doc = true;
+					}
 				}
 				catch (Exception excepcion)
 				{
@@ -7115,6 +7328,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 						foreach (var item_eve in list_event)
 						{
+							if (item_eve.StrUrlEvento.Contains("mifactura"))
+							{
+								item_eve.StrUrlEvento = item_eve.StrUrlEvento.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+							}
+
 							int cont_consecutivo = 10;
 
 							//Evento de Respuesta de la DIAN
