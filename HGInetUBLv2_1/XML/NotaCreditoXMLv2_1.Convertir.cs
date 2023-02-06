@@ -38,54 +38,43 @@ namespace HGInetUBLv2_1
 				}
 				else
 				{
-                    //Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
-
-                    //Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
-
                     string documento = string.Empty;
 
-                    MatchCollection matches = Regex.Matches(nota_credito_ubl.ID.Value, "\\d+");
+					if (nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme == null || nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID == null)
+					{
+						MatchCollection matches = Regex.Matches(nota_credito_ubl.ID.Value, "\\d+");
 
-                    foreach (Match match in matches)
-                    {
-                       documento = match.Value;
-                    }
+						foreach (Match match in matches)
+						{
+							documento = match.Value;
+						}
 
-                    //string last_pre = string.Empty;
+						nota_credito_obj.Prefijo = string.Empty;
+					}
+					else
+					{
+						nota_credito_obj.Prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
 
-                    //Se valida que posicion tiene la ultima letra del prefijo para poder sacar lo que corresponde a valor y a prefijo
-                    //if (pref.Length > 1)
-                    //{
-                    //	last_pre = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
-                    //}
-                    //else
-                    //{
-                    //	last_pre = pref.Value;
-                    //}
+						try
+						{
+							documento = nota_credito_ubl.ID.Value.ToString().Substring(nota_credito_obj.Prefijo.Length);
+						}
+						catch (Exception)
+						{
 
-                    //if (!string.IsNullOrWhiteSpace(last_pre))
-                    //{
-                    //	int pos_las = nota_credito_ubl.ID.Value.ToString().LastIndexOf(last_pre) + 1;
-                    //	numero = nota_credito_ubl.ID.Value.Substring(pos_las);
-                    //	prefijo = nota_credito_ubl.ID.Value.Substring(0, nota_credito_ubl.ID.Value.Length - numero.Length);
+							MatchCollection matches = Regex.Matches(nota_credito_ubl.ID.Value, "\\d+");
 
-                    //}
-                    //else
-                    //{
-                    //	numero = numero_doc.Value;
-                    //	prefijo = pref.Value;
-                    //}
+							foreach (Match match in matches)
+							{
+								documento = match.Value;
+							}
+						}
 
-                  
-                        //string prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
-                        //string numero = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
-                                      
-                        
-                    try
-                    {
-                        nota_credito_obj.Prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme == null || nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID == null ? string.Empty : nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
+					}
 
-                        nota_credito_obj.Documento = !string.IsNullOrEmpty(nota_credito_obj.Prefijo.ToString()) ? Convert.ToInt64(nota_credito_ubl.ID.Value) : long.Parse(documento);
+					try
+					{
+						nota_credito_obj.Documento = long.Parse(documento);
 
 					}
 					catch (Exception ex)
@@ -93,6 +82,39 @@ namespace HGInetUBLv2_1
 						string mensaje = string.Format("Se presento inconsistencia Obteniedo el numero y prefijo de la Nota Credito. Detalle: {0}", ex.Message);
 						throw new ApplicationException(mensaje, ex.InnerException);
 					}
+
+					//Match numero_doc = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
+
+					//Match pref = Regex.Match(nota_credito_ubl.ID.Value, "\\d+");
+
+					//string last_pre = string.Empty;
+
+					//Se valida que posicion tiene la ultima letra del prefijo para poder sacar lo que corresponde a valor y a prefijo
+					//if (pref.Length > 1)
+					//{
+					//	last_pre = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
+					//}
+					//else
+					//{
+					//	last_pre = pref.Value;
+					//}
+
+					//if (!string.IsNullOrWhiteSpace(last_pre))
+					//{
+					//	int pos_las = nota_credito_ubl.ID.Value.ToString().LastIndexOf(last_pre) + 1;
+					//	numero = nota_credito_ubl.ID.Value.Substring(pos_las);
+					//	prefijo = nota_credito_ubl.ID.Value.Substring(0, nota_credito_ubl.ID.Value.Length - numero.Length);
+
+					//}
+					//else
+					//{
+					//	numero = numero_doc.Value;
+					//	prefijo = pref.Value;
+					//}
+
+
+					//string prefijo = nota_credito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
+					//string numero = nota_credito_ubl.ID.Value.ToString().Substring(prefijo.Length);
 				}
 
 				//Se obtiene el proveedor Emisor del documento

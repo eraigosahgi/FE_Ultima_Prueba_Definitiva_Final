@@ -42,32 +42,47 @@ namespace HGInetUBLv2_1
 				{
                     string documento = string.Empty;
 
-                    MatchCollection matches = Regex.Matches(nota_debito_ubl.ID.Value, "\\d+");
+					if (nota_debito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme == null || nota_debito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID == null)
+					{
+						MatchCollection matches = Regex.Matches(nota_debito_ubl.ID.Value, "\\d+");
 
-                    foreach (Match match in matches)
-                    {
-                        documento = match.Value;
-                    }
-                    //Match numero_doc = Regex.Match(nota_debito_ubl.ID.Value, "\\d+");
+						foreach (Match match in matches)
+						{
+							documento = match.Value;
+						}
 
-                    //Match pref = Regex.Match(nota_debito_ubl.ID.Value, "\\D+");
+						nota_debito_obj.Prefijo = string.Empty;
+					}
+					else
+					{
+						nota_debito_obj.Prefijo = nota_debito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
 
-                    //nota_debito_obj.Documento = Convert.ToInt64(numero_doc.Value);
+						try
+						{
+							documento = nota_debito_ubl.ID.Value.ToString().Substring(nota_debito_obj.Prefijo.Length);
+						}
+						catch (Exception)
+						{
+							MatchCollection matches = Regex.Matches(nota_debito_ubl.ID.Value, "\\d+");
 
-                    //nota_debito_obj.Prefijo = pref.Value.ToString();
+							foreach (Match match in matches)
+							{
+								documento = match.Value;
+							}
+						}
 
-                    try
-                    {
-                        nota_debito_obj.Prefijo = nota_debito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme == null || nota_debito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID == null ? string.Empty : nota_debito_ubl.AccountingSupplierParty.Party.PartyLegalEntity.FirstOrDefault().CorporateRegistrationScheme.ID.Value;
+					}
 
-                        nota_debito_obj.Documento = !string.IsNullOrEmpty(nota_debito_obj.Prefijo.ToString()) ? Convert.ToInt64(nota_debito_ubl.ID.Value) : long.Parse(documento);
+					try
+					{
+						nota_debito_obj.Documento = long.Parse(documento);
 
-                    }
-                    catch (Exception ex)
-                    {
-                        string mensaje = string.Format("Se presento inconsistencia Obteniedo el numero y prefijo de la Nota Credito. Detalle: {0}", ex.Message);
-                        throw new ApplicationException(mensaje, ex.InnerException);
-                    }
+					}
+					catch (Exception ex)
+					{
+						string mensaje = string.Format("Se presento inconsistencia Obteniedo el numero y prefijo de la Nota Credito. Detalle: {0}", ex.Message);
+						throw new ApplicationException(mensaje, ex.InnerException);
+					}
                 }
 
 				//Se obtiene el proveedor Emisor del documento
