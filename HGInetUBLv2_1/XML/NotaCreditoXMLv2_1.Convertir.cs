@@ -120,7 +120,7 @@ namespace HGInetUBLv2_1
 				//Se obtiene el proveedor Emisor del documento
 				foreach (UBLExtensionType item_extension in nota_credito_ubl.UBLExtensions)
 				{
-					if (item_extension.ExtensionContent.LocalName.Equals("DianExtensions")) 
+					if (item_extension.ExtensionContent != null && item_extension.ExtensionContent.LocalName.Equals("DianExtensions")) 
 					{
 						foreach (XmlNode item in item_extension.ExtensionContent.ChildNodes)
 						{
