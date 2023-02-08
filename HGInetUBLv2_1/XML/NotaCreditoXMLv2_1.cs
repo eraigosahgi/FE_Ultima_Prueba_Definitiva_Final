@@ -492,6 +492,16 @@ namespace HGInetUBLv2_1
 					ruta_qr_Dian = string.Format("{0}{1}", "https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=", nota_credito.UUID.Value);
 				}
 
+				// Extension de la Dian
+				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
+				UBLExtensionDian.ExtensionContent = HGInetUBLv2_1.ExtensionDian.Obtener(resolucion, TipoDocumento.NotaCredito, nota_credito.ID.Value, ruta_qr_Dian);
+				UBLExtensions.Add(UBLExtensionDian);
+
+				// Extension de la firma
+				UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
+				UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
+				UBLExtensions.Add(UBLExtensionFirma);
+
 				// Extension del sector Salud
 				if (documento.SectorSalud != null && documento.SectorSalud.CamposSector.Count > 0)
 				{
@@ -506,16 +516,6 @@ namespace HGInetUBLv2_1
 					UBLExtensions.Add(UBLExtensionSector);
 				}
 
-				// Extension de la Dian
-				UBLExtensionType UBLExtensionDian = new UBLExtensionType();
-				UBLExtensionDian.ExtensionContent = HGInetUBLv2_1.ExtensionDian.Obtener(resolucion, TipoDocumento.NotaCredito, nota_credito.ID.Value, ruta_qr_Dian);
-				UBLExtensions.Add(UBLExtensionDian);
-
-				// Extension de la firma
-				UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
-				UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
-				UBLExtensions.Add(UBLExtensionFirma);
-
 				nota_credito.UBLExtensions = UBLExtensions.ToArray();
 
 				#endregion
@@ -523,16 +523,18 @@ namespace HGInetUBLv2_1
 				// convierte los datos del objeto en texto XML 
 				StringBuilder txt_xml = ConvertirXML.Convertir(nota_credito, namespaces_xml, TipoDocumento.NotaCredito);
 
+
+				TextReader textReader = new StringReader(txt_xml.ToString());
+				string texto_xml = textReader.ReadToEnd();
+
+				if (texto_xml.Contains("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\""))
+				{
+					texto_xml = texto_xml.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
+					txt_xml = new StringBuilder(texto_xml);
+				}
 				//if (documento.TipoOperacion == 3)
 				//{
-				//	TextReader textReader = new StringReader(txt_xml.ToString());
-				//	string texto_xml = textReader.ReadToEnd();
-
-				//	if (texto_xml.Contains("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\""))
-				//	{
-				//		texto_xml = texto_xml.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
-				//		txt_xml = new StringBuilder(texto_xml);
-				//	}
+				//	
 				//}
 
 				FacturaE_Documento xml_sin_firma = new FacturaE_Documento();

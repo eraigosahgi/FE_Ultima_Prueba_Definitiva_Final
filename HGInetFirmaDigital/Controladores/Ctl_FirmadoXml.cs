@@ -547,7 +547,7 @@ namespace HGInetFirmaDigital
 									//Se valida si el documento trae informacion de algun sector para que sepa en la ruta donde debe agregar la firma del documento
 									var documento_obj = (dynamic)null;
 									documento_obj = archivo.Documento;
-									if (documento_obj.SectorSalud != null && documento_obj.SectorSalud.CamposSector.Count > 0)
+									if (documento_obj.SectorSalud != null && documento_obj.SectorSalud.CamposSector.Count > 0 && archivo.DocumentoTipo != TipoDocumento.NotaCredito)
 									{
 										cantidad_extension += 1;
 									}
