@@ -30,37 +30,68 @@ GestionCompraPlanesApp.controller('ModalComprarPlanController', function ModalCo
 				if (response.data == "")
 				{
 					//Carga notificación de creación con opción de editar formato.
-					var myDialog = DevExpress.ui.dialog.custom({
+					//var myDialog = DevExpress.ui.dialog.custom({
+					//	title: "Proceso Éxitoso",
+					//	message: "Tú plan ha sido activado correctamente, pronto será enviada la factura electrónica correspondiente.",
+					//	buttons: [{
+					//		text: "Aceptar",
+					//		onClick: function (e) {
+					//			myDialog.hide();
+					//			$scope.CargarPlanes();
+					//		}
+					//	}]
+					//});
+					//myDialog.show().done(function (dialogResult) {
+					//});
+
+					swal({
 						title: "Proceso Éxitoso",
-						message: "Tú plan ha sido activado correctamente, pronto será enviada la factura electrónica correspondiente.",
-						buttons: [{
-							text: "Aceptar",
-							onClick: function (e) {
-								myDialog.hide();
-								$scope.CargarPlanes();
-							}
-						}]
-					});
-					myDialog.show().done(function (dialogResult) {
+						text: "Tú plan ha sido activado correctamente, pronto será enviada la factura electrónica correspondiente.",
+						type: 'success',
+						confirmButtonColor: '#4CAF50',
+						confirmButtonText: 'Aceptar',
+						animation: 'pop',
+						html: true,
+					}, function () {
+						$scope.CargarPlanes();
+						//window.location = "/Views/Pages/GestionReportes.aspx";
 					});
 				}
 				else {
 					//Carga notificación de creación con opción de editar formato.
-					var myDialog = DevExpress.ui.dialog.custom({
-						title: "Proceso Falló",
-						message: response.data,
-						buttons: [{
-							text: "Aceptar",
-							onClick: function (e) {
-								myDialog.hide();
-								$scope.CargarPlanes();
-							}
-						}]
+					//var myDialog = DevExpress.ui.dialog.custom({
+					//	title: "Proceso Falló",
+					//	message: response.data,
+					//	buttons: [{
+					//		text: "Aceptar",
+					//		onClick: function (e) {
+					//			myDialog.hide();
+					//			$scope.CargarPlanes();
+					//		}
+					//	}]
+					//});
+					//myDialog.show().done(function (dialogResult) {
+					//});
+
+
+					swal({
+						title: 'Notificación',
+						text: response.data,
+						type: 'warning',
+						confirmButtonColor: '#FF5722',
+						confirmButtonText: 'Aceptar',
+						animation: 'pop',
+						html: true,
+					}, function () {
+						$scope.CargarPlanes();
+						//window.location = "/Views/Pages/GestionReportes.aspx";
 					});
-					myDialog.show().done(function (dialogResult) {
-					});
+
 				}
 
+
+
+				
 				
 
 			} catch (err) {
