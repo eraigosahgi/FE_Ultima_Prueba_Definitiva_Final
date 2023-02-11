@@ -620,7 +620,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
 
-				TblPlanesTransacciones postpago = clase_planes.Obtener(Sesion.DatosEmpresa.StrIdentificacion).FirstOrDefault(x => x.IntTipoProceso == 3 || x.DocumentoRef.Equals("-1"));
+				TblPlanesTransacciones postpago = clase_planes.Obtener(Sesion.DatosEmpresa.StrIdentificacion).FirstOrDefault(x => x.IntEstado == 0 && (x.IntTipoProceso == 3 || x.DocumentoRef.Equals("-1")));
 
 				if (Sesion.DatosEmpresa.IntCompraPlan == true && postpago == null)
 				{
