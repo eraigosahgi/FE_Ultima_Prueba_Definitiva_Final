@@ -297,10 +297,10 @@ namespace HGInetMiFacturaElectonicaController
 						doc_bd.IntEstadoEnvio = (short)EstadoEnvio.NoEntregado.GetHashCode();
 						doc_bd.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(Correo.Estado);
 						doc_bd.DatFechaActualizaEstado = (string.IsNullOrEmpty(Correo.Estado)) ? Fecha.GetFecha() : Correo.Recibido;
-					}
-					Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
-					List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(doc_bd, doc_bd.TblEmpresasAdquiriente.StrTelefono, tbl_correo.StrMailEnviado, Correo.Estado, tbl_correo.StrIdSeguridadDoc.ToString());
+						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+						List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(doc_bd, doc_bd.TblEmpresasAdquiriente.StrTelefono, tbl_correo.StrMailEnviado, Correo.Estado, tbl_correo.StrIdSeguridadDoc.ToString());
 
+					}
 				}
 				else
 				{
