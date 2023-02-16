@@ -745,13 +745,14 @@ namespace HGInetMiFacturaElectonicaController
 
 				//*********Agregar validacion si el documento es de y para clientes de HGI para que no sobreescriba el correo
 				string correo_registrado = string.Empty;
+				//Se solicita por parte de gerencia que el correo se envie solo a los correos que lleguen en el objeto indpendiente del listado de la DIAN 2023-02-15
 				//Se valida si es un documento de produccion para sobrescribir el correo registrado en la DIAN resolucion 042
-				if (empresa_obligado.IntHabilitacion == Habilitacion.Produccion.GetHashCode() && reenvio_documento == false && interoperabilidad == false)
-				{
-					//se obtiene correo registrado para enviar el documento a este(Resolucion 042)
-					Ctl_ObtenerCorreos correo_recep = new Ctl_ObtenerCorreos();
-					correo_registrado = correo_recep.Obtener(empresa_adquiriente.StrIdentificacion);
-				}
+				//if (empresa_obligado.IntHabilitacion == Habilitacion.Produccion.GetHashCode() && reenvio_documento == false && interoperabilidad == false)
+				//{
+				//	//se obtiene correo registrado para enviar el documento a este(Resolucion 042)
+				//	Ctl_ObtenerCorreos correo_recep = new Ctl_ObtenerCorreos();
+				//	correo_registrado = correo_recep.Obtener(empresa_adquiriente.StrIdentificacion);
+				//}
 
 
 
