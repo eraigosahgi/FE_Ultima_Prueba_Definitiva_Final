@@ -293,7 +293,7 @@ namespace HGInetUBLv2_1
 					{
 
 						DocumentoDetalle detalle = new DocumentoDetalle();
-						detalle.Codigo = Convert.ToInt16(nota_credito_ubl.CreditNoteLine[i].ID.Value);
+						detalle.Codigo = !string.IsNullOrWhiteSpace(nota_credito_ubl.CreditNoteLine[i].ID.Value) ? Convert.ToInt16(nota_credito_ubl.CreditNoteLine[i].ID.Value) : (i == 0) ? 1 : i;
 						if (nota_credito_ubl.CreditNoteLine[i].Item.SellersItemIdentification != null)
 							detalle.ProductoCodigo = nota_credito_ubl.CreditNoteLine[i].Item.SellersItemIdentification.ID.Value;
 						if (nota_credito_ubl.CreditNoteLine[i].Item.StandardItemIdentification != null)

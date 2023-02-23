@@ -325,7 +325,7 @@ namespace HGInetUBLv2_1
 					{
 						DocumentoDetalle detalle = new DocumentoDetalle();
 
-						if (Texto.ValidarExpresion(TipoExpresion.Numero, factura_ubl.InvoiceLine[i].ID.Value))
+						if (!string.IsNullOrWhiteSpace(factura_ubl.InvoiceLine[i].ID.Value) && Texto.ValidarExpresion(TipoExpresion.Numero, factura_ubl.InvoiceLine[i].ID.Value))
 						{
 							try
 							{
