@@ -419,6 +419,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso691671", "Caso691671", 
 		Documentacion\Liberaciones\Caso691671\TblProcesoCorreo.txt = Documentacion\Liberaciones\Caso691671\TblProcesoCorreo.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGIFacturacionEClearFlies", "HGIFacturacionEClearFlies\HGIFacturacionEClearFlies.csproj", "{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -567,6 +569,14 @@ Global
 		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|x86.ActiveCfg = Release|Any CPU
 		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|x86.Build.0 = Release|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Debug|x86.Build.0 = Debug|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|x86.ActiveCfg = Release|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
