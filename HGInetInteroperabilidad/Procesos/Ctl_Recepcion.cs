@@ -1503,8 +1503,23 @@ namespace HGInetInteroperabilidad.Procesos
 
 					if (attach_document.DocumentoElectronico.Contains("<cbc:InvoiceTypeCode"))
 					{
-						tipo_doc = TipoDocumento.Factura.GetHashCode();
-						documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.Factura);
+						try
+						{
+							tipo_doc = TipoDocumento.Factura.GetHashCode();
+							documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.Factura);
+						}
+						catch (Exception excepcion)
+						{
+							string mensaje = string.Format("No es posible procesar el documento, se presenta inconsistencia conviertiendo el XMl-UBL de la Factura del documento recibido Detalle: {0}", excepcion.Message);
+							List<string> mensajes = new List<string>();
+							mensajes.Add(mensaje);
+
+							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
+
+							throw new ApplicationException(mensaje);
+						}
 
 						//Validaciones del objeto
 						try
@@ -1513,13 +1528,13 @@ namespace HGInetInteroperabilidad.Procesos
 						}
 						catch (Exception excepcion)
 						{
-							string mensaje = string.Format("Error validando el XMl-UBL del documento recibido Detalle: {0}", excepcion.Message);
+							string mensaje = string.Format("No es posible procesar el documento, se presenta inconsistencia validando el XMl-UBL del documento recibido Detalle: {0}", excepcion.Message);
 							List<string> mensajes = new List<string>();
 							mensajes.Add(mensaje);
 
 							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-							RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
+							RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
 
 							throw new ApplicationException(mensaje);
 						}
@@ -1528,8 +1543,23 @@ namespace HGInetInteroperabilidad.Procesos
 					}
 					else if (attach_document.DocumentoElectronico.Contains("<cbc:CreditNoteTypeCode"))
 					{
-						tipo_doc = TipoDocumento.NotaCredito.GetHashCode();
-						documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaCredito);
+						try
+						{
+							tipo_doc = TipoDocumento.NotaCredito.GetHashCode();
+							documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaCredito);
+						}
+						catch (Exception excepcion)
+						{
+							string mensaje = string.Format("No es posible procesar el documento, se presenta inconsistencia conviertiendo el XMl-UBL de la Nota Crédito del documento recibido Detalle: {0}", excepcion.Message);
+							List<string> mensajes = new List<string>();
+							mensajes.Add(mensaje);
+
+							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
+
+							throw new ApplicationException(mensaje);
+						}
 
 						//Validaciones del objeto
 						try
@@ -1538,13 +1568,13 @@ namespace HGInetInteroperabilidad.Procesos
 						}
 						catch (Exception excepcion)
 						{
-							string mensaje = string.Format("Error validando el XMl-UBL del documento recibido Detalle: {0}", excepcion.Message);
+							string mensaje = string.Format("No es posible procesar el documento, se presenta inconsistencia validando el XMl-UBL del documento recibido Detalle: {0}", excepcion.Message);
 							List<string> mensajes = new List<string>();
 							mensajes.Add(mensaje);
 
 							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-							RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
+							RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
 
 							throw new ApplicationException(mensaje);
 						}
@@ -1553,8 +1583,23 @@ namespace HGInetInteroperabilidad.Procesos
 					}
 					else if (attach_document.DocumentoElectronico.Contains("xsd:DebitNote-2"))
 					{
-						tipo_doc = TipoDocumento.NotaDebito.GetHashCode();
-						documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaDebito);
+						try
+						{
+							tipo_doc = TipoDocumento.NotaDebito.GetHashCode();
+							documento_obj = ObtenerDocumento(attach_document.DocumentoElectronico, TipoDocumento.NotaDebito);
+						}
+						catch (Exception excepcion)
+						{
+							string mensaje = string.Format("No es posible procesar el documento, se presenta inconsistencia conviertiendo el XMl-UBL de la Nota Débito del documento recibido Detalle: {0}", excepcion.Message);
+							List<string> mensajes = new List<string>();
+							mensajes.Add(mensaje);
+
+							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
+
+							throw new ApplicationException(mensaje);
+						}
 
 						//Validaciones del objeto
 						try
@@ -1569,7 +1614,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 							//ReEnviarCorreoError(ruta_archivo_mail, mensajes);
 
-							RechazarCorreo(mensajes, ruta_archivo_mail, false, emision);
+							RechazarCorreo(mensajes, ruta_archivo_mail, true, emision);
 
 							throw new ApplicationException(mensaje);
 						}
