@@ -33,6 +33,8 @@
           <Property Name="StrUrlActual" Type="varchar" MaxLength="400" Nullable="false" />
           <Property Name="DatFechaRegistroDoc" Type="datetime" Nullable="false" />
           <Property Name="DatFechaSincronizacion" Type="datetime" Nullable="false" />
+          <Property Name="IntBorrado" Type="bit" Nullable="false" />
+          <Property Name="DatFechaBorrado" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="TblConfiguracionInteroperabilidad">
           <Key>
@@ -1922,6 +1924,8 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="DatFechaRegistroDoc" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DatFechaSincronizacion" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="TblDocumentos" Relationship="Modelo.FK_TblAlmacenamientoDocs_TblDocumentos" FromRole="TblAlmacenamientoDocs" ToRole="TblDocumentos" />
+          <Property Name="IntBorrado" Type="Boolean" Nullable="false" />
+          <Property Name="DatFechaBorrado" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <Association Name="FK_TblAlmacenamientoDocs_TblDocumentos">
           <End Type="Modelo.TblDocumentos" Role="TblDocumentos" Multiplicity="1" />
@@ -2468,6 +2472,8 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySetMapping Name="TblAlmacenamientoDocs">
             <EntityTypeMapping TypeName="Modelo.TblAlmacenamientoDocs">
               <MappingFragment StoreEntitySet="TblAlmacenamientoDocs">
+                <ScalarProperty Name="DatFechaBorrado" ColumnName="DatFechaBorrado" />
+                <ScalarProperty Name="IntBorrado" ColumnName="IntBorrado" />
                 <ScalarProperty Name="DatFechaSincronizacion" ColumnName="DatFechaSincronizacion" />
                 <ScalarProperty Name="DatFechaRegistroDoc" ColumnName="DatFechaRegistroDoc" />
                 <ScalarProperty Name="StrUrlActual" ColumnName="StrUrlActual" />

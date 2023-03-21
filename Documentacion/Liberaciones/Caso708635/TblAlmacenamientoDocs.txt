@@ -1,0 +1,5 @@
+ALTER TABLE TblAlmacenamientoDocs
+ADD IntBorrado bit NOT NULL DEFAULT(0);
+
+ALTER TABLE TblAlmacenamientoDocs
+ADD DatFechaBorrado Datetime NOT NULL DEFAULT(GetDate());

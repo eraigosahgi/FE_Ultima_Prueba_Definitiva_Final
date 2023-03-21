@@ -20,6 +20,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string StrUrlActual { get; set; }
         public System.DateTime DatFechaRegistroDoc { get; set; }
         public System.DateTime DatFechaSincronizacion { get; set; }
+        public bool IntBorrado { get; set; }
+        public System.DateTime DatFechaBorrado { get; set; }
     
         public virtual TblDocumentos TblDocumentos { get; set; }
     }

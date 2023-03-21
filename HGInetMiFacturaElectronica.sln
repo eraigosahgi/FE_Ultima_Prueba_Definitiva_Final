@@ -421,6 +421,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso691671", "Caso691671", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGIFacturacionEClearFlies", "HGIFacturacionEClearFlies\HGIFacturacionEClearFlies.csproj", "{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso708635", "Caso708635", "{5C3E2DEF-3A77-4DBA-A64A-9994B7797065}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso708635\TblAlmacenamientoDocs.txt = Documentacion\Liberaciones\Caso708635\TblAlmacenamientoDocs.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -639,5 +644,6 @@ Global
 		{FA02A0A0-1DB1-408E-86AF-D0E50DDF1BF5} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{8A6BD9A3-6CE9-4FCF-A3C5-D1CA6201DF89} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 		{DF66701B-1E45-496D-A7A8-F88AC6FDB197} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{5C3E2DEF-3A77-4DBA-A64A-9994B7797065} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
 	EndGlobalSection
 EndGlobal
