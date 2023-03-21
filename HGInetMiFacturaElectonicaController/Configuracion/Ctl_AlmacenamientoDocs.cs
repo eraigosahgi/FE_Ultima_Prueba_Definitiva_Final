@@ -70,6 +70,32 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return datos;
 		}
 
+		public List<TblAlmacenamientoDocs> ObtenerSincronizadoEliminar(bool LazyLoading = false)
+		{
+			List<TblAlmacenamientoDocs> datos = null;
+			try
+			{
+				context.Configuration.LazyLoadingEnabled = LazyLoading;
+
+				DateTime fecha_val = new DateTime(2022, 10, 01);
+
+				datos = (from item in context.TblAlmacenamientoDocs
+						 where item.DatFechaRegistroDoc > fecha_val 
+						 && item.StrUrlAnterior.Contains("files")
+						 && item.IntConsecutivo == 1
+						 && item.IntBorrado == false
+						 select item).OrderBy(x => x.DatFechaRegistroDoc).ToList();
+
+
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Consultando los archicos en bd a eliminar");
+			}
+
+			return datos;
+		}
+
 		public TblAlmacenamientoDocs Crear(TblAlmacenamientoDocs evento)
 		{
 			evento = this.Add(evento);

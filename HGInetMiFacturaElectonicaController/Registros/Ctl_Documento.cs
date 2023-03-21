@@ -6713,7 +6713,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								TimeSpan Diff_dates = fecha_actual.Subtract(fecha_proceso);
 
-								if (Diff_dates.TotalDays < 60)
+								if (Diff_dates.TotalDays < 90)
 									throw new ApplicationException("No se puede sincronizar los archivos a azure");
 
 								//va hacer el recorrido por hora
@@ -6870,7 +6870,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										context.Configuration.LazyLoadingEnabled = false;
 
 										datos = (from doc in context.TblDocumentos
-												 where ((doc.StrUrlArchivoUbl.Contains("mifactura") || doc.StrUrlArchivoUbl.Contains("archivos")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+												 where ((doc.StrUrlArchivoUbl.Contains("files") || doc.StrUrlArchivoUbl.Contains("archivos")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
 												 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
 
 										if ((datos == null || datos.Count == 0) && fecha_fin_consulta.Hour == 23)
@@ -6878,7 +6878,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 											fecha_fin_consulta.AddHours(3);
 
 											datos = (from doc in context.TblDocumentos
-													 where ((doc.StrUrlArchivoUbl.Contains("mifactura") || doc.StrUrlArchivoUbl.Contains("archivos")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+													 where ((doc.StrUrlArchivoUbl.Contains("files") || doc.StrUrlArchivoUbl.Contains("archivos")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
 													 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
 										}
 
@@ -7440,6 +7440,99 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				catch (Exception excepcion)
 				{
 					Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion,"Tarea de creacion del registro");
+				}
+
+			});
+		}
+
+		public async Task EliminarArchivoStorage()
+		{
+			try
+			{
+				var Tarea = TareaEliminarArchivosStorage();
+				await Task.WhenAny(Tarea);
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+			}
+
+		}
+
+		public async Task TareaEliminarArchivosStorage()
+		{
+			await Task.Factory.StartNew(() =>
+			{
+
+				try
+				{
+
+					PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+					RegistroLog.EscribirLog(new ApplicationException("Inicia Proceso Eliminacion"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, "Inicia Proceso");
+
+					//se obtiene el ultimo registro sincronizado a Azure segun año que se este procesando
+					Ctl_AlmacenamientoDocs almacenamiento = new Ctl_AlmacenamientoDocs();
+
+					//Se debe agregar la forma para que obtenga 
+					List<TblAlmacenamientoDocs> registros_eliminar = almacenamiento.ObtenerSincronizadoEliminar();
+
+					RegistroLog.EscribirLog(new ApplicationException("Inicia Proceso Eliminacion"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, "Inicia Proceso");
+
+					if (registros_eliminar != null && registros_eliminar.Count > 0)
+					{
+						try
+						{
+							RegistroLog.EscribirLog(new ApplicationException("Obtiene registros para eliminar"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Registros : {0} ", registros_eliminar.Count.ToString()));
+
+						}
+						catch (Exception)
+						{
+
+						}
+						foreach (TblAlmacenamientoDocs item_eliminar in registros_eliminar)
+						{
+							List<TblAlmacenamientoDocs> list_docs = almacenamiento.Obtener(item_eliminar.StrIdSeguridadDoc);
+
+							foreach (TblAlmacenamientoDocs item in list_docs)
+							{
+								//string carpeta_fisica = string.Format(@"{0}/{1}/{2}/", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica);
+								string ruta_fisica = item.StrUrlAnterior.Replace(plataforma_datos.RutaDmsPublica, plataforma_datos.RutaDmsFisica);//string.Format(@"{0}{1}/{2}.pdf", carpeta_fisica, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
+
+								if (Archivo.Borrar(ruta_fisica))
+								{
+									item.DatFechaBorrado = Fecha.GetFecha();
+									item.IntBorrado = true;
+									try
+									{
+										almacenamiento.Actualizar(item);
+									}
+									catch (Exception excepcion)
+									{
+										RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion, "Inconsistencia actualizando registro de archivos borrado");
+									}
+
+								}
+							}
+						}
+					}
+
+					//Se envia notificacion a tic para indicar que termino de importar el rango especificado
+					List<string> mensajes = new List<string>();
+					mensajes.Add(string.Format("Termino de eliminar Archivos subidos a Azure: Fecha terminacion: {0}", Fecha.GetFecha()));
+
+					try
+					{
+						Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+						email.EnviaNotificacionAlertaDIAN(Constantes.NitResolucionconPrefijo, "0", mensajes, 3, false, "jzea.hgi@gmail.com", 2);
+					}
+					catch (Exception)
+					{ }
+
+				}
+				catch (Exception excepcion)
+				{
+					RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Sonda para Eliminar Archivos importador en Blob");
 				}
 
 			});
