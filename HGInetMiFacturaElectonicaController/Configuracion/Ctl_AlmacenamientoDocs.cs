@@ -77,11 +77,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				context.Configuration.LazyLoadingEnabled = LazyLoading;
 
-				DateTime fecha_val = new DateTime(2022, 10, 01);
+				DateTime fecha_val = new DateTime(2022, 11, 01);
 
 				datos = (from item in context.TblAlmacenamientoDocs
 						 where item.DatFechaRegistroDoc > fecha_val 
-						 && item.StrUrlAnterior.Contains("files")
+						 && item.StrUrlAnterior.Contains("files.hgidocs.co")
 						 && item.IntConsecutivo == 1
 						 && item.IntBorrado == false
 						 select item).OrderBy(x => x.DatFechaRegistroDoc).ToList();
