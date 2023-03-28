@@ -72,7 +72,7 @@ namespace HGIFacturacionEClearFlies
 
 						//// Fechas de consulta xml sin firmar
 						DateTime inicial = GetFecha().AddYears(-3);
-						DateTime final = GetFecha().AddDays(-15);
+						DateTime final = GetFecha().AddDays(-5);
 
 						string directorio_xml_sin_firmar = string.Format(@"{0}\{1}", item, carpeta_xml_sin_firmar);
 
