@@ -129,6 +129,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			archivo.IntConsecutivo = tipo_archivo;
 			archivo.StrUrlAnterior = ruta_anterior;
 			archivo.StrUrlActual = ruta_actual;
+			archivo.DatFechaBorrado = fecha_ingreso_doc;
 
 			return archivo;
 		}
@@ -136,10 +137,18 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		public void ProcesoCreacion(Guid doc_StrIdSeguridad, DateTime fecha_ingreso_doc, int tipo_archivo, string ruta_anterior, string ruta_actual, bool buscar_faltantes)
 		{
-			Ctl_AlmacenamientoDocs ctl_almacenamiento = new Ctl_AlmacenamientoDocs();
-			TblAlmacenamientoDocs almacenamiento = ctl_almacenamiento.Convertir(doc_StrIdSeguridad, fecha_ingreso_doc, tipo_archivo, ruta_anterior, ruta_actual, buscar_faltantes);
+			try
+			{
+				Ctl_AlmacenamientoDocs ctl_almacenamiento = new Ctl_AlmacenamientoDocs();
+				TblAlmacenamientoDocs almacenamiento = ctl_almacenamiento.Convertir(doc_StrIdSeguridad, fecha_ingreso_doc, tipo_archivo, ruta_anterior, ruta_actual, buscar_faltantes);
 
-			ctl_almacenamiento.Crear(almacenamiento);
+				ctl_almacenamiento.Crear(almacenamiento);
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creando registro del archivo generado en blob");
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
 		}
 
 

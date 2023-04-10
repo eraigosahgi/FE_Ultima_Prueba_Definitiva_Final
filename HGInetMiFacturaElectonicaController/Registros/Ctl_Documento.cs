@@ -7248,11 +7248,25 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 						string nombre_zip = Path.GetFileNameWithoutExtension(url_zip_original);
 
-						archivo = Archivo.ObtenerWeb(url_zip_original.Replace(nombre_zip, nombre_archivo));
+						try
+						{
+							archivo = Archivo.ObtenerWeb(url_zip_original.Replace(nombre_zip, nombre_archivo));
+						}
+						catch (Exception excepcion)
+						{
+							RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.lectura, string.Format("Obteniendo ZIP Attach-PDF del documento ruta: {0} - Nombre:{1}", url_zip_original.Replace(nombre_zip, nombre_archivo), nombre_archivo));
+						}
 
 						if (archivo != null)
 						{
-							ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(url_zip_original.Replace(nombre_zip, nombre_archivo)), metadata, Path.GetFileNameWithoutExtension(nombre_archivo));
+							try
+							{
+								ruta_blob_zip = contenedor.Enviar(archivo, Path.GetExtension(url_zip_original.Replace(nombre_zip, nombre_archivo)), metadata, Path.GetFileNameWithoutExtension(nombre_archivo));
+							}
+							catch (Exception excepcion)
+							{
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, string.Format("Importando ZIP Attach-PDF del documento ruta: {0} - Nombre:{1}", url_zip_original.Replace(nombre_zip, nombre_archivo), nombre_archivo));
+							}
 							//var Tarea1 = RegistroArchivoStorage(item.StrIdSeguridad, item.DatFechaIngreso, TipoArchivoStorage.ZIPAttached.GetHashCode(), url_zip_original.Replace(nombre_zip, nombre_archivo), ruta_blob_zip, buscar_faltantes);
 							try
 							{
@@ -7260,7 +7274,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							}
 							catch (Exception excepcion)
 							{
-								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo ZIP Attach-PDF");
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Creacion del registro del archivo ZIP Attach-PDF");
 							}
 						}
 					}
