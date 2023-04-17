@@ -203,7 +203,7 @@ namespace HGInetInteroperabilidad.Procesos
 
 										empresa = _empresa.Obtener(asunto_params[0]);
 
-										if (empresa == null & asunto_params[0].Length >= 7)
+										if (empresa == null && asunto_params[0].Length >= 6)
 										{
 
 											Tercero empresa_emisor = new Tercero();
