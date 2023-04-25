@@ -1731,15 +1731,16 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				{
 					//Crea el pago en la tabla principal
 					TblPagosElectronicos datos_registro = new TblPagosElectronicos();
-					datos_registro.StrIdRegistro = factura.StrIdSeguridad;
+					datos_registro.StrIdRegistro = Guid.NewGuid();
 					datos_registro.StrIdRegistro2 = factura.StrIdSeguridad;					
 					datos_registro.DatFechaRegistro = Fecha.GetFecha();					
-					datos_registro.IntValorPago = factura.IntVlrTotal;
+					datos_registro.IntValorPago = documentoBd.IntVlrTotal;
 					datos_registro.StrMensaje = "Pago Automatico Nota";
 					datos_registro.IntEstadoPago = EstadoPago.Aprobado.GetHashCode();
 					datos_registro.IntFormaPago = 0;
 					datos_registro.StrEmpresaFacturador = factura.StrEmpresaFacturador;
 					datos_registro.StrEmpresaAdquiriente = factura.StrEmpresaAdquiriente;
+					datos_registro.StrCodigoFranquicia = "NC";
 					Crear(datos_registro);
 
 					//Crea el detalle del pago
