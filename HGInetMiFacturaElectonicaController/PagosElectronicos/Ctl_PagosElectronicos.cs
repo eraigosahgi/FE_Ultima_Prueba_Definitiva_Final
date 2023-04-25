@@ -1714,9 +1714,13 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 			});
 		}
 
+		/// <summary>
+		/// Crea el pago de una nota credito para que al consultar el saldo, este ya descuente el valor de la nota
+		/// </summary>
+		/// <param name="cufe_factura">CUFE de la Factura</param>
+		/// <param name="documentoBd">Tabla TblDocumentos</param>
 		public void ProcesarNotaPago(string cufe_factura, TblDocumentos documentoBd)
 		{
-
 			try
 			{
 				TblDocumentos factura = (from Doc in context.TblDocumentos
@@ -1725,8 +1729,29 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 
 				if (factura != null)
 				{
-					Guid id_pago = Guid.NewGuid();
-					CrearPago(id_pago, factura.StrIdSeguridad, 0, documentoBd.IntVlrTotal, 0, factura.StrEmpresaFacturador, factura.StrEmpresaAdquiriente);
+					//Crea el pago en la tabla principal
+					TblPagosElectronicos datos_registro = new TblPagosElectronicos();
+					datos_registro.StrIdRegistro = factura.StrIdSeguridad;
+					datos_registro.StrIdRegistro2 = factura.StrIdSeguridad;					
+					datos_registro.DatFechaRegistro = Fecha.GetFecha();					
+					datos_registro.IntValorPago = factura.IntVlrTotal;
+					datos_registro.StrMensaje = "Pago Automatico Nota";
+					datos_registro.IntEstadoPago = EstadoPago.Aprobado.GetHashCode();
+					datos_registro.IntFormaPago = 0;
+					datos_registro.StrEmpresaFacturador = factura.StrEmpresaFacturador;
+					datos_registro.StrEmpresaAdquiriente = factura.StrEmpresaAdquiriente;
+					Crear(datos_registro);
+
+					//Crea el detalle del pago
+					TblPagosDetalles pago_detalle = new TblPagosDetalles();
+					pago_detalle.StrIdSeguridadDoc = factura.StrIdSeguridad;
+					pago_detalle.StrIdPagoPrincipal = datos_registro.StrIdRegistro;
+					pago_detalle.IntValorPago = datos_registro.IntValorPago;
+
+					Ctl_PagosDetalles _PagosDetalles = new Ctl_PagosDetalles();
+
+					_PagosDetalles.Crear(pago_detalle);
+
 				}
 			}
 			catch (Exception excepcion)
