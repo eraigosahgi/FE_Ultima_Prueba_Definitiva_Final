@@ -588,6 +588,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Sesion.ValidarSesion();
 
+				//Si la empresa esta inactiva no puede activar plan de documentos.
+				if (Sesion.DatosEmpresa.IntIdEstado == 2)
+					return Ok("El Facturador Electrónico no está habilitado para esta funcionalidad.<br /><br /> Cualquier inquietud comunicarse con nuestra area de Servicio al Cliente.");
+
 				//Obtengo el plan adquirido para crearlo con el valor correcto
 				try
 				{
