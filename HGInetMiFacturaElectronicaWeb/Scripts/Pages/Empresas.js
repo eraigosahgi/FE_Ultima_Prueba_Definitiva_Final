@@ -1749,7 +1749,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 
 
-	//Funciones
+    //Funciones
 	function validar() {
 		if (Datos_Adquiriente == true || Datos_Obligado == true) {
 			return false;
@@ -1759,7 +1759,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 	//Validación de Email
 	function validarEmailEnvio() {
-		if (Datos_estado != 3) {
+	    if (Datos_Habilitacion != 99) {
+	        return true
+	    }
+
+	    if (Datos_estado != 3) {
 			if (Datos_Email_Envio == "" || Datos_Email_Envio == undefined) {
 				return false;
 			}
@@ -1771,7 +1775,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	}
 
 	function validarEmailRecepcion() {
-		if (Datos_estado != 3) {
+	    if (Datos_Habilitacion != 99) {
+	        return true
+	    }
+
+	    if (Datos_estado != 3) {  
 			if (Datos_Email_Recepcion == "" || Datos_Email_Recepcion == undefined) {
 				return false;
 			}
@@ -1783,6 +1791,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	}
 
 	function validarEmailAcuse() {
+	    if (Datos_Habilitacion != 99) {
+	        return true
+	    }
+
 		if (Datos_estado != 3) {
 			if (Datos_Email_Acuse == "" || Datos_Email_Acuse == undefined) {
 				return false;
@@ -1795,6 +1807,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	}
 
 	function validarEmailPagos() {
+	    if (Datos_Habilitacion != 99) {
+	        return true
+	    }
+
 		if (Datos_estado != 3) {
 			if (Datos_Email_Pagos == "" || Datos_Email_Pagos == undefined) {
 				return false;
@@ -1841,7 +1857,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_Habilitacion_NominaE = response.data[0].Habilitacion_NominaE;
 				Datos_IdentificacionDv = response.data[0].IntIdentificacionDv;
 				Datos_Observaciones = response.data[0].StrObservaciones;
-				Datos_Serial = response.data[0].Serial;
+				Datos_Serial = (response.data[0].Serial == null) ? 0 : response.data[0].Serial;
 				Datos_empresa_Asociada = response.data[0].StrEmpresaAsociada;
 				Datos_Integrador = response.data[0].IntIntegrador;
 				Datos_Numero_usuarios = response.data[0].IntNumUsuarios;
@@ -1858,14 +1874,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_PermiteConsultarTodosLosDocumentos = response.data[0].IntPagosPermiteConsTodos;
 				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
 				Datos_EnvioNominaMail = response.data[0].IntEnvioNominaMail;
-				Datos_estado = response.data[0].Estado;
+				Datos_estado = (response.data[0].Estado == 0) ? 2 : response.data[0].Estado ;
 				Datos_postpago = response.data[0].Postpago;
 				Datos_Email_Envio = response.data[0].StrMailEnvio;
 				Datos_Email_Recepcion = response.data[0].StrMailRecepcion;
 				Datos_Email_Acuse = response.data[0].StrMailAcuse;
 				Datos_Email_Pagos = response.data[0].StrMailPagos;
 				Datos_telefono = response.data[0].telefono;
-				Datos_VersionDIAN = response.data[0].VersionDIAN;
+				Datos_VersionDIAN = (response.data[0].VersionDIAN == 0) ? 1 : response.data[0].VersionDIAN; 
 				Datos_TipoPlan = response.data[0].IntTipoPlan
 
 				Datos_Serial_Cloud = response.data[0].SerialCloudServices;
