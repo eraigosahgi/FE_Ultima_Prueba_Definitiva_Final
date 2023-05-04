@@ -365,8 +365,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (string.IsNullOrEmpty(tercero.Departamento) && tercero.CodigoPais.Equals("CO") && !tipo.Equals("Mandatario"))
 				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Departamento", tipo).Replace("de tipo", "del"));
 
-			if (string.IsNullOrEmpty(tercero.Direccion) && !tipo.Equals("Mandatario"))
-				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
+			//if (string.IsNullOrEmpty(tercero.Direccion) && !tipo.Equals("Mandatario"))
+			//	throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Direccion", tipo).Replace("de tipo", "del"));
 
 			//Se valida si envian una direccion fiscal diferente a la de entrega
 			if (tercero.DireccionFiscal != null && !tipo.Equals("Mandatario"))
@@ -509,10 +509,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						//if (!tercero.CodigoPostal.StartsWith(tercero.CodigoDepartamento))
 						//	throw new ArgumentException(string.Format("El Codigo Postal {0} no esta bien formado del {1}", tercero.CodigoPostal, tipo));
 
-						ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
-						ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.CodigoPostal)).FirstOrDefault();
-						if (codpostal == null)
-							throw new ArgumentException(string.Format("El Codigo Postal {0} del {1} no cumplen con el listado de la DIAN", tercero.CodigoPostal, tipo));
+						//ListaCodigoPostal list_codpostal = new ListaCodigoPostal();
+						//ListaItem codpostal = list_codpostal.Items.Where(d => d.Codigo.Equals(tercero.CodigoPostal)).FirstOrDefault();
+						//if (codpostal == null)
+						//	throw new ArgumentException(string.Format("El Codigo Postal {0} del {1} no cumplen con el listado de la DIAN", tercero.CodigoPostal, tipo));
 					}
 
 					//Se valida si envian una direccion fiscal
