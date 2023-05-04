@@ -877,7 +877,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Xml = d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
 					zip = d.StrUrlAnexo,
-					RutaServDian = d.RutaServDian,//(d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+					RutaServDian = (d.IntIdEstado >= 8 && d.IntIdEstado < 93) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
 					XmlAcuse = d.StrUrlAcuseUbl,
 					d.IntAdquirienteRecibo,
 					EstadoCat = d.IdCategoriaEstado
@@ -954,7 +954,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Xml = d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
 					zip = d.StrUrlAnexo,
-					RutaServDian = d.RutaServDian,//(d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+					RutaServDian = (d.IntIdEstado >= 8 && d.IntIdEstado < 93) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
 					XmlAcuse = d.StrUrlAcuseUbl
 				});
 
@@ -1528,7 +1528,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					RutaAcuse = string.Format("{0}{1}", plataforma.RutaPublica, Constantes.PaginaAcuseRecibo.Replace("{id_seguridad}", d.StrIdSeguridad.ToString())),
 					tipodoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocumento>(d.IntDocTipo)),
 					zip = d.StrUrlAnexo,
-					RutaServDian = d.RutaServDian,//(d.StrUrlArchivoUbl != null) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
+					RutaServDian = (d.IntIdEstado >= 8 && d.IntIdEstado < 93) ? d.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",
 					XmlAcuse = d.StrUrlAcuseUbl,
 					permiteenvio = ((Int16)d.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode()) ? true : false,
 					d.IntAdquirienteRecibo,
