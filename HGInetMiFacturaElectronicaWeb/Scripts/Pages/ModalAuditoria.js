@@ -6,11 +6,13 @@ App.controller('ModalAuditDocumentoController', function ModalAuditDocumentoCont
 
 	//$rootScope.ConsultarAuditDoc = function (IdSeguridad, IdFacturador, NumeroDocumento) {
 	ConsultarAuditDoc_old = function (IdSeguridad, IdFacturador, NumeroDocumento) {
-		$http.get('/api/AuditoriaDocumento?id_seguridad_doc=' + IdSeguridad).then(function (response) {
+		$http.get('/api/AuditoriaDocumento_old?id_seguridad_doc=' + IdSeguridad).then(function (response) {
 
 			$scope.IdSeguridad = IdSeguridad;
 			$scope.NumeroDocumento = NumeroDocumento;
 			$scope.Obligado = IdFacturador;
+
+			$("#modal_audit_documento").modal('show');
 
 			$("#gridAuditDocumento").dxDataGrid({
 				dataSource: response.data,
@@ -154,7 +156,7 @@ App.controller('ModalAuditDocumentoController', function ModalAuditDocumentoCont
 
 	ConsultarAuditDoc = function (IdSeguridad, IdFacturador, NumeroDocumento, EstadoFactura) {
 
-		if (EstadoFactura >= 8 && EstadoFactura < 93)
+		if (EstadoFactura >= 8 && EstadoFactura <= 93)
 		{
 			$("#modal_audit_documento").modal('hide');
 			$http.get('/api/AuditoriaDocumento?id_seguridad_doc=' + IdSeguridad).then(function (response) {

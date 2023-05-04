@@ -9,8 +9,7 @@
 <body>
 
 	<form>
-		<%----%>
-		<div style="display: none;" id="modal_audit_documento" class="modal fade">
+		<div id="modal_audit_documento" class="modal fade" style="display: none;">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div id="EncabezadoModal" class="modal-header">
