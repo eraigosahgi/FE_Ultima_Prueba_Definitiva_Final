@@ -490,7 +490,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			masterDetail: {
 				enabled: true,
 				template: function (container, options) {
-					container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdFacturador, options.data.NumeroDocumento));
+					container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdFacturador, options.data.NumeroDocumento, options.data.EstadoFactura));
 				}
 			},
 

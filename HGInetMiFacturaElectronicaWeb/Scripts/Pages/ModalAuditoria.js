@@ -144,7 +144,7 @@ App.controller('ModalAuditDocumentoController', function ModalAuditDocumentoCont
 					visible: true
 				}
 			});
-		}, function (response) {
+		}, function (response) {															   
 			$('#wait').hide();
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
@@ -152,24 +152,31 @@ App.controller('ModalAuditDocumentoController', function ModalAuditDocumentoCont
 	}
 
 
-	ConsultarAuditDoc = function (IdSeguridad, IdFacturador, NumeroDocumento) {
+	ConsultarAuditDoc = function (IdSeguridad, IdFacturador, NumeroDocumento, EstadoFactura) {
 
-		$("#modal_audit_documento").modal('hide');
-		$http.get('/api/AuditoriaDocumento?id_seguridad_doc=' + IdSeguridad).then(function (response) {
-
-			if (location.href.includes('habilitacion')) {
-				window.open("https://catalogo-vpfe-hab.dian.gov.co/Document/ShowDocumentToPublic/" + response.data, '_blank');
-			} else {
-				window.open("https://catalogo-vpfe.dian.gov.co/Document/ShowDocumentToPublic/" + response.data, '_blank');
-			}
-
+		if (EstadoFactura >= 8 && EstadoFactura < 93)
+		{
 			$("#modal_audit_documento").modal('hide');
+			$http.get('/api/AuditoriaDocumento?id_seguridad_doc=' + IdSeguridad).then(function (response) {
 
-		}, function (response) {
-			$('#wait').hide();
-			$("#modal_audit_documento").modal('hide');
-			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-		});
+				if (location.href.includes('habilitacion')) {
+					window.open("https://catalogo-vpfe-hab.dian.gov.co/Document/ShowDocumentToPublic/" + response.data, '_blank');
+				} else {
+					window.open("https://catalogo-vpfe.dian.gov.co/Document/ShowDocumentToPublic/" + response.data, '_blank');
+				}
+
+				$("#modal_audit_documento").modal('hide');
+
+			}, function (response) {
+				$('#wait').hide();
+				$("#modal_audit_documento").modal('hide');
+				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			});
+		}
+		else
+		{
+			ConsultarAuditDoc_old(IdSeguridad, IdFacturador, NumeroDocumento);
+		}
 
 	}
 
