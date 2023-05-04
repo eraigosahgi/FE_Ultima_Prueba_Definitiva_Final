@@ -156,7 +156,7 @@ App.controller('ModalAuditDocumentoController', function ModalAuditDocumentoCont
 
 	ConsultarAuditDoc = function (IdSeguridad, IdFacturador, NumeroDocumento, EstadoFactura) {
 
-		if (EstadoFactura >= 8 && EstadoFactura <= 93)
+		if ((EstadoFactura >= 8 && EstadoFactura < 92) || EstadoFactura == 99)
 		{
 			$("#modal_audit_documento").modal('hide');
 			$http.get('/api/AuditoriaDocumento?id_seguridad_doc=' + IdSeguridad).then(function (response) {
