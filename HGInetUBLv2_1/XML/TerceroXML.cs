@@ -93,7 +93,6 @@ namespace HGInetUBLv2_1
 				{
 					ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(empresa.CodigoDepartamento)).FirstOrDefault();
 					CountrySubentity.Value = departamento.Nombre;//"Antioquia";//Listado de Departamentos el Nombre
-					Address.CountrySubentity = CountrySubentity;
 					CountrySubentityCode.Value = empresa.CodigoDepartamento;//Listado de Departamentos el codigo
 				}
 				else
@@ -102,7 +101,8 @@ namespace HGInetUBLv2_1
 					CountrySubentityCode.Value = empresa.CodigoDepartamento;
 
 				}
-				
+
+				Address.CountrySubentity = CountrySubentity;
 				Address.CountrySubentityCode = CountrySubentityCode;
 
 				//Direccion
