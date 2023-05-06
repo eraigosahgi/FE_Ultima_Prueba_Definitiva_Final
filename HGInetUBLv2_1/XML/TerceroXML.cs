@@ -71,18 +71,38 @@ namespace HGInetUBLv2_1
 				Address.ID.Value = empresa.CodigoCiudad;
 				CityNameType City = new CityNameType();
 				ListaMunicipio list_municipio = new ListaMunicipio();
-				ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(empresa.CodigoCiudad)).FirstOrDefault();
-				City.Value = municipio.Nombre; //empresa.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				if (empresa.CodigoPais.Equals("CO"))
+				{
+					ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(empresa.CodigoCiudad)).FirstOrDefault();
+					City.Value = municipio.Nombre; //empresa.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+				}
+				else
+				{
+					City.Value = empresa.Ciudad;
+				}
+				
+				
+				
 				Address.CityName = City;
 
 				//6.4.2. Departamentos (ISO 3166-2:CO):  cbc:CountrySubentity, cbc:CountrySubentityCode
 				CountrySubentityType CountrySubentity = new CountrySubentityType();
-				ListaDepartamentos list_depart = new ListaDepartamentos();
-				ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(empresa.CodigoDepartamento)).FirstOrDefault();
-				CountrySubentity.Value = departamento.Nombre;//"Antioquia";//Listado de Departamentos el Nombre
-				Address.CountrySubentity = CountrySubentity;
 				CountrySubentityCodeType CountrySubentityCode = new CountrySubentityCodeType();
-				CountrySubentityCode.Value = empresa.CodigoDepartamento;//Listado de Departamentos el codigo
+				ListaDepartamentos list_depart = new ListaDepartamentos();
+				if (empresa.CodigoPais.Equals("CO"))
+				{
+					ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(empresa.CodigoDepartamento)).FirstOrDefault();
+					CountrySubentity.Value = departamento.Nombre;//"Antioquia";//Listado de Departamentos el Nombre
+					Address.CountrySubentity = CountrySubentity;
+					CountrySubentityCode.Value = empresa.CodigoDepartamento;//Listado de Departamentos el codigo
+				}
+				else
+				{
+					CountrySubentity.Value = empresa.Departamento;
+					CountrySubentityCode.Value = empresa.CodigoDepartamento;
+
+				}
+				
 				Address.CountrySubentityCode = CountrySubentityCode;
 
 				//Direccion
@@ -140,14 +160,14 @@ namespace HGInetUBLv2_1
 					Address.ID.Value = empresa.DireccionFiscal.CodigoCiudad;
 					City = new CityNameType();
 					list_municipio = new ListaMunicipio();
-					municipio = list_municipio.Items.Where(d => d.Codigo.Equals(empresa.DireccionFiscal.CodigoCiudad)).FirstOrDefault();
+					ListaItem municipio = list_municipio.Items.Where(d => d.Codigo.Equals(empresa.DireccionFiscal.CodigoCiudad)).FirstOrDefault();
 					City.Value = municipio.Nombre; //empresa.Ciudad; //Ciudad (LISTADO DE VALORES DEFINIDO POR LA DIAN)
 					Address.CityName = City;
 
 					//6.4.2. Departamentos (ISO 3166-2:CO):  cbc:CountrySubentity, cbc:CountrySubentityCode
 					CountrySubentity = new CountrySubentityType();
 					list_depart = new ListaDepartamentos();
-					departamento = list_depart.Items.Where(d => d.Codigo.Equals(empresa.DireccionFiscal.CodigoDepartamento)).FirstOrDefault();
+					ListaItem departamento = list_depart.Items.Where(d => d.Codigo.Equals(empresa.DireccionFiscal.CodigoDepartamento)).FirstOrDefault();
 					CountrySubentity.Value = departamento.Nombre;//"Antioquia";//Listado de Departamentos el Nombre
 					Address.CountrySubentity = CountrySubentity;
 					CountrySubentityCode = new CountrySubentityCodeType();
