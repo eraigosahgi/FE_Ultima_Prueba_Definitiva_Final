@@ -1089,14 +1089,17 @@ namespace HGInetMiFacturaElectonicaController
                                                     if (bytes_applications.Length < 25)
                                                     {
                                                         Archivo.Borrar(ruta_fisica_zip);
-                                                        generar_att_zip = true;
+                                                        archivo_attach = false;
                                                     }
-                                                    
                                                     else
-                                                        {
-                                                            archivo_attach = true;
-                                                            zip_attach_blob = false;
-                                                        }
+                                                    {
+                                                        archivo_attach = true;
+                                                        zip_attach_blob = false;
+                                                    }
+                                                }
+                                                else
+                                                {
+
                                                 }
                                             }                                                                     
                                          }
