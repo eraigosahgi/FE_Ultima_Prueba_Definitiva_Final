@@ -387,11 +387,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "DireccionFiscal - Direccion", tipo).Replace("de tipo", "del"));
 			}
 
-			if (string.IsNullOrEmpty(tercero.Telefono) && !tipo.Equals("Mandatario"))
-				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Telefono", tipo).Replace("de tipo", "del"));
+			//if (string.IsNullOrEmpty(tercero.Telefono) && !tipo.Equals("Mandatario"))
+			//	throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Telefono", tipo).Replace("de tipo", "del"));
 
-			if (string.IsNullOrEmpty(tercero.Email) && !tipo.Equals("Mandatario"))
-				throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Email", tipo).Replace("de tipo", "del"));
+			//if (string.IsNullOrEmpty(tercero.Email) && !tipo.Equals("Mandatario"))
+			//	throw new ArgumentException(string.Format(RecursoMensajes.ArgumentNullError, "Email", tipo).Replace("de tipo", "del"));
 
 			//Regex ismail = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
 
