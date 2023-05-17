@@ -1780,7 +1780,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				tbl_empresa.IntObligado = (tbl_empresa.IntObligado == false) ? true : tbl_empresa.IntObligado;
 				tbl_empresa.IntVersionDian = 2;
-				
+
 				if (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost"))
 				{
 					if (!tbl_empresa.StrMailAdmin.Equals(empresa.EmailAdmin))
@@ -1836,6 +1836,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					tbl_empresa.IntHabilitacionNomina = (empresa.NominaE == true && (tbl_empresa.IntHabilitacionNomina == null || tbl_empresa.IntHabilitacionNomina == Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode()))) ? Convert.ToByte(Habilitacion.Produccion.GetHashCode()) : tbl_empresa.IntHabilitacionNomina;
 					tbl_empresa.IntNumUsuarios = (tbl_empresa.IntNumUsuarios < 3) ? 3 : tbl_empresa.IntNumUsuarios;
 					tbl_empresa.IntIdEstado = Convert.ToInt16(EstadoEmpresa.INACTIVA.GetHashCode());
+					tbl_empresa.StrSerial = empresa.PinSoftware;
 
 					ListaEmailRegistro.Add(new ObjVerificacionEmail { email = tbl_empresa.StrMailAdmin });
 

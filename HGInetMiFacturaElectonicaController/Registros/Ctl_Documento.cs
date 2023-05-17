@@ -45,6 +45,7 @@ using HGInetUtilidadAzure.Almacenamiento;
 using System.Data.OleDb;
 using System.Data;
 using System.Data.SqlClient;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -7513,6 +7514,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						{
 							List<TblAlmacenamientoDocs> list_docs = almacenamiento.Obtener(item_eliminar.StrIdSeguridadDoc);
 
+							Ctl_Documento ctl_doc = new Ctl_Documento();
+							TblDocumentos doc_bd = ctl_doc.ObtenerDocumento(item_eliminar.StrIdSeguridadDoc);
+
+							Ctl_Empresa _empresa = new Ctl_Empresa();
+							TblEmpresas facturador = _empresa.Obtener(doc_bd.StrEmpresaFacturador);
+
 							Parallel.ForEach<TblAlmacenamientoDocs>(list_docs, item =>
 							{
 								if (cont == 0)
@@ -7529,15 +7536,47 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								}
 
-								//string carpeta_fisica = string.Format(@"{0}/{1}/{2}/", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica);
-								string ruta_fisica = item.StrUrlAnterior.Replace(plataforma_datos.RutaDmsPublica, plataforma_datos.RutaDmsFisica).Replace("/", "\\");//string.Format(@"{0}{1}/{2}.pdf", carpeta_fisica, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
+								string ruta_fisica = string.Empty;
+
+								if (!item.StrUrlAnterior.Contains("files.hgidocs.co"))
+								{
+									string carpeta_fisica = string.Format(@"{0}\{1}\{2}\{3}\", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, facturador.StrIdSeguridad, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+									string nombre_archivo = Path.GetFileNameWithoutExtension(item.StrUrlActual);
+									string extension_archivo = Path.GetExtension(item.StrUrlActual);
+
+
+									if (item.IntConsecutivo == TipoArchivoStorage.XMLACUSE.GetHashCode())
+									{
+										carpeta_fisica = carpeta_fisica.Replace(RecursoDms.CarpetaFacturaEDian, RecursoDms.CarpetaXmlAcuse);
+									}
+									if (item.IntConsecutivo == TipoArchivoStorage.XMLRESPDIAN.GetHashCode())
+									{
+										carpeta_fisica = carpeta_fisica.Replace(RecursoDms.CarpetaFacturaEDian, RecursoDms.CarpetaFacturaEConsultaDian);
+									}
+									if (item.IntConsecutivo == TipoArchivoStorage.ZIPAnexo.GetHashCode())
+									{
+										carpeta_fisica = carpeta_fisica.Replace(RecursoDms.CarpetaFacturaEDian, RecursoDms.CarpetaFacturaEAnexos);
+									}
+
+									ruta_fisica = string.Format(@"{0}{1}{2}", carpeta_fisica, nombre_archivo, extension_archivo);
+								}
+								else
+								{
+									ruta_fisica = item.StrUrlAnterior.Replace(plataforma_datos.RutaDmsPublica, plataforma_datos.RutaDmsFisica).Replace("/", "\\");
+								}
 
 								try
 								{
-									Archivo.Borrar(ruta_fisica);
+									bool archivo_borrado = false;
 
-									item.DatFechaBorrado = Fecha.GetFecha();
-									item.IntBorrado = true;
+									archivo_borrado = Archivo.Borrar(ruta_fisica);
+
+									if (archivo_borrado == true)
+									{
+										item.DatFechaBorrado = Fecha.GetFecha();
+										item.IntBorrado = true;
+									}
+
 									list_docs_act.Add(item);
 									cont++;
 								}
@@ -7703,6 +7742,31 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 
 			});
+		}
+
+		public void ValidarCertificadoDigital(TblEmpresas facturador)
+		{
+
+			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+			string ruta_certificado = string.Empty;
+
+			ruta_certificado = string.Format("{0}\\{1}\\{2}\\{3}.pfx", plataforma_datos.RutaDmsFisica, Constantes.CarpetaCertificadosDigitales, facturador.StrCertRuta, facturador.StrIdSeguridad);
+
+			if (!Archivo.ValidarExistencia(ruta_certificado))
+			{
+				throw new ApplicationException(string.Format("No se encuentra el certificado en la ruta {0}", ruta_certificado));
+			}
+
+			//"E:/certificadrdb/Certificado_Sunat_PFX_REPDORABEATRIZ.pfx";
+			X509Certificate2 MontCertificat = new X509Certificate2(ruta_certificado, facturador.StrCertClave);
+
+			if (!MontCertificat.Subject.Contains(facturador.StrIdentificacion))
+				throw new ApplicationException(string.Format("Certificado digital {0} no corresponde a  la identificación {1}", Path.GetFileNameWithoutExtension(ruta_certificado).Substring(0, 8), facturador.StrIdentificacion));
+
+			if (MontCertificat.NotAfter < Fecha.GetFecha())
+				throw new ApplicationException(string.Format("Certificado digital {0} con fecha de vigencia {1}, se encuentra vencido", Path.GetFileNameWithoutExtension(ruta_certificado).Substring(0, 8), MontCertificat.NotAfter));
+
 		}
 
 
