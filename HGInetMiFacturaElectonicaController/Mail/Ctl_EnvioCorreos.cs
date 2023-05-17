@@ -991,9 +991,9 @@ namespace HGInetMiFacturaElectonicaController
 						{
 
 							string nombre_xml = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documento.IntNumero.ToString(), documento.StrEmpresaFacturador, tipo_documento, documento.StrPrefijo);//Path.GetFileName(documento.StrUrlArchivoUbl);
-
-							//Se anexa el XML-UBL solo para esta version,si no cumple segun Anexo solo se debe enviar el AttachedDocument y el PDF
-							if (documento.IntVersionDian == 1)
+                            
+                            //Se anexa el XML-UBL solo para esta version,si no cumple segun Anexo solo se debe enviar el AttachedDocument y el PDF
+                            if (documento.IntVersionDian == 1)
 							{
 
 								if (string.IsNullOrEmpty(documento.StrUrlArchivoUbl))
@@ -1042,7 +1042,10 @@ namespace HGInetMiFacturaElectonicaController
 							{
 								try
 								{
-									if (documento.StrUrlArchivoUbl.Contains("hgidocs.blob"))
+                                    archivo_attach = false;
+                                    zip_attach_blob = false;
+
+                                    if (documento.StrUrlArchivoUbl.Contains("hgidocs.blob"))
 									{
 										Ctl_AlmacenamientoDocs ctl_alm = new Ctl_AlmacenamientoDocs();
 										List<TblAlmacenamientoDocs> list_docs_alm = ctl_alm.Obtener(documento.StrIdSeguridad);
@@ -1059,27 +1062,44 @@ namespace HGInetMiFacturaElectonicaController
 											BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
 
 											byte[] bytes_applications_b = contenedor.LecturaBlobBase64(Path.GetExtension(zip_attach.StrUrlActual), Path.GetFileNameWithoutExtension(zip_attach.StrUrlActual));
+                                                                                      
+                                            string zip_blob = Convert.ToBase64String(bytes_applications_b);                                            
 
-											string zip_blob = Convert.ToBase64String(bytes_applications_b);
-											//string nombre_xml = Path.GetFileName(documento.StrUrlArchivoUbl);
+                                            if (bytes_applications_b.Length > 25)
+                                            {
+                                                if (!string.IsNullOrEmpty(zip_blob))
+                                                {
+                                                    Adjunto adjunto = new Adjunto();
+                                                    adjunto.ContenidoB64 = zip_blob;
+                                                    adjunto.Nombre = Path.GetFileName(zip_attach.StrUrlActual);
+                                                    archivos.Add(adjunto);
 
-											if (!string.IsNullOrEmpty(zip_blob))
-											{
-												Adjunto adjunto = new Adjunto();
-												adjunto.ContenidoB64 = zip_blob;
-												adjunto.Nombre = Path.GetFileName(zip_attach.StrUrlActual);
-												archivos.Add(adjunto);
-											}
+                                                    archivo_attach = true;
+                                                    zip_attach_blob = true;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                string ruta_fisica_zip = string.Format(@"{0}\{1}.zip", carpeta_xml, nombre_archivo);
 
-											archivo_attach = true;
-											zip_attach_blob = true;
+                                                if (Archivo.ValidarExistencia(ruta_fisica_zip))
+                                                {
+                                                    bytes_applications = Archivo.ObtenerBytes(ruta_fisica_zip);
 
-										}
-										else
-										{
-											archivo_attach = false;
-											zip_attach_blob = false;
-										}
+                                                    if (bytes_applications.Length < 25)
+                                                    {
+                                                        Archivo.Borrar(ruta_fisica_zip);
+                                                        generar_att_zip = true;
+                                                    }
+                                                    
+                                                    else
+                                                        {
+                                                            archivo_attach = true;
+                                                            zip_attach_blob = false;
+                                                        }
+                                                }
+                                            }                                                                     
+                                         }
 									}
 									else
 									{
@@ -1129,22 +1149,22 @@ namespace HGInetMiFacturaElectonicaController
 							// ruta del zip
 							string ruta_zip = string.Format(@"{0}\{1}.zip", carpeta_xml, nombre_archivo);
 
-							if (archivo_attach == false && documento.IntVersionDian == 2 && zip_attach_blob == false && !Archivo.ValidarExistencia(ruta_zip))
-							{
-								if (documento_obj != null)
-								{
-									attached = Ctl_Documento.ConvertirAttachedDoc(documento_obj, documento, empresa_obligado);
-								}
-								else
-								{
-									attached = Ctl_Documento.ConvertirAttachedDoc(null, documento, empresa_obligado);
-								}
+                            if (archivo_attach == false && documento.IntVersionDian == 2 && zip_attach_blob == false && !Archivo.ValidarExistencia(ruta_zip))
+                                {
+                                    if (documento_obj != null)
+                                    {
+                                        attached = Ctl_Documento.ConvertirAttachedDoc(documento_obj, documento, empresa_obligado);
+                                    }
+                                    else
+                                    {
+                                        attached = Ctl_Documento.ConvertirAttachedDoc(null, documento, empresa_obligado);
+                                    }
 
-							}
-							else if (documento.IntVersionDian == 2)
-							{
-								attached = true;
-							}
+                                }
+                                else if (documento.IntVersionDian == 2)
+                                {
+                                    attached = true;
+                                }
 
 							if (attached == true && documento.IntVersionDian == 2)
 							{
