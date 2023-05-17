@@ -144,6 +144,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				}
 
+				//Valida que si tiene certificado digital este vigente
+				if (facturador_electronico.IntCertFirma == 1)
+				{
+					Ctl_Documento certif = new Ctl_Documento();
+					certif.ValidarCertificadoDigital(facturador_electronico);
+				}
+
 				int i = 0;
 				//Planes y transacciones
 				foreach (var item in documentos)

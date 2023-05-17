@@ -157,8 +157,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else if (!lista_resolucion.Any())
 					throw new ApplicationException(string.Format("No se encontraron las resoluciones para el Facturador Electrónico '{0}'", facturador_electronico.StrIdentificacion));
 
-				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
 
+				//Valida que si tiene certificado digital este vigente
+				if (facturador_electronico.IntCertFirma == 1)
+				{
+					Ctl_Documento certif = new Ctl_Documento();
+					certif.ValidarCertificadoDigital(facturador_electronico);
+				}
+
+				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
 				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count(), TipoDocPlanes.Documento.GetHashCode());
 
 				if (ListaPlanes == null)

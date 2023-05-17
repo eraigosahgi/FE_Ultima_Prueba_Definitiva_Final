@@ -83,6 +83,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 				}
 
+				//Valida que si tiene certificado digital este vigente
+				if (facturador_electronico.IntCertFirma == 1)
+				{
+					Ctl_Documento certif = new Ctl_Documento();
+					certif.ValidarCertificadoDigital(facturador_electronico);
+				}
+
 				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
 				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count(), TipoDocPlanes.Nomina.GetHashCode());
 
