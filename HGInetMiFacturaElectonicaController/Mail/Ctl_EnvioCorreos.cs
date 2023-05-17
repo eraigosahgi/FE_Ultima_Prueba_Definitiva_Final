@@ -1100,7 +1100,9 @@ namespace HGInetMiFacturaElectonicaController
                                                 }
                                                 else
                                                 {
-
+                                                    Archivo.Borrar(ruta_fisica_zip);
+                                                    archivo_attach = false;
+                                                    generar_att_zip = true;
                                                 }
                                             }                                                                     
                                          }
