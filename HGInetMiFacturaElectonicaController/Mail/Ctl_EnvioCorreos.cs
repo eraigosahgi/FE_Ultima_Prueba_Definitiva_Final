@@ -1090,6 +1090,7 @@ namespace HGInetMiFacturaElectonicaController
                                                     {
                                                         Archivo.Borrar(ruta_fisica_zip);
                                                         archivo_attach = false;
+                                                        generar_att_zip = true;
                                                     }
                                                     else
                                                     {
@@ -1209,7 +1210,21 @@ namespace HGInetMiFacturaElectonicaController
 												generar_att_zip = false;
 											}
 
-										}
+                                            if (reenvio_documento == true && generar_att_zip == true)
+                                            {
+                                                byte[] bytes_pdf = Archivo.ObtenerWeb(documento.StrUrlArchivoPdf);
+                                                if (bytes_pdf != null)
+                                                {
+                                                    string ruta_pdf_copia = string.Format(@"{0}\{1}.pdf", carpeta_xml, Path.GetFileNameWithoutExtension(documento.StrUrlArchivoPdf));
+                                                    File.WriteAllBytes(ruta_pdf_copia, bytes_pdf);
+                                                }
+                                                else
+                                                {
+                                                    contiene_pdf = false;
+                                                }
+                                            }
+
+                                        }
 
 										//if (reenvio_documento == true && Archivo.ValidarExistencia(ruta_zip))
 										//{
@@ -1219,6 +1234,8 @@ namespace HGInetMiFacturaElectonicaController
 										if (generar_att_zip == true)
 										{
 											Archivo.Borrar(ruta_zip);
+
+
 
 											// genera la compresión del archivo en zip
 											using (ZipArchive archive = ZipFile.Open(ruta_zip, ZipArchiveMode.Update))
