@@ -77,12 +77,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				context.Configuration.LazyLoadingEnabled = LazyLoading;
 
-				DateTime fecha_val = new DateTime(2022, 11, 27);
+				DateTime fecha_ini = new DateTime(2022, 12, 31);
 
 				datos = (from item in context.TblAlmacenamientoDocs
-						 where item.DatFechaRegistroDoc > fecha_val 
+						 where item.DatFechaRegistroDoc > fecha_ini
 						 //&& item.StrUrlAnterior.Contains("files.hgidocs.co")
-						 && item.IntConsecutivo == 1
+						 //&& item.IntConsecutivo == 1
 						 && item.IntBorrado == false
 						 select item).OrderBy(x => x.DatFechaRegistroDoc).ToList();
 
@@ -92,6 +92,18 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			{
 				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Consultando los archicos en bd a eliminar");
 			}
+
+			return datos;
+		}
+
+		public List<TblAlmacenamientoDocs> ObtenerDocXElim(Guid IdSeguridad, bool LazyLoading = false)
+		{
+			context.Configuration.LazyLoadingEnabled = LazyLoading;
+
+			List<TblAlmacenamientoDocs> datos = (from item in context.TblAlmacenamientoDocs
+												 where item.StrIdSeguridadDoc.Equals(IdSeguridad)
+												 && item.IntBorrado == false
+												 select item).ToList();
 
 			return datos;
 		}

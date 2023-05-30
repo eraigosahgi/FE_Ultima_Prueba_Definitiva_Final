@@ -6673,6 +6673,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								if (ultimo_registro.DatFechaRegistroDoc.Year == anyo)
 								{
 									mes = ultimo_registro.DatFechaRegistroDoc.Month;
+									j = mes;
 									dia = ultimo_registro.DatFechaRegistroDoc.Day;
 									hora = ultimo_registro.DatFechaRegistroDoc.Hour;
 									min = ultimo_registro.DatFechaRegistroDoc.Minute;
@@ -7509,10 +7510,10 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						List<TblAlmacenamientoDocs> list_docs_act = new List<TblAlmacenamientoDocs>();
 						int cont = 0;
 						int tope = 1000;
-						foreach (TblAlmacenamientoDocs item_eliminar in registros_eliminar)
-						//Parallel.ForEach<TblAlmacenamientoDocs>(registros_eliminar, item_eliminar =>
+						//foreach (TblAlmacenamientoDocs item_eliminar in registros_eliminar)
+						Parallel.ForEach<TblAlmacenamientoDocs>(registros_eliminar, item_eliminar =>
 						{
-							List<TblAlmacenamientoDocs> list_docs = almacenamiento.Obtener(item_eliminar.StrIdSeguridadDoc);
+							//List<TblAlmacenamientoDocs> list_docs = almacenamiento.ObtenerDocXElim(item_eliminar.StrIdSeguridadDoc);
 
 							Ctl_Documento ctl_doc = new Ctl_Documento();
 							TblDocumentos doc_bd = ctl_doc.ObtenerDocumento(item_eliminar.StrIdSeguridadDoc);
@@ -7520,145 +7521,68 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							Ctl_Empresa _empresa = new Ctl_Empresa();
 							TblEmpresas facturador = _empresa.Obtener(doc_bd.StrEmpresaFacturador);
 
-							Parallel.ForEach<TblAlmacenamientoDocs>(list_docs, item =>
+
+							string ruta_fisica = string.Empty;
+
+							string carpeta_fisica = string.Format(@"{0}\{1}\{2}\{3}\", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, facturador.StrIdSeguridad, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+							string nombre_archivo = Path.GetFileNameWithoutExtension(item_eliminar.StrUrlActual);
+							string extension_archivo = Path.GetExtension(item_eliminar.StrUrlActual);
+
+
+							if (item_eliminar.IntConsecutivo == TipoArchivoStorage.XMLACUSE.GetHashCode() || item_eliminar.IntConsecutivo > 9)
 							{
-								if (cont == 0)
-								{
-									try
-									{
-										RegistroLog.EscribirLog(new ApplicationException("Ingresa Elimina archivos"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Registros : {0} ", 0));
+								carpeta_fisica = carpeta_fisica.Replace(RecursoDms.CarpetaFacturaEDian, RecursoDms.CarpetaXmlAcuse);
+							}
+							if (item_eliminar.IntConsecutivo == TipoArchivoStorage.XMLRESPDIAN.GetHashCode())
+							{
+								carpeta_fisica = carpeta_fisica.Replace(RecursoDms.CarpetaFacturaEDian, RecursoDms.CarpetaFacturaEConsultaDian);
+							}
+							if (item_eliminar.IntConsecutivo == TipoArchivoStorage.ZIPAnexo.GetHashCode())
+							{
+								carpeta_fisica = carpeta_fisica.Replace(RecursoDms.CarpetaFacturaEDian, RecursoDms.CarpetaFacturaEAnexos);
+							}
 
-									}
-									catch (Exception)
-									{
-
-									}
-
-								}
-
-								string ruta_fisica = string.Empty;
-
-								if (!item.StrUrlAnterior.Contains("files.hgidocs.co"))
-								{
-									string carpeta_fisica = string.Format(@"{0}\{1}\{2}\{3}\", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, facturador.StrIdSeguridad, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
-									string nombre_archivo = Path.GetFileNameWithoutExtension(item.StrUrlActual);
-									string extension_archivo = Path.GetExtension(item.StrUrlActual);
+							ruta_fisica = string.Format(@"{0}{1}{2}", carpeta_fisica, nombre_archivo, extension_archivo);
 
 
-									if (item.IntConsecutivo == TipoArchivoStorage.XMLACUSE.GetHashCode())
-									{
-										carpeta_fisica = carpeta_fisica.Replace(RecursoDms.CarpetaFacturaEDian, RecursoDms.CarpetaXmlAcuse);
-									}
-									if (item.IntConsecutivo == TipoArchivoStorage.XMLRESPDIAN.GetHashCode())
-									{
-										carpeta_fisica = carpeta_fisica.Replace(RecursoDms.CarpetaFacturaEDian, RecursoDms.CarpetaFacturaEConsultaDian);
-									}
-									if (item.IntConsecutivo == TipoArchivoStorage.ZIPAnexo.GetHashCode())
-									{
-										carpeta_fisica = carpeta_fisica.Replace(RecursoDms.CarpetaFacturaEDian, RecursoDms.CarpetaFacturaEAnexos);
-									}
+							try
+							{
+								bool archivo_borrado = false;
 
-									ruta_fisica = string.Format(@"{0}{1}{2}", carpeta_fisica, nombre_archivo, extension_archivo);
-								}
-								else
-								{
-									ruta_fisica = item.StrUrlAnterior.Replace(plataforma_datos.RutaDmsPublica, plataforma_datos.RutaDmsFisica).Replace("/", "\\");
-								}
+								archivo_borrado = Archivo.Borrar(ruta_fisica);
 
+								item_eliminar.DatFechaBorrado = Fecha.GetFecha();
+								item_eliminar.IntBorrado = true;
+								
+
+								list_docs_act.Add(item_eliminar);
+
+							}
+							catch (Exception excepcion)
+							{
+								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Inconsistencia borrando el archivo, ruta: {0}", ruta_fisica));
+							}
+
+							if (cont == tope)
+							{
 								try
 								{
-									bool archivo_borrado = false;
+									RegistroLog.EscribirLog(new ApplicationException("Registro Elimina archivos"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Registros : {0} ", list_docs_act.Count()));
 
-									archivo_borrado = Archivo.Borrar(ruta_fisica);
-
-									if (archivo_borrado == true)
-									{
-										item.DatFechaBorrado = Fecha.GetFecha();
-										item.IntBorrado = true;
-									}
-
-									list_docs_act.Add(item);
-									cont++;
 								}
-								catch (Exception excepcion)
+								catch (Exception)
 								{
-									RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Inconsistencia borrando el archivo, ruta: {0}", ruta_fisica));
+
 								}
+								tope += 1000;
 
-								if (cont == tope)
-								{
-									try
-									{
-										RegistroLog.EscribirLog(new ApplicationException("Registro Elimina archivos"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Registros : {0} ", tope.ToString()));
+							}
 
-									}
-									catch (Exception)
-									{
+							
 
-									}
-									tope += 1000;
+						});
 
-									try
-									{
-										var Tarea = ActualizaEliminarArchivosStorage(list_docs_act);
-									}
-									catch (Exception excepcion)
-									{
-										Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
-									}
-									list_docs_act = new List<TblAlmacenamientoDocs>();
-								}
-							});
-
-							//foreach (TblAlmacenamientoDocs item in list_docs)
-							//{
-							//	if (cont == 0)
-							//	{
-							//		try
-							//		{
-							//			RegistroLog.EscribirLog(new ApplicationException("Ingresa Elimina archivos"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Registros : {0} ", tope.ToString()));
-
-							//		}
-							//		catch (Exception)
-							//		{
-
-							//		}
-									
-							//	}
-
-							//	//string carpeta_fisica = string.Format(@"{0}/{1}/{2}/", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica);
-							//	string ruta_fisica = item.StrUrlAnterior.Replace(plataforma_datos.RutaDmsPublica, plataforma_datos.RutaDmsFisica).Replace("/", "\\");//string.Format(@"{0}{1}/{2}.pdf", carpeta_fisica, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
-
-							//	try
-							//	{
-							//		Archivo.Borrar(ruta_fisica);
-
-							//		item.DatFechaBorrado = Fecha.GetFecha();
-							//		item.IntBorrado = true;
-							//		list_docs_act.Add(item);
-							//		cont++;
-							//	}
-							//	catch (Exception excepcion)
-							//	{
-							//		RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Inconsistencia borrando el archivo, ruta: {0}", ruta_fisica));
-							//	}
-
-							//	if (cont == tope)
-							//	{
-							//		try
-							//		{
-							//			RegistroLog.EscribirLog(new ApplicationException("Registro Elimina archivos"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Registros : {0} ", tope.ToString()));
-
-							//		}
-							//		catch (Exception)
-							//		{
-
-							//		}
-							//		tope += 1000;
-							//	}
-								
-							//}
-						}
+							
 
 						try
 						{
@@ -7670,17 +7594,18 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 						}
 
-						foreach (TblAlmacenamientoDocs item in list_docs_act)
+						if (list_docs_act.Count() > 0)
 						{
 							try
 							{
-								almacenamiento.Actualizar(item);
+								var Tarea = ActualizaEliminarArchivosStorage(list_docs_act);
 							}
 							catch (Exception excepcion)
 							{
-								RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion, "Inconsistencia actualizando registro de archivos borrado");
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 							}
 						}
+
 					}
 
 					//Se envia notificacion a tic para indicar que termino de importar el rango especificado
