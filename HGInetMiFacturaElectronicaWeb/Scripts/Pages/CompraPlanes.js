@@ -126,20 +126,21 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 			
 		});
 
+		//Caso 718725
 		//TipoDocumento
-		$("#SelectTipoDoc").dxSelectBox({
-			placeholder: "Seleccione el Tipo de Documento",
-			displayExpr: "Texto",
-			dataSource: TiposDocumento,
-			onValueChanged: function (data) {
-				$scope.tipo_documento = data.value.ID;
-			}
-		}).dxValidator({
-			validationRules: [{
-				type: "required",
-				message: "Debe seleccionar el Tipo de Documento"
-			}]
-		});
+		//$("#SelectTipoDoc").dxSelectBox({
+		//	placeholder: "Seleccione el Tipo de Documento",
+		//	displayExpr: "Texto",
+		//	dataSource: TiposDocumento,
+		//	onValueChanged: function (data) {
+		//		$scope.tipo_documento = data.value.ID;
+		//	}
+		//}).dxValidator({
+		//	validationRules: [{
+		//		type: "required",
+		//		message: "Debe seleccionar el Tipo de Documento"
+		//	}]
+		//});
 
 		$('#modal_comprar_plan').modal('show');
 	};
@@ -147,8 +148,8 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 	var TiposDocumento =
 		[
 			{ ID: "0", Texto: 'Mixto' },
-			{ ID: "1", Texto: 'Factura Electrónica' },
-			{ ID: "2", Texto: 'Nomina Electrónica' }
+			//{ ID: "1", Texto: 'Factura Electrónica' },
+			//{ ID: "2", Texto: 'Nomina Electrónica' }
 		];
 
 });
