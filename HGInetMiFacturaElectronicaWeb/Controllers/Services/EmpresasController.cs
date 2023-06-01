@@ -148,6 +148,31 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			return Ok(datos);
 		}
 
+		[HttpGet]
+		[Route("api/ObtenerEmpresasCertificados")]
+		public IHttpActionResult ObtenerEmpresasCertificados(string IdentificacionEmpresa, DateTime Desde, DateTime Hasta, string responsable="*",string proveedor="*")
+		{
+			Sesion.ValidarSesion();
+
+			Ctl_Empresa CtEmpresa = new Ctl_Empresa();
+			List<TblEmpresas> empresas = new List<TblEmpresas>();
+
+			empresas = CtEmpresa.ObtenerEmpresasCertificados(IdentificacionEmpresa, Desde, Hasta,  responsable ,  proveedor );
+
+			var retorno = empresas.Select(d => new
+			{
+				Identificacion = d.StrIdentificacion,
+				RazonSocial = d.StrRazonSocial,
+				Email = d.StrMailAdmin,
+				d.DatCertVence,
+				d.IntCertProveedor,
+				d.IntCertFirma,
+				d.IntCertResponsableHGI
+			});
+
+			return Ok(retorno);
+		}
+
 		/// <summary>
 		/// Obtiene de Facturadores y perfil 99 de Habilitacion 
 		/// </summary>        
@@ -352,7 +377,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				return NotFound();
 			}
 
-			var retorno = new {
+			var retorno = new
+			{
 				Idseguridad = datos.StrIdSeguridad,
 				RazonSocial = datos.StrRazonSocial,
 				TipoIdentificacion = datos.StrTipoIdentificacion,
@@ -502,7 +528,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntInteroperabilidad = ObjEmpresa.IntInteroperabilidad;
 				Empresa.IntRadian = ObjEmpresa.IntRadian;
 				Empresa.IntTipoPlan = ObjEmpresa.IntTipoPlan;
-				Empresa.IntCompraPlan = ObjEmpresa.IntTipoPlan == 0 ? true : false; 
+				Empresa.IntCompraPlan = ObjEmpresa.IntTipoPlan == 0 ? true : false;
 
 				#region Certificado
 				Empresa.IntCertFirma = ObjEmpresa.IntCertFirma;

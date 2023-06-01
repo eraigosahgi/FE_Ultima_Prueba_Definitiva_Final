@@ -50,6 +50,16 @@
 		});
 	}
 
+
+	this.ObtenerEmpresasCertificados = function (codigo_facturador, Desde, Hasta, responsable) {
+		return $http.get('/api/ObtenerEmpresasCertificados?IdentificacionEmpresa=' + codigo_facturador + '&Desde=' + Desde + '&Hasta=' + Hasta + '&responsable=' + responsable + '&proveedor=*').then(function (response) {
+			return response.data;
+		}, function (response) {
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			return $q.reject(response.data);
+		});
+	}
+
 	//Actualiza los datos de configuración de comercio de la Empresa	
 	this.EditarConfigPago = function (Stridseguridad, Permitepagosparciales, IdComercio, DescripcionComercio) {
 

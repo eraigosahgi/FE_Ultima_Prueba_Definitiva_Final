@@ -217,4 +217,7 @@
   <data name="ImportarDocumentosRecibidos" xml:space="preserve">
     <value>1323</value>
   </data>
+  <data name="ConsultaEmpresaCertificado" xml:space="preserve">
+    <value>1354</value>
+  </data>
 </root>

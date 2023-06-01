@@ -241,6 +241,48 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return datos;
 		}
 
+
+		/// <summary>
+		/// Consulta todos los factores para obtener informacion sobre la fecha de vencimiento del certificado
+		/// </summary>
+		/// <param name="identificacion"></param>
+		/// <param name="fecha_inicio"></param>
+		/// <param name="fecha_fin"></param>
+		/// <param name="responsable"></param>
+		/// <param name="proveedor"></param>
+		/// <param name="LazyLoading"></param>
+		/// <returns></returns>
+		public List<TblEmpresas> ObtenerEmpresasCertificados(string identificacion, DateTime fecha_inicio, DateTime fecha_fin, string responsable = "*", string proveedor = "*", bool LazyLoading = true)
+		{
+
+			fecha_inicio = fecha_inicio.Date;
+			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+			int responsable_certificado = 0;
+			try
+			{
+				if (responsable != "*")
+				{
+					responsable_certificado = Convert.ToInt16(responsable);
+				}
+			}
+			catch (Exception)
+			{
+
+			}
+
+			context.Configuration.LazyLoadingEnabled = LazyLoading;
+
+			var datos = (from item in context.TblEmpresas
+						 where (item.StrIdentificacion.Equals(identificacion) || identificacion.Equals("*"))
+						 && (item.DatCertVence >= fecha_inicio && item.DatCertVence <= fecha_fin)
+						 && item.IntObligado == true
+						 && (item.IntCertFirma == responsable_certificado || responsable.Equals("*"))
+						 select item).OrderBy(x => x.DatCertVence).ToList();
+			return datos;
+		}
+
+
 		/// <summary>
 		/// Obtiene todas las empresa asociadas al facturador
 		/// </summary>
@@ -485,12 +527,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntEnvioMailRecepcion = empresa.IntEnvioMailRecepcion;
 					EmpresaActualiza.IntVersionDian = empresa.IntVersionDian;
 					EmpresaActualiza.IntTimeout = empresa.IntTimeout;
-                    
 
-                    EmpresaActualiza.IntDebug = empresa.IntDebug;
+
+					EmpresaActualiza.IntDebug = empresa.IntDebug;
 					EmpresaActualiza.IntInteroperabilidad = empresa.IntInteroperabilidad;
-                    EmpresaActualiza.IntRadian = empresa.IntRadian;
-                    EmpresaActualiza.StrSerialCloudServices = empresa.StrSerialCloudServices;
+					EmpresaActualiza.IntRadian = empresa.IntRadian;
+					EmpresaActualiza.StrSerialCloudServices = empresa.StrSerialCloudServices;
 					EmpresaActualiza.IntTipoPlan = empresa.IntTipoPlan;
 					EmpresaActualiza.IntCompraPlan = empresa.IntTipoPlan == 0 ? true : false;
 
@@ -531,7 +573,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					}
 
 				}
-				
+
 
 				if (EmpresaActualiza.IntAcuseTacito == null)
 					EmpresaActualiza.IntAcuseTacito = 0;
@@ -1590,10 +1632,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			if (sonda == false)
 			{
 				datos = (from item in context.TblEmpresas
-							 where item.IntAcuseTacito >= 72
-							 select item).ToList();
+						 where item.IntAcuseTacito >= 72
+						 select item).ToList();
 
-				
+
 			}
 			else
 			{
@@ -1702,7 +1744,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			//Valida si se obtuvieron datos y convierte la tbl a Empresa.
 			if (tbl_empresa == null)
 			{
-				
+
 				tbl_empresa = new TblEmpresas();
 
 				tbl_empresa.StrTipoIdentificacion = empresa.TipoIdentificacion.ToString();
@@ -1720,7 +1762,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 				tbl_empresa.IntIdEstado = Convert.ToInt16(EstadoEmpresa.ACTIVA.GetHashCode());
 				tbl_empresa.IntVersionDian = 2;
-				
+
 				tbl_empresa.StrEmpresaAsociada = empresa.Identificacion;
 				tbl_empresa.StrEmpresaDescuento = empresa.Identificacion;
 				tbl_empresa.IntNumUsuarios = 3;
@@ -1732,7 +1774,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				tbl_empresa.StrMailPagos = empresa.EmailAdmin;
 
 				ListaEmailRegistro.Add(new ObjVerificacionEmail { email = empresa.EmailAdmin });
-				
+
 				if (!plataforma_datos.RutaPublica.Contains("habilitacion") && !plataforma_datos.RutaPublica.Contains("localhost"))
 				{
 					tbl_empresa.IntHabilitacion = Convert.ToByte(Habilitacion.Valida_Objeto.GetHashCode());
@@ -1744,7 +1786,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					tbl_empresa.IntHabilitacionNomina = empresa.NominaE == true ? Convert.ToByte(Habilitacion.Pruebas.GetHashCode()) : tbl_empresa.IntHabilitacionNomina;
 					tbl_empresa.IntTipoPlan = 1;
 					tbl_empresa.IntCompraPlan = false;
-					
+
 				}
 
 				tbl_empresa = Guardar(tbl_empresa, ListaEmailRegistro);
@@ -1771,7 +1813,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					{
 						Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, "Error Creando el Plan de documentos para las pruebas");
 					}
-					
+
 				}
 
 
