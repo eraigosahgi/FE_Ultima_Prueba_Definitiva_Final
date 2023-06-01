@@ -6709,7 +6709,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								if (i == diasmes || fecha_proceso.Day == diasmes)
 								{
-									fecha_proceso = fecha_fin;
+									//fecha_proceso = fecha_fin;
 									i = diasmes;
 								}
 
