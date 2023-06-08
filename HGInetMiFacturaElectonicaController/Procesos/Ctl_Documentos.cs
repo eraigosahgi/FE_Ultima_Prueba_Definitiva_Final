@@ -1387,10 +1387,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if (Numero.Tolerancia(retefte_cal, Docdet.ReteFuenteValor, 2))
 							//if (retefte_cal == Docdet.ReteFuenteValor)
 							{
-								ListaTarifaImpuestoReteFuente list_retefte = new ListaTarifaImpuestoReteFuente();
-								ListaItem retfte = list_retefte.Items.Where(d => d.Codigo.Equals(Docdet.ReteFuentePorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
-								if (retfte == null)
-									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ReteFuentePorcentaje", Docdet.ReteFuentePorcentaje));
+								//articulo 383 del E.T es posible manejar tarifas diferente a las que se tiene por parte de la DIAN en FE
+								//ListaTarifaImpuestoReteFuente list_retefte = new ListaTarifaImpuestoReteFuente();
+								//ListaItem retfte = list_retefte.Items.Where(d => d.Codigo.Equals(Docdet.ReteFuentePorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
+								//if (retfte == null)
+								//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ReteFuentePorcentaje", Docdet.ReteFuentePorcentaje));
 							}
 							else
 							{
