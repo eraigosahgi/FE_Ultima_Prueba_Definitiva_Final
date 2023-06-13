@@ -142,6 +142,7 @@ EmpresasApp.controller('ConsultaEmpresasCertificadosController', function Consul
 	//consultar();
 	function consultar() {
 		$('#wait').hide();
+		txt_hgi_Facturador = (txt_hgi_Facturador == "") ? "*" : txt_hgi_Facturador;
 
 		SrvEmpresas.ObtenerEmpresasCertificados(txt_hgi_Facturador, fecha_inicio, fecha_fin, item_Responsable).then(function (data) {
 			$('#wait').hide();
