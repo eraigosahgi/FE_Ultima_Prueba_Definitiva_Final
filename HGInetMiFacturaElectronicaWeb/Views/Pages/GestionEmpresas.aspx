@@ -460,18 +460,19 @@
 
 								<div class="col-md-12" style="margin-top: -10px;">
 
-
-
-
 									<div class="col-md-6" data-ng-show="Admin">
-										<div class="col-md-12" style="margin: 0px; margin-bottom: 1%">
-											<div class="dx-field-label" style="font-size: 14px;" id="idCerFirma">Firma:<strom style="color: red;">*</strom></div>
-											<div class="dx-field-value">
-												<div id="CerFirma"></div>
-
-											</div>
+										<div class="dx-field-label" style="font-size: 14px;" id="idCerFirma">Firma: <strong style="color: red;">*</strong></div>
+										<div class="dx-field-value">
+											<div id="CerFirma"></div>
 										</div>
 									</div>
+
+                                    <div class="col-md-12" id="PanelFirmaHGI">			
+                                        <div class="dx-field-label" style="font-size: 14px;">Fecha de vencimiento: <strong style="color: red;">*</strong></div>
+                                        <div class="dx-field-value">
+											<div id="fechaVencimientoCertificadoHGI"></div>
+										</div>
+                                    </div>
 
 									<div class="col-md-12" id="PanelFirmaFacturador" data-ng-show="id_seguridad != ''">
 										<div class="col-md-6">
@@ -531,10 +532,7 @@
 
 									</div>
 
-
 								</div>
-
-
 							</div>
 						</div>
 					</div>

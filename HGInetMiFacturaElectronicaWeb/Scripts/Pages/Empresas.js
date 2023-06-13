@@ -1056,9 +1056,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 		}
 
-
-
-
+        // Certificado
 		$("#CerFirma").dxRadioGroup({
 			searchEnabled: true,
 			caption: 'Firma',
@@ -1069,7 +1067,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_CertFirma = data.value.ID;
 
 				if (Datos_CertFirma == 0) {
-					$('#PanelFirmaFacturador').hide();
+				    // Ocultar panel con campos para firmar certificado como Proveedor
+				    $('#PanelFirmaFacturador').hide();
+
+				    // Mostrar panel con campos para firmar certificado como HGI SAS
+				    $('#PanelFirmaHGI').show();
+
 					//Coloco como NO requerido el proveedor del certificado
 					$("#cboProveedor").dxValidator({ validationRules: [] });
 					//Coloco como NO requerida la clave del certificado						
@@ -1078,11 +1081,22 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					try {
 						//Coloco como NO requerida la clave del certificado						
 						//Se coloca dentro de try porque este campo no existe cuando la empresa es nueva
-						$("#VenceCert").dxTextBox({ validationRules: [] });
+					    $("#VenceCert").dxTextBox({ validationRules: [] });
 					} catch (e) { }
 
+				    // Asignar valor fecha vencimiento para firmar como HGI SAS
+					$("#fechaVencimientoCertificadoHGI").dxDateBox({ value: Datos_FechaCert });
+
 				} else {
-					$('#PanelFirmaFacturador').show();
+				    // Resetear valor fecha vencimiento para firmar como HGI SAS
+				    $("#fechaVencimientoCertificadoHGI").dxDateBox({ value: Datos_FechaCert });
+
+				    // Ocultar panel con campos para firmar certificado como HGI SAS
+				    $('#PanelFirmaHGI').hide();
+
+                    // Mostrar panel con campos para firmar certificado como Proveedor
+				    $('#PanelFirmaFacturador').show();
+
 					//Coloco como requerido el proveedor del certificado
 					//$("#cboProveedor").dxValidator({
 					//	validationRules: [{
@@ -1212,9 +1226,16 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			}
 		});
 
-
-
-
+	    // Fecha de vencimiento certificado HGI SAS
+		$("#fechaVencimientoCertificadoHGI").dxDateBox({
+		    type: 'date',
+		    width: '100%',
+		    displayFormat: "yyyy-MM-dd",
+		    min: now,
+		    onValueChanged: function (data) {
+		        Datos_FechaCert = data.value;
+		    }
+		});
 
 		/////////////////////////////////////Tooltip
 		$("#ttEmail").dxPopover({
@@ -2090,7 +2111,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#ClaveCert").dxTextBox({ value: Datos_ClaveCert });
 				} catch (e) { }
 				try {
-					$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
+				    $("#VenceCert").dxTextBox({ value: Datos_FechaCert });
+
+				    // Asignar valor fecha vencimiento para firmar como HGI SAS
+				    $("#fechaVencimientoCertificadoHGI").dxDateBox({ value: Datos_FechaCert });
 				} catch (e) { }
 
 
