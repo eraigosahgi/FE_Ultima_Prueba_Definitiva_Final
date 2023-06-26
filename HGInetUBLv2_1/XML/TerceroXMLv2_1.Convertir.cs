@@ -125,12 +125,27 @@ namespace HGInetUBLv2_1
 
 				if (cliente.Party.PhysicalLocation != null)
 				{
-					adquiriente.Direccion = cliente.Party.PhysicalLocation.Address.AddressLine[0].Line.Value;
-					adquiriente.Ciudad = cliente.Party.PhysicalLocation.Address.CityName.Value;
-					adquiriente.CodigoCiudad = cliente.Party.PhysicalLocation.Address.ID.Value;
-					adquiriente.Departamento = cliente.Party.PhysicalLocation.Address.CountrySubentity.Value;
-					adquiriente.CodigoDepartamento = cliente.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
-					adquiriente.CodigoPais = cliente.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
+					try
+					{
+						adquiriente.Direccion = cliente.Party.PhysicalLocation.Address.AddressLine[0].Line.Value;
+					}
+					catch (Exception)
+					{
+						adquiriente.Direccion = string.Empty;
+					}
+					adquiriente.Ciudad = (cliente.Party.PhysicalLocation.Address.CityName != null) ? cliente.Party.PhysicalLocation.Address.CityName.Value: string.Empty;
+					adquiriente.CodigoCiudad = (cliente.Party.PhysicalLocation.Address.ID != null) ? cliente.Party.PhysicalLocation.Address.ID.Value : string.Empty;
+					adquiriente.Departamento = (cliente.Party.PhysicalLocation.Address.CountrySubentity != null) ? cliente.Party.PhysicalLocation.Address.CountrySubentity.Value : string.Empty;
+					adquiriente.CodigoDepartamento = (cliente.Party.PhysicalLocation.Address.CountrySubentityCode != null) ? cliente.Party.PhysicalLocation.Address.CountrySubentityCode.Value : string.Empty;
+					try
+					{
+						adquiriente.CodigoPais = cliente.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
+					}
+					catch (Exception)
+					{
+
+						adquiriente.CodigoPais = "CO";
+					}
 
 					try
 					{
@@ -149,12 +164,26 @@ namespace HGInetUBLv2_1
 				{
 					//Direccion Fiscal
 					adquiriente.DireccionFiscal = new Direcciones();
-					adquiriente.DireccionFiscal.Ciudad = cliente.Party.PartyTaxScheme[0].RegistrationAddress.CityName.Value;
-					adquiriente.DireccionFiscal.CodigoCiudad = cliente.Party.PartyTaxScheme[0].RegistrationAddress.ID.Value;
-					adquiriente.DireccionFiscal.Departamento = cliente.Party.PartyTaxScheme[0].RegistrationAddress.CountrySubentity.Value;
-					adquiriente.DireccionFiscal.CodigoDepartamento = cliente.Party.PartyTaxScheme[0].RegistrationAddress.CountrySubentityCode.Value;
-					adquiriente.DireccionFiscal.CodigoPais = cliente.Party.PartyTaxScheme[0].RegistrationAddress.Country.IdentificationCode.Value;
-					adquiriente.DireccionFiscal.Direccion = cliente.Party.PartyTaxScheme[0].RegistrationAddress.AddressLine[0].Line.Value;
+					adquiriente.DireccionFiscal.Ciudad = (cliente.Party.PartyTaxScheme[0].RegistrationAddress.CityName != null) ? cliente.Party.PartyTaxScheme[0].RegistrationAddress.CityName.Value : string.Empty;
+					adquiriente.DireccionFiscal.CodigoCiudad = (cliente.Party.PartyTaxScheme[0].RegistrationAddress.ID != null) ? cliente.Party.PartyTaxScheme[0].RegistrationAddress.ID.Value : string.Empty;
+					adquiriente.DireccionFiscal.Departamento = (cliente.Party.PartyTaxScheme[0].RegistrationAddress.CountrySubentity != null) ? cliente.Party.PartyTaxScheme[0].RegistrationAddress.CountrySubentity.Value : string.Empty;
+					adquiriente.DireccionFiscal.CodigoDepartamento = (cliente.Party.PartyTaxScheme[0].RegistrationAddress.CountrySubentityCode != null) ? cliente.Party.PartyTaxScheme[0].RegistrationAddress.CountrySubentityCode.Value : string.Empty;
+					try
+					{
+						adquiriente.DireccionFiscal.CodigoPais = cliente.Party.PartyTaxScheme[0].RegistrationAddress.Country.IdentificationCode.Value;
+					}
+					catch (Exception)
+					{
+						adquiriente.DireccionFiscal.CodigoPais = "CO";
+					}
+					try
+					{
+						adquiriente.DireccionFiscal.Direccion = cliente.Party.PartyTaxScheme[0].RegistrationAddress.AddressLine[0].Line.Value;
+					}
+					catch (Exception)
+					{
+						adquiriente.DireccionFiscal.Direccion = string.Empty;
+					}
 					try
 					{
 						ListaPaises list_paises = new ListaPaises();
