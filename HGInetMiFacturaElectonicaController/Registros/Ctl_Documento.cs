@@ -6670,7 +6670,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							if (ultimo_registro != null)
 							{
-								if (ultimo_registro.DatFechaRegistroDoc.Year == anyo)
+								if (ultimo_registro.DatFechaRegistroDoc.Year == anyo && mes == 1)
 								{
 									mes = ultimo_registro.DatFechaRegistroDoc.Month;
 									j = mes;
@@ -6715,7 +6715,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								TimeSpan Diff_dates = fecha_actual.Subtract(fecha_proceso);
 
-								if (Diff_dates.TotalDays < 90)
+								if (Diff_dates.TotalDays < 60)
 									throw new ApplicationException("No se puede sincronizar los archivos a azure");
 
 								//va hacer el recorrido por hora
