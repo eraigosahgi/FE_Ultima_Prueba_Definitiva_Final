@@ -42,23 +42,25 @@ namespace HGInetUBLv2_1
 						obligado.PrimerApellido = empresa.Party.Person.FirstOrDefault().FamilyName.Value;
 				}
 
-
-				obligado.Direccion = empresa.Party.PhysicalLocation.Address.AddressLine[0].Line.Value;
-				obligado.Ciudad = empresa.Party.PhysicalLocation.Address.CityName.Value;
-				obligado.CodigoCiudad = empresa.Party.PhysicalLocation.Address.ID.Value;
-				obligado.Departamento = empresa.Party.PhysicalLocation.Address.CountrySubentity.Value;
-				obligado.CodigoDepartamento = empresa.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
-				obligado.CodigoPais = empresa.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
-				try
+				if (empresa.Party.PhysicalLocation != null)
 				{
-					ListaPaises list_paises = new ListaPaises();
-					ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(obligado.CodigoPais)).FirstOrDefault();
-					obligado.Pais = pais.Descripcion;
+					obligado.Direccion = empresa.Party.PhysicalLocation.Address.AddressLine[0].Line.Value;
+					obligado.Ciudad = empresa.Party.PhysicalLocation.Address.CityName.Value;
+					obligado.CodigoCiudad = empresa.Party.PhysicalLocation.Address.ID.Value;
+					obligado.Departamento = empresa.Party.PhysicalLocation.Address.CountrySubentity.Value;
+					obligado.CodigoDepartamento = empresa.Party.PhysicalLocation.Address.CountrySubentityCode.Value;
+					obligado.CodigoPais = empresa.Party.PhysicalLocation.Address.Country.IdentificationCode.Value;
+					try
+					{
+						ListaPaises list_paises = new ListaPaises();
+						ListaItem pais = list_paises.Items.Where(d => d.Codigo.Equals(obligado.CodigoPais)).FirstOrDefault();
+						obligado.Pais = pais.Descripcion;
+					}
+					catch (Exception)
+					{ }
+					if (empresa.Party.PhysicalLocation.Address.PostalZone != null)
+						obligado.CodigoPostal = empresa.Party.PhysicalLocation.Address.PostalZone.Value;
 				}
-				catch (Exception)
-				{ }
-				if (empresa.Party.PhysicalLocation.Address.PostalZone != null)
-					obligado.CodigoPostal = empresa.Party.PhysicalLocation.Address.PostalZone.Value;
 
 				if (empresa.Party.Contact != null)
 				{
