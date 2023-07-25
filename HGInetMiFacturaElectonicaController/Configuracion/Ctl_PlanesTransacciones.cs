@@ -26,7 +26,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 	{
 
 
-	
+
 
 
 		/// <summary>
@@ -107,8 +107,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			Ptransaccion.IntNumTransaccCompra = datos_plan.IntNumTransaccCompra;
 			Ptransaccion.IntValor = datos_plan.IntValor;
 			Ptransaccion.IntEstado = datos_plan.IntEstado;
-			Ptransaccion.StrObservaciones = datos_plan.StrObservaciones + "\nMODIFICACIÓN: " + Fecha.GetFecha() +" - USUARIO: " + datos_plan.StrUsuario;
-            Ptransaccion.StrEmpresaFacturador = datos_plan.StrEmpresaFacturador.Trim();
+			Ptransaccion.StrObservaciones = datos_plan.StrObservaciones + "\nMODIFICACIÓN: " + Fecha.GetFecha() + " - USUARIO: " + datos_plan.StrUsuario;
+			Ptransaccion.StrEmpresaFacturador = datos_plan.StrEmpresaFacturador.Trim();
 			Ptransaccion.DocumentoRef = datos_plan.DocumentoRef;
 			Ptransaccion.IntMesesVence = datos_plan.IntMesesVence;
 			Ptransaccion.DatFechaVencimiento = datos_plan.DatFechaVencimiento;
@@ -116,8 +116,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			Ptransaccion.IntTipoDocumento = datos_plan.IntTipoDocumento;
 
 			if (Ptransaccion.IntMesesVence > 0 && Ptransaccion.DatFechaInicio != null)
-			{                
-		        Ptransaccion.DatFechaVencimiento = Ptransaccion.DatFechaInicio.Value.AddMonths(Ptransaccion.IntMesesVence);                
+			{
+				Ptransaccion.DatFechaVencimiento = Ptransaccion.DatFechaInicio.Value.AddMonths(Ptransaccion.IntMesesVence);
 			}
 
 			Ptransaccion = this.Edit(Ptransaccion);
@@ -293,11 +293,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			//Consultamos los planes del facturador
 			datos_plan = (from t in context.TblPlanesTransacciones
-													   where (t.StrEmpresaFacturador.Equals(Identificacion))
-														&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
-														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) && (t.IntTipoProceso == TipoPlan))
-														&& (t.IntTipoDocumento == TipoDocumeto)
-													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFecha }).ToList();
+						  where (t.StrEmpresaFacturador.Equals(Identificacion))
+						   && t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
+						   && (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) && (t.IntTipoProceso == TipoPlan))
+						   && (t.IntTipoDocumento == TipoDocumeto)
+						  select t).OrderBy(x => new { x.IntTipoProceso, x.DatFecha }).ToList();
 
 			return datos_plan;
 		}
@@ -615,6 +615,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return Plan;
 		}
 
+
+		#region Happgi
+
 		public dynamic obtenerPlanesHgiDocs(string identificacion)
 		{
 			context.Configuration.LazyLoadingEnabled = false;
@@ -622,30 +625,36 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			int tipoplan = (int)TipoCompra.PostPago.GetHashCode();
 
 			var Plan = (from planes in context.TblPlanesTransacciones
-						where planes.IntTipoProceso != tipoplan 
-						&& planes.StrEmpresaFacturador.Equals(identificacion)												
+						where planes.IntTipoProceso != tipoplan
+						&& planes.StrEmpresaFacturador.Equals(identificacion)
 						select new
 						{
 							Identificacion = planes.StrEmpresaFacturador,
-							Planes = 1,
 							TProcesadas = planes.IntNumTransaccProcesadas,
 							TCompra = planes.IntNumTransaccCompra,
-							Facturador = 1
+							Valor = planes.IntValor,
+							Estado = planes.IntEstado,
+							FechaCompra = planes.DatFecha,
+							FechaInicio = planes.DatFechaInicio,
+							FechaFin = planes.DatFechaVencimiento
 						}).Select(item => new
 						{
 							item.Identificacion,
-							item.Planes,
 							item.TProcesadas,
 							item.TCompra,
 							TDisponible = (item.TCompra - item.TProcesadas),
 							Porcentaje = Math.Round(((float)item.TProcesadas / (float)item.TCompra) * 100, 2),
-							Tipo = 1,
-							item.Facturador
-						}).FirstOrDefault();
-			
+							item.Estado,
+							item.Valor,
+							item.FechaCompra,
+							item.FechaInicio,
+							item.FechaFin
+						}).ToList();
+
 			return Plan;
 		}
 
+		#endregion
 
 
 
@@ -1146,7 +1155,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					context.Configuration.LazyLoadingEnabled = false;
 					planes = (from datos in context.TblPlanesTransacciones
-							  where datos.IntEstado == habilitado  &&
+							  where datos.IntEstado == habilitado &&
 							  datos.DatFechaVencimiento < fecha_actual
 							  select datos).ToList();
 

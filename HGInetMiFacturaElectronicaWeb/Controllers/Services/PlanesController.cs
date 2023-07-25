@@ -48,7 +48,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				//Sin saldo
 				if (Planes == null)
 				{
-					Planes = new { Facturador = 1, Planes = 0, TProcesadas = 0, TCompra = 0, TDisponible = 0, Porcentaje = 0 };
+					Planes = new { Identificacion = Facturador, FechaCompra = 0, TProcesadas = 0, TCompra = 0, TDisponible = 0, Porcentaje = 0, Valor = 0 };
 				}
 
 				return Ok(Planes);
