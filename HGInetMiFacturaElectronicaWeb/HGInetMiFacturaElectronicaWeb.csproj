@@ -2927,6 +2927,7 @@
     <Compile Include="Controllers\Services\IndicadoresController.cs" />
     <Compile Include="Controllers\Services\InteroperabilidadController.cs" />
     <Compile Include="Controllers\Services\PagosController.cs" />
+    <Compile Include="Controllers\Services\PlanesController.cs" />
     <Compile Include="Controllers\Services\RecepcionDocumentosController.cs" />
     <Compile Include="Controllers\Services\UsuarioPagosController.cs" />
     <Compile Include="Properties\Constantes.Designer.cs">

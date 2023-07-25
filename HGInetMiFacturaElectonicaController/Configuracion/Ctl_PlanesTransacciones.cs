@@ -615,6 +615,37 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return Plan;
 		}
 
+		public dynamic obtenerPlanesHgiDocs(string identificacion)
+		{
+			context.Configuration.LazyLoadingEnabled = false;
+
+			int tipoplan = (int)TipoCompra.PostPago.GetHashCode();
+
+			var Plan = (from planes in context.TblPlanesTransacciones
+						where planes.IntTipoProceso != tipoplan 
+						&& planes.StrEmpresaFacturador.Equals(identificacion)												
+						select new
+						{
+							Identificacion = planes.StrEmpresaFacturador,
+							Planes = 1,
+							TProcesadas = planes.IntNumTransaccProcesadas,
+							TCompra = planes.IntNumTransaccCompra,
+							Facturador = 1
+						}).Select(item => new
+						{
+							item.Identificacion,
+							item.Planes,
+							item.TProcesadas,
+							item.TCompra,
+							TDisponible = (item.TCompra - item.TProcesadas),
+							Porcentaje = Math.Round(((float)item.TProcesadas / (float)item.TCompra) * 100, 2),
+							Tipo = 1,
+							item.Facturador
+						}).FirstOrDefault();
+			
+			return Plan;
+		}
+
 
 
 
