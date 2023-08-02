@@ -544,14 +544,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				{
 					if (sesion_usuario != null)
 					{
+						//Por ahora se valida solo con la empresa Norteña ya que no queremos llenar el disco de tanta información
+						if (empresa.StrIdentificacion == "890905680")
+						{
+							AuditoriaEmpresa auditoria = new AuditoriaEmpresa();
+							auditoria.Empresa_Autenticada = sesion_usuario.StrEmpresa;
+							auditoria.Usuario_Autenticado = sesion_usuario.StrUsuario;
+							auditoria.Empresa_Modificada = empresa;
+							auditoria.Empresa_Original = EmpresaActualiza;
+							Almacenar(JsonConvert.SerializeObject(auditoria), Fecha.GetFecha().ToString(Fecha.formato_fecha_archivo) + ".json", EmpresaActualiza.StrIdentificacion);
 
-						AuditoriaEmpresa auditoria = new AuditoriaEmpresa();
-						auditoria.Empresa_Autenticada = sesion_usuario.StrEmpresa;
-						auditoria.Usuario_Autenticado = sesion_usuario.StrUsuario;
-						auditoria.Empresa_Modificada = empresa;
-						auditoria.Empresa_Original = EmpresaActualiza;						
-						Almacenar(JsonConvert.SerializeObject(auditoria),  Fecha.GetFecha().ToString(Fecha.formato_fecha_archivo) + ".json", EmpresaActualiza.StrIdentificacion);
-
+						}
 					}
 				}
 				catch (Exception e)
