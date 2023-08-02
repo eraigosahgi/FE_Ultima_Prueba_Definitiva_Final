@@ -150,14 +150,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpGet]
 		[Route("api/ObtenerEmpresasCertificados")]
-		public IHttpActionResult ObtenerEmpresasCertificados(string IdentificacionEmpresa, DateTime Desde, DateTime Hasta, string responsable="*",string proveedor="*")
+		public IHttpActionResult ObtenerEmpresasCertificados(string IdentificacionEmpresa, DateTime Desde, DateTime Hasta, string responsable = "*", string proveedor = "*")
 		{
 			Sesion.ValidarSesion();
 
 			Ctl_Empresa CtEmpresa = new Ctl_Empresa();
 			List<TblEmpresas> empresas = new List<TblEmpresas>();
 
-			empresas = CtEmpresa.ObtenerEmpresasCertificados(IdentificacionEmpresa, Desde, Hasta,  responsable ,  proveedor );
+			empresas = CtEmpresa.ObtenerEmpresasCertificados(IdentificacionEmpresa, Desde, Hasta, responsable, proveedor);
 
 			var retorno = empresas.Select(d => new
 			{
@@ -681,7 +681,15 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				else
 				{
 					{
-						var datos = ctl_empresa.Editar(Empresa, Sesion.DatosEmpresa.IntAdministrador, ListaEmailRegistro);
+						///Se agrega el objeto session del usuario para almacenar en la auditoria
+						TblUsuarios usuario_sesion = null;
+						try
+						{
+							usuario_sesion = Sesion.DatosUsuario;
+						}
+						catch (Exception)
+						{ }
+						var datos = ctl_empresa.Editar(Empresa, Sesion.DatosEmpresa.IntAdministrador, ListaEmailRegistro, usuario_sesion);
 					}
 				}
 				return Ok();

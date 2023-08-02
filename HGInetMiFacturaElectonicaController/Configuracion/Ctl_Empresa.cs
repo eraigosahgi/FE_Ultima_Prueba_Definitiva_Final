@@ -26,6 +26,7 @@ using System.IO;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetFirmaDigital;
 using LibreriaGlobalHGInet.Peticiones;
+using Newtonsoft.Json;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -465,12 +466,60 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		}
 
+		public class AuditoriaEmpresa
+		{
+			public TblEmpresas Empresa_Original { get; set; }
+			public TblEmpresas Empresa_Modificada { get; set; }
+			public string Empresa_Autenticada { get; set; }
+			public string Usuario_Autenticado { get; set; }
+		}
+
+
+		public static void Almacenar(string mensaje,string archivo,string nit)
+		{
+			StreamWriter sw = null;
+
+			try
+			{
+
+				string directorio_logs = string.Format("{0}\\logs\\CambioEmpresas\\{1}\\", RecursoArchivosParametros.DirectorioArchivosApp,nit);
+
+				string directorio = string.Format("{0}{1}\\", Directorio.ObtenerDirectorioRaiz(), directorio_logs);
+
+				Directorio.CrearDirectorio(directorio);
+
+				// asegura la creación del archivo de auditoría
+				string ruta_archivo = string.Format("{0}{1}", directorio, archivo);
+				Crear(ruta_archivo);
+				
+				sw = new StreamWriter(ruta_archivo, true);
+
+				sw.WriteLine(string.Format("{0}", mensaje));
+				// sw.Flush(); para borrar lo que ya esta escrito
+				sw.Close();
+
+			}
+			catch (Exception)
+			{
+			}
+		}
+
+		public static bool Crear(string ruta)
+		{
+			if (!File.Exists(ruta))
+			{
+				FileStream fs = File.Create(ruta);
+				fs.Close();
+			}
+			return true;
+		}
+
 		/// <summary>
 		/// Actualizar una empresa en la BD
 		/// </summary>
 		/// <param name="empresa">Objeto BD de la empresa a Actualizar</param>
 		/// <returns></returns>
-		public TblEmpresas Editar(TblEmpresas empresa, bool Administrador, List<ObjVerificacionEmail> ListaEmailRegistro)
+		public TblEmpresas Editar(TblEmpresas empresa, bool Administrador, List<ObjVerificacionEmail> ListaEmailRegistro, TblUsuarios sesion_usuario = null)
 		{
 
 			try
@@ -481,6 +530,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (empresa == null)
 					throw new ApplicationException("La empresa es incorrecta!, Error");
 
+				context.Configuration.LazyLoadingEnabled = false;
+
 				TblEmpresas EmpresaActualiza = (from item in context.TblEmpresas
 												where item.StrIdentificacion.Equals(empresa.StrIdentificacion)
 												select item).FirstOrDefault();
@@ -488,6 +539,25 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				if (EmpresaActualiza == null)
 					throw new ApplicationException("La empresa que desea Actualizar no Existe");
 
+				//Auditoria
+				try
+				{
+					if (sesion_usuario != null)
+					{
+
+						AuditoriaEmpresa auditoria = new AuditoriaEmpresa();
+						auditoria.Empresa_Autenticada = sesion_usuario.StrEmpresa;
+						auditoria.Usuario_Autenticado = sesion_usuario.StrUsuario;
+						auditoria.Empresa_Modificada = empresa;
+						auditoria.Empresa_Original = EmpresaActualiza;						
+						Almacenar(JsonConvert.SerializeObject(auditoria),  Fecha.GetFecha().ToString(Fecha.formato_fecha_archivo) + ".json", EmpresaActualiza.StrIdentificacion);
+
+					}
+				}
+				catch (Exception e)
+				{
+
+				}
 
 				//Solo si es administrador, podra guardar toda la información, de resto solo actualizara la información de Facturador o Integrador.
 				if (Administrador)
