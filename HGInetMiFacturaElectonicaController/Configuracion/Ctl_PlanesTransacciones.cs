@@ -649,7 +649,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							item.FechaCompra,
 							item.FechaInicio,
 							item.FechaFin
-						}).ToList();
+						}).OrderByDescending(x => x.FechaCompra).ToList();
 
 			return Plan;
 		}
