@@ -86,20 +86,27 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			try
 			{
+				Almacenar("Inicio pago", facturador);
+
 				//Se valida que el id sea el mismo para evitar 
 				Guid id = Guid.Parse("1f23ea1564af496f93731d46583f13b5");
 				if (identificador_unico != id)
 				{
+					Almacenar("Identificador unico, incorrecto", facturador);
 					throw new ApplicationException("Identificador unico, incorrecto");
 				}
 
+
+
 				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
 
+				Almacenar("Paso ", facturador);
 				TblPlanesTransacciones postpago = clase_planes.Obtener(facturador).FirstOrDefault(x => x.IntEstado == 0 && (x.IntTipoProceso == 3 || (!string.IsNullOrEmpty(x.DocumentoRef) && x.DocumentoRef.Equals("-1"))));
-
+				Almacenar("Paso 2", facturador);
 
 				if (postpago == null)
 				{
+					Almacenar("Paso 3", facturador);
 					TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
 					ObjPlanTransacciones.IntTipoProceso = Convert.ToByte(TipoCompra.Compra.GetHashCode());
 					ObjPlanTransacciones.StrEmpresaUsuario = facturador;
@@ -118,13 +125,15 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					// entonces lo estan haciendo fuera del proceso de happgi ya que este permite solo los planes de la pagina
 					if (ObjPlanTransacciones.IntNumTransaccCompra >= 500)
 					{
+						Almacenar("Paso 4", facturador);
 						return Ok("Compra de documentos supera la cantidad de documentos permitidos <br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
 					}
+					Almacenar("Paso 5", facturador);
 					ObjPlanTransacciones.IntMesesVence = 12;
 					ObjPlanTransacciones.IntTipoDocumento = 0;
 
 					clase_planes.Crear(ObjPlanTransacciones, false);
-
+					Almacenar("Paso 6", facturador);
 					return Ok("Recarga Exitosa");
 				}
 				else if (postpago != null && postpago.IntTipoProceso == 3)
@@ -143,6 +152,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 			catch (Exception ex)
 			{
+				Almacenar(ex.Message, facturador);
 				return Ok(ex.Message);
 			}
 
@@ -179,6 +189,41 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			public string StrClienteEmail { get; set; }
 			public string StrClienteTelefono { get; set; }
 
+		}
+
+
+		public static void Almacenar(string mensaje, string nit, string nombre = "HGIDocs")
+		{
+			StreamWriter sw = null;
+
+			try
+			{
+				// obtiene la ruta del archivo de auditoria
+				string ruta_log = string.Format(@"{0}\logs\{1}\", Cl_Directorio.ObtenerDirectorioRaiz(), nombre);
+
+				// asegura la existencia del archivo
+				Cl_Directorio.CrearDirectorio(ruta_log);
+
+				// ruta completa del archivo de auditoria
+				ruta_log = string.Format("{0}{1}_{2}.txt", ruta_log, nit, Cl_Fecha.GetFecha().ToString(Cl_Fecha.formato_fecha_hginet));
+
+				// asegura la creación del archivo de auditoría
+				Cl_Archivo.Crear(ruta_log);
+
+				// valida la existencia del archivo
+				if (!Cl_Archivo.ValidarExistencia(ruta_log))
+					throw new ApplicationException("Error al obtener la ruta del archivo de auditoria.");
+
+				sw = new StreamWriter(ruta_log, true);
+
+				sw.WriteLine(string.Format("{0}", mensaje));
+				// sw.Flush(); para borrar lo que ya esta escrito
+				sw.Close();
+
+			}
+			catch (Exception)
+			{
+			}
 		}
 	}
 
