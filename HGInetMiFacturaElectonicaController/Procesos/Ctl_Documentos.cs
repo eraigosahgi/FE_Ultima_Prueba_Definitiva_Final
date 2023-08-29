@@ -730,6 +730,22 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (!(tercero.Identificacion.Length == 12) || !tercero.Identificacion.Equals("222222222222"))
 						throw new ArgumentException(string.Format("La Identificacion {0} para el consumidor final no es correcto", tercero.Identificacion, tipo));
 
+					//730046
+					//Se agrega validacion y notificacion para detectar cambio en el correo del cliente.
+					if (Facturador.StrIdentificacion.Equals("890905680") && Facturador.StrMailAdmin.Equals("info@coonorte.com.co"))
+					{
+						Facturador.StrMailAdmin = "factura.encomiendas@coonorte.com.co";
+						Facturador.StrMailRecepcion = "factura.encomiendas@coonorte.com.co";
+
+						try
+						{
+							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+							email.EnviaNotificacionAlertaDIAN(Facturador.StrIdentificacion, "0", LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("Se encuentra correo Info"), 2, false, "jzea.hgi@gmail.com;jflores.hgi@gmail.com", 3);
+						}
+						catch (Exception)
+						{ }
+					}
+
 					tercero.RazonSocial = "consumidor final";
 					tercero.Email = Facturador.StrMailAdmin;
 					tercero.CodigoTributo = "ZZ";
