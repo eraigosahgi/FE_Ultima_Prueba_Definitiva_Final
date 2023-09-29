@@ -86,8 +86,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		{
 			try
 			{
-				Almacenar("Inicio pago", facturador);
-
+				
 				//Se valida que el id sea el mismo para evitar 
 				Guid id = Guid.Parse("1f23ea1564af496f93731d46583f13b5");
 				if (identificador_unico != id)
@@ -99,14 +98,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 
 				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
-
-				Almacenar("Paso ", facturador);
-				TblPlanesTransacciones postpago = clase_planes.Obtener(facturador).FirstOrDefault(x => x.IntEstado == 0 && (x.IntTipoProceso == 3 || (!string.IsNullOrEmpty(x.DocumentoRef) && x.DocumentoRef.Equals("-1"))));
-				Almacenar("Paso 2", facturador);
+				
+				TblPlanesTransacciones postpago = clase_planes.Obtener(facturador).FirstOrDefault(x => x.IntEstado == 0 && (x.IntTipoProceso == 3 ));				
 
 				if (postpago == null)
 				{
-					Almacenar("Paso 3", facturador);
+				
 					TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
 					ObjPlanTransacciones.IntTipoProceso = Convert.ToByte(TipoCompra.Compra.GetHashCode());
 					ObjPlanTransacciones.StrEmpresaUsuario = facturador;
@@ -125,25 +122,25 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					// entonces lo estan haciendo fuera del proceso de happgi ya que este permite solo los planes de la pagina
 					if (ObjPlanTransacciones.IntNumTransaccCompra >= 500)
 					{
-						Almacenar("Paso 4", facturador);
 						return Ok("Compra de documentos supera la cantidad de documentos permitidos <br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
 					}
-					Almacenar("Paso 5", facturador);
+					
 					ObjPlanTransacciones.IntMesesVence = 12;
 					ObjPlanTransacciones.IntTipoDocumento = 0;
 
 					clase_planes.Crear(ObjPlanTransacciones, false);
-					Almacenar("Paso 6", facturador);
+					
 					return Ok("Recarga Exitosa");
 				}
 				else if (postpago != null && postpago.IntTipoProceso == 3)
 				{
 					return Ok("El Facturador Electrónico tiene registrado un plan Postpago que no le permite activar uno nuevo.<br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
 				}
-				else if (postpago != null && postpago.DocumentoRef.Equals("-1"))
-				{
-					return Ok("El Facturador Electrónico cuenta con un plan activo,esta pendiente por parte de HGI SAS la generacion de la Factura Electrónica.<br /> Cualquier inquietud comunicarse con nuestra area comercial.");
-				}
+				//else 
+				//if (postpago != null && postpago.DocumentoRef.Equals("-1"))
+				//{
+				//	return Ok("El Facturador Electrónico cuenta con un plan activo,esta pendiente por parte de HGI SAS la generacion de la Factura Electrónica.<br /> Cualquier inquietud comunicarse con nuestra area comercial.");
+				//}
 				else
 				{
 					return Ok("El Facturador Electrónico tiene registrado un tipo de plan que no le permite activar uno nuevo.<br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
@@ -157,6 +154,49 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 
 		}
+
+
+		[HttpPost]
+		[Route("api/ActualizaRecargaDocumentosHappgi")]
+		public IHttpActionResult ActualizaRecargaDocumentosHappgi(Guid identificador_unico, string facturador, int cantidad, decimal valor_total, DateTime fecha_vencimiento,int cantidad_documentos_plan_actual, RespuestaHGIPagos Objeto)
+		{
+			try
+			{
+
+				//Se valida que el id sea el mismo para evitar 
+				Guid id = Guid.Parse("1f23ea1564af496f93731d46583f13b5");
+				if (identificador_unico != id)
+				{
+					Almacenar("Identificador unico, incorrecto", facturador);
+					throw new ApplicationException("Identificador unico, incorrecto");
+				}
+
+				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
+
+				TblPlanesTransacciones postpago = clase_planes.ObtenerPorFechaCantidad(facturador,fecha_vencimiento, cantidad_documentos_plan_actual);
+
+				if (postpago == null)
+				{
+					postpago.StrObservaciones = string.Format(" {0} -- Actualizacion de documentos por mejora de plan Nº {0} de HGIPay", Objeto.TicketId, postpago.StrObservaciones);
+
+					clase_planes.Edit(postpago);
+
+					return Ok("Recarga Actualizada con Exito");
+				}
+				else
+				{
+					return Ok("Plan de documentos no encontrado");
+				}
+
+			}
+			catch (Exception ex)
+			{
+				Almacenar(ex.Message, facturador);
+				return Ok(ex.Message);
+			}
+
+		}
+
 
 		public class RespuestaHGIPagos
 		{

@@ -160,6 +160,30 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return datos_plan;
 		}
 
+
+		/// <summary>
+		/// Obtener el plan 
+		/// </summary>
+		/// <param name="identificacion">identificacion</param>
+		/// <param name="fecha_vencimiento">Fecha de vencimiento del plan</param>
+		/// <param name="cantidad">Cantidad de documentos</param>
+		/// <returns>TblPlanesTransacciones</returns>
+		public TblPlanesTransacciones ObtenerPorFechaCantidad(string identificacion, DateTime fecha_vencimiento, int cantidad)
+		{
+			TblPlanesTransacciones datos_plan = new TblPlanesTransacciones();
+			var fecha_inicio = fecha_vencimiento.Date;
+
+			var fecha_fin = new DateTime(fecha_vencimiento.Year, fecha_vencimiento.Month, fecha_vencimiento.Day, 23, 59, 59, 999);
+
+			datos_plan = (from t in context.TblPlanesTransacciones
+						  where (t.StrEmpresaFacturador.Equals(identificacion))
+						  && (t.DatFechaVencimiento >= fecha_inicio && t.DatFechaVencimiento <= fecha_fin)
+						  && t.IntNumTransaccCompra == cantidad
+						  select t).FirstOrDefault();
+
+			return datos_plan;
+		}
+
 		/// <summary>
 		/// obtiene los planes de un facturador o un grupo de facturadores
 		/// </summary>
