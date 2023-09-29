@@ -175,12 +175,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				TblPlanesTransacciones postpago = clase_planes.ObtenerPorFechaCantidad(facturador,fecha_vencimiento, cantidad_documentos_plan_actual);
 
-				if (postpago == null)
+				if (postpago != null)
 				{
 					postpago.StrObservaciones = string.Format(" {0} -- Actualizacion de documentos por mejora de plan Nº {0} de HGIPay", Objeto.TicketId, postpago.StrObservaciones);
-
+					postpago.IntNumTransaccCompra = cantidad;
 					clase_planes.Edit(postpago);
-
 					return Ok("Recarga Actualizada con Exito");
 				}
 				else
