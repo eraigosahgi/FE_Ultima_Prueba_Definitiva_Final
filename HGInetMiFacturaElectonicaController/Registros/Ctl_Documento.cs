@@ -2731,11 +2731,30 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									evento_procesado_DIAN = true;
 
 								//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
-								if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+								if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")) || respuesta_error_dian.Contains("LGC09"))
 								{
-									respuesta_error_dian = string.Empty;
-									resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo, true);
-									recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
+
+									if (respuesta_error_dian.Contains("LGC09"))
+									{
+										respuesta_error_dian = string.Empty;
+										resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Recibido.GetHashCode(), motivo_rechazo, true);
+										recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode(), ref respuesta_error_dian);
+
+										if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+										{
+											resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo, true);
+											recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
+										}
+
+									}
+									else
+									{
+										
+										resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo, true);
+										recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
+									}
+									
+									
 								}
 							}
 							else if (recibo != null && !doc.IntAdquirienteRecibo.Equals(estado))
@@ -2765,11 +2784,42 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										evento_procesado_DIAN = true;
 
 									//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
-									if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+									if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento") || respuesta_error_dian.Contains("LGC12") || respuesta_error_dian.Contains("LGC13")))
 									{
-										respuesta_error_dian = string.Empty;
-										resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo, true);
-										expresa = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
+										
+
+										if (respuesta_error_dian.Contains("LGC12") || respuesta_error_dian.Contains("LGC13"))
+										{
+											if (respuesta_error_dian.Contains("LGC13"))
+											{
+												respuesta_error_dian = string.Empty;
+												resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Recibido.GetHashCode(), motivo_rechazo, true);
+												recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Recibido.GetHashCode(), ref respuesta_error_dian);
+											}
+
+											if (respuesta_error_dian.Contains("LGC12"))
+											{
+												respuesta_error_dian = string.Empty;
+												resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo, true);
+												recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
+											}
+
+											if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento")))
+											{
+												respuesta_error_dian = string.Empty;
+												resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo, true);
+												expresa = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
+											}
+
+										}
+										else
+										{
+											respuesta_error_dian = string.Empty;
+											resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, estado, motivo_rechazo, true);
+											expresa = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
+										}
+
+										
 									}
 								}
 
