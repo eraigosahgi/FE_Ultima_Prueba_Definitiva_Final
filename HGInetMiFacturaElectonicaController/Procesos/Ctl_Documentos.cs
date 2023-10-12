@@ -395,7 +395,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			//Regex ismail = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
 
-			if (tercero.Email.Contains(";") && !tipo.Equals("Mandatario"))
+			if (!string.IsNullOrWhiteSpace(tercero.Email) && tercero.Email.Contains(";") && !tipo.Equals("Mandatario"))
 			{
 				string tercero_mail = string.Empty;
 				if (Coleccion.ConvertirLista(tercero.Email, ';').Count > 0)
@@ -415,11 +415,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
 				}
 			}
-			else if (!tipo.Equals("Mandatario"))
+			else if (!string.IsNullOrWhiteSpace(tercero.Email) && !tipo.Equals("Mandatario"))
 			{
 				tercero.Email = tercero.Email.Trim();
 				if (!Texto.ValidarExpresion(TipoExpresion.Email, tercero.Email))
 					throw new ArgumentException(string.Format("El parámetro {0} del {1} no esta bien formado", "Email", tipo));
+			}
+			else if (string.IsNullOrWhiteSpace(tercero.Email))
+			{
+				if (tipo.Equals("Obligado"))
+				{
+					tercero.Email = Facturador.StrMailAdmin;
+				}
 			}
 
 			//Regex isweb = new Regex("([\\w-]+\\.)+(/[\\w- ./?%&=]*)?");
