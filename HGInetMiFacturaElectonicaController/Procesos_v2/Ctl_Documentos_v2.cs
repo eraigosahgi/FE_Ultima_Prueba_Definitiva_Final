@@ -584,6 +584,25 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										Task pago = pagos.GenerarNotaPago(documento_obj.CufeFactura, documentoBd);
 									}
 
+									//Envio de SMS
+									if (empresa.IntEnvioSms == true && empresa.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
+									{
+										//a los telefonos se le deben agregar el 57 y debe tener 10 digitos y comenzar con 3
+										//El nombre de la compañia se toma de la empresa creada en plataforma o desde el objeto del obligado
+										//para informacion un correo o un numero telefonico
+										//Si es numero telefonico este ya debe llegar con el indicativo 
+										List<string> celulares = new List<string>();//documento_obj.DatosAdquiriente.Telefono.Split(',').ToList();
+										string num_tel = documento_obj.DatosAdquiriente.Telefono;
+										if (num_tel.Substring(0) == "3" && num_tel.Length == 10)
+										{
+											celulares.Add(documento_obj.DatosAdquiriente.Telefono);
+
+											string mensaje_sms = string.Format("{0} le acaba de generar un Documento Electrónico {1}{2} . Cualquier inquietud al {3}", empresa.StrRazonSocial, documentoBd.StrPrefijo, documentoBd.IntNumero, documento_obj.DatosObligado.Telefono);
+
+											Ctl_Sms.Enviar(mensaje_sms, documentoBd.StrIdSeguridad.ToString(), celulares);
+										}
+									}
+
 								}
 								else if (enviar_correo == false)
 								{
