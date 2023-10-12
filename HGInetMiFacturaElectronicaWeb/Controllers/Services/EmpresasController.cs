@@ -293,7 +293,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 			var retorno = datos.Select(d => new
 			{
-				TipoIdentificacion = d.StrTipoIdentificacion,
+				TipoIdentificacion = (d.StrTipoIdentificacion == "0") ? "31" : d.StrTipoIdentificacion,
 				Identificacion = d.StrIdentificacion,
 				RazonSocial = d.StrRazonSocial,
 				Email = d.StrMailAdmin,
@@ -316,6 +316,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				d.IntPagoEParcial,
 				IntEmailRecepcion = d.IntEnvioMailRecepcion,
 				Radian = d.IntRadian,
+				SMS = d.IntEnvioSms,
 				IntAcuseTacito = d.IntAcuseTacito,
 				StrEmpresaDescuenta = ctl_empresa.ObtenerRazonSocial(d.StrEmpresaDescuento),
 				Estado = d.IntIdEstado,
@@ -527,6 +528,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Empresa.IntDebug = ObjEmpresa.IntDebug;
 				Empresa.IntInteroperabilidad = ObjEmpresa.IntInteroperabilidad;
 				Empresa.IntRadian = ObjEmpresa.IntRadian;
+				Empresa.IntEnvioSms = ObjEmpresa.IntEnvioSms;
 				Empresa.IntTipoPlan = ObjEmpresa.IntTipoPlan;
 				Empresa.IntCompraPlan = ObjEmpresa.IntTipoPlan == 0 ? true : false;
 

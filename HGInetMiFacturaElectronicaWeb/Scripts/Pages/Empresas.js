@@ -37,6 +37,7 @@ Datos_postpago = 0,
 Datos_debug = 0,
 Datos_InterOp = 0,
 Datos_Radian = 0,
+Datos_Sms = 0,
 Datos_Email_Recepcion = "",
 Datos_Email_Acuse = "",
 Datos_Email_Envio = "",
@@ -398,6 +399,15 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				else {
 					$('#PanelRepresentante').hide();
 				}
+			}
+		});
+
+		$("#SMS").dxCheckBox({
+			name: "SMS",
+			text: "SMS",
+			value: false,
+			onValueChanged: function (data) {
+				Datos_Sms = (data.value == true) ? 1 : 0;
 			}
 		});
 
@@ -1597,6 +1607,19 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			title: "Detalle:"
 		});
 
+		$("#tooltip_SMS").dxPopover({
+			target: "#SMS",
+			showEvent: {
+				name: "mouseenter",
+				delay: 500
+			},
+			hideEvent: "mouseleave",
+			position: "bottom",
+			width: 300,
+			showTitle: true,
+			title: "Detalle:"
+		});
+
 
 		$("#tooltip_EmpresaAsociada").dxPopover({
 			target: "#EmpresaAsociada",
@@ -1909,6 +1932,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_debug = response.data[0].Debug;
 				Datos_InterOp = response.data[0].InterOp;
 				Datos_Radian = response.data[0].Radian;
+				Datos_Sms = response.data[0].SMS;
 				//Comercio
 				Datos_ComercioConfigId = response.data[0].ComercioConfigId;
 				Datos_ComercioConfigDescrip = response.data[0].ComercioConfigDescrip;
@@ -2086,6 +2110,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				        }
 				    } catch (e) { }
 
+					//Check Radian
+					try {
+						if (Datos_Sms == 1) {
+							$("#SMS").dxCheckBox({ value: true });
+						}
+						
+					} catch (e) { }
+
 					//Certificado
 					try {
 						$("#CerFirma").dxRadioGroup({ value: TiposCertFirma[BuscarID(TiposCertFirma, Datos_CertFirma)] });
@@ -2254,6 +2286,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				IntDebug: Datos_debug,
 				IntInteroperabilidad: Datos_InterOp,
 				IntRadian: Datos_Radian,
+				IntEnvioSms: Datos_Sms,
 				IntEnvioNominaMail: Datos_EnvioNominaMail,
 				StrIdentificacionRep: Datos_IdentificacionRep,
 				StrTipoIdentificacionRep: Datos_TipoidentificacionRep,
@@ -2663,7 +2696,10 @@ var TiposIdentificacion =
         { ID: "22", Texto: 'Cédula de extranjería' },
         { ID: "31", Texto: 'NIT' },
         { ID: "41", Texto: 'Pasaporte' },
-        { ID: "42", Texto: 'Documento de identificación extranjero' }
+        { ID: "42", Texto: 'Documento de identificación extranjero' },
+		{ ID: "47", Texto: 'PEP' },
+        { ID: "50", Texto: 'NIT de otro país' },
+        { ID: "91", Texto: 'NUIP' },
     ];
 
 

@@ -314,6 +314,10 @@
 									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
 										<div id="Radian" style="margin-top: 1%"></div>
 										<div id="tooltip_Radian">Indica si la empresa genera eventos de las facturas en la DIAN</div>
+									<br />
+									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
+										<div id="SMS" style="margin-top: 1%"></div>
+										<div id="tooltip_SMS">Indica si la empresa envía SMS de los documentos Electrónicos emitidos a la DIAN</div>
 								</div>
 
 								<%--<div class="col-md-12  text-center" style="z-index: 9;">
