@@ -742,7 +742,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (Facturador.StrIdentificacion.Equals("890905680") && Facturador.StrMailAdmin.Equals("info@coonorte.com.co"))
 					{
 						Facturador.StrMailAdmin = "factura.encomiendas@coonorte.com.co";
-						Facturador.StrMailRecepcion = "factura.encomiendas@coonorte.com.co";
+						Facturador.StrMailRecepcion = Facturador.StrMailAdmin;
+						Facturador.StrMailEnvio = Facturador.StrMailAdmin;
+						Facturador.StrMailAcuse = Facturador.StrMailAdmin;
+
+						try
+						{
+							Ctl_Empresa empresa = new Ctl_Empresa();
+							empresa.Actualizar(Facturador);
+						}
+						catch (Exception)
+						{ }
+						
 
 						try
 						{

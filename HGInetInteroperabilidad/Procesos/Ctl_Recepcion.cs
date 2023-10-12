@@ -614,6 +614,22 @@ namespace HGInetInteroperabilidad.Procesos
 
 				if ((!string.IsNullOrWhiteSpace(documento_obj.DatosObligado.Email)) && !facturador_emisor.StrMailAdmin.Equals(documento_obj.DatosObligado.Email))
 				{
+					//730046
+					//Se agrega validacion y notificacion para detectar cambio en el correo del cliente.
+					if (facturador_emisor.StrIdentificacion.Equals("890905680") && documento_obj.DatosObligado.Email.Equals("info@coonorte.com.co"))
+					{
+						documento_obj.DatosObligado.Email = "factura.encomiendas@coonorte.com.co";
+						//Facturador.StrMailRecepcion = "factura.encomiendas@coonorte.com.co";
+
+						try
+						{
+							Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
+							email.EnviaNotificacionAlertaDIAN(facturador_emisor.StrIdentificacion, "0", LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("Se encuentra correo Info en Recepcion Prefijo: {0} - Doc: {1} - NitOB: {2} - NitAd: {3}", documento_obj.Prefijo, documento_obj.Documento, documento_obj.DatosObligado.Identificacion, documento_obj.DatosAdquiriente.Identificacion)), 2, false, "jzea.hgi@gmail.com;jflores.hgi@gmail.com", 3);
+						}
+						catch (Exception)
+						{ }
+					}
+
 					facturador_emisor.StrMailAdmin = documento_obj.DatosObligado.Email;
 					facturador_emisor.StrMailEnvio = facturador_emisor.StrMailAdmin;
 					facturador_emisor.StrMailAcuse = facturador_emisor.StrMailAdmin;
