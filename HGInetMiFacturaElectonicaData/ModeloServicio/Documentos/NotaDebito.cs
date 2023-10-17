@@ -282,6 +282,10 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public Salud SectorSalud { get; set; }
 
+		/// <summary>
+		/// Indica si se envia notificacion SMS al Adquiriente cuando un documento es valido en la DIAN: 0 - No, 1 - Sí
+		/// </summary>
+		public int EnvioSms { get; set; }
 
 		#endregion
 	}

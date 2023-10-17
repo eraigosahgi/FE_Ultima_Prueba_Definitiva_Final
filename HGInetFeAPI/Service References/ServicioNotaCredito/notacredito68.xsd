@@ -30,6 +30,7 @@
       <xs:element minOccurs="0" name="DocumentoFormato" nillable="true" type="tns:Formato" />
       <xs:element minOccurs="0" name="DocumentoRef" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DocumentosReferencia" nillable="true" type="tns:ArrayOfReferenciaAdicional" />
+      <xs:element minOccurs="0" name="EnvioSms" type="xs:int" />
       <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FechaFactura" type="xs:dateTime" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />

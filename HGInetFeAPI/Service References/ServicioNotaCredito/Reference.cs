@@ -78,6 +78,9 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaCredito.ReferenciaAdicional> DocumentosReferenciaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int EnvioSmsField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime FechaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -410,6 +413,19 @@ namespace HGInetFeAPI.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.DocumentosReferenciaField, value) != true)) {
                     this.DocumentosReferenciaField = value;
                     this.RaisePropertyChanged("DocumentosReferencia");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int EnvioSms {
+            get {
+                return this.EnvioSmsField;
+            }
+            set {
+                if ((this.EnvioSmsField.Equals(value) != true)) {
+                    this.EnvioSmsField = value;
+                    this.RaisePropertyChanged("EnvioSms");
                 }
             }
         }

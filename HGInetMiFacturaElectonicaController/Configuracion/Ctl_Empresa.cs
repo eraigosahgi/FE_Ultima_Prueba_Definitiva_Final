@@ -605,7 +605,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					EmpresaActualiza.IntDebug = empresa.IntDebug;
 					EmpresaActualiza.IntInteroperabilidad = empresa.IntInteroperabilidad;
 					EmpresaActualiza.IntRadian = empresa.IntRadian;
-					//EmpresaActualiza.IntEnvioSms = empresa.IntEnvioSms;
+					EmpresaActualiza.IntEnvioSms = empresa.IntEnvioSms;
 					EmpresaActualiza.StrSerialCloudServices = empresa.StrSerialCloudServices;
 					EmpresaActualiza.IntTipoPlan = empresa.IntTipoPlan;
 					EmpresaActualiza.IntCompraPlan = empresa.IntTipoPlan == 0 ? true : false;
