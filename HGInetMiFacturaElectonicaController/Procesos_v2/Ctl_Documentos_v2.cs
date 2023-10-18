@@ -585,7 +585,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									}
 
 									//Envio de SMS
-									if (empresa.IntEnvioSms == true && empresa.IntHabilitacion == Habilitacion.Produccion.GetHashCode() && documento_obj.EnvioSms == 1)
+									if (empresa.IntEnvioSms == true && documento_obj.EnvioSms == 1)
 									{
 										//a los telefonos se le deben agregar el 57 y debe tener 10 digitos y comenzar con 3
 										//El nombre de la compañia se toma de la empresa creada en plataforma o desde el objeto del obligado
@@ -593,7 +593,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										//Si es numero telefonico este ya debe llegar con el indicativo 
 										List<string> celulares = new List<string>();//documento_obj.DatosAdquiriente.Telefono.Split(',').ToList();
 										string num_tel = documento_obj.DatosAdquiriente.Telefono;
-										if (num_tel.Substring(0) == "3" && num_tel.Length == 10)
+
+										if (num_tel.Substring(0, 1) == "3" && num_tel.Length == 10)
 										{
 											celulares.Add(documento_obj.DatosAdquiriente.Telefono);
 
