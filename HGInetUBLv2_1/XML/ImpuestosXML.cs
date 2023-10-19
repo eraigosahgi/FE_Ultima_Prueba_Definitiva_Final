@@ -150,9 +150,16 @@ namespace HGInetUBLv2_1
 									ListaItem inc = lista_inc.Items.Where(d => d.Codigo.Equals(item.ImpoConsumoPorcentaje.ToString().Replace(",", "."))).FirstOrDefault();
 									imp_doc.Nombre = inc.Nombre;
 									imp_doc.TipoImpuesto = "04";//item.Consumo;
-								}
-								
-								imp_doc.Porcentaje = decimal.Round(item.ImpoConsumoPorcentaje, 2, MidpointRounding.AwayFromZero);
+									//Ultraprocesados
+									if (item.ImpoConsumoPorcentaje == 10)
+									{
+										//imp_doc.Nombre = "ICUI";
+										imp_doc.TipoImpuesto = "35";
+										//imp_doc.Codigo = "35";
+									}
+							}
+
+							imp_doc.Porcentaje = decimal.Round(item.ImpoConsumoPorcentaje, 2, MidpointRounding.AwayFromZero);
 
 								if (item.ImpoConsumoPorcentaje == 0 && imp_doc.TipoImpuesto == "04")
 									imp_doc.Porcentaje = 4.00M;
