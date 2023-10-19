@@ -228,6 +228,13 @@ namespace HGInetInteroperabilidad.Procesos
 
 											_empresa.Actualizar(empresa);
 										}
+										else if (empresa.IntObligado == true && empresa.IntIdEstado == 1 && empresa.IntVersionDian == 2)
+										{
+											// mueve el mensaje a no procesado de la bandeja de entrada
+											cliente_imap.MoverNoProcesado(id_mensaje);
+
+											throw new ApplicationException("El correo electrónico fue emitido por la plataforma");
+										}
 									}
 
 								}

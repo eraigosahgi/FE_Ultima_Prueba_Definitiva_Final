@@ -612,6 +612,7 @@ namespace HGInetInteroperabilidad.Procesos
 					actualizar_emisor = true;
 				}
 
+				/*
 				if ((!string.IsNullOrWhiteSpace(documento_obj.DatosObligado.Email)) && !facturador_emisor.StrMailAdmin.Equals(documento_obj.DatosObligado.Email))
 				{
 					//730046
@@ -635,7 +636,7 @@ namespace HGInetInteroperabilidad.Procesos
 					facturador_emisor.StrMailAcuse = facturador_emisor.StrMailAdmin;
 					facturador_emisor.StrMailRecepcion = facturador_emisor.StrMailAdmin;
 					actualizar_emisor = true;
-				}
+				}  */
 
 				if (actualizar_emisor == true)
 				{
