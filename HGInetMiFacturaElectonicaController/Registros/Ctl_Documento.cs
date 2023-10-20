@@ -5628,7 +5628,27 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										doc_bd.IntEstadoEnvio = (short)EstadoEnvio.NoEntregado.GetHashCode();
 										doc_bd.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(datos_retorno.Estado);
 										doc_bd.DatFechaActualizaEstado = (string.IsNullOrEmpty(datos_retorno.Estado)) ? Fecha.GetFecha() : datos_retorno.Recibido;
-										List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(doc_bd, doc_bd.TblEmpresasAdquiriente.StrTelefono, item.StrMailEnviado, datos_retorno.Estado, item.StrIdSeguridadDoc.ToString());
+
+										//736894 - 711754 - Si el facturador no es de HGI no se enviará esta notificacion de alerta del correo bloqueado
+										bool Facturador_Externo = true;
+										try
+										{
+											// obtiene los datos del facturador electrónico
+											Ctl_Empresa facturador_electronico = new Ctl_Empresa();
+											TblEmpresas empresa_obligado = facturador_electronico.Obtener(doc_bd.TblEmpresasFacturador.StrIdentificacion);
+
+											if (empresa_obligado.IntIdEstado == 1 && empresa_obligado.IntVersionDian == 2 && empresa_obligado.IntObligado == true)
+												Facturador_Externo = false;
+										}
+										catch (Exception)
+										{
+											Facturador_Externo = false;
+										}
+
+										if (Facturador_Externo == false)
+										{
+											List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(doc_bd, doc_bd.TblEmpresasAdquiriente.StrTelefono, item.StrMailEnviado, datos_retorno.Estado, item.StrIdSeguridadDoc.ToString());
+										}
 										item.IntValidadoMail = true;
 
 									}
