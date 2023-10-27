@@ -193,6 +193,16 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string AgrupacionDesc { get; set; }
 
+		/// <summary>
+		/// Porcentaje del Impuesto saludable
+		/// </summary>
+		public decimal ImpoConsumo2Porcentaje { get; set; }
+
+		/// <summary>
+		/// Valor del Impuesto saludable
+		/// </summary>
+		public decimal ValorImpuestoConsumo2 { get; set; }
+
 		#endregion
 
 
