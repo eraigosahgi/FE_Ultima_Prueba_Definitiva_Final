@@ -187,6 +187,7 @@
       <xs:element minOccurs="0" name="DatosMandatario" nillable="true" type="tns:Tercero" />
       <xs:element minOccurs="0" name="DescuentoPorcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="DescuentoValor" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ImpoConsumo2Porcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="ImpoConsumoPorcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="IvaPorcentaje" type="xs:decimal" />
       <xs:element minOccurs="0" name="IvaValor" type="xs:decimal" />
@@ -206,6 +207,7 @@
       <xs:element minOccurs="0" name="UnidadCodigo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UnidadCodigoDesc" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ValorImpuestoConsumo" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ValorImpuestoConsumo2" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorSubtotal" type="xs:decimal" />
       <xs:element minOccurs="0" name="ValorUnitario" type="xs:decimal" />
     </xs:sequence>

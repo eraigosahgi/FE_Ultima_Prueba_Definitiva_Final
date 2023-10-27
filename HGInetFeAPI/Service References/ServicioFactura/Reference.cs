@@ -2480,6 +2480,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private decimal DescuentoValorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ImpoConsumo2PorcentajeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ImpoConsumoPorcentajeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -2535,6 +2538,9 @@ namespace HGInetFeAPI.ServicioFactura {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorImpuestoConsumoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ValorImpuestoConsumo2Field;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorSubtotalField;
@@ -2704,6 +2710,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.DescuentoValorField.Equals(value) != true)) {
                     this.DescuentoValorField = value;
                     this.RaisePropertyChanged("DescuentoValor");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ImpoConsumo2Porcentaje {
+            get {
+                return this.ImpoConsumo2PorcentajeField;
+            }
+            set {
+                if ((this.ImpoConsumo2PorcentajeField.Equals(value) != true)) {
+                    this.ImpoConsumo2PorcentajeField = value;
+                    this.RaisePropertyChanged("ImpoConsumo2Porcentaje");
                 }
             }
         }
@@ -2951,6 +2970,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.ValorImpuestoConsumoField.Equals(value) != true)) {
                     this.ValorImpuestoConsumoField = value;
                     this.RaisePropertyChanged("ValorImpuestoConsumo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ValorImpuestoConsumo2 {
+            get {
+                return this.ValorImpuestoConsumo2Field;
+            }
+            set {
+                if ((this.ValorImpuestoConsumo2Field.Equals(value) != true)) {
+                    this.ValorImpuestoConsumo2Field = value;
+                    this.RaisePropertyChanged("ValorImpuestoConsumo2");
                 }
             }
         }
