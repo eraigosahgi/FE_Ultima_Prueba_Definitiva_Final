@@ -423,6 +423,12 @@ namespace HGInetUBLv2_1
 									nota_credito_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
 								}
 
+								if (tipo_impto.Equals("35") || tipo_impto.Equals("34"))//Impuesto saludable (35 - Ultraprocesados, 34 - Bebidas Azucaradas)
+								{
+									detalle.ValorImpuestoConsumo2 = valor_impto;
+									nota_credito_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
+								}
+
 							}
 						}
 

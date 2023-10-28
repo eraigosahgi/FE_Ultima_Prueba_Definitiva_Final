@@ -38,6 +38,10 @@ namespace HGInetUBLv2_1
 				var impuesto_consumo = documentoDetalle.Where(d => d.ValorImpuestoConsumo > 0 || d.Aiu == 4).ToList().Select(_consumo => new
 				{ _consumo.ImpoConsumoPorcentaje, _consumo.ValorImpuestoConsumo, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
 
+				//Toma el impuesto2 Saludable de los productos que esten el detalle
+				var impuesto_consumo2 = documentoDetalle.Where(d => d.ValorImpuestoConsumo2 > 0 || d.Aiu == 4).ToList().Select(_consumo => new
+				{ _consumo.ImpoConsumo2Porcentaje, _consumo.ValorImpuestoConsumo2, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumo2Porcentaje, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
+
 				List<DocumentoImpuestos> doc_impuestos = new List<DocumentoImpuestos>();
 
 				decimal BaseImponibleImpuesto = 0;
@@ -45,7 +49,7 @@ namespace HGInetUBLv2_1
 				//Se cambia a false cuando no envian IVA pero si Impoconsumo mayor 0
 				bool agregar_iva = true;
 
-				if (impuestos_iva.Count() == 0 && impuesto_consumo.Count() > 0)
+				if (impuestos_iva.Count() == 0 && impuesto_consumo.Count() > 0 && impuesto_consumo2.Count() > 0)
 					agregar_iva = false;
 
 				// moneda del primer detalle
@@ -83,7 +87,7 @@ namespace HGInetUBLv2_1
 						}
 
 						//Validacion de muestras
-						List<DocumentoDetalle> muestra = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje && docDet.ProductoGratis.Equals(true) && docDet.ValorImpuestoConsumo.Equals(0)).ToList();
+						List<DocumentoDetalle> muestra = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje && docDet.ProductoGratis.Equals(true) && docDet.ValorImpuestoConsumo.Equals(0) && docDet.ValorImpuestoConsumo2.Equals(0)).ToList();
 						decimal BaseimponibleMuestra = 0;
 						foreach (var DocMues in muestra)
 						{
@@ -201,6 +205,96 @@ namespace HGInetUBLv2_1
 
 							}
 						}
+
+					//}
+				}
+
+				//Toma el impuesto2 Saludable de los productos que esten el detalle
+
+				BaseImponibleImpConsumo = 0;
+				BaseImponibleBolsa = 0;
+
+				if (impuesto_consumo2.Count() > 0)
+				{
+					foreach (var item in impuesto_consumo2)
+					{
+						//Valida si hay algun producto con impuesto al consumo
+						//if (item.ValorImpuestoConsumo != 0)
+						//{
+						DocumentoImpuestos imp_doc = new DocumentoImpuestos();
+						List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo2 != 0 && item.ImpoConsumo2Porcentaje == docDet.ImpoConsumo2Porcentaje && item.Aiu == docDet.Aiu).ToList();
+						DocumentoDetalle bolsa = doc_.Where(det => item.Aiu == 4 && det.ValorImpuestoConsumo2 > 0 && det.ImpoConsumo2Porcentaje == item.ImpoConsumo2Porcentaje && det.Aiu == 4).FirstOrDefault();
+
+						if (bolsa == null)
+						{
+
+							BaseImponibleImpConsumo = decimal.Round(doc_.Where(docDet => docDet.ValorImpuestoConsumo2 != 0).Sum(docDet => docDet.ValorSubtotal), 2, MidpointRounding.AwayFromZero);
+
+							//imp_doc.Codigo = item.IntImpConsumo.ToString();
+							//imp_doc.Nombre = item.StrDescripcion;
+							if (item.ImpoConsumo2Porcentaje == 0 && item.ValorImpuestoConsumo2 > 0)
+							{
+								imp_doc.Nombre = "IBUA";
+								imp_doc.TipoImpuesto = "34";
+								imp_doc.Codigo = "94";
+							}
+							else
+							{
+								ListaTarifaImpuestoINC lista_inc = new ListaTarifaImpuestoINC();
+								ListaItem inc = lista_inc.Items.Where(d => d.Codigo.Equals(item.ImpoConsumo2Porcentaje.ToString().Replace(",", "."))).FirstOrDefault();
+								imp_doc.Nombre = inc.Nombre;
+								imp_doc.TipoImpuesto = "35";//item.Consumo;
+															//Ultraprocesados
+								//if (item.ImpoConsumoPorcentaje == 10)
+								//{
+								//	//imp_doc.Nombre = "ICUI";
+								//	imp_doc.TipoImpuesto = "35";
+								//	//imp_doc.Codigo = "35";
+								//}
+							}
+
+							imp_doc.Porcentaje = decimal.Round(item.ImpoConsumo2Porcentaje, 2, MidpointRounding.AwayFromZero);
+
+							if (item.ImpoConsumo2Porcentaje == 0 && imp_doc.TipoImpuesto == "34")
+								imp_doc.Porcentaje = 0.00M;
+
+							imp_doc.BaseImponible = BaseImponibleImpConsumo;
+							foreach (var docDet in doc_)
+							{
+								imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo2, 2, MidpointRounding.AwayFromZero);
+							}
+
+							doc_impuestos.Add(imp_doc);
+
+							//if (imp_doc.Porcentaje >= 0 && imp_doc.ValorImpuesto > 0)
+							//{
+							//	//decimal imp_cal = decimal.Round(BaseImponibleImpConsumo * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+
+							//	//if (imp_cal != imp_doc.ValorImpuesto)
+							//	//	imp_doc.ValorImpuesto = imp_cal;
+
+							//	doc_impuestos.Add(imp_doc);
+							//}
+
+						}
+						else
+						{
+							BaseImponibleBolsa = decimal.Round(item.ValorImpuestoConsumo2, 2);
+							imp_doc.Porcentaje = decimal.Round(0.00M);
+							ListaTipoImpuesto list_impBolsa = new ListaTipoImpuesto();
+							ListaItem impBolsa = list_impBolsa.Items.Where(d => d.Codigo.Equals("22")).FirstOrDefault();
+
+							imp_doc.TipoImpuesto = impBolsa.Codigo;
+							imp_doc.Nombre = impBolsa.Nombre;//bolsa.UnidadCodigo;
+							imp_doc.Codigo = bolsa.UnidadCodigo;
+							imp_doc.BaseImponible = decimal.Round(bolsa.Cantidad, 2);
+							imp_doc.ValorImpuesto = BaseImponibleBolsa;
+
+							if (imp_doc.ValorImpuesto > 0)
+								doc_impuestos.Add(imp_doc);
+
+						}
+					}
 
 					//}
 				}

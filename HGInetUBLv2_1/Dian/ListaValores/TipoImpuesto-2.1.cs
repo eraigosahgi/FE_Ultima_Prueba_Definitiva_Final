@@ -34,6 +34,7 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("24", "INCombustibles", "INCombustibles"),
 			new ListaItem("25", "Sobretasa Combustibles", "Sobretasa Combustibles"),
 			new ListaItem("26", "Sordicom", "Sordicom"),
+			new ListaItem("34", "IBUA", "IBUA"),
 			new ListaItem("35", "ICUI", "ICUI"),
 			new ListaItem("ZZ", "No aplica", "No aplica"),
 
