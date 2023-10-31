@@ -14,6 +14,14 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
 			return $q.reject(response.data);
 		});
 	}
+	this.ObtenerAttachedDocument = function (Id) {
+	    return $http.get('/api/ObtenerAttachedDocument?id='+Id).then(function (response) {
+			return response.data;
+		}, function (response) {
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+			return $q.reject(response.data);
+		});
+	}
 	//Procesa los documentos
 	this.ProcesarDocumentos = function (documentos, Consultar) {
 		return $http({ url: '/api/Documentos/', data: { Documentos: documentos, Consultar_Documento: Consultar }, method: 'Post' }).then(function (response) {

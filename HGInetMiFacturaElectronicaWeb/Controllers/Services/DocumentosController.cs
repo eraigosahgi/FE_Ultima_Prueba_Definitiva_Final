@@ -25,6 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+//using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -595,6 +598,69 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				});
 
 				return Ok(retorno);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		[HttpGet]
+		[Route("api/ObtenerAttachedDocument")]
+		public IHttpActionResult ObtenerAttachedDocument(Guid id)
+		{
+			try
+            {
+                Sesion.ValidarSesion();
+
+                PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+                Ctl_Documento ctl_documento = new Ctl_Documento();
+                List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id);
+
+                string nombreArchivo = System.IO.Path.GetFileNameWithoutExtension(datos.FirstOrDefault().StrUrlArchivoUbl).Replace("fv","ad");
+                string ruta_archivos = string.Format(@"{0}\{1}\{2}\{3}\{4}.zip", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica,datos.FirstOrDefault().TblEmpresasFacturador.StrIdSeguridad,LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian,nombreArchivo);
+                string ruta_destino = string.Format(@"{0}\{1}\{2}\{3}\{4}.xml", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica,datos.FirstOrDefault().TblEmpresasFacturador.StrIdSeguridad,LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian,nombreArchivo);
+
+                
+
+
+                using (ZipArchive file = ZipFile.OpenRead(ruta_archivos))
+                {
+                    foreach (ZipArchiveEntry archivo in file.Entries)
+                    {
+                        // valida que los archivos no tengan extensiones definidas
+                        if ((archivo.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            //Se valida que el archivo ya no exista    
+                            if(!File.Exists(ruta_destino))
+                            {
+                                archivo.ExtractToFile(ruta_destino);
+
+                            }
+                        }
+                    }
+
+                    // genera la descompresión del archivo zip
+                    /*
+                    try
+                    {
+                        file.ExtractToDirectory(ruta_archivos);
+                    }
+                    catch (Exception excepcion)
+                    {
+                        string msg = string.Format("Error al extaer los archivos del zip '{0}'", ruta_archivos);
+                        RegistroLog.EscribirLog(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion, msg);
+                    }*/
+
+
+                    file.Dispose();
+                }
+
+                string nombreActual = System.IO.Path.GetFileNameWithoutExtension(datos.FirstOrDefault().StrUrlArchivoUbl);
+                string ruta_publica_destino = datos.FirstOrDefault().StrUrlArchivoUbl.Replace(nombreActual,nombreArchivo);
+
+                return Ok(ruta_publica_destino);
 			}
 			catch (Exception excepcion)
 			{

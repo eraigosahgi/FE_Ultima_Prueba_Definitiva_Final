@@ -335,7 +335,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			, columns: [
 				{
 					caption: "Archivos",
-					//width: "10%",
+					width: "101px",
 					columnMinWidth: 80,
 					alignment: "left",
 					columnAutoWidth: false,
@@ -359,7 +359,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 						if (options.data.Xml)
 							visible_xml = "href='" + options.data.Xml + "' class='icon-file-xml' style='pointer-events:auto;cursor: pointer;'";
 						else
-							options.data.Xml = "#";
+						    options.data.Xml = "#";
 
 						if (options.data.EstadoAcuse != 0)
 							visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
@@ -374,7 +374,14 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 						$("<div>")
 							.append(
 							   $("<a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "><a style='margin-left:5%;margin-right:5%;' target='_blank'  " + visible_xml + ">"),
-								$("<a " + permite_envio + "></a>").dxButton({
+                                $("<a style='margin: 0;' target='_blank' class='icon-file-xml2'></a>").dxButton({
+                                    onClick: function () {
+                                        SrvDocumento.ObtenerAttachedDocument(options.data.StrIdSeguridad).then(function (data) {
+                                            window.open(data, '_blank');
+                                        });
+                                    }
+                                }).removeClass("dx-button dx-button-normal dx-widget"),
+                                $("<a " + permite_envio + "></a>").dxButton({
 									onClick: function () {
 										$scope.showModal = true;
 										email_destino = options.data.MailAdquiriente;
@@ -386,7 +393,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 											});
 										}
 									}
-								}).removeClass("dx-button dx-button-normal dx-widget")
+								}).removeClass("dx-button dx-button-normal dx-widget")                               
 						)
 							.appendTo(container);
 					}
@@ -573,7 +580,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 
 
-					container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.StrEmpresaFacturador, options.data.NumeroDocumento, "Obligado", options.data.EstadoFactura));
+				    container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.StrEmpresaFacturador, options.data.NumeroDocumento, "Obligado", options.data.EstadoFactura));
 
 				}
 			},
