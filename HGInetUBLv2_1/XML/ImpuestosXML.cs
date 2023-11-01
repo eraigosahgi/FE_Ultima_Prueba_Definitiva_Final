@@ -39,7 +39,7 @@ namespace HGInetUBLv2_1
 				{ _consumo.ImpoConsumoPorcentaje, _consumo.ValorImpuestoConsumo, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
 
 				//Toma el impuesto2 Saludable de los productos que esten el detalle
-				var impuesto_consumo2 = documentoDetalle.Where(d => d.ValorImpuestoConsumo2 > 0 || d.Aiu == 4).ToList().Select(_consumo => new
+				var impuesto_consumo2 = documentoDetalle.Where(d => d.ValorImpuestoConsumo2 > 0).ToList().Select(_consumo => new
 				{ _consumo.ImpoConsumo2Porcentaje, _consumo.ValorImpuestoConsumo2, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumo2Porcentaje, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
 
 				List<DocumentoImpuestos> doc_impuestos = new List<DocumentoImpuestos>();
