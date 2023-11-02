@@ -159,7 +159,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							 EnvioMail = datos.IntEstadoEnvio,
 							 poseeIdComercio = (datos.TblEmpresasFacturador.IntManejaPagoE) ? (datos.IntIdEstado != 90) ? 1 : 0 : 0,
 							 FacturaCancelada = (datos.IntIdEstadoPago.Value != null) ? datos.IntIdEstadoPago.Value : (short)1,
-							 PagosParciales = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntManejaPagoE) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
+							 PagosParciales = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? (datos.TblEmpresasFacturador.IntPagoEParcial) ? 1 : 0 : datos.TblEmpresasResoluciones.PermiteParciales,
 							 IdComercio = (string.IsNullOrEmpty(datos.TblEmpresasResoluciones.ComercioConfigId.ToString())) ? datos.TblEmpresasFacturador.ComercioConfigId.ToString() : datos.TblEmpresasResoluciones.ComercioConfigId.ToString(),
 							 IntValorPagar = datos.IntValorPagar
 						 }).ToList();
