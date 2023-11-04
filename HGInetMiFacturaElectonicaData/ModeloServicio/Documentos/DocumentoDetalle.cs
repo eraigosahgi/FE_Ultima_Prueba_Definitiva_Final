@@ -148,7 +148,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string ProductoCodigoPArancelaria { get; set; }
 
 		/// <summary>
-		/// Informacion relacionado al manejo AIU: 0 - Ninguno, 1 - Utilidad, 2 - Administracion, 3 - Imprevisto
+		/// Informacion relacionado al manejo AIU: 0 - Ninguno, 1 - Utilidad, 2 - Administracion, 3 - Imprevisto, 4 - Impuesto a la Bolsa,  5 - Impuesto Bebidas Azucaradas
 		/// </summary>
 		public int Aiu { get; set; }
 
@@ -202,6 +202,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Valor del Impuesto saludable
 		/// </summary>
 		public decimal ValorImpuestoConsumo2 { get; set; }
+
+		/// <summary>
+		/// Contenido del producto especificamente en mililitros para el impuesto de bebidas azucaradas
+		/// </summary>
+		public decimal ProductoContenido { get; set; }
 
 		#endregion
 

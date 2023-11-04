@@ -39,7 +39,7 @@ namespace HGInetUBLv2_1
 				{ _consumo.ImpoConsumoPorcentaje, _consumo.ValorImpuestoConsumo, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumoPorcentaje, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
 
 				//Toma el impuesto2 Saludable de los productos que esten el detalle
-				var impuesto_consumo2 = documentoDetalle.Where(d => d.ValorImpuestoConsumo2 > 0).ToList().Select(_consumo => new
+				var impuesto_consumo2 = documentoDetalle.Where(d => d.ValorImpuestoConsumo2 > 0 || d.Aiu == 5).ToList().Select(_consumo => new
 				{ _consumo.ImpoConsumo2Porcentaje, _consumo.ValorImpuestoConsumo2, _consumo.Aiu }).GroupBy(_consumo => new { _consumo.ImpoConsumo2Porcentaje, _consumo.Aiu }).Select(_consumo => _consumo.First()).ToList();
 
 				List<DocumentoImpuestos> doc_impuestos = new List<DocumentoImpuestos>();
@@ -212,7 +212,7 @@ namespace HGInetUBLv2_1
 				//Toma el impuesto2 Saludable de los productos que esten el detalle
 
 				BaseImponibleImpConsumo = 0;
-				BaseImponibleBolsa = 0;
+				decimal BaseImponibleBedidas = 0;
 
 				if (impuesto_consumo2.Count() > 0)
 				{
@@ -223,16 +223,16 @@ namespace HGInetUBLv2_1
 						//{
 						DocumentoImpuestos imp_doc = new DocumentoImpuestos();
 						List<DocumentoDetalle> doc_ = documentoDetalle.Where(docDet => docDet.ValorImpuestoConsumo2 != 0 && item.ImpoConsumo2Porcentaje == docDet.ImpoConsumo2Porcentaje && item.Aiu == docDet.Aiu).ToList();
-						DocumentoDetalle bolsa = doc_.Where(det => item.Aiu == 4 && det.ValorImpuestoConsumo2 > 0 && det.ImpoConsumo2Porcentaje == item.ImpoConsumo2Porcentaje && det.Aiu == 4).FirstOrDefault();
+						DocumentoDetalle Bebidas = doc_.Where(det => item.Aiu == 5 && det.ValorImpuestoConsumo2 > 0 && det.ImpoConsumo2Porcentaje == item.ImpoConsumo2Porcentaje && det.Aiu == 5).FirstOrDefault();
 
-						if (bolsa == null)
+						if (Bebidas == null)
 						{
 
 							BaseImponibleImpConsumo = decimal.Round(doc_.Where(docDet => docDet.ValorImpuestoConsumo2 != 0).Sum(docDet => docDet.ValorSubtotal), 2, MidpointRounding.AwayFromZero);
 
 							//imp_doc.Codigo = item.IntImpConsumo.ToString();
 							//imp_doc.Nombre = item.StrDescripcion;
-							if (item.ImpoConsumo2Porcentaje == 0 && item.ValorImpuestoConsumo2 > 0)
+							if (item.ImpoConsumo2Porcentaje == 0 && item.ValorImpuestoConsumo2 > 0 && item.Aiu == 5)
 							{
 								imp_doc.Nombre = "IBUA";
 								imp_doc.TipoImpuesto = "34";
@@ -279,16 +279,16 @@ namespace HGInetUBLv2_1
 						}
 						else
 						{
-							BaseImponibleBolsa = decimal.Round(item.ValorImpuestoConsumo2, 2);
-							imp_doc.Porcentaje = decimal.Round(0.00M);
+							BaseImponibleBedidas = decimal.Round(item.ValorImpuestoConsumo2, 2);
+							imp_doc.Porcentaje = Bebidas.Cantidad;//decimal.Round(0.00M);//
 							ListaTipoImpuesto list_impBolsa = new ListaTipoImpuesto();
-							ListaItem impBolsa = list_impBolsa.Items.Where(d => d.Codigo.Equals("22")).FirstOrDefault();
+							ListaItem impBolsa = list_impBolsa.Items.Where(d => d.Codigo.Equals("34")).FirstOrDefault();
 
 							imp_doc.TipoImpuesto = impBolsa.Codigo;
 							imp_doc.Nombre = impBolsa.Nombre;//bolsa.UnidadCodigo;
-							imp_doc.Codigo = bolsa.UnidadCodigo;
-							imp_doc.BaseImponible = decimal.Round(bolsa.Cantidad, 2);
-							imp_doc.ValorImpuesto = BaseImponibleBolsa;
+							imp_doc.Codigo = Bebidas.UnidadCodigo;
+							imp_doc.BaseImponible = decimal.Round(Bebidas.Peso, 2) + 0.00M;
+							imp_doc.ValorImpuesto = BaseImponibleBedidas;
 
 							if (imp_doc.ValorImpuesto > 0)
 								doc_impuestos.Add(imp_doc);
@@ -371,7 +371,7 @@ namespace HGInetUBLv2_1
 					{
 						#region Impuesto Legal ***PENDIENTE
 
-						if (!item_sub.TipoImpuesto.Equals("22"))
+						if (!item_sub.TipoImpuesto.Equals("22") && !item_sub.TipoImpuesto.Equals("34"))
 						{
 
 							// Indicador de si estos totales se reconocen como evidencia legal a efectos impositivos.
@@ -474,7 +474,12 @@ namespace HGInetUBLv2_1
 							//Base Imponible = Importe bruto + cargos - descuentos
 							BaseUnitMeasureType BaseUnitMeasure = new BaseUnitMeasureType();
 							BaseUnitMeasure.unitCode = item_sub.Codigo; //moneda_detalle.ToString();
-							BaseUnitMeasure.Value = decimal.Round(item_sub.BaseImponible, 2);//1.00M;//
+							BaseUnitMeasure.Value = decimal.Round(item_sub.BaseImponible * item_sub.Porcentaje, 2);//1.00M;//
+							if (item_sub.TipoImpuesto == "34")
+							{
+								BaseUnitMeasure.unitCode = "MLT";
+							}
+								
 							TaxSubtotal.BaseUnitMeasure = BaseUnitMeasure;
 
 							#endregion
@@ -500,7 +505,12 @@ namespace HGInetUBLv2_1
 							PerUnitAmountType Percent = new PerUnitAmountType();
 							Percent.currencyID = moneda_detalle.ToString();
 							//decimal cantidad = documentoDetalle.Where(d => d.ImpoConsumoPorcentaje == 0 && d.ValorImpuestoConsumo > 0 && d.ProductoGratis == false && d.Aiu == 4).Sum(c => c.Cantidad);
-							Percent.Value = decimal.Round(item_sub.ValorImpuesto / BaseUnitMeasure.Value, 2);//decimal.Round(item_sub.ValorImpuesto / cantidad, 2);// 
+							Percent.Value = decimal.Round((item_sub.ValorImpuesto / BaseUnitMeasure.Value) * 100, 2);//decimal.Round(item_sub.ValorImpuesto / cantidad, 2);// 
+							//if (item_sub.TipoImpuesto == "34")
+							//{
+							//	Percent.Value = decimal.Round((item_sub.ValorImpuesto * item_sub.Porcentaje) / (BaseUnitMeasure.Value/100)/100, 0);
+							//	//decimal.Round((DocDet.ValorImpuestoConsumo2 / DocDet.Cantidad)/(DocDet.Peso/100), 0) + 0.00M
+							//}
 							Percent.Value = Percent.Value + 0.00M;
 							//Percent.Value = decimal.Round(item_sub.ValorImpuesto / item_sub.BaseImponible, 2);
 

@@ -2055,8 +2055,9 @@ namespace HGInetUBLv2_1
 
 							if (DocDet.ImpoConsumo2Porcentaje == 10)
 								codigo_impuesto = "35";
+
 							//
-							if (DocDet.ValorImpuestoConsumo2 > 0 && DocDet.ImpoConsumo2Porcentaje == 0)
+							if (DocDet.ValorImpuestoConsumo2 > 0 && DocDet.ImpoConsumo2Porcentaje == 0 && DocDet.Aiu == 5)
 							{
 								/*if (DocDet.Aiu != 4)
 								{
@@ -2073,8 +2074,8 @@ namespace HGInetUBLv2_1
 								//----Se debe Solicitar la base con la que calculo el impuesto
 								TaxSubtotalConsumo.BaseUnitMeasure = new BaseUnitMeasureType()
 								{
-									unitCode = InvoicedQuantity.unitCode,
-									Value = DocDet.Cantidad //1.00M//decimal.Round(DocDet.Cantidad, 6)//
+									unitCode = "MLT",//InvoicedQuantity.unitCode,
+									Value = decimal.Round(DocDet.Cantidad * DocDet.Peso, 2) + 0.00M//DocDet.Peso + 0.00M //1.00M//
 								};
 
 								// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
@@ -2083,7 +2084,7 @@ namespace HGInetUBLv2_1
 								TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
 								{
 									currencyID = moneda_detalle.ToString(),
-									Value = decimal.Round((DocDet.ValorImpuestoConsumo2) / DocDet.Cantidad, 6) + 0.000000M
+									Value = decimal.Round((DocDet.ValorImpuestoConsumo2 / DocDet.Cantidad)/(DocDet.Peso/100), 0) + 0.00M
 								};
 
 							}

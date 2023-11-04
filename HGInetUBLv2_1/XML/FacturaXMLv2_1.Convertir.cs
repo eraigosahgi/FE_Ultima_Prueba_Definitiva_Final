@@ -479,12 +479,21 @@ namespace HGInetUBLv2_1
 										}
 										else if (tipo_impto.Equals("22"))//Impuesto a la bolsa
 										{
+											detalle.Aiu = 4;
 											detalle.ValorImpuestoConsumo = valor_impto;
 											factura_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
 										}
 
 										if (tipo_impto.Equals("35") || tipo_impto.Equals("34"))//Impuesto saludable (35 - Ultraprocesados, 34 - Bebidas Azucaradas)
 										{
+											if (tipo_impto.Equals("34"))
+											{
+												detalle.Aiu = 5;
+											}
+											else
+											{
+												detalle.ImpoConsumo2Porcentaje = porcentaje_impto;
+											}
 											detalle.ValorImpuestoConsumo2 = valor_impto;
 											factura_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
 										}
