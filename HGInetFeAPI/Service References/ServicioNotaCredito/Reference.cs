@@ -2080,6 +2080,9 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         private string ProductoCodigoPArancelariaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ProductoContenidoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string ProductoDescripcionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -2390,6 +2393,19 @@ namespace HGInetFeAPI.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.ProductoCodigoPArancelariaField, value) != true)) {
                     this.ProductoCodigoPArancelariaField = value;
                     this.RaisePropertyChanged("ProductoCodigoPArancelaria");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ProductoContenido {
+            get {
+                return this.ProductoContenidoField;
+            }
+            set {
+                if ((this.ProductoContenidoField.Equals(value) != true)) {
+                    this.ProductoContenidoField = value;
+                    this.RaisePropertyChanged("ProductoContenido");
                 }
             }
         }

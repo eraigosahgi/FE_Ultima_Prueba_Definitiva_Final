@@ -161,6 +161,7 @@
       <xs:element minOccurs="0" name="ProductoCodigo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoCodigoEAN" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoCodigoPArancelaria" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProductoContenido" type="xs:decimal" />
       <xs:element minOccurs="0" name="ProductoDescripcion" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="ProductoGratis" type="xs:boolean" />
       <xs:element minOccurs="0" name="ProductoGratisPrecioRef" nillable="true" type="xs:string" />
