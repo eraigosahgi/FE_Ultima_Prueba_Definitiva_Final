@@ -287,7 +287,7 @@ namespace HGInetUBLv2_1
 							imp_doc.TipoImpuesto = impBolsa.Codigo;
 							imp_doc.Nombre = impBolsa.Nombre;//bolsa.UnidadCodigo;
 							imp_doc.Codigo = Bebidas.UnidadCodigo;
-							imp_doc.BaseImponible = decimal.Round(Bebidas.Peso, 2) + 0.00M;
+							imp_doc.BaseImponible = decimal.Round(Bebidas.ProductoContenido, 2) + 0.00M;
 							imp_doc.ValorImpuesto = BaseImponibleBedidas;
 
 							if (imp_doc.ValorImpuesto > 0)
