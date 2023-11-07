@@ -136,11 +136,11 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				{
 					return Ok("El Facturador Electrónico tiene registrado un plan Postpago que no le permite activar uno nuevo.<br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
 				}
-				//else 
-				//if (postpago != null && postpago.DocumentoRef.Equals("-1"))
-				//{
-				//	return Ok("El Facturador Electrónico cuenta con un plan activo,esta pendiente por parte de HGI SAS la generacion de la Factura Electrónica.<br /> Cualquier inquietud comunicarse con nuestra area comercial.");
-				//}
+				else
+				if (postpago != null && postpago.DocumentoRef.Equals("-1"))
+				{
+					return Ok("El Facturador Electrónico cuenta con un plan activo,esta pendiente por parte de HGI SAS la generacion de la Factura Electrónica.<br /> Cualquier inquietud comunicarse con nuestra area comercial.");
+				}
 				else
 				{
 					return Ok("El Facturador Electrónico tiene registrado un tipo de plan que no le permite activar uno nuevo.<br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
