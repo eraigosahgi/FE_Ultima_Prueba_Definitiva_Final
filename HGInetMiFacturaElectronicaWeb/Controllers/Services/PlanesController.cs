@@ -99,7 +99,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
 				
-				TblPlanesTransacciones postpago = clase_planes.Obtener(facturador).FirstOrDefault(x => x.IntEstado == 0 && (x.IntTipoProceso == 3 ));				
+				TblPlanesTransacciones postpago = clase_planes.Obtener(facturador).FirstOrDefault(x => x.IntEstado == 0 && (x.IntTipoProceso == 2 ));				
 
 				if (postpago == null)
 				{
@@ -120,7 +120,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 					//Se valida si el numero de documentos comprados es mayor a 500 
 					// entonces lo estan haciendo fuera del proceso de happgi ya que este permite solo los planes de la pagina
-					if (ObjPlanTransacciones.IntNumTransaccCompra >= 500)
+					if (ObjPlanTransacciones.IntNumTransaccCompra > 1200)
 					{
 						return Ok("Compra de documentos supera la cantidad de documentos permitidos <br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
 					}
