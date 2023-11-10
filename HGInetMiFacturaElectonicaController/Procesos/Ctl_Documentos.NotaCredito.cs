@@ -461,7 +461,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								{
 									//Si el documento afectado es diferente a la version de la empresa emisora se cambia el tìpo de operacion
 									if (doc_resp.IdVersionDian == 1)
-										item.TipoOperacion = 23;
+										item.TipoOperacion = 22;
 									//throw new ApplicationException(string.Format("El número de Factura afectada {0} no es válida para la Versión que se esta enviando", item.DocumentoRef));
 									item.DocumentoRef = string.Format("{0} - {1}", doc_resp.Prefijo, doc_resp.Documento);
 								}
@@ -473,7 +473,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										//Si el documento afectado es diferente a la version de la empresa emisora se cambia el tìpo de operacion
 										if (doc_resp.IdVersionDian == 1)
 										{
-											item.TipoOperacion = 23;
+											item.TipoOperacion = 22;
 											item.CufeFactura = doc_resp.Cufe;
 										}
 										else if (!doc_resp.Cufe.Equals(item.CufeFactura))
@@ -490,15 +490,18 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 							else
 							{
-								if (!string.IsNullOrEmpty(item.CufeFactura) && !item.CufeFactura.Equals("0"))
-								{
-									item.TipoOperacion = 23;
-								}
-								else
-								{
-									//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
-									item.TipoOperacion = 22;
-								}
+								//if (!string.IsNullOrEmpty(item.CufeFactura) && !item.CufeFactura.Equals("0"))
+								//{
+								//	item.TipoOperacion = 23;
+								//}
+								//else
+								//{
+								//	//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
+								//	item.TipoOperacion = 22;
+								//}
+
+								//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
+								item.TipoOperacion = 22;
 
 								//Si envian Prefijo de la factura que estan afectando se concatena para la impresion
 								if (!string.IsNullOrEmpty(item.PrefijoFactura))
