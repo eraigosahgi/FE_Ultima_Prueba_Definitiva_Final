@@ -661,6 +661,9 @@ namespace HGInetMiFacturaElectonicaController
 						documento_obj = objeto.DatosFactura;
 					}
 
+					//739793 - Se agrega codigo de Exportacion en el asunto.
+					if (documento.IntTipoOperacion == 2)
+						tipodoc_asunto = "02";
 				}
 				else if (tipo_documento == TipoDocumento.NotaCredito)
 				{
