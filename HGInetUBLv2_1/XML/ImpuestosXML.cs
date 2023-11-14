@@ -504,13 +504,18 @@ namespace HGInetUBLv2_1
 
 							PerUnitAmountType Percent = new PerUnitAmountType();
 							Percent.currencyID = moneda_detalle.ToString();
-							//decimal cantidad = documentoDetalle.Where(d => d.ImpoConsumoPorcentaje == 0 && d.ValorImpuestoConsumo > 0 && d.ProductoGratis == false && d.Aiu == 4).Sum(c => c.Cantidad);
-							Percent.Value = decimal.Round((item_sub.ValorImpuesto / BaseUnitMeasure.Value) * 100, 2);//decimal.Round(item_sub.ValorImpuesto / cantidad, 2);// 
-							//if (item_sub.TipoImpuesto == "34")
-							//{
-							//	Percent.Value = decimal.Round((item_sub.ValorImpuesto * item_sub.Porcentaje) / (BaseUnitMeasure.Value/100)/100, 0);
-							//	//decimal.Round((DocDet.ValorImpuestoConsumo2 / DocDet.Cantidad)/(DocDet.Peso/100), 0) + 0.00M
-							//}
+
+							if (item_sub.TipoImpuesto == "22")
+							{
+								decimal cantidad = documentoDetalle.Where(d => d.ImpoConsumoPorcentaje == 0 && d.ValorImpuestoConsumo > 0 && d.ProductoGratis == false && d.Aiu == 4).Sum(c => c.Cantidad);
+								Percent.Value = decimal.Round(item_sub.ValorImpuesto / cantidad, 2);//decimal.Round((item_sub.ValorImpuesto / BaseUnitMeasure.Value) * 100, 2);// 
+							}
+							
+							if (item_sub.TipoImpuesto == "34")
+							{
+								Percent.Value = decimal.Round((item_sub.ValorImpuesto * item_sub.Porcentaje) / (BaseUnitMeasure.Value / 100) / 100, 0);
+								//decimal.Round((DocDet.ValorImpuestoConsumo2 / DocDet.Cantidad)/(DocDet.Peso/100), 0) + 0.00M
+							}
 							Percent.Value = Percent.Value + 0.00M;
 							//Percent.Value = decimal.Round(item_sub.ValorImpuesto / item_sub.BaseImponible, 2);
 
