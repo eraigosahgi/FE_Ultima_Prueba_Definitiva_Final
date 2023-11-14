@@ -1491,6 +1491,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 						}
 
+						//739958 - Si tiene parametrizacion de bebida azucarada y tiene un valor de impuesto debe llegar un contenido del producto
+						if (Docdet.ValorImpuestoConsumo2 > 0 && Docdet.Aiu == 5)
+						{
+							if (Docdet.ProductoContenido == 0)
+								throw new ApplicationException(string.Format("El campo {0} del impuesto a las Bebidas Azucaradas con valor {1} del detalle no está bien formado", "ProductoContenido", Docdet.ProductoContenido));
+						}
+
 						if (Docdet.DatosMandatario != null)
 						{
 							ValidarTercero(Docdet.DatosMandatario, "Mandatario", facturador);
