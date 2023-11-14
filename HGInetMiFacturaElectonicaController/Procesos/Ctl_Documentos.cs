@@ -610,7 +610,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (!tipo.Equals("Mandatario"))
 				{
 					//Se agrega validacion, se tiene en el listado de la DIAN estas opciones pero presenta notificacion en la rececpion.
-					if (tercero.CodigoTributo.Equals("22"))
+					if (string.IsNullOrWhiteSpace(tercero.CodigoTributo) || tercero.CodigoTributo.Equals("22"))
 						tercero.CodigoTributo = "01";
 
 					ListaTipoImpuestoTercero list_tipoImp = new ListaTipoImpuestoTercero();
