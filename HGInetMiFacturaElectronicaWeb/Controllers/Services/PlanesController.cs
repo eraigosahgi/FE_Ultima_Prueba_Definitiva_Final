@@ -99,10 +99,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_PlanesTransacciones clase_planes = new Ctl_PlanesTransacciones();
 				
-				TblPlanesTransacciones postpago = clase_planes.Obtener(facturador).FirstOrDefault(x => x.IntEstado == 0 && (x.IntTipoProceso == 2 ));				
+				//TblPlanesTransacciones postpago = clase_planes.Obtener(facturador).FirstOrDefault(x => x.IntEstado == 0 && (x.IntTipoProceso == 2 ));				
 
-				if (postpago == null)
-				{
+				//if (postpago == null)
+				//{
 				
 					TblPlanesTransacciones ObjPlanTransacciones = new TblPlanesTransacciones();
 					ObjPlanTransacciones.IntTipoProceso = Convert.ToByte(TipoCompra.Compra.GetHashCode());
@@ -131,20 +131,20 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					clase_planes.Crear(ObjPlanTransacciones, false);
 					
 					return Ok("Recarga Exitosa");
-				}
-				else if (postpago != null && postpago.IntTipoProceso == 3)
-				{
-					return Ok("El Facturador Electrónico tiene registrado un plan Postpago que no le permite activar uno nuevo.<br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
-				}
-				else
-				if (postpago != null && postpago.DocumentoRef.Equals("-1"))
-				{
-					return Ok("El Facturador Electrónico cuenta con un plan activo,esta pendiente por parte de HGI SAS la generacion de la Factura Electrónica.<br /> Cualquier inquietud comunicarse con nuestra area comercial.");
-				}
-				else
-				{
-					return Ok("El Facturador Electrónico tiene registrado un tipo de plan que no le permite activar uno nuevo.<br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
-				}
+				//}
+				//else if (postpago != null && postpago.IntTipoProceso == 3)
+				//{
+				//	return Ok("El Facturador Electrónico tiene registrado un plan Postpago que no le permite activar uno nuevo.<br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
+				//}
+				//else
+				//if (postpago != null && postpago.DocumentoRef.Equals("-1"))
+				//{
+				//	return Ok("El Facturador Electrónico cuenta con un plan activo,esta pendiente por parte de HGI SAS la generacion de la Factura Electrónica.<br /> Cualquier inquietud comunicarse con nuestra area comercial.");
+				//}
+				//else
+				//{
+				//	return Ok("El Facturador Electrónico tiene registrado un tipo de plan que no le permite activar uno nuevo.<br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
+				//}
 
 			}
 			catch (Exception ex)
