@@ -344,6 +344,9 @@ namespace HGInetUBLv2_1
 								if (nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal[j].TaxCategory.Percent != null)
 								{
 									porcentaje_impto = nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal[j].TaxCategory.Percent.Value;
+									//Impuesto ultraprocesados sin clasificar
+									if (porcentaje_impto == 10 && tipo_impto.Equals("ZZ"))
+										tipo_impto = "35";
 								}
 								decimal valor_impto = nota_debito_ubl.DebitNoteLine[i].TaxTotal[0].TaxSubtotal[j].TaxAmount.Value;
 

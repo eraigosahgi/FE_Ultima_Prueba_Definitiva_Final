@@ -450,6 +450,9 @@ namespace HGInetUBLv2_1
 										if (factura_ubl.InvoiceLine[i].TaxTotal[x].TaxSubtotal[j].TaxCategory.Percent != null)
 										{
 											porcentaje_impto = factura_ubl.InvoiceLine[i].TaxTotal[x].TaxSubtotal[j].TaxCategory.Percent.Value;
+											//Impuesto ultraprocesados sin clasificar
+											if (porcentaje_impto == 10 && tipo_impto.Equals("ZZ"))
+												tipo_impto = "35";
 										}
 
 										decimal valor_impto = factura_ubl.InvoiceLine[i].TaxTotal[x].TaxSubtotal[j].TaxAmount.Value;
