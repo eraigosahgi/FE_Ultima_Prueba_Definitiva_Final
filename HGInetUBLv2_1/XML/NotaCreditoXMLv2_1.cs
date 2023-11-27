@@ -1234,6 +1234,10 @@ namespace HGInetUBLv2_1
 						TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
 
 						string codigo_impuesto = "04";
+
+						if (DocDet.ImpoConsumo2Porcentaje == 10)
+							codigo_impuesto = "35";
+
 						//
 						if (DocDet.ValorImpuestoConsumo2 > 0 && DocDet.ImpoConsumo2Porcentaje == 0)
 						{
