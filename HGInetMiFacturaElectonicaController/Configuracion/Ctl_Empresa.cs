@@ -1471,8 +1471,9 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Convierte un objeto de tipo TblEmpresas a Empresa
 		/// </summary>
 		/// <param name="datos_empresa">datos de la empresa</param>
+		/// <param name="DatosEmisor">True: Muestra todos los datos del emisor False: Solo muestra los datos del adquiriente </param>
 		/// <returns></returns>
-		public static Empresa ConvertirEmpresa(TblEmpresas datos_empresa)
+		public static Empresa ConvertirEmpresa(TblEmpresas datos_empresa, bool DatosEmisor)
 		{
 			try
 			{
@@ -1483,19 +1484,24 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				datos_retorno.Identificacion = datos_empresa.StrIdentificacion;
 				datos_retorno.IdentificacionDv = datos_empresa.IntIdentificacionDv;
 				datos_retorno.RazonSocial = datos_empresa.StrRazonSocial;
-				datos_retorno.Telefono = datos_empresa.StrTelefono;
-				datos_retorno.HorasAcuseTacito = datos_empresa.IntAcuseTacito.Value;
-				datos_retorno.ManejaAnexo = datos_empresa.IntManejaAnexos;
+				datos_retorno.Telefono = datos_empresa.StrTelefono; 
 				datos_retorno.EmailAdmin = datos_empresa.StrMailAdmin;
-				datos_retorno.EmailEnvio = datos_empresa.StrMailEnvio;
-				datos_retorno.EmailRecepcion = datos_empresa.StrMailRecepcion;
-				datos_retorno.EmailAcuse = datos_empresa.StrMailAcuse;
-				datos_retorno.EmailPagos = datos_empresa.StrMailPagos;
-				datos_retorno.VersionDian = datos_empresa.IntVersionDian;
+                datos_retorno.TipoIdentificacion = int.Parse(datos_empresa.StrTipoIdentificacion);
 
-				//Obtiene correo de la tabla que tiene registrado en la DIAN
-				Ctl_ObtenerCorreos correo_dian = new Ctl_ObtenerCorreos();
-				datos_retorno.EmailRecepcionDian = correo_dian.Obtener(datos_empresa.StrIdentificacion);
+                if (DatosEmisor == true)
+                {
+                   datos_retorno.HorasAcuseTacito = datos_empresa.IntAcuseTacito.Value;
+				    datos_retorno.ManejaAnexo = datos_empresa.IntManejaAnexos;
+				    datos_retorno.EmailEnvio = datos_empresa.StrMailEnvio;
+				    datos_retorno.EmailRecepcion = datos_empresa.StrMailRecepcion;
+				    datos_retorno.EmailAcuse = datos_empresa.StrMailAcuse;
+				    datos_retorno.EmailPagos = datos_empresa.StrMailPagos;
+				    datos_retorno.VersionDian = datos_empresa.IntVersionDian;
+
+				    //Obtiene correo de la tabla que tiene registrado en la DIAN
+				    Ctl_ObtenerCorreos correo_dian = new Ctl_ObtenerCorreos();
+                    datos_retorno.EmailRecepcionDian = correo_dian.Obtener(datos_empresa.StrIdentificacion);
+                }
 
 				return datos_retorno;
 			}

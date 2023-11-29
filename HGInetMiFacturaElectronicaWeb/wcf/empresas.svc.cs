@@ -50,7 +50,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				//Valida si se obtuvieron datos y convierte la tbl a Empresa.
 				if (datos_tbl != null)
 				{
-					respuesta = Ctl_Empresa.ConvertirEmpresa(datos_tbl);
+					respuesta = Ctl_Empresa.ConvertirEmpresa(datos_tbl,true);
 					DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
 
 					respuesta.PinSoftware = data_dian.Pin;
@@ -61,6 +61,44 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 					//	DianProveedor data_dian_habilitacion = HgiConfiguracion.GetConfiguration().DianProveedor;
 					//	respuesta.PinSoftware = data_dian_habilitacion.Pin;
 					//}
+					
+				}
+
+				return respuesta;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+        /// <summary>
+		/// Obtiene la información de la empresa
+		/// </summary>
+		/// <param name="DataKey"></param>
+		/// <param name="Identificacion"></param>
+		/// <returns></returns>
+		public Empresa ConsultarAdquiriente(string DataKey, string IdentificacionEmisor, string IdentificacionAdquiriente)
+		{
+			try
+			{
+				if (string.IsNullOrWhiteSpace(DataKey))
+					throw new ApplicationException("DataKey de la empresa inválido.");
+
+				Empresa respuesta = new Empresa();
+
+				//Válida que la key sea correcta.
+				Peticion.Validar(DataKey, IdentificacionEmisor);
+
+				Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+
+				//Obtiene los datos de la empresa.
+				TblEmpresas datos_tbl = ctl_empresa.Obtener(IdentificacionAdquiriente);
+
+				//Valida si se obtuvieron datos y convierte la tbl a Empresa.
+				if (datos_tbl != null)
+				{
+					respuesta = Ctl_Empresa.ConvertirEmpresa(datos_tbl, false);				
 					
 				}
 
