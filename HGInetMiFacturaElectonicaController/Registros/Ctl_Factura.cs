@@ -190,7 +190,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio">fecha inicial de consulta</param>
 		/// <param name="fecha_fin">fecha final de consulta</param>
 		/// <returns>documentos de tipo factura consultados por IdSeguridad</returns>
-		public List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string identificacion_adquiriente, string CodigosRegistros)
+		public List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string identificacion_adquiriente, string CodigosRegistros, bool Facturador = false)
 		{
 			try
 			{
@@ -209,14 +209,31 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				//Convierte CodigoRegistros en una lista.
 				List<string> lista_documentos = Coleccion.ConvertirLista(CodigosRegistros);
 
-				// obtiene los documentos de acuerdo al id seguridad y con los estados de visibilidad pública
-				var respuesta = (from datos in context.TblDocumentos
+				List<TblDocumentos> respuesta = new List<TblDocumentos>();
+
+				if (Facturador == false)
+				{
+
+					// obtiene los documentos de acuerdo al id seguridad y con los estados de visibilidad pública
+					respuesta = (from datos in context.TblDocumentos
 								 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 								 where (empresa.StrIdentificacion.Equals(identificacion_adquiriente))
 								 && (lista_documentos.Contains(datos.StrIdSeguridad.ToString()))
 								 && (estado_dian.Contains(datos.IntIdEstado.ToString()))
 								 orderby datos.IntNumero descending
 								 select datos).ToList();
+				}
+				else
+				{
+					// obtiene los documentos de acuerdo al id seguridad y con los estados de visibilidad pública
+					respuesta = (from datos in context.TblDocumentos
+								 join empresa in context.TblEmpresas on datos.StrEmpresaFacturador equals empresa.StrIdentificacion
+								 where (empresa.StrIdentificacion.Equals(identificacion_adquiriente))
+								 && (lista_documentos.Contains(datos.StrIdSeguridad.ToString()))
+								 && (estado_dian.Contains(datos.IntIdEstado.ToString()))
+								 orderby datos.IntNumero descending
+								 select datos).ToList();
+				}
 
 				List<FacturaConsulta> lista_respuesta = new List<FacturaConsulta>();
 

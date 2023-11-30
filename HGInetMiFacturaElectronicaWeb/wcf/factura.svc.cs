@@ -158,7 +158,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		/// <param name="Identificacion">Número de identificación del adquiriente</param>
 		/// <param  <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
 		/// <returns>documentos facturas entre fechas por adquiriente</returns>
-		public List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros)
+		public List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros, bool Facturador = false)
 		{
 			try
 			{
@@ -178,7 +178,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				Ctl_Factura ctl_documento = new Ctl_Factura();
 
 				// obtiene los datos
-				respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros);
+				respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros, Facturador);
 
 				//Almacena la petición
 				try

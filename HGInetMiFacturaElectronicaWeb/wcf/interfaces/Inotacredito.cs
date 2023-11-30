@@ -31,6 +31,6 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
         [OperationContract(Name = "ObtenerPorIdSeguridadAdquiriente")]
         [FaultContract(typeof(Error), Action = "ObtenerPorIdSeguridadAdquiriente", Name = "Error")]
         [WebInvoke(Method = "GET")]
-        List<NotaCreditoConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros);
+        List<NotaCreditoConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros, bool Facturador = false);
     }
 }

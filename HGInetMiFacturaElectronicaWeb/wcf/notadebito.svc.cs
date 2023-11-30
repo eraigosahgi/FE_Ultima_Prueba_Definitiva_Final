@@ -99,7 +99,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
         /// <param name="Identificacion">Número de identificación del adquiriente</param>
         /// <param  <param name="CodigosRegistros">código de registro de los documentos (recibe varios códigos separados por coma)</param>
         /// <returns>documentos facturas entre fechas por adquiriente</returns>
-        public List<NotaDebitoConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros)
+        public List<NotaDebitoConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros, bool Facturador = false)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
                 Ctl_NotaDebito ctl_documento = new Ctl_NotaDebito();
 
                 // obtiene los datos
-                respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros);
+                respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros, Facturador);
 
                 return respuesta;
 

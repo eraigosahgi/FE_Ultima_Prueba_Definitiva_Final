@@ -117,11 +117,12 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
         {
             try
             {	// se restringe el acceso al servicio web NOVIEMBRE 16
-				DateTime fecha_control = new DateTime(2020,11,15).Date;
-				DateTime fecha_actual = LibreriaGlobalHGInet.Funciones.Fecha.GetFecha().Date;
-				if (fecha_control < fecha_actual)
-					throw new ApplicationException("El servicio web ConsultaPorFechaElaboracion no se encuentra disponible; por favor realice la consulta mediante el servicio web ConsultaPorCodigoRegistro.");
-				
+				//DateTime fecha_control = new DateTime(2020,11,15).Date;
+				//DateTime fecha_actual = LibreriaGlobalHGInet.Funciones.Fecha.GetFecha().Date;
+
+				//if (fecha_control < fecha_actual)
+				//	throw new ApplicationException("El servicio web ConsultaPorFechaElaboracion no se encuentra disponible; por favor realice la consulta mediante el servicio web ConsultaPorCodigoRegistro.");
+
 				if (string.IsNullOrEmpty(DataKey))
 					throw new ApplicationException("Parámetro DataKey de tipo string inválido.");
 
@@ -135,6 +136,11 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 				if (FechaFinal < FechaInicial)
 					throw new ApplicationException("Fecha final inválida.");
+
+				long dif_fecha = LibreriaGlobalHGInet.Funciones.Fecha.Diferencia(FechaInicial, FechaFinal, LibreriaGlobalHGInet.Funciones.Fecha.DateInterval.Day);
+
+				if (dif_fecha > 30)
+					throw new ApplicationException("La consulta supera el maximo de 30 dias; por favor realice la consulta teniendo en cuenta este maximo");
 
 				List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 

@@ -30,7 +30,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 		[OperationContract(Name = "ObtenerPorIdSeguridadAdquiriente")]
 		[FaultContract(typeof(Error), Action = "ObtenerPorIdSeguridadAdquiriente", Name = "Error")]
 		[WebInvoke(Method = "GET")]
-		List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros);
+		List<FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string DataKey, string Identificacion, string CodigosRegistros, bool Facturador = false);
 
 		[OperationContract(Name = "ActualizarEstadoProcesoERP")]
 		[FaultContract(typeof(Error), Action = "ActualizarEstadoProcesoERP", Name = "Error")]
