@@ -646,6 +646,12 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				{
 					Tercero empresa_new = new Tercero();
 					empresa_new.Identificacion = documento_obj.StrEmpresaFacturador;
+					try
+					{
+						empresa_new.IdentificacionDv = (int)LibreriaGlobalHGInet.HgiNet.FuncionesIdentificacion.Dv(empresa_new.Identificacion);
+					}
+					catch (Exception)
+					{}
 					empresa_new.TipoIdentificacion = 31;
 					empresa_new.RazonSocial = documento_obj.StrNombreFacturador;
 					empresa_new.NombreComercial = documento_obj.StrNombreFacturador;
