@@ -162,9 +162,9 @@ App.controller('ModalAuditDocumentoController', function ModalAuditDocumentoCont
 			$http.get('/api/AuditoriaDocumento?id_seguridad_doc=' + IdSeguridad).then(function (response) {
 
 				if (location.href.includes('habilitacion')) {
-					window.open("https://catalogo-vpfe-hab.dian.gov.co/Document/ShowDocumentToPublic/" + response.data, '_blank');
+					window.open("https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=" + response.data, '_blank');
 				} else {
-					window.open("https://catalogo-vpfe.dian.gov.co/Document/ShowDocumentToPublic/" + response.data, '_blank');
+					window.open("https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=" + response.data, '_blank');
 				}
 
 				$("#modal_audit_documento").modal('hide');
