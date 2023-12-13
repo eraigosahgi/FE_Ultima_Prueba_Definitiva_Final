@@ -4584,13 +4584,17 @@ namespace HGInetFeAPI.ServicioFactura {
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=2)]
         public string CodigosRegistros;
         
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=3)]
+        public bool Facturador;
+        
         public ObtenerPorIdSeguridadAdquirienteRequest() {
         }
         
-        public ObtenerPorIdSeguridadAdquirienteRequest(string DataKey, string Identificacion, string CodigosRegistros) {
+        public ObtenerPorIdSeguridadAdquirienteRequest(string DataKey, string Identificacion, string CodigosRegistros, bool Facturador) {
             this.DataKey = DataKey;
             this.Identificacion = Identificacion;
             this.CodigosRegistros = CodigosRegistros;
+            this.Facturador = Facturador;
         }
     }
     

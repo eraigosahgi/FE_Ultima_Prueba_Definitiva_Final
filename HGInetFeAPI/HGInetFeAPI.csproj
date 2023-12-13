@@ -198,19 +198,22 @@
     <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioEmpresas\empresas.wsdl" />
-    <None Include="Service References\ServicioEmpresas\empresas.xsd">
+    <None Include="Service References\ServicioEmpresas\empresas2.wsdl" />
+    <None Include="Service References\ServicioEmpresas\empresas21.wsdl" />
+    <None Include="Service References\ServicioEmpresas\empresas4.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioEmpresas\empresas1.wsdl" />
-    <None Include="Service References\ServicioEmpresas\empresas1.xsd">
+    <None Include="Service References\ServicioEmpresas\empresas41.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioEmpresas\empresas2.xsd">
+    <None Include="Service References\ServicioEmpresas\empresas42.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioEmpresas\empresas3.xsd">
+    <None Include="Service References\ServicioEmpresas\empresas43.xsd">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioEmpresas\HGInetFeAPI.ServicioEmpresas.ConsultarAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ServicioEmpresas\HGInetFeAPI.ServicioEmpresas.CrearResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -544,9 +547,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioEmpresas\empresas.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ServicioEmpresas\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -662,6 +662,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioNotaDebito\notadebito11.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioEmpresas\empresas1.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

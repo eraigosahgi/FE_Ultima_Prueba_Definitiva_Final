@@ -302,7 +302,7 @@ namespace HGInetFeAPI
 		/// <param name="Identificacion">número de identificación del Adquiriente</param>
 		/// <param name="CodigosDocumentos">còdigos de documentos del Facturador Electrónico para consulta separados por el caracter coma (,)</param>
 		/// <returns>Una lista de las Facturas generadas a nombre del adquiriente</returns>
-		public static List<ServicioFactura.FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string UrlWs, string Serial, string Identificacion, string CodigosDocumentos)
+		public static List<ServicioFactura.FacturaConsulta> ObtenerPorIdSeguridadAdquiriente(string UrlWs, string Serial, string Identificacion, string CodigosDocumentos, bool Facturador = false)
 		{
 
 			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
@@ -346,6 +346,7 @@ namespace HGInetFeAPI
 					DataKey = dataKey,
 					Identificacion = Identificacion,
 					CodigosRegistros = CodigosDocumentos,
+					Facturador = Facturador,
 				};
 
 				// ejecución del servicio web

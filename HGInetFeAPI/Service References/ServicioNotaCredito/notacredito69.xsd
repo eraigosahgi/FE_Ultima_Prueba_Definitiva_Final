@@ -52,6 +52,7 @@
         <xs:element minOccurs="0" name="DataKey" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="CodigosRegistros" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="Facturador" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

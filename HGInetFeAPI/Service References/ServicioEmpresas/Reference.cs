@@ -473,6 +473,15 @@ namespace HGInetFeAPI.ServicioEmpresas {
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/Obtener", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/ObtenerResponse")]
         System.Threading.Tasks.Task<HGInetFeAPI.ServicioEmpresas.ObtenerResponse> ObtenerAsync(HGInetFeAPI.ServicioEmpresas.ObtenerRequest request);
         
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/ConsultarAdquiriente", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/ConsultarAdquirienteRespon" +
+            "se")]
+        [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioEmpresas.Error), Action="ConsultarAdquiriente", Name="Error")]
+        HGInetFeAPI.ServicioEmpresas.ConsultarAdquirienteResponse ConsultarAdquiriente(HGInetFeAPI.ServicioEmpresas.ConsultarAdquirienteRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/ConsultarAdquiriente", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/ConsultarAdquirienteRespon" +
+            "se")]
+        System.Threading.Tasks.Task<HGInetFeAPI.ServicioEmpresas.ConsultarAdquirienteResponse> ConsultarAdquirienteAsync(HGInetFeAPI.ServicioEmpresas.ConsultarAdquirienteRequest request);
+        
         [System.ServiceModel.OperationContractAttribute(Action="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/Crear", ReplyAction="HGInetFacturaElectronica.ServiciosWcf/ServicioEmpresas/CrearResponse")]
         [System.ServiceModel.FaultContractAttribute(typeof(HGInetFeAPI.ServicioEmpresas.Error), Action="Crear", Name="Error")]
         HGInetFeAPI.ServicioEmpresas.CrearResponse Crear(HGInetFeAPI.ServicioEmpresas.CrearRequest request);
@@ -539,6 +548,46 @@ namespace HGInetFeAPI.ServicioEmpresas {
         
         public ObtenerResponse(HGInetFeAPI.ServicioEmpresas.Empresa ObtenerResult) {
             this.ObtenerResult = ObtenerResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultarAdquiriente", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultarAdquirienteRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public string DataKey;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=1)]
+        public string IdentificacionEmisor;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=2)]
+        public string IdentificacionAdquiriente;
+        
+        public ConsultarAdquirienteRequest() {
+        }
+        
+        public ConsultarAdquirienteRequest(string DataKey, string IdentificacionEmisor, string IdentificacionAdquiriente) {
+            this.DataKey = DataKey;
+            this.IdentificacionEmisor = IdentificacionEmisor;
+            this.IdentificacionAdquiriente = IdentificacionAdquiriente;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="ConsultarAdquirienteResponse", WrapperNamespace="HGInetFacturaElectronica.ServiciosWcf", IsWrapped=true)]
+    public partial class ConsultarAdquirienteResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="HGInetFacturaElectronica.ServiciosWcf", Order=0)]
+        public HGInetFeAPI.ServicioEmpresas.Empresa ConsultarAdquirienteResult;
+        
+        public ConsultarAdquirienteResponse() {
+        }
+        
+        public ConsultarAdquirienteResponse(HGInetFeAPI.ServicioEmpresas.Empresa ConsultarAdquirienteResult) {
+            this.ConsultarAdquirienteResult = ConsultarAdquirienteResult;
         }
     }
     
@@ -615,6 +664,14 @@ namespace HGInetFeAPI.ServicioEmpresas {
         
         public System.Threading.Tasks.Task<HGInetFeAPI.ServicioEmpresas.ObtenerResponse> ObtenerAsync(HGInetFeAPI.ServicioEmpresas.ObtenerRequest request) {
             return base.Channel.ObtenerAsync(request);
+        }
+        
+        public HGInetFeAPI.ServicioEmpresas.ConsultarAdquirienteResponse ConsultarAdquiriente(HGInetFeAPI.ServicioEmpresas.ConsultarAdquirienteRequest request) {
+            return base.Channel.ConsultarAdquiriente(request);
+        }
+        
+        public System.Threading.Tasks.Task<HGInetFeAPI.ServicioEmpresas.ConsultarAdquirienteResponse> ConsultarAdquirienteAsync(HGInetFeAPI.ServicioEmpresas.ConsultarAdquirienteRequest request) {
+            return base.Channel.ConsultarAdquirienteAsync(request);
         }
         
         public HGInetFeAPI.ServicioEmpresas.CrearResponse Crear(HGInetFeAPI.ServicioEmpresas.CrearRequest request) {
