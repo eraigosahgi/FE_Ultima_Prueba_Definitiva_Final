@@ -19,7 +19,7 @@ namespace HGInetUBLv2_1
 		private static string name1 = "Responsable";
 		private static string value1 = "url www.minsalud.gov.co";
 		private static string name2 = "Tipo, identificador:año del acto administrativo";
-		private static string value2 = "Resolucion 084:2021";
+		private static string value2 = "Resolucion 510:2022";
 		private static string sector = "Sector Salud";
 		private static string usuario = "Usuario";
 
@@ -129,21 +129,21 @@ namespace HGInetUBLv2_1
 
 				if (i == campo_validador+1)
 				{
-					TipoIdentificacionSalud dato_enum = Enumeracion.GetValueFromAmbiente<TipoIdentificacionSalud>(datos.CamposSector[i].Valor);
+					ModalidadDePago dato_enum = Enumeracion.GetValueFromAmbiente<ModalidadDePago>(datos.CamposSector[i].Valor);
 					coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
 					coleccion_datos.Value.schemeName = "salud_identificación.gc";
 					coleccion_datos.Value.schemeID = datos.CamposSector[i].Valor;
 				}
 
-				if (i == campo_validador+7)
-				{
-					TipoUsuarioSalud dato_enum = Enumeracion.GetEnumObjectByValue<TipoUsuarioSalud>(Convert.ToInt16(datos.CamposSector[i].Valor));
-					coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
-					coleccion_datos.Value.schemeName = "salud_tipo_usuario.gc";
-					coleccion_datos.Value.schemeID = Enumeracion.GetAmbiente(dato_enum);
-				}
+				//if (i == campo_validador+7)
+				//{
+				//	TipoUsuarioSalud dato_enum = Enumeracion.GetEnumObjectByValue<TipoUsuarioSalud>(Convert.ToInt16(datos.CamposSector[i].Valor));
+				//	coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
+				//	coleccion_datos.Value.schemeName = "salud_tipo_usuario.gc";
+				//	coleccion_datos.Value.schemeID = Enumeracion.GetAmbiente(dato_enum);
+				//}
 
-				if (i == campo_validador+9)
+				if (i == campo_validador+2)
 				{
 					CoberturaSalud dato_enum = Enumeracion.GetEnumObjectByValue<CoberturaSalud>(Convert.ToInt16(datos.CamposSector[i].Valor));
 					coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);

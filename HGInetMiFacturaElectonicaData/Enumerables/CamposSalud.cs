@@ -12,65 +12,65 @@ namespace HGInetMiFacturaElectonicaData
 		[Description("CODIGO_PRESTADOR")]
 		prestadorservicios = 1,
 
-		[Description("TIPO_DOCUMENTO_IDENTIFICACION")]
-		tipodocumento = 2,
+		//[Description("TIPO_DOCUMENTO_IDENTIFICACION")]
+		//tipodocumento = 2,
 
-		[Description("NUMERO_DOCUMENTO_IDENTIFICACION")]
-		numerodocumento = 3,
+		//[Description("NUMERO_DOCUMENTO_IDENTIFICACION")]
+		//numerodocumento = 3,
 
-		[Description("PRIMER_APELLIDO")]
-		primerapellidousuario = 4,
+		//[Description("PRIMER_APELLIDO")]
+		//primerapellidousuario = 4,
 
-		[Description("SEGUNDO_APELLIDO")]
-		segundoapellidousuario = 5,
+		//[Description("SEGUNDO_APELLIDO")]
+		//segundoapellidousuario = 5,
 
-		[Description("PRIMER_NOMBRE")]
-		primernombreusuario = 6,
+		//[Description("PRIMER_NOMBRE")]
+		//primernombreusuario = 6,
 
-		[Description("SEGUNDO_NOMBRE")]
-		segundonombreusuario = 7,
+		//[Description("SEGUNDO_NOMBRE")]
+		//segundonombreusuario = 7,
 
-		[Description("TIPO_USUARIO")]
-		tipousuario = 8,
+		//[Description("TIPO_USUARIO")]
+		//tipousuario = 8,
 
-		[Description("MODALIDAD_CONTRATACION")]
-		RecepcionAcuse = 9,
+		[Description("MODALIDAD_PAGO")]
+		RecepcionAcuse = 2,
 
 		[Description("COBERTURA_PLAN_BENEFICIOS")]
-		coberturaplanbeneficios = 10,
+		coberturaplanbeneficios = 3,
 
 		[Description("NUMERO_AUTORIZACION")]
-		numeroautorizacion = 11,
+		numeroautorizacion = 4,
 
-		[Description("NUMERO_MIPRES")]
-		numeromipres = 12,
+		//[Description("NUMERO_MIPRES")]
+		//numeromipres = 12,
 
-		[Description("NUMERO_ENTREGA_MIPRES")]
-		numeroidmipres = 13,
+		//[Description("NUMERO_ENTREGA_MIPRES")]
+		//numeroidmipres = 13,
 
-		[Description("NUMERO_CONTRATO")]
-		numerocontrato = 14,
+		//[Description("NUMERO_CONTRATO")]
+		//numerocontrato = 14,
 
 		[Description("NUMERO_POLIZA")]
-		numeropoliza = 15,
+		numeropoliza = 5,
 
 		[Description("COPAGO")]
-		copago = 16,
+		copago = 6,
 
 		[Description("CUOTA_MODERADORA")]
-		cuotamoderadora = 17,
+		cuotamoderadora = 7,
 
 		[Description("CUOTA_RECUPERACION")]
-		cuotarecuperacion = 18,
+		cuotarecuperacion = 8,
 
 		[Description("PAGOS_COMPARTIDOS")]
-		pagoscompartidos = 19,
+		pagoscompartidos = 9,
 
 		[Description("FECHA_INICIO")]
-		fechainicio = 20,
+		fechainicio = 10,
 
 		[Description("FECHA_FIN")]
-		fechafin = 21
+		fechafin = 11
 	}
 
 	public enum TipoIdentificacionSalud
@@ -223,6 +223,29 @@ namespace HGInetMiFacturaElectonicaData
 		[Description("Particular")]
 		[AmbientValue("15")]
 		Particular = 15
+	}
+
+	public enum ModalidadDePago
+	{
+		[Description("Pago individual por caso / Conjunto integral de atenciones / Paquete / Canasta")]
+		[AmbientValue("01")]
+		ContributivoC = 1,
+
+		[Description("Pago global prospectivo")]
+		[AmbientValue("02")]
+		ContributivoB = 2,
+
+		[Description("Pago por capitación")]
+		[AmbientValue("03")]
+		ContributivoA = 3,
+
+		[Description("Pago por evento")]
+		[AmbientValue("04")]
+		Subsidiado = 4,
+
+		[Description("Otra modalidad (específica)")]
+		[AmbientValue("05")]
+		SinRegimen = 5
 	}
 
 
