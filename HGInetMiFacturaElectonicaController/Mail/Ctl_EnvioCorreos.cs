@@ -121,8 +121,13 @@ namespace HGInetMiFacturaElectonicaController
 
 					// Reply-To
 					//***Se agrega validacion para que solo pueda responder al primer remitente
-					if (correo_remitente.Email.Contains(","))
+					if (correo_remitente.Email.Contains(",") || correo_remitente.Email.Contains(";"))
 					{
+						//744333 - vienen 2 correos en el facturador y es un documento de otro proveedor
+						if (correo_remitente.Email.Contains(";"))
+						{
+							correo_remitente.Email = correo_remitente.Email.Replace(";", ",");
+						}
 						List<string> List_rem = Coleccion.ConvertirLista(correo_remitente.Email);
 						correo_remitente.Email = List_rem[0];
 					}
