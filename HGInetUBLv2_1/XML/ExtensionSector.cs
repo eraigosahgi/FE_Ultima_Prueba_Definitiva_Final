@@ -95,74 +95,117 @@ namespace HGInetUBLv2_1
 			List<Collection> datos_usuario = new List<Collection>();
 
 			int campo_validador = 0;
-			for (int i = 0; i < datos.CamposSector.Count; i++)
+			//Informacion como indica Resolucion 510 que corresponde a 11 campos
+			if (datos.CamposSector.Count == 11)
 			{
-				AdditionalInformationType1 coleccion_datos = new AdditionalInformationType1();
-				coleccion_datos.Name = new Name();
-				try
+				for (int i = 0; i < datos.CamposSector.Count; i++)
 				{
+					AdditionalInformationType1 coleccion_datos = new AdditionalInformationType1();
+					coleccion_datos.Name = new Name();
+					try
+					{
 
-					coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud>(Convert.ToInt16(datos.CamposSector[i].Descripcion)));
+						coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud510>(Convert.ToInt16(datos.CamposSector[i].Descripcion)));
 
-					//if (diferente_orden == true && i > 14)
-					//{
-					//	int y = i + 2;
+					}
+					catch (Exception)
+					{
 
-					//	if (i > 18)
-					//		y = i - 4;
-						
-					//	coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud>(Convert.ToInt16(datos.CamposSector[y].Descripcion)));
-					//}
-					//else 
-					//{
-					//	coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud>(Convert.ToInt16(datos.CamposSector[i].Descripcion)));
-					//}
-					
-				}
-				catch (Exception)
-				{
+						coleccion_datos.Name.Value = datos.CamposSector[i].Descripcion;
+					}
+					coleccion_datos.Value = new Value();
+					coleccion_datos.Value.Value = datos.CamposSector[i].Valor;
 
-					coleccion_datos.Name.Value = datos.CamposSector[i].Descripcion;
-				}
-				coleccion_datos.Value = new Value();
-				coleccion_datos.Value.Value = datos.CamposSector[i].Valor;
+					if (i == campo_validador + 1)
+					{
+						ModalidadDePago dato_enum = Enumeracion.GetValueFromAmbiente<ModalidadDePago>(datos.CamposSector[i].Valor);
+						coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
+						coleccion_datos.Value.schemeName = "salud_identificación.gc";
+						coleccion_datos.Value.schemeID = datos.CamposSector[i].Valor;
+					}
 
-				if (i == campo_validador+1)
-				{
-					ModalidadDePago dato_enum = Enumeracion.GetValueFromAmbiente<ModalidadDePago>(datos.CamposSector[i].Valor);
-					coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
-					coleccion_datos.Value.schemeName = "salud_identificación.gc";
-					coleccion_datos.Value.schemeID = datos.CamposSector[i].Valor;
-				}
+					if (i == campo_validador + 2)
+					{
+						CoberturaSalud dato_enum = Enumeracion.GetEnumObjectByValue<CoberturaSalud>(Convert.ToInt16(datos.CamposSector[i].Valor));
+						coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
+						coleccion_datos.Value.schemeName = "salud_cobertura.gc";
+						coleccion_datos.Value.schemeID = Enumeracion.GetAmbiente(dato_enum);
+						campo_validador += 11;
+					}
 
-				//if (i == campo_validador+7)
-				//{
-				//	TipoUsuarioSalud dato_enum = Enumeracion.GetEnumObjectByValue<TipoUsuarioSalud>(Convert.ToInt16(datos.CamposSector[i].Valor));
-				//	coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
-				//	coleccion_datos.Value.schemeName = "salud_tipo_usuario.gc";
-				//	coleccion_datos.Value.schemeID = Enumeracion.GetAmbiente(dato_enum);
-				//}
+					datos_adicionales.Add(coleccion_datos);
 
-				if (i == campo_validador+2)
-				{
-					CoberturaSalud dato_enum = Enumeracion.GetEnumObjectByValue<CoberturaSalud>(Convert.ToInt16(datos.CamposSector[i].Valor));
-					coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
-					coleccion_datos.Value.schemeName = "salud_cobertura.gc";
-					coleccion_datos.Value.schemeID = Enumeracion.GetAmbiente(dato_enum);
-					campo_validador += 21;
-				}
-
-				datos_adicionales.Add(coleccion_datos);
-
-				if (i == campo_validador - 1)
-				{
-					Collection datos_coleccion = new Collection();
-					datos_coleccion.schemeName = usuario;
-					datos_coleccion.AdditionalInformation = datos_adicionales.ToArray();
-					datos_adicionales = new List<AdditionalInformationType1>();
-					datos_usuario.Add(datos_coleccion);
+					if (i == campo_validador - 1)
+					{
+						Collection datos_coleccion = new Collection();
+						datos_coleccion.schemeName = usuario;
+						datos_coleccion.AdditionalInformation = datos_adicionales.ToArray();
+						datos_adicionales = new List<AdditionalInformationType1>();
+						datos_usuario.Add(datos_coleccion);
+					}
 				}
 			}
+
+			//Información como indica la resolucion 084 respecto a 21 campos
+			if (datos.CamposSector.Count == 21)
+			{
+				campo_validador = 0;
+				for (int i = 0; i < datos.CamposSector.Count; i++)
+				{
+					AdditionalInformationType1 coleccion_datos = new AdditionalInformationType1();
+					coleccion_datos.Name = new Name();
+					try
+					{
+
+						coleccion_datos.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CamposSalud>(Convert.ToInt16(datos.CamposSector[i].Descripcion)));
+
+					}
+					catch (Exception)
+					{
+
+						coleccion_datos.Name.Value = datos.CamposSector[i].Descripcion;
+					}
+					coleccion_datos.Value = new Value();
+					coleccion_datos.Value.Value = datos.CamposSector[i].Valor;
+
+					if (i == campo_validador + 1)
+					{
+						TipoIdentificacionSalud dato_enum = Enumeracion.GetValueFromAmbiente<TipoIdentificacionSalud>(datos.CamposSector[i].Valor);
+						coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
+						coleccion_datos.Value.schemeName = "salud_identificación.gc";
+						coleccion_datos.Value.schemeID = datos.CamposSector[i].Valor;
+					}
+
+					if (i == campo_validador + 7)
+					{
+						TipoUsuarioSalud dato_enum = Enumeracion.GetEnumObjectByValue<TipoUsuarioSalud>(Convert.ToInt16(datos.CamposSector[i].Valor));
+						coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
+						coleccion_datos.Value.schemeName = "salud_tipo_usuario.gc";
+						coleccion_datos.Value.schemeID = Enumeracion.GetAmbiente(dato_enum);
+					}
+
+					if (i == campo_validador + 9)
+					{
+						CoberturaSalud dato_enum = Enumeracion.GetEnumObjectByValue<CoberturaSalud>(Convert.ToInt16(datos.CamposSector[i].Valor));
+						coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
+						coleccion_datos.Value.schemeName = "salud_cobertura.gc";
+						coleccion_datos.Value.schemeID = Enumeracion.GetAmbiente(dato_enum);
+						campo_validador += 21;
+					}
+
+					datos_adicionales.Add(coleccion_datos);
+
+					if (i == campo_validador - 1)
+					{
+						Collection datos_coleccion = new Collection();
+						datos_coleccion.schemeName = usuario;
+						datos_coleccion.AdditionalInformation = datos_adicionales.ToArray();
+						datos_adicionales = new List<AdditionalInformationType1>();
+						datos_usuario.Add(datos_coleccion);
+					}
+				}
+			}
+			
 			
 			interoperabilidad.Group.Collection = datos_usuario.ToArray();
 

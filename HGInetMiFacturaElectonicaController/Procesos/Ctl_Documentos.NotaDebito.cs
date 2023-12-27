@@ -760,41 +760,69 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				CampoValor valid_salud = new CampoValor();
 				string valid_enum_salud = string.Empty;
 
-				valid_salud = documento.SectorSalud.CamposSector[1];
-				try
+				if (documento.SectorSalud.CamposSector.Count == 11)
 				{
-					ModalidadDePago dato_iden = Enumeracion.GetValueFromAmbiente<ModalidadDePago>(valid_salud.Valor);
-					valid_enum_salud = Enumeracion.GetDescription(dato_iden);
+					valid_salud = documento.SectorSalud.CamposSector[1];
+					try
+					{
+						ModalidadDePago dato_iden = Enumeracion.GetValueFromAmbiente<ModalidadDePago>(valid_salud.Valor);
+						valid_enum_salud = Enumeracion.GetDescription(dato_iden);
+					}
+					catch (Exception)
+					{
+						throw new ApplicationException(string.Format("La modalidad de pago {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
+					}
+
+					valid_salud = documento.SectorSalud.CamposSector[2];
+					try
+					{
+						CoberturaSalud dato_enum = Enumeracion.GetEnumObjectByValue<CoberturaSalud>(Convert.ToInt16(valid_salud.Valor));
+						valid_enum_salud = Enumeracion.GetDescription(dato_enum);
+					}
+					catch (Exception)
+					{
+
+						throw new ApplicationException(string.Format("La cobertura de salud {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
+					}
 				}
-				catch (Exception)
+
+				if (documento.SectorSalud.CamposSector.Count == 21)
 				{
-					throw new ApplicationException(string.Format("El tipo de identificacion del usuario {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
+					valid_salud = documento.SectorSalud.CamposSector[1];
+					try
+					{
+						TipoIdentificacionSalud dato_iden = Enumeracion.GetValueFromAmbiente<TipoIdentificacionSalud>(valid_salud.Valor);
+						valid_enum_salud = Enumeracion.GetDescription(dato_iden);
+					}
+					catch (Exception)
+					{
+						throw new ApplicationException(string.Format("El tipo de identificacion del usuario {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
+					}
+
+					valid_salud = documento.SectorSalud.CamposSector[7];
+					try
+					{
+						TipoUsuarioSalud dato_enum = Enumeracion.GetEnumObjectByValue<TipoUsuarioSalud>(Convert.ToInt16(valid_salud.Valor));
+						valid_enum_salud = Enumeracion.GetDescription(dato_enum);
+					}
+					catch (Exception)
+					{
+
+						throw new ApplicationException(string.Format("El tipo de usuario {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
+					}
+
+					valid_salud = documento.SectorSalud.CamposSector[9];
+					try
+					{
+						CoberturaSalud dato_enum = Enumeracion.GetEnumObjectByValue<CoberturaSalud>(Convert.ToInt16(valid_salud.Valor));
+						valid_enum_salud = Enumeracion.GetDescription(dato_enum);
+					}
+					catch (Exception)
+					{
+
+						throw new ApplicationException(string.Format("La Cobertura o Plan de beneficio {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
+					}
 				}
-
-				valid_salud = documento.SectorSalud.CamposSector[2];
-				try
-				{
-					CoberturaSalud dato_enum = Enumeracion.GetEnumObjectByValue<CoberturaSalud>(Convert.ToInt16(valid_salud.Valor));
-					valid_enum_salud = Enumeracion.GetDescription(dato_enum);
-				}
-				catch (Exception)
-				{
-
-					throw new ApplicationException(string.Format("El tipo de usuario {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
-				}
-
-				//valid_salud = documento.SectorSalud.CamposSector[9];
-				//try
-				//{
-				//	CoberturaSalud dato_enum = Enumeracion.GetEnumObjectByValue<CoberturaSalud>(Convert.ToInt16(valid_salud.Valor));
-				//	valid_enum_salud = Enumeracion.GetDescription(dato_enum);
-				//}
-				//catch (Exception)
-				//{
-
-				//	throw new ApplicationException(string.Format("La Cobertura o Plan de beneficio {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
-				//}
-
 			}
 
 			return documento;
