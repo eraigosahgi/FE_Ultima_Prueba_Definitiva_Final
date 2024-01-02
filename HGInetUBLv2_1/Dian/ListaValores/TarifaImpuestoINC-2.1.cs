@@ -24,6 +24,7 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("8.00", "INC", "Tarifa general"),
 			new ListaItem("16.00", "INC", "Tarifa especial"),
 			new ListaItem("10.00", "ICUI", "Tarifa especial"),
+			new ListaItem("15.00", "ICUI", "Tarifa especial"),
 
 		};
 
