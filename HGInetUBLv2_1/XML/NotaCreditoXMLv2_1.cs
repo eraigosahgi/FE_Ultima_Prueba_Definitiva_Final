@@ -1235,7 +1235,7 @@ namespace HGInetUBLv2_1
 
 						string codigo_impuesto = "04";
 
-						if (DocDet.ImpoConsumo2Porcentaje == 10)
+						if (DocDet.ImpoConsumo2Porcentaje == 10 || DocDet.ImpoConsumo2Porcentaje == 15)
 							codigo_impuesto = "35";
 
 						//
@@ -1269,6 +1269,12 @@ namespace HGInetUBLv2_1
 								currencyID = moneda_detalle.ToString(),
 								Value = decimal.Round((DocDet.ValorImpuestoConsumo2) / DocDet.Cantidad, 6) + 0.00M
 							};
+
+							if (TaxTotal.TaxAmount.Value != ((TaxSubtotalConsumo.PerUnitAmount.Value * TaxSubtotalConsumo.BaseUnitMeasure.Value) / 100))
+							{
+								TaxTotal.TaxAmount.Value = Decimal.Round((TaxSubtotalConsumo.PerUnitAmount.Value * TaxSubtotalConsumo.BaseUnitMeasure.Value) / 100, 2) + 0.00M;
+								TaxSubtotalConsumo.TaxAmount.Value = TaxTotal.TaxAmount.Value;
+							}
 
 						}
 						else

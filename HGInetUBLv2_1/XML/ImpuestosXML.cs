@@ -513,10 +513,18 @@ namespace HGInetUBLv2_1
 							
 							if (item_sub.TipoImpuesto == "34")
 							{
-								Percent.Value = decimal.Round((item_sub.ValorImpuesto * item_sub.Porcentaje) / (BaseUnitMeasure.Value / 100), 0);
+								Percent.Value = decimal.Round((item_sub.ValorImpuesto / item_sub.Porcentaje) / (item_sub.BaseImponible / 100), 0);
+								Percent.Value = Percent.Value + 0.00M;
 								//decimal.Round((DocDet.ValorImpuestoConsumo2 / DocDet.Cantidad)/(DocDet.Peso/100), 0) + 0.00M
+
+								if(TaxAmount.Value != (Percent.Value * TaxSubtotal.BaseUnitMeasure.Value) / 100)
+								{
+									TaxAmount.Value = Decimal.Round((Percent.Value * TaxSubtotal.BaseUnitMeasure.Value) / 100,2 ) + 0.00M;
+									TaxSubtotal.TaxAmount.Value = TaxAmount.Value;
+
+								} 
 							}
-							Percent.Value = Percent.Value + 0.00M;
+							
 							//Percent.Value = decimal.Round(item_sub.ValorImpuesto / item_sub.BaseImponible, 2);
 
 							#endregion
