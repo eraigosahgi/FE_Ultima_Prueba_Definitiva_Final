@@ -81,6 +81,8 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("66", "Nota promisoria firmada ", "Nota promisoria firmada "),
 			new ListaItem("67", "Nota promisoria firmada por un tercero avalada por un banco", "Nota promisoria firmada por un tercero avalada por un banco"),
 			new ListaItem("70", "Retiro de nota por el por el acreedor", "Retiro de nota por el por el acreedor"),
+			new ListaItem("71", "Bonos", "Bonos"),
+			new ListaItem("72", "Vales", "Vales"),
 			new ListaItem("74", "Retiro de nota por el por el acreedor sobre un banco", "Retiro de nota por el por el acreedor sobre un banco"),
 			new ListaItem("75", "Retiro de nota por el acreedor, avalada por otro banco", "Retiro de nota por el acreedor, avalada por otro banco"),
 			new ListaItem("76", "Retiro de nota por el acreedor, sobre un banco avalada por un tercero", "Retiro de nota por el acreedor, sobre un banco avalada por un tercero"),
