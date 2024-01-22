@@ -25,5 +25,95 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Fecha en la que se fijó la tasa de cambio 
 		/// </summary>
 		public DateTime FechaTrm { get; set; }
+
+		/// <summary>
+		/// Valor bruto antes de tributos
+		/// </summary>
+		public decimal FctConvCop { get; set; }
+
+		/// <summary>
+		/// Sub Total
+		/// </summary>
+		public decimal SubTotalCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el total de los descuentos
+		/// </summary>
+		public decimal DescuentoDetalleCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el total de los recargos
+		/// </summary>
+		public decimal RecargoDetalleCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el total bruto
+		/// </summary>
+		public decimal TotalBrutoFacturaCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el total IVA
+		/// </summary>
+		public decimal TotIvaCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el total INC
+		/// </summary>
+		public decimal TotIncCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el total Imp Bolsa
+		/// </summary>
+		public decimal TotBolCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el total Otro Imp
+		/// </summary>
+		public decimal ImpOtroCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el total Mnt Imp
+		/// </summary>
+		public decimal MntImpCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el Valor total a pagar
+		/// </summary>
+		public decimal TotalNetoFacturaCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el Descuento en pesos
+		/// </summary>
+		public decimal MntDctoCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el Recargo en pesos
+		/// </summary>
+		public decimal MntRcgoCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el Valor a pagar en pesos
+		/// </summary>
+		public decimal VlrPagarCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el Valor ReteFuente en pesos
+		/// </summary>
+		public decimal ReteFueCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el Valor ReteIva en pesos
+		/// </summary>
+		public decimal ReteIvaCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el Valor ReteIca en pesos
+		/// </summary>
+		public decimal ReteIcaCop { get; set; }
+
+		/// <summary>
+		/// Campo para informar el Valor Total anticipos en pesos
+		/// </summary>
+		public decimal TotAnticiposCop { get; set; }
 	}
 }

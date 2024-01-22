@@ -15,6 +15,8 @@ namespace HGInetUBLv2_1
 
 		private InteroperabilidadType interoperabilidadField;
 
+		private TotalesCopType totalescopField;
+
 		public Name Name
 		{
 			get
@@ -48,6 +50,18 @@ namespace HGInetUBLv2_1
 			set
 			{
 				this.interoperabilidadField = value;
+			}
+		}
+
+		public TotalesCopType TotalesCop
+		{
+			get
+			{
+				return this.totalescopField;
+			}
+			set
+			{
+				this.totalescopField = value;
 			}
 		}
 

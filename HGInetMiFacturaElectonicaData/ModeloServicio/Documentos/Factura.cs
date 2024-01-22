@@ -254,7 +254,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public List<Anticipo> Anticipos { get; set; }
 
 		/// <summary>
-		/// Tipo Operacion del documento ( 0 - Factura, 1 - Contingencia, 2 - Exportacion, 3 - Adquisiciones, 4 - Transporte)
+		/// Tipo Operacion del documento ( 0 - Factura, 1 - Contingencia, 2 - Exportacion, 3 - Adquisiciones, 4 - Transporte, 5 - POS, 6 - POSPasajeros)
 		/// </summary>
 		public int TipoOperacion { get; set; }
 
@@ -324,6 +324,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Indica si se envia notificacion SMS al Adquiriente cuando un documento es valido en la DIAN: 0 - No, 1 - Sí
 		/// </summary>
 		public int EnvioSms { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public InformacionPos DatosPos { get; set; }
 
 
 		#endregion

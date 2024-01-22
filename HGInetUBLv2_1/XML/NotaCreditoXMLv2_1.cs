@@ -146,6 +146,19 @@ namespace HGInetUBLv2_1
 					nota_credito.CreditNoteTypeCode.Value = "95";
 				}
 
+				//Se debe llenar el periodo de las o la factura que se afectan cuando es una nota no relacionada a Factura
+				if (documento.TipoOperacion == 22)
+				{
+					PeriodType[] periodos = new PeriodType[1];
+					PeriodType periodo = new PeriodType();
+					periodo.StartDate = new StartDateType();
+					periodo.StartDate.Value = documento.FechaFactura;
+					periodo.EndDate = new EndDateType();
+					periodo.EndDate.Value = documento.FechaFinFactura;
+					periodos[0] = periodo;
+					nota_credito.InvoicePeriod = periodos;
+				}
+
 				//Lineas del Detalle
 				nota_credito.LineCountNumeric = new LineCountNumericType();
 				nota_credito.LineCountNumeric.Value = documento.DocumentoDetalles.Count;

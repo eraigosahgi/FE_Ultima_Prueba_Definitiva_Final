@@ -245,7 +245,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         public List<Anticipo> Anticipos { get; set; }
 
 		/// <summary>
-		/// Tipo Operacion del documento ( 20 - referencia una factura electrónica, 22 - sin referencia a facturas, 23 - facturación electrónica V1 (Decreto 2242) )
+		/// Tipo Operacion del documento ( 20 - referencia una factura electrónica, 22 - sin referencia a facturas)
 		/// Tipo Operacion - 3 (Nota Documento de Adquisiciones), 4 - Transporte
 		/// </summary>
 		public int TipoOperacion { get; set; }
@@ -289,6 +289,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Indica si se envia notificacion SMS al Adquiriente cuando un documento es valido en la DIAN: 0 - No, 1 - Sí
 		/// </summary>
 		public int EnvioSms { get; set; }
+
+		/// <summary>
+		/// Indica el final del periodo para afectar
+		/// </summary>
+		public DateTime FechaFinFactura { get; set; }
 
 		#endregion
 	}

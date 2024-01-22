@@ -129,10 +129,12 @@ namespace HGInetUBLv2_1
 				}
 
 				facturaXML.ProfileID = new ProfileIDType();
-				if (documento.TipoOperacion != 3)
+				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5)
 					facturaXML.ProfileID.Value = "DIAN 2.1: Factura Electrónica de Venta";
-				else
+				else if(documento.TipoOperacion == 3)
 					facturaXML.ProfileID.Value = "DIAN 2.1: documento soporte en adquisiciones efectuadas a no obligados a facturar.";
+				else if (documento.TipoOperacion == 5)
+					facturaXML.ProfileID.Value = "DIAN 2.1: Documento Equivalente POS";
 
 				//---Ambiente al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 				facturaXML.ProfileExecutionID = new ProfileExecutionIDType();
@@ -302,6 +304,10 @@ namespace HGInetUBLv2_1
 				{
 					InvoiceTypeCode.Value = "05";
 				}
+				else if (documento.TipoOperacion == 5)//documento soporte equivalente POS
+				{
+					InvoiceTypeCode.Value = "20";
+				}
 				else
 				{
 					InvoiceTypeCode.Value = "01";
@@ -363,7 +369,7 @@ namespace HGInetUBLv2_1
 
 				#region período al que aplica el documento
 				// <cac:InvoicePeriod>
-				if (documento.TipoOperacion != 3)
+				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5)
 				{
 					PeriodType PeriodType = new PeriodType()
 					{
@@ -392,7 +398,7 @@ namespace HGInetUBLv2_1
 					documento.OrderReference.Documento = documento.DocumentoRef;
 				}
 
-				if (documento.OrderReference != null)
+				if (documento.OrderReference != null && documento.TipoOperacion != 5)
 				{
 					facturaXML.OrderReference = new OrderReferenceType();
 
@@ -407,7 +413,7 @@ namespace HGInetUBLv2_1
 
 				#region facturaXML.DespatchDocumentReference 
 
-				if (documento.DespatchDocument != null)
+				if (documento.DespatchDocument != null && documento.TipoOperacion != 5)
 				{
 					//Referencia un documento
 					facturaXML.DespatchDocumentReference = new DocumentReferenceType[documento.DespatchDocument.Count];
@@ -427,7 +433,7 @@ namespace HGInetUBLv2_1
 				//Referencia Adicional si se utiliza y cuando es contingencia
 				#region facturaXML.AdditionalDocumentReference
 
-				if (documento.DocumentosReferencia != null)
+				if (documento.DocumentosReferencia != null && documento.TipoOperacion != 5)
 				{
 					List<DocumentReferenceType> AdditionalDocument = new List<DocumentReferenceType>();
 					foreach (var item in documento.DocumentosReferencia)
@@ -448,7 +454,7 @@ namespace HGInetUBLv2_1
 
 				#region facturaXML.ReceiptDocument 
 
-				if (documento.ReceiptDocument != null)
+				if (documento.ReceiptDocument != null && documento.TipoOperacion != 5)
 				{
 					//Referencia un documento
 					facturaXML.ReceiptDocumentReference = new DocumentReferenceType[documento.ReceiptDocument.Count];
@@ -467,7 +473,7 @@ namespace HGInetUBLv2_1
 
 				/*** QUEMADO ***/
 				//---Validar persona autorizada por el emisor a descargar el documento desde la base de datos de la DIAN
-				if (documento.TipoOperacion != 3)
+				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5)
 				{
 					#region facturaXML.TaxRepresentativeParty - Grupo con informaciones que definen una persona autorizada por el emisor a descargar el documento desde la base de datos de la DIAN 
 					PartyType TaxRepresentativeParty = new PartyType();
@@ -519,7 +525,7 @@ namespace HGInetUBLv2_1
 				if ((documento.Descuentos != null && documento.Descuentos.Sum(x => (x.Valor)) > 0) || (documento.Cargos != null && documento.Cargos.Sum(x => (x.Valor)) > 0))
 					facturaXML.AllowanceCharge = ValoresAdicionalesXML.ObtenerValoresAd(documento);
 
-				if (documento.DatosAdquiriente.DireccionEntrega != null)
+				if (documento.DatosAdquiriente.DireccionEntrega != null && documento.TipoOperacion != 5)
 				{
 					DeliveryType[] delivery = new DeliveryType[1];
 					DeliveryType deliverytype = new DeliveryType();
@@ -610,7 +616,7 @@ namespace HGInetUBLv2_1
 				}
 
 
-				if (documento.TipoOperacion == TipoOperacion.FacturaExportacion.GetHashCode() && documento.TipoEntrega != null)
+				if (documento.TipoOperacion == TipoOperacion.FacturaExportacion.GetHashCode() && documento.TipoEntrega != null && documento.TipoOperacion != 5)
 				{
 					ListaTipoEntrega list_tipo_entrega = new ListaTipoEntrega();
 					ListaItem entrega = list_tipo_entrega.Items.Where(d => d.Codigo.Equals(documento.TipoEntrega.CodCondicionEntrega)).FirstOrDefault();
@@ -655,7 +661,7 @@ namespace HGInetUBLv2_1
 				//---Validar Se llena con informacion del ejemplo Factura Genericas
 				#region PaymentExchangeRate - Conversión de divisas: cac:PaymentExchangeRate 
 
-				if (documento.TipoOperacion != 3)
+				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5)
 				{
 					ExchangeRateType PaymentExchangeRate = new ExchangeRateType();
 					//---5.3.3. Moneda (ISO 4217):
@@ -733,7 +739,7 @@ namespace HGInetUBLv2_1
 					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);//resolucion.ClaveTecnicaDIAN
 					UUID.schemeName = "CUFE-SHA384";
 				}
-				else if (facturaXML.InvoiceTypeCode.Value.Equals("03"))
+				else if (facturaXML.InvoiceTypeCode.Value.Equals("03") || facturaXML.InvoiceTypeCode.Value.Equals("20"))
 				{
 					CUFE = CalcularCUFE(facturaXML, resolucion.PinSoftware, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);
 					UUID.schemeName = "CUDE-SHA384";
@@ -823,6 +829,22 @@ namespace HGInetUBLv2_1
 				UBLExtensionType UBLExtensionFirma = new UBLExtensionType();
 				UBLExtensionFirma.ExtensionContent = doc.DocumentElement;
 				UBLExtensions.Add(UBLExtensionFirma);
+
+				// Extension POS
+				if (documento.TipoOperacion == 5)
+				{
+					UBLExtensionType UBLExtensionSector = new UBLExtensionType();
+					UBLExtensionSector.ExtensionContent = ExtensionPos.ObtenerSW(documento.DatosPos.DatosSoftware);
+					UBLExtensions.Add(UBLExtensionSector);
+
+					UBLExtensionSector = new UBLExtensionType();
+					UBLExtensionSector.ExtensionContent = ExtensionPos.ObtenerBenComprador(documento.DatosPos.DatosComprador);
+					UBLExtensions.Add(UBLExtensionSector);
+
+					UBLExtensionSector = new UBLExtensionType();
+					UBLExtensionSector.ExtensionContent = ExtensionPos.ObtenerPuntoVenta(documento.DatosPos.DatosPuntoVenta);
+					UBLExtensions.Add(UBLExtensionSector);
+				}
 
 				// Extension de HGI
 				//UBLExtensionType UBLExtensionHgi = new UBLExtensionType();

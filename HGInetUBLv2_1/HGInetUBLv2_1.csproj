@@ -51,6 +51,10 @@
     <Compile Include="..\Documentacion\Librerias\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DatosExtensiones\BeneficiosComprador.cs" />
+    <Compile Include="DatosExtensiones\InformacionBeneficiosComprador.cs" />
+    <Compile Include="DatosExtensiones\InformacionCajaVenta.cs" />
+    <Compile Include="DatosExtensiones\PuntoVenta.cs" />
     <Compile Include="Definitions\Certificate\AnyType.cs" />
     <Compile Include="Definitions\Certificate\CertIDListType.cs" />
     <Compile Include="Definitions\Certificate\CertIDType.cs" />
@@ -1388,14 +1392,16 @@
     <Compile Include="Radian\InformacionNegociacionType.cs" />
     <Compile Include="Radian\InformacionPagoType.cs" />
     <Compile Include="Radian\InformacionParaelPagoType.cs" />
-    <Compile Include="Salud\AdditionalInformationType.cs" />
-    <Compile Include="Salud\CampoValorType.cs" />
-    <Compile Include="Salud\Collection.cs" />
-    <Compile Include="Salud\EntregaDocumentoType.cs" />
-    <Compile Include="Salud\Group.cs" />
-    <Compile Include="Salud\InteroperabilidadPtType.cs" />
-    <Compile Include="Salud\InterOperabilidadType.cs" />
-    <Compile Include="Salud\CustomTagGeneralType.cs" />
+    <Compile Include="DatosExtensiones\AdditionalInformationType.cs" />
+    <Compile Include="DatosExtensiones\CampoValorType.cs" />
+    <Compile Include="DatosExtensiones\Collection.cs" />
+    <Compile Include="DatosExtensiones\EntregaDocumentoType.cs" />
+    <Compile Include="DatosExtensiones\FabricanteSoftwareType.cs" />
+    <Compile Include="DatosExtensiones\Group.cs" />
+    <Compile Include="DatosExtensiones\InformacionDelFabricanteDelSoftware.cs" />
+    <Compile Include="DatosExtensiones\InteroperabilidadPtType.cs" />
+    <Compile Include="DatosExtensiones\InterOperabilidadType.cs" />
+    <Compile Include="DatosExtensiones\CustomTagGeneralType.cs" />
     <Compile Include="Hgi\HgiNetExtensionsType.cs" />
     <Compile Include="Namespaces\NamespacesXML.cs" />
     <Compile Include="Nomina\NominaAjuste\NominaIndividualDeAjusteType.cs" />
@@ -1503,16 +1509,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VersionesDIANv2_1.resx</DependentUpon>
     </Compile>
-    <Compile Include="Salud\Name.cs" />
-    <Compile Include="Salud\ParametrosArgumentosType.cs" />
-    <Compile Include="Salud\URLDescagaAdjuntosType.cs" />
-    <Compile Include="Salud\Value.cs" />
+    <Compile Include="DatosExtensiones\Name.cs" />
+    <Compile Include="DatosExtensiones\ParametrosArgumentosType.cs" />
+    <Compile Include="DatosExtensiones\TotalesCopType.cs" />
+    <Compile Include="DatosExtensiones\URLDescagaAdjuntosType.cs" />
+    <Compile Include="DatosExtensiones\Value.cs" />
     <Compile Include="XML\AcuseReciboXMLv2_1.Convertir.cs" />
     <Compile Include="XML\AcuseReciboXMLv2_1.cs" />
     <Compile Include="XML\AttachedDocument.Convertir.cs" />
     <Compile Include="XML\AttachedDocument.cs" />
     <Compile Include="XML\ConvertirXML.cs" />
     <Compile Include="XML\DocumentoImpuestos.cs" />
+    <Compile Include="XML\ExtensionExportacion.cs" />
+    <Compile Include="XML\ExtensionPos.cs" />
     <Compile Include="XML\NominaAjusteXML.Convertir.cs" />
     <Compile Include="XML\NovedadesNominaXML.Convertir.cs" />
     <Compile Include="XML\ParticipantesNominaXML.Convertir.cs" />
