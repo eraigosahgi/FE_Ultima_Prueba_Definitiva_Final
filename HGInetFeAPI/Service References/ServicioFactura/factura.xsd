@@ -22,6 +22,7 @@
       <xs:element minOccurs="0" name="DataKey" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DatosAdquiriente" nillable="true" type="tns:Tercero" />
       <xs:element minOccurs="0" name="DatosObligado" nillable="true" type="tns:Tercero" />
+      <xs:element minOccurs="0" name="DatosPos" nillable="true" type="tns:InformacionPos" />
       <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio.Documentos" minOccurs="0" name="Descuentos" nillable="true" type="q3:ArrayOfDescuento" />
       <xs:element minOccurs="0" name="DespatchDocument" nillable="true" type="tns:ArrayOfReferenciaAdicional" />
       <xs:element minOccurs="0" name="Documento" type="xs:long" />
@@ -153,6 +154,52 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Direcciones" nillable="true" type="tns:Direcciones" />
+  <xs:complexType name="InformacionPos">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DatosComprador" nillable="true" type="tns:InfoComprador" />
+      <xs:element minOccurs="0" name="DatosPuntoVenta" nillable="true" type="tns:InfoPuntoVenta" />
+      <xs:element minOccurs="0" name="DatosSoftware" nillable="true" type="tns:FabricanteSoftwarePos" />
+      <xs:element minOccurs="0" name="DatosTicketPasajero" nillable="true" type="tns:InfoTicket" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InformacionPos" nillable="true" type="tns:InformacionPos" />
+  <xs:complexType name="InfoComprador">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Codigo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NombreApellido" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Puntos" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InfoComprador" nillable="true" type="tns:InfoComprador" />
+  <xs:complexType name="InfoPuntoVenta">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Cajero" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoVenta" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PlacaCaja" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SubTotal" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TipoCaja" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UbicacionCaja" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InfoPuntoVenta" nillable="true" type="tns:InfoPuntoVenta" />
+  <xs:complexType name="FabricanteSoftwarePos">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="NombreApellido" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NombreSoftware" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RazonSocial" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FabricanteSoftwarePos" nillable="true" type="tns:FabricanteSoftwarePos" />
+  <xs:complexType name="InfoTicket">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IDMediodeTransporte" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LugardeDestino" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LugardeOrigen" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Mediodetransporte" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ModoTransporte" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InfoTicket" nillable="true" type="tns:InfoTicket" />
   <xs:complexType name="ArrayOfReferenciaAdicional">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="ReferenciaAdicional" nillable="true" type="tns:ReferenciaAdicional" />
@@ -273,9 +320,27 @@
   <xs:element name="CondicionEntrega" nillable="true" type="tns:CondicionEntrega" />
   <xs:complexType name="TasaCambio">
     <xs:sequence>
+      <xs:element minOccurs="0" name="DescuentoDetalleCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="FctConvCop" type="xs:decimal" />
       <xs:element minOccurs="0" name="FechaTrm" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ImpOtroCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="MntDctoCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="MntImpCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="MntRcgoCop" type="xs:decimal" />
       <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RecargoDetalleCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteFueCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteIcaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteIvaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SubTotalCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotAnticiposCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotBolCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotIncCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotIvaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotalBrutoFacturaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotalNetoFacturaCop" type="xs:decimal" />
       <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
+      <xs:element minOccurs="0" name="VlrPagarCop" type="xs:decimal" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="TasaCambio" nillable="true" type="tns:TasaCambio" />

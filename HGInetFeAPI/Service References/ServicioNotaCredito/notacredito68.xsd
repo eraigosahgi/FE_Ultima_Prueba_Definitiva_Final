@@ -33,6 +33,7 @@
       <xs:element minOccurs="0" name="EnvioSms" type="xs:int" />
       <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FechaFactura" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FechaFinFactura" type="xs:dateTime" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />
       <xs:element minOccurs="0" name="IdentificacionProveedor" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="LineaNegocio" nillable="true" type="xs:string" />
@@ -245,9 +246,27 @@
   <xs:element name="ReferenciaDocumento" nillable="true" type="tns:ReferenciaDocumento" />
   <xs:complexType name="TasaCambio">
     <xs:sequence>
+      <xs:element minOccurs="0" name="DescuentoDetalleCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="FctConvCop" type="xs:decimal" />
       <xs:element minOccurs="0" name="FechaTrm" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ImpOtroCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="MntDctoCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="MntImpCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="MntRcgoCop" type="xs:decimal" />
       <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RecargoDetalleCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteFueCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteIcaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteIvaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SubTotalCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotAnticiposCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotBolCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotIncCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotIvaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotalBrutoFacturaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotalNetoFacturaCop" type="xs:decimal" />
       <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
+      <xs:element minOccurs="0" name="VlrPagarCop" type="xs:decimal" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="TasaCambio" nillable="true" type="tns:TasaCambio" />
