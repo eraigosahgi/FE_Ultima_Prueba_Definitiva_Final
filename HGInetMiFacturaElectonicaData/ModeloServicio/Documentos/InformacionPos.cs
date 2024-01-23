@@ -13,5 +13,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public InfoComprador DatosComprador { get; set; }
 
 		public InfoPuntoVenta DatosPuntoVenta { get; set; }
+
+		public InfoTicket DatosTicketPasajero { get; set; }
 	}
 }

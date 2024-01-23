@@ -135,6 +135,8 @@ namespace HGInetUBLv2_1
 					facturaXML.ProfileID.Value = "DIAN 2.1: documento soporte en adquisiciones efectuadas a no obligados a facturar.";
 				else if (documento.TipoOperacion == 5)
 					facturaXML.ProfileID.Value = "DIAN 2.1: Documento Equivalente POS";
+				else if (documento.TipoOperacion == 6)
+					facturaXML.ProfileID.Value = "DIAN 2.1: Documento Equivalente Tiquete de Transporte  Terrestre de Pasajeros";
 
 				//---Ambiente al que se va enviar el documento: 1 - Produccion, 2 - Pruebas
 				facturaXML.ProfileExecutionID = new ProfileExecutionIDType();
@@ -307,6 +309,10 @@ namespace HGInetUBLv2_1
 				else if (documento.TipoOperacion == 5)//documento soporte equivalente POS
 				{
 					InvoiceTypeCode.Value = "20";
+				}
+				else if (documento.TipoOperacion == 6)//documento soporte equivalente POS Pasajeros
+				{
+					InvoiceTypeCode.Value = "35";
 				}
 				else
 				{
@@ -831,19 +837,30 @@ namespace HGInetUBLv2_1
 				UBLExtensions.Add(UBLExtensionFirma);
 
 				// Extension POS
-				if (documento.TipoOperacion == 5)
+				if (documento.TipoOperacion == 5 || documento.TipoOperacion == 6)
 				{
 					UBLExtensionType UBLExtensionSector = new UBLExtensionType();
 					UBLExtensionSector.ExtensionContent = ExtensionPos.ObtenerSW(documento.DatosPos.DatosSoftware);
 					UBLExtensions.Add(UBLExtensionSector);
 
-					UBLExtensionSector = new UBLExtensionType();
-					UBLExtensionSector.ExtensionContent = ExtensionPos.ObtenerBenComprador(documento.DatosPos.DatosComprador);
-					UBLExtensions.Add(UBLExtensionSector);
+					if (documento.TipoOperacion == 5)
+					{
+						UBLExtensionSector = new UBLExtensionType();
+						UBLExtensionSector.ExtensionContent = ExtensionPos.ObtenerBenComprador(documento.DatosPos.DatosComprador);
+						UBLExtensions.Add(UBLExtensionSector);
 
-					UBLExtensionSector = new UBLExtensionType();
-					UBLExtensionSector.ExtensionContent = ExtensionPos.ObtenerPuntoVenta(documento.DatosPos.DatosPuntoVenta);
-					UBLExtensions.Add(UBLExtensionSector);
+						UBLExtensionSector = new UBLExtensionType();
+						UBLExtensionSector.ExtensionContent = ExtensionPos.ObtenerPuntoVenta(documento.DatosPos.DatosPuntoVenta);
+						UBLExtensions.Add(UBLExtensionSector);
+					}
+
+					if (documento.TipoOperacion == 6)
+					{
+						UBLExtensionSector = new UBLExtensionType();
+						UBLExtensionSector.ExtensionContent = ExtensionPos.ObtenerInfoTicket(documento.DatosPos.DatosTicketPasajero);
+						UBLExtensions.Add(UBLExtensionSector);
+					}
+
 				}
 
 				// Extension de HGI

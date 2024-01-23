@@ -14,18 +14,6 @@ namespace HGInetUBLv2_1
 {
 	public class ExtensionPos
 	{
-		private static string name1 = string.Empty;
-		private static string value1 = string.Empty;
-		private static string name2 = string.Empty;
-		private static string value2 = string.Empty;
-		private static string name3 = string.Empty;
-		private static string value3 = string.Empty;
-		private static string name4 = string.Empty;
-		private static string value4 = string.Empty;
-		private static string name5 = string.Empty;
-		private static string value5 = string.Empty;
-		private static string name6 = string.Empty;
-		private static string value6 = string.Empty;
 
 		public static XmlElement ObtenerSW(FabricanteSoftwarePos datos)
 		{
@@ -327,6 +315,73 @@ namespace HGInetUBLv2_1
 			return extension_sector.DocumentElement;
 		}
 
+		public static XmlElement ObtenerInfoTicket(InfoTicket datos)
+		{
+
+			InformacionAdicional ticket = new InformacionAdicional();
+
+			InformacionTicket Informacion = new InformacionTicket();
+
+			Informacion.Name = new Name();
+			Informacion.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DatosFijosPosTicket>(0));//"PlacaCaja";
+			Informacion.Value = new Value();
+			Informacion.Value.Value = datos.ModoTransporte;
+
+			ticket.InformacionTicket = Informacion;
+
+
+			//XmlSerializerNamespaces serializer = NamespacesXML.ObtenerExtensionSector("Salud");
+			StreamWriter stWriter = null;
+			XmlSerializer xmlSerializer;
+			string buffer;
+
+			xmlSerializer = new XmlSerializer(ticket.GetType());
+			MemoryStream memStream = new MemoryStream();
+			stWriter = new StreamWriter(memStream);
+
+			xmlSerializer.Serialize(stWriter, ticket);
+			buffer = Encoding.UTF8.GetString(memStream.GetBuffer());
+
+			XmlDocument extension_sector = new XmlDocument();
+			extension_sector.LoadXml(buffer);
+
+			XmlNode root = extension_sector.DocumentElement.ChildNodes[0];
+
+			extension_sector.DocumentElement.RemoveAllAttributes();
+
+			int j = 2;
+			for (int i = 1; i < 5; i++)
+			{
+				XmlNode nodo_name = extension_sector.DocumentElement.ChildNodes[0].FirstChild.Clone();
+				nodo_name.InnerText = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DatosFijosPosTicket>(i));
+				root.InsertBefore(nodo_name, extension_sector.DocumentElement.ChildNodes[j]);
+
+				XmlNode nodo_value = extension_sector.DocumentElement.ChildNodes[0].ChildNodes[1].Clone();
+				switch (i)
+				{
+					case 1:
+						nodo_value.InnerText = datos.IDMediodeTransporte;//value1;
+						break;
+					case 2:
+						nodo_value.InnerText = datos.Mediodetransporte;//value2;
+						break;
+					case 3:
+						nodo_value.InnerText = datos.LugardeOrigen;//value3;
+						break;
+					case 4:
+						nodo_value.InnerText = datos.LugardeDestino;//value4;
+						break;
+					default:
+						break;
+				}
+				root.InsertBefore(nodo_value, extension_sector.DocumentElement.ChildNodes[j + 1]);
+
+				j++;
+			}
+
+			return extension_sector.DocumentElement;
+		}
+
 		public enum DatosFijosPosSW
 		{
 			[Description("NombreApellido")]
@@ -373,6 +428,24 @@ namespace HGInetUBLv2_1
 
 			[Description("SubTotal")]
 			name6 = 6
+		}
+
+		public enum DatosFijosPosTicket
+		{
+			[Description("ModoTransporte")]
+			name = 0,
+
+			[Description("IDMediodeTransporte")]
+			name1 = 1,
+
+			[Description("Mediodetransporte")]
+			name2 = 2,
+
+			[Description("LugardeOrigen")]
+			name3 = 3,
+
+			[Description("LugardeDestino")]
+			name4 = 4
 		}
 
 	}

@@ -146,6 +146,17 @@ namespace HGInetUBLv2_1
 					nota_credito.CreditNoteTypeCode.Value = "95";
 				}
 
+				//Si es nota de ajuste de documento POS
+				if (documento.TipoOperacion == 5)
+				{
+					//16.1.4.1 Procedencia de Vendedor: cbc:CustomizationID - No Residente
+					nota_credito.CustomizationID.Value = "20";
+
+					nota_credito.ProfileID.Value = "DIAN 2.1: Nota de ajuste crédito al documento equivalente";
+
+					nota_credito.CreditNoteTypeCode.Value = "94";
+				}
+
 				//Se debe llenar el periodo de las o la factura que se afectan cuando es una nota no relacionada a Factura
 				if (documento.TipoOperacion == 22)
 				{

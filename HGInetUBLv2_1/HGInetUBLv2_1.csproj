@@ -52,8 +52,10 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DatosExtensiones\BeneficiosComprador.cs" />
+    <Compile Include="DatosExtensiones\InformacionAdicional.cs" />
     <Compile Include="DatosExtensiones\InformacionBeneficiosComprador.cs" />
     <Compile Include="DatosExtensiones\InformacionCajaVenta.cs" />
+    <Compile Include="DatosExtensiones\InformacionTicket.cs" />
     <Compile Include="DatosExtensiones\PuntoVenta.cs" />
     <Compile Include="Definitions\Certificate\AnyType.cs" />
     <Compile Include="Definitions\Certificate\CertIDListType.cs" />

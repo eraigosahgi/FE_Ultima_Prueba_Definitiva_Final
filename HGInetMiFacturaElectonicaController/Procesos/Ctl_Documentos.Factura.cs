@@ -749,7 +749,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ApplicationException("No se encontró Tasa de Cambio para el documento de exportación");
 					}
 
-					if (documento.TipoEntrega != null )
+					if (documento.TipoEntrega != null)
 					{
 
 						ListaTipoEntrega list_tipo_entrega = new ListaTipoEntrega();
@@ -758,6 +758,44 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							throw new ApplicationException(string.Format("El código de la Condicion de Entrega '{0}' no es válido según Estandar DIAN", documento.TipoEntrega.CodCondicionEntrega));
 					}
 				}
+				else if (documento.TipoOperacion.Equals(5) || documento.TipoOperacion.Equals(6))//Valida que si es POS llegue los campos DatosPos
+				{
+					if (documento.DatosPos != null)
+					{
+						if (documento.DatosPos.DatosSoftware != null)
+						{
+							if (string.IsNullOrEmpty(documento.DatosPos.DatosSoftware.NombreApellido))
+								throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NombreApellido del Fabricante del SW", "string"));
+
+							if (string.IsNullOrEmpty(documento.DatosPos.DatosSoftware.RazonSocial))
+								throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "RazonSocial del Fabricante del SW", "string"));
+
+							if (string.IsNullOrEmpty(documento.DatosPos.DatosSoftware.NombreSoftware))
+								throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NombreSoftware del Fabricante del SW", "string"));
+						}
+						else
+						{
+							throw new ApplicationException("No se encontró Datos del Software para el documento de POS");
+						}
+
+						if (documento.DatosPos.DatosComprador == null && documento.TipoOperacion.Equals(5))
+						{
+							throw new ApplicationException("No se encontró Datos del Comprador para el documento de POS");
+						}
+
+						if (documento.DatosPos.DatosPuntoVenta == null && documento.TipoOperacion.Equals(5))
+						{
+							throw new ApplicationException("No se encontró Datos del Punto de Venta para el documento de POS");
+						}
+
+						if (documento.DatosPos.DatosTicketPasajero == null && documento.TipoOperacion.Equals(6))
+						{
+							throw new ApplicationException("No se encontró Datos del Punto de Venta para el documento de POS");
+						}
+
+					}
+				}
+
 
 				if (documento.DocumentosReferencia != null)
 				{
