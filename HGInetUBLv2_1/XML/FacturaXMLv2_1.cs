@@ -742,12 +742,14 @@ namespace HGInetUBLv2_1
 				UUIDType UUID = new UUIDType();
 				//-----Se agrega Ambiente al cual se va enviar el documento
 				string CUFE = string.Empty;
-				if (facturaXML.InvoiceTypeCode.Value.Equals("01") || facturaXML.InvoiceTypeCode.Value.Equals("02"))
+				if (facturaXML.InvoiceTypeCode.Value.Equals("01") || facturaXML.InvoiceTypeCode.Value.Equals("02") || facturaXML.InvoiceTypeCode.Value.Equals("20"))
 				{
 					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);//resolucion.ClaveTecnicaDIAN
 					UUID.schemeName = "CUFE-SHA384";
+					if (facturaXML.InvoiceTypeCode.Value.Equals("20"))
+						UUID.schemeName = "CUDE-SHA384";
 				}
-				else if (facturaXML.InvoiceTypeCode.Value.Equals("03") || facturaXML.InvoiceTypeCode.Value.Equals("20"))
+				else if (facturaXML.InvoiceTypeCode.Value.Equals("03"))
 				{
 					CUFE = CalcularCUFE(facturaXML, resolucion.PinSoftware, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);
 					UUID.schemeName = "CUDE-SHA384";
@@ -885,6 +887,20 @@ namespace HGInetUBLv2_1
 				if (texto_xml.Contains("xmlns:schemaLocation"))
 				{
 					texto_xml = texto_xml.Replace("xmlns:schemaLocation", "xsi:schemaLocation");
+
+					if (documento.TipoOperacion == 5)
+					{
+						texto_xml = texto_xml.Replace("FabricanteSoftware xmlns=\"\"", "FabricanteSoftware");
+						texto_xml = texto_xml.Replace("BeneficiosComprador xmlns=\"\"", "BeneficiosComprador");
+						texto_xml = texto_xml.Replace("PuntoVenta xmlns=\"\"", "PuntoVenta");
+					}
+
+					if (documento.TipoOperacion == 6)
+					{
+						texto_xml = texto_xml.Replace("FabricanteSoftware xmlns=\"\"", "FabricanteSoftware");
+						texto_xml = texto_xml.Replace("InformacionAdicional xmlns=\"\"", "InformacionAdicional");
+					}
+
 					txt_xml = new StringBuilder(texto_xml);
 				}
 
