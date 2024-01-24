@@ -309,10 +309,12 @@ namespace HGInetUBLv2_1
 				else if (documento.TipoOperacion == 5)//documento soporte equivalente POS
 				{
 					InvoiceTypeCode.Value = "20";
+					nombre_archivo_xml = nombre_archivo_xml.Replace("fv", "ds");
 				}
 				else if (documento.TipoOperacion == 6)//documento soporte equivalente POS Pasajeros
 				{
 					InvoiceTypeCode.Value = "35";
+					nombre_archivo_xml = nombre_archivo_xml.Replace("fv", "ds");
 				}
 				else
 				{

@@ -155,6 +155,8 @@ namespace HGInetUBLv2_1
 					nota_credito.ProfileID.Value = "DIAN 2.1: Nota de ajuste crédito al documento equivalente";
 
 					nota_credito.CreditNoteTypeCode.Value = "94";
+
+					nombre_archivo_xml = nombre_archivo_xml.Replace("nc", "ncs");
 				}
 
 				//Se debe llenar el periodo de las o la factura que se afectan cuando es una nota no relacionada a Factura

@@ -23,12 +23,10 @@ namespace HGInetUBLv2_1
 			fabricanteSW.InformacionDelFabricanteDelSoftware = new InformacionDelFabricanteDelSoftware();
 			InformacionDelFabricanteDelSoftware Informacion = new InformacionDelFabricanteDelSoftware();
 
-			List<CampoValorType> list_parametros = new List<CampoValorType>();
-
 			CampoValorType campo_valor = new CampoValorType();
 
 			Informacion.Name = new Name();
-			Informacion.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DatosFijosPosSW>(0));//"NombreApellido";//
+			Informacion.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DatosFijosPosSW>(1));//"NombreApellido";//
 			Informacion.Value = new Value();
 			Informacion.Value.Value = datos.NombreApellido;
 
@@ -63,7 +61,7 @@ namespace HGInetUBLv2_1
 			for (int i = 1; i < 3; i++)
 			{
 				XmlNode nodo_name = extension_sector.DocumentElement.ChildNodes[0].FirstChild.Clone();
-				nodo_name.InnerText = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DatosFijosPosSW>(i));
+				nodo_name.InnerText = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DatosFijosPosSW>(j));
 				root.InsertBefore(nodo_name, extension_sector.DocumentElement.ChildNodes[j]);
 
 				XmlNode nodo_value = extension_sector.DocumentElement.ChildNodes[0].ChildNodes[1].Clone();
@@ -145,7 +143,7 @@ namespace HGInetUBLv2_1
 			for (int i = 1; i < 3; i++)
 			{
 				XmlNode nodo_name = extension_sector.DocumentElement.ChildNodes[0].FirstChild.Clone();
-				nodo_name.InnerText = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DatosFijosPosBenCom>(i));
+				nodo_name.InnerText = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DatosFijosPosBenCom>(j));
 				root.InsertBefore(nodo_name, extension_sector.DocumentElement.ChildNodes[j]);
 
 				XmlNode nodo_value = extension_sector.DocumentElement.ChildNodes[0].ChildNodes[1].Clone();
@@ -192,7 +190,7 @@ namespace HGInetUBLv2_1
 			InformacionCajaVenta Informacion = new InformacionCajaVenta();
 
 			Informacion.Name = new Name();
-			Informacion.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DatosFijosPosPV>(1));//"PlacaCaja";
+			Informacion.Name.Value = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DatosFijosPosPV>(0));//"PlacaCaja";
 			Informacion.Value = new Value();
 			Informacion.Value.Value = datos.PlacaCaja;
 
