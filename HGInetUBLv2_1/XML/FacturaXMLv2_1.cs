@@ -742,14 +742,12 @@ namespace HGInetUBLv2_1
 				UUIDType UUID = new UUIDType();
 				//-----Se agrega Ambiente al cual se va enviar el documento
 				string CUFE = string.Empty;
-				if (facturaXML.InvoiceTypeCode.Value.Equals("01") || facturaXML.InvoiceTypeCode.Value.Equals("02") || facturaXML.InvoiceTypeCode.Value.Equals("20"))
+				if (facturaXML.InvoiceTypeCode.Value.Equals("01") || facturaXML.InvoiceTypeCode.Value.Equals("02"))
 				{
 					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);//resolucion.ClaveTecnicaDIAN
 					UUID.schemeName = "CUFE-SHA384";
-					if (facturaXML.InvoiceTypeCode.Value.Equals("20"))
-						UUID.schemeName = "CUDE-SHA384";
 				}
-				else if (facturaXML.InvoiceTypeCode.Value.Equals("03"))
+				else if (facturaXML.InvoiceTypeCode.Value.Equals("03") || facturaXML.InvoiceTypeCode.Value.Equals("20"))
 				{
 					CUFE = CalcularCUFE(facturaXML, resolucion.PinSoftware, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);
 					UUID.schemeName = "CUDE-SHA384";
