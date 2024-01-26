@@ -449,7 +449,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							item.TipoOperacion = 20;
 
 						//valida si envian documento a afectar
-						if (!string.IsNullOrEmpty(item.DocumentoRef) && !string.IsNullOrEmpty(item.CufeFactura))
+						if (!string.IsNullOrEmpty(item.DocumentoRef) && !string.IsNullOrEmpty(item.CufeFactura) && (item.TipoOperacion != 22))
 						{
 							//valida si el Documento afectado ya existe en Base de Datos
 							List<DocumentoRespuesta> doc_ref = num_doc.ConsultaPorNumeros(facturador_electronico.StrIdentificacion, TipoDocumento.Factura.GetHashCode(), item.DocumentoRef);
@@ -490,18 +490,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 							else
 							{
-								//if (!string.IsNullOrEmpty(item.CufeFactura) && !item.CufeFactura.Equals("0"))
-								//{
-								//	item.TipoOperacion = 23;
-								//}
-								//else
-								//{
-								//	//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
-								//	item.TipoOperacion = 22;
-								//}
-
-								//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
-								item.TipoOperacion = 22;
+								if (!string.IsNullOrEmpty(item.CufeFactura) && !item.CufeFactura.Equals("0"))
+								{
+									item.TipoOperacion = 20;
+								}
+								else
+								{
+									//si el documento afectado no existe en BD y no envian el CUFE cambio el tipo de operacion
+									item.TipoOperacion = 22;
+								}
 
 								//Si envian Prefijo de la factura que estan afectando se concatena para la impresion
 								if (!string.IsNullOrEmpty(item.PrefijoFactura))
@@ -739,7 +736,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					documento.ConceptoDescripcion = concepto.Descripcion;
 				}
-					
+
 
 				/*Ctl_Documento num_doc = new Ctl_Documento();
 
@@ -755,6 +752,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					throw new ApplicationException(string.Format("El número de Factura afectada {0} no se encuentra registrada", documento.DocumentoRef));
 				}*/
+
+				if (documento.TipoOperacion == 22)
+				{
+					//documento.FechaFactura = documento.FechaFactura.AddMonths(-3);
+					if (documento.FechaFinFactura < documento.FechaFactura)
+						documento.FechaFinFactura = documento.FechaFactura;
+
+					if (concepto.Codigo == "2")
+						throw new ApplicationException(string.Format("El concepto {0} en este tipo de Notas Crédito no puede anular Facturas", documento.Concepto));
+				}
 
 			}
 
