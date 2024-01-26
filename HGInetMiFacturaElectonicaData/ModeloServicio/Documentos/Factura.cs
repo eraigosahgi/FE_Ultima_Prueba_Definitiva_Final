@@ -326,7 +326,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public int EnvioSms { get; set; }
 
 		/// <summary>
-		/// 
+		/// Informacion relacionado a documento POS electronico
 		/// </summary>
 		public InformacionPos DatosPos { get; set; }
 
