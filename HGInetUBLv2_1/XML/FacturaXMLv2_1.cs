@@ -62,7 +62,32 @@ namespace HGInetUBLv2_1
 				{
 					//Se hace cambio para que al momento de validar el anticipo no rechace el documento la DIAN por ser del sector salud.
 					facturaXML.CustomizationID.Value = "SS-CUFE";//"SS-Recaudo";
-					facturaXML.CustomizationID.schemeID = "SS-CUFE";
+					//facturaXML.CustomizationID.schemeID = "SS-CUFE";
+					if (documento.SectorSalud.TipoOperacion == 1)
+					{
+						facturaXML.CustomizationID.Value = "SS-Recaudo";
+						facturaXML.CustomizationID.schemeID = "SS-CUFE";
+					}
+					if (documento.SectorSalud.TipoOperacion == 2)
+					{
+						facturaXML.CustomizationID.Value = "SS-SNum";
+						//facturaXML.CustomizationID.schemeID = "SS-CUFE";
+					}
+					if (documento.SectorSalud.TipoOperacion == 3)
+					{
+						facturaXML.CustomizationID.Value = "SS-Reporte";
+						//facturaXML.CustomizationID.schemeID = "SS-CUFE";
+					}
+					if (documento.SectorSalud.TipoOperacion == 4)
+					{
+						facturaXML.CustomizationID.Value = "SS-SinA porte";
+						//facturaXML.CustomizationID.schemeID = "SS-CUFE";
+					}
+					if (documento.TipoOperacion == 1)//Contingencia
+					{
+						facturaXML.CustomizationID.Value = "SS-CUDE";//"SS-Recaudo";
+						//facturaXML.CustomizationID.schemeID = "SS-CUFE";
+					}
 				}
 				
 				
@@ -390,6 +415,20 @@ namespace HGInetUBLv2_1
 							Value = new DateTime(documento.Fecha.Date.Year, documento.Fecha.Date.Month, DateTime.DaysInMonth(documento.Fecha.Date.Year, documento.Fecha.Date.Month))
 						}
 					};
+					//Documento Tipo Sector Salud
+					if (documento.SectorSalud != null)
+					{
+						try
+						{
+							PeriodType.StartDate.Value = documento.SectorSalud.FechaIni;
+							PeriodType.EndDate.Value = documento.SectorSalud.FechaFin;
+						}
+						catch (Exception)
+						{
+
+							throw;
+						}
+					}
 					facturaXML.InvoicePeriod = new PeriodType[1];
 					facturaXML.InvoicePeriod[0] = PeriodType;
 				}
@@ -525,7 +564,16 @@ namespace HGInetUBLv2_1
 			    la recibe, rechaza, cuando
 				52 sea del caso, y conserva para su posterior exhibición*/
 				if (documento.TipoOperacion != 3)
-					facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosAdquiriente);
+				{
+					if (documento.SectorSalud == null)
+					{
+						facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosAdquiriente);
+					}
+					else
+					{
+						facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosAdquiriente, documento.SectorSalud.DatosBeneficiario);
+					}
+				}					
 				else
 					facturaXML.AccountingCustomerParty = TerceroXML.ObtenerAquiriente(documento.DatosObligado);
 				#endregion

@@ -10,7 +10,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 	public class Salud
 	{
 		/// <summary>
-		///Debe ser una lista de 21 elementos en donde la descripcion debe ser del enumerable(lista) CamposSalud y el valor que corresponda.
+		///Debe ser una lista de 5 elementos en donde la descripcion debe ser del enumerable(lista) CamposSalud y el valor que corresponda.
 		/// </summary>
 		public List<CampoValor> CamposSector { get; set; }
 
@@ -45,9 +45,24 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public List<ReferenciaDocumento> Documentosreferencia { get; set; }
 
 		/// <summary>
-		/// Descripcion de la Modalidad de contratacion y Pago Tabla 18.4.3 resolucion 084 pagina 63
+		/// Indica si la operacion del documento 0 - Factura Eelctronica, 1 - Recuado, 2 - Factura Talonario, 3 - Reporte, 4 - Sin Aporte 
 		/// </summary>
-		//public string ModalidadesContratacionPago { get; set; }
+		public int TipoOperacion { get; set; }
+
+		/// <summary>
+		/// Fecha Inicio del periodo de Facturacion
+		/// </summary>
+		public DateTime FechaIni { get; set; }
+
+		/// <summary>
+		/// Fecha Fin del periodo de Facturacion
+		/// </summary>
+		public DateTime FechaFin { get; set; }
+
+		/// <summary>
+		/// Informacion del usuario beneficiario del servicio de salud
+		/// </summary>
+		public Tercero DatosBeneficiario { get; set; }
 
 	}
 }

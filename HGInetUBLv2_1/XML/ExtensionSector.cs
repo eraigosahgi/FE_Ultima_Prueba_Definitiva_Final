@@ -96,7 +96,7 @@ namespace HGInetUBLv2_1
 
 			int campo_validador = 0;
 			//Informacion como indica Resolucion 510 que corresponde a 11 campos
-			if (datos.CamposSector.Count == 11)
+			if (datos.CamposSector.Count == 5)
 			{
 				for (int i = 0; i < datos.CamposSector.Count; i++)
 				{

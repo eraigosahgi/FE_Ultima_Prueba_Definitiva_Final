@@ -84,29 +84,29 @@ namespace HGInetMiFacturaElectonicaData
 		[Description("COBERTURA_PLAN_BENEFICIOS")]
 		coberturaplanbeneficios = 3,
 
-		[Description("NUMERO_AUTORIZACION")]
+		[Description("NUMERO_CONTRATO")]
 		numeroautorizacion = 4,
 
 		[Description("NUMERO_POLIZA")]
 		numeropoliza = 5,
 
-		[Description("COPAGO")]
-		copago = 6,
+		//[Description("COPAGO")]
+		//copago = 6,
 
-		[Description("CUOTA_MODERADORA")]
-		cuotamoderadora = 7,
+		//[Description("CUOTA_MODERADORA")]
+		//cuotamoderadora = 7,
 
-		[Description("CUOTA_RECUPERACION")]
-		cuotarecuperacion = 8,
+		//[Description("PAGOS_COMPARTIDOS")]
+		//cuotarecuperacion = 8,
 
-		[Description("PAGOS_COMPARTIDOS")]
-		pagoscompartidos = 9,
+		//[Description("ANTICIPO")]
+		//pagoscompartidos = 9,
 
-		[Description("FECHA_INICIO")]
-		fechainicio = 10,
+		//[Description("FECHA_INICIO")]
+		//fechainicio = 10,
 
-		[Description("FECHA_FIN")]
-		fechafin = 11
+		//[Description("FECHA_FIN")]
+		//fechafin = 11
 	}
 
 	public enum TipoIdentificacionSalud

@@ -321,7 +321,7 @@ namespace HGInetUBLv2_1
 		/// </summary>
 		/// <param name="tercero">Datos de la tercero</param>
 		/// <returns>Objeto de tipo SupplierPartyType1</returns>
-		public static CustomerPartyType ObtenerAquiriente(Tercero tercero)
+		public static CustomerPartyType ObtenerAquiriente(Tercero tercero, Tercero UsuarioSalud = null)
 		{
 			try
 			{
@@ -623,7 +623,7 @@ namespace HGInetUBLv2_1
 
 				#region Datos personales de Persona Natural Validar, no hay documentacion de esto
 
-				if (tercero.TipoPersona.Equals(2))//Persona natural
+				if (tercero.TipoPersona.Equals(2) && UsuarioSalud == null)//Persona natural
 				{
 					PersonType Person = new PersonType();
 
@@ -660,6 +660,44 @@ namespace HGInetUBLv2_1
 					Party.PartyIdentification = PartyIdentifications;
 					#endregion
 				}
+				else if (UsuarioSalud != null)//Usuario Beneficiario Sector Salud
+				{
+					PersonType Person = new PersonType();
+
+					FirstNameType FirstName = new FirstNameType();
+					FirstName.Value = UsuarioSalud.PrimerNombre;
+					Person.FirstName = FirstName;
+
+					MiddleNameType MiddleName = new MiddleNameType();
+					if (UsuarioSalud.SegundoNombre != null && !UsuarioSalud.SegundoNombre.Equals(string.Empty))
+					{
+						MiddleName.Value = UsuarioSalud.SegundoNombre;
+					}
+					Person.MiddleName = MiddleName;
+
+					FamilyNameType FamilyName = new FamilyNameType();
+					FamilyName.Value = string.Format("{0} {1}", UsuarioSalud.PrimerApellido, UsuarioSalud.SegundoApellido);
+					Person.FamilyName = FamilyName;
+
+					PersonType[] persontype = new PersonType[1];
+					persontype[0] = Person;
+					Party.Person = persontype;
+
+					#region Documento y tipo de documento---Ya esta en PartyTaxScheme se agrega cuando sea solo persona natural
+					PartyIdentificationType[] PartyIdentifications = new PartyIdentificationType[1];
+					PartyIdentificationType PartyIdentification = new PartyIdentificationType();
+					IDType ID = new IDType();
+					ID.schemeAgencyName = "CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)";
+					ID.schemeAgencyID = "195";
+					ID.schemeName = UsuarioSalud.TipoIdentificacion.ToString();
+					ID.schemeID = UsuarioSalud.IdentificacionDv.ToString(); //Tipo documento (LISTADO DE VALORES DEFINIDO POR LA DIAN)
+					ID.Value = UsuarioSalud.Identificacion.ToString();
+					PartyIdentification.ID = ID;
+					PartyIdentifications[0] = PartyIdentification;
+					Party.PartyIdentification = PartyIdentifications;
+					#endregion
+				}
+
 				#endregion
 
 
