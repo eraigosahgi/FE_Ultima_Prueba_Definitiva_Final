@@ -147,14 +147,16 @@ namespace HGInetUBLv2_1
 				}
 
 				//Si es nota de ajuste de documento POS
-				if (documento.TipoOperacion == 5)
+				if (documento.TipoOperacion == 5 || documento.TipoOperacion == 6)
 				{
 					//16.1.4.1 Procedencia de Vendedor: cbc:CustomizationID - No Residente
 					nota_credito.CustomizationID.Value = "20";
 
 					nota_credito.ProfileID.Value = "DIAN 2.1: Nota de ajuste crédito al documento equivalente";
 
-					nota_credito.CreditNoteTypeCode.Value = "94";
+					nota_credito.CreditNoteTypeCode.Value = "20";
+					if (documento.TipoOperacion == 6)
+						nota_credito.CreditNoteTypeCode.Value = "35";
 
 					nombre_archivo_xml = nombre_archivo_xml.Replace("nc", "ncs");
 				}
@@ -165,7 +167,7 @@ namespace HGInetUBLv2_1
 					PeriodType[] periodos = new PeriodType[1];
 					PeriodType periodo = new PeriodType();
 					periodo.StartDate = new StartDateType();
-					periodo.StartDate.Value = documento.FechaFactura;
+					periodo.StartDate.Value = new DateTime(documento.FechaFactura.Year, documento.FechaFactura.Month, 1);
 					periodo.EndDate = new EndDateType();
 					periodo.EndDate.Value = documento.FechaFinFactura;
 					periodos[0] = periodo;

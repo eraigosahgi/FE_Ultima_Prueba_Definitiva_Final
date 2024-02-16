@@ -246,7 +246,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 
 		/// <summary>
 		/// Tipo Operacion del documento ( 20 - referencia una factura electrónica, 22 - sin referencia a facturas)
-		/// Tipo Operacion - 3 (Nota Documento de Adquisiciones), 4 - Transporte, 5 - Nota Ajuste POS
+		/// Tipo Operacion - 3 (Nota Documento de Adquisiciones), 4 - Transporte, 5 - Nota Ajuste POS, 6 - Nota Ajuste POS Pasajeros
 		/// </summary>
 		public int TipoOperacion { get; set; }
 
