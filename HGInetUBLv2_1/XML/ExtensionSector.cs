@@ -19,7 +19,7 @@ namespace HGInetUBLv2_1
 		private static string name1 = "Responsable";
 		private static string value1 = "url www.minsalud.gov.co";
 		private static string name2 = "Tipo, identificador:año del acto administrativo";
-		private static string value2 = "Resolucion 510:2022";
+		private static string value2 = "Resolucion 2275:2023";
 		private static string sector = "Sector Salud";
 		private static string usuario = "Usuario";
 
