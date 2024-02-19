@@ -425,8 +425,6 @@ namespace HGInetUBLv2_1
 						}
 						catch (Exception)
 						{
-
-							throw;
 						}
 					}
 					facturaXML.InvoicePeriod = new PeriodType[1];

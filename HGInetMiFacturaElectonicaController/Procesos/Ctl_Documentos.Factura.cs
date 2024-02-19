@@ -862,7 +862,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				string valid_enum_salud = string.Empty;
 
 				int campo_validador = 0;
-				if (documento.SectorSalud.CamposSector.Count == 11)
+				if (documento.SectorSalud.CamposSector.Count == 5)
 				{
 					for (int i = 0; i < documento.SectorSalud.CamposSector.Count; i++)
 					{
@@ -894,7 +894,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 								throw new ApplicationException(string.Format("La Cobertura en salud {0} no corresponde a ninguno del listado del Sector Salud.", valid_salud.Valor));
 							}
-							campo_validador += 11;
+							campo_validador += 5;
 						}
 					}
 				}

@@ -45,7 +45,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public List<ReferenciaDocumento> Documentosreferencia { get; set; }
 
 		/// <summary>
-		/// Indica si la operacion del documento 0 - Factura Eelctronica, 1 - Recuado, 2 - Factura Talonario, 3 - Reporte, 4 - Sin Aporte 
+		/// Indica si la operacion del documento 0 - Factura Eelctronica, 1 - Recaudo, 2 - Factura Talonario, 3 - Reporte, 4 - Sin Aporte 
 		/// </summary>
 		public int TipoOperacion { get; set; }
 
