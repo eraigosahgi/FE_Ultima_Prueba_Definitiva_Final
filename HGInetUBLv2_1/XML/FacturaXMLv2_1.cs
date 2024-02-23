@@ -420,6 +420,11 @@ namespace HGInetUBLv2_1
 					{
 						try
 						{
+							if (documento.SectorSalud.FechaIni.Year == 0001 && documento.SectorSalud.FechaFin.Year == 0001)
+							{
+								documento.SectorSalud.FechaIni = documento.Fecha;
+								documento.SectorSalud.FechaFin = documento.Fecha;
+							}
 							PeriodType.StartDate.Value = documento.SectorSalud.FechaIni;
 							PeriodType.EndDate.Value = documento.SectorSalud.FechaFin;
 						}
@@ -2659,7 +2664,7 @@ namespace HGInetUBLv2_1
 								campo.Value = new ValueType();
 								if (Campos.Descripcion.Equals("03"))
 								{
-									campo.Value.Value = Math.Floor(Convert.ToDecimal(Campos.Valor)).ToString();
+									campo.Value.Value = Math.Floor(Convert.ToDecimal(Campos.Valor)).ToString();//Campos.Valor.Replace(".00","");
 									campo.ValueQuantity = new ValueQuantityType();
 									campo.ValueQuantity.unitCode = InvoicedQuantity.unitCode;
 									campo.ValueQuantity.Value = Math.Floor(InvoicedQuantity.Value);
