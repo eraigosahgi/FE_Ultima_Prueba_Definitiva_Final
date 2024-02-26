@@ -699,6 +699,7 @@ namespace HGInetUBLv2_1
 				if (documento.Anticipos != null && documento.Anticipos.Count > 0)
 				{
 					List<PaymentType> list_anticipos = new List<PaymentType>();
+					int consecutivo = 1;
 					foreach (var item in documento.Anticipos)
 					{
 						PaymentType anticipo = new PaymentType();
@@ -707,6 +708,12 @@ namespace HGInetUBLv2_1
 						anticipo.PaidAmount = new PaidAmountType();
 						anticipo.PaidAmount.Value = item.Valor;
 						anticipo.PaidAmount.currencyID = Ctl_Enumeracion.ObtenerMoneda(documento.Moneda).ToString();
+						if (documento.SectorSalud != null)
+						{
+							anticipo.ID.Value = consecutivo.ToString();
+							anticipo.ID.schemeID = item.Codigo;
+							consecutivo++;
+						}
 						list_anticipos.Add(anticipo);
 					}
 					facturaXML.PrepaidPayment = list_anticipos.ToArray();
