@@ -574,8 +574,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (item_respuesta.Error == null)
 				item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
 			//Si el estado es menor a firmado, la respuesta del estado siempre
-			if ((item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode() || (item_respuesta.IdProceso > (short)ProcesoEstado.EnvioEmailAcuse.GetHashCode() && item_respuesta.IdProceso < (short)ProcesoEstado.FinalizacionErrorDian.GetHashCode())) 
-			    && (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
+			if ((item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode() || (item_respuesta.IdProceso > (short)ProcesoEstado.EnvioEmailAcuse.GetHashCode() && item_respuesta.IdProceso < (short)ProcesoEstado.FinalizacionErrorDian.GetHashCode()))
+				&& (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
 			{
 				//Se actualiza el estado del documento en BD para que lo envien de nuevo
 				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
@@ -591,11 +591,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
 				}
 
-				item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
-				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
+				// [749311] Se agrega validación para que no cambie el proceso cuando se realice algun evento sobre el documento.
+				if (item_respuesta.IdProceso != (short)ProcesoEstado.RecepcionAcuse.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.EnvioRespuestaAcuse.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.AcuseVisto.GetHashCode())
+				{
+					item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
+					item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
+				}
+
+
 
 			}
-			else if (item_respuesta.IdProceso == (short) ProcesoEstado.EnvioZip.GetHashCode())
+			else if (item_respuesta.IdProceso == (short)ProcesoEstado.EnvioZip.GetHashCode())
 			{
 				item_respuesta.IdProceso = (short)ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
 				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
@@ -828,7 +834,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ApplicationException(string.Format("La fecha de entrega {0} no puede ser mayor a 10 dias de la fecha de recepcion en la plataforma.", documento.FechaEntrega));
 
 			}
-			else if(documento.DatosAdquiriente.DireccionEntrega != null)
+			else if (documento.DatosAdquiriente.DireccionEntrega != null)
 				throw new ApplicationException("La fecha de entrega es requerida cuando se informa la dirección de entrega.");
 
 			//Valida que no este vacio y este bien formado 
@@ -952,7 +958,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					}
 				}
-				
+
 
 			}
 

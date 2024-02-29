@@ -184,7 +184,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Ctl_Sms.EnviarSms(respuesta, id_peticion, facturador_electronico, documentos);
 				}
 
-				
+
 			}
 			catch (Exception ex)
 			{
@@ -500,7 +500,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							{
 								item.PrefijoFactura = string.Empty;
 							}
-						} 
+						}
 					}
 					else
 					{
@@ -601,7 +601,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
 			//Si el estado es menor a firmado, la respuesta del estado siempre
 			if ((item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode() || (item_respuesta.IdProceso > (short)ProcesoEstado.EnvioEmailAcuse.GetHashCode() && item_respuesta.IdProceso < (short)ProcesoEstado.FinalizacionErrorDian.GetHashCode()))
-			    && (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
+				&& (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
 			{
 				//Se actualiza el estado del documento en BD para que lo envien de nuevo
 				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
@@ -614,9 +614,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						item_respuesta.Error.Mensaje = "Se presentó inconsistencia al procesar el documento, enviar de nuevo el documento";
 				}
 
-				item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
-				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
-
+				// [749311] Se agrega validación para que no cambie el proceso cuando se realice algun evento sobre el documento.
+				if (item_respuesta.IdProceso != (short)ProcesoEstado.RecepcionAcuse.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.EnvioRespuestaAcuse.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.AcuseVisto.GetHashCode())
+				{
+					item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
+					item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
+				}
 			}
 			else if (item_respuesta.IdProceso == (short)ProcesoEstado.EnvioZip.GetHashCode())
 			{

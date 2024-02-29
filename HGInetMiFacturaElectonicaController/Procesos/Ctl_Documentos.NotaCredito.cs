@@ -171,7 +171,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion);
 					respuesta.Add(item_respuesta);
 				});
-				
+
 				//Conciliar Planes
 				var datos = Planestransacciones.ConciliarPlanes(ListaPlanes, respuesta);
 
@@ -184,7 +184,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					Ctl_Sms.EnviarSms(respuesta, id_peticion, facturador_electronico, documentos);
 				}
 
-				
+
 			}
 			catch (Exception ex)
 			{
@@ -418,8 +418,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 
 						TblEmpresasResoluciones resol_factura = lista_resolucion.Where(_resolucion_doc => _resolucion_doc.StrEmpresa.Equals(item.DatosObligado.Identificacion) &&
-						                                                                                  !string.IsNullOrEmpty(_resolucion_doc.StrIdSetDian)
-						                                                                                  && _resolucion_doc.IntTipoDoc == TipoDocumento.Factura.GetHashCode()).FirstOrDefault();
+																										  !string.IsNullOrEmpty(_resolucion_doc.StrIdSetDian)
+																										  && _resolucion_doc.IntTipoDoc == TipoDocumento.Factura.GetHashCode()).FirstOrDefault();
 
 						if (resol_factura == null)
 							throw new ApplicationException("No se encontró IdSetDian registrado para el facturador electrónico");
@@ -580,7 +580,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_act, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
 				}
-				catch (Exception ex) {
+				catch (Exception ex)
+				{
 					Ctl_Log.Guardar(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
 				}
 				Ctl_Log.Guardar(excepcion, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.creacion);
@@ -633,7 +634,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				item_respuesta.Error = new LibreriaGlobalHGInet.Error.Error();
 			//Si el estado es menor a firmado, la respuesta del estado siempre
 			if ((item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode() || (item_respuesta.IdProceso > (short)ProcesoEstado.EnvioEmailAcuse.GetHashCode() && item_respuesta.IdProceso < (short)ProcesoEstado.FinalizacionErrorDian.GetHashCode()))
-			    && (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
+				&& (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
 			{
 				//Se actualiza el estado del documento en BD para que lo envien de nuevo
 				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
@@ -646,8 +647,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						item_respuesta.Error.Mensaje = "Se presentó inconsistencia al procesar el documento, enviar de nuevo el documento";
 				}
 
-				item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
-				item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
+				// [749311] Se agrega validación para que no cambie el proceso cuando se realice algun evento sobre el documento.
+				if (item_respuesta.IdProceso != (short)ProcesoEstado.RecepcionAcuse.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.EnvioRespuestaAcuse.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.AcuseVisto.GetHashCode())
+				{
+					item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
+					item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();
+				}
 
 			}
 			else if (item_respuesta.IdProceso == (short)ProcesoEstado.EnvioZip.GetHashCode())
