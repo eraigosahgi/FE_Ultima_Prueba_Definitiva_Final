@@ -96,7 +96,7 @@ namespace HGInetUBLv2_1
 
 			int campo_validador = 0;
 			//Informacion como indica Resolucion 510 que corresponde a 11 campos
-			if (datos.CamposSector.Count == 5)
+			if (datos.CamposSector.Count > 0)
 			{
 				for (int i = 0; i < datos.CamposSector.Count; i++)
 				{
@@ -130,7 +130,7 @@ namespace HGInetUBLv2_1
 						coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
 						coleccion_datos.Value.schemeName = "salud_cobertura.gc";
 						coleccion_datos.Value.schemeID = Enumeracion.GetAmbiente(dato_enum);
-						campo_validador += 11;
+						campo_validador += datos.CamposSector.Count;
 					}
 
 					datos_adicionales.Add(coleccion_datos);

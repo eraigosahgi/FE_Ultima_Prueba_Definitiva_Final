@@ -1917,13 +1917,25 @@ namespace HGInetFeAPI.ServicioFactura {
         private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.CampoValor> CamposSectorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioFactura.Tercero DatosBeneficiarioField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.ReferenciaDocumento> DocumentosreferenciaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaFinField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaIniField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.CampoValor> ParametrosDescargaAdjuntosField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.CampoValor> ParametrosWebServiceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int TipoOperacionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string URLDescargaAdjuntosField;
@@ -1955,6 +1967,19 @@ namespace HGInetFeAPI.ServicioFactura {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioFactura.Tercero DatosBeneficiario {
+            get {
+                return this.DatosBeneficiarioField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DatosBeneficiarioField, value) != true)) {
+                    this.DatosBeneficiarioField = value;
+                    this.RaisePropertyChanged("DatosBeneficiario");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public System.Collections.Generic.List<HGInetFeAPI.ServicioFactura.ReferenciaDocumento> Documentosreferencia {
             get {
                 return this.DocumentosreferenciaField;
@@ -1963,6 +1988,32 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((object.ReferenceEquals(this.DocumentosreferenciaField, value) != true)) {
                     this.DocumentosreferenciaField = value;
                     this.RaisePropertyChanged("Documentosreferencia");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaFin {
+            get {
+                return this.FechaFinField;
+            }
+            set {
+                if ((this.FechaFinField.Equals(value) != true)) {
+                    this.FechaFinField = value;
+                    this.RaisePropertyChanged("FechaFin");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaIni {
+            get {
+                return this.FechaIniField;
+            }
+            set {
+                if ((this.FechaIniField.Equals(value) != true)) {
+                    this.FechaIniField = value;
+                    this.RaisePropertyChanged("FechaIni");
                 }
             }
         }
@@ -1989,6 +2040,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((object.ReferenceEquals(this.ParametrosWebServiceField, value) != true)) {
                     this.ParametrosWebServiceField = value;
                     this.RaisePropertyChanged("ParametrosWebService");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int TipoOperacion {
+            get {
+                return this.TipoOperacionField;
+            }
+            set {
+                if ((this.TipoOperacionField.Equals(value) != true)) {
+                    this.TipoOperacionField = value;
+                    this.RaisePropertyChanged("TipoOperacion");
                 }
             }
         }

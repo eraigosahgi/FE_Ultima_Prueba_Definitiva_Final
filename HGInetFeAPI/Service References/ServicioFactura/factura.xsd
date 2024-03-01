@@ -287,9 +287,13 @@
   <xs:complexType name="Salud">
     <xs:sequence>
       <xs:element minOccurs="0" name="CamposSector" nillable="true" type="tns:ArrayOfCampoValor" />
+      <xs:element minOccurs="0" name="DatosBeneficiario" nillable="true" type="tns:Tercero" />
       <xs:element minOccurs="0" name="Documentosreferencia" nillable="true" type="tns:ArrayOfReferenciaDocumento" />
+      <xs:element minOccurs="0" name="FechaFin" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FechaIni" type="xs:dateTime" />
       <xs:element minOccurs="0" name="ParametrosDescargaAdjuntos" nillable="true" type="tns:ArrayOfCampoValor" />
       <xs:element minOccurs="0" name="ParametrosWebService" nillable="true" type="tns:ArrayOfCampoValor" />
+      <xs:element minOccurs="0" name="TipoOperacion" type="xs:int" />
       <xs:element minOccurs="0" name="URLDescargaAdjuntos" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="URLWebService" nillable="true" type="xs:string" />
     </xs:sequence>
