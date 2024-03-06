@@ -63,6 +63,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
 
+				//****Esto es temporal, se debe implementar el manejo por sucursal el manejo de planes
+				bool Tercero_EDS_PostP = false;
+
 				// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
 				if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
 				{
@@ -149,6 +152,29 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ApplicationException(string.Format("No se encontró resolución para el facturador'{0}' en nuestra plataforma, por favor valide las resoluciones", facturador_electronico.StrIdentificacion));
 					}
 
+					//*****Esto se quita cuando se haga el cambio a plan por sucursal
+					//***** ESTACIONES PRIVADAS NACIONALES S.A.S.
+					try
+					{
+						if (facturador_electronico.StrIdentificacion.Equals("900141446"))
+						{
+							TblEmpresasResoluciones resolucion_PostP = lista_resolucion.FirstOrDefault(x => x.ComercioConfigDescrip == "PostEDS"); //.Where(x => x.ComercioConfigDescrip == "PostEDS").Select(res => res.StrNumResolucion).ToList<string>();
+							var resol_prefijo = documentos.Where(x => x.NumeroResolucion == resolucion_PostP.StrNumResolucion && x.Prefijo == resolucion_PostP.StrPrefijo).ToList().Select(_res => new { _res.NumeroResolucion, _res.Prefijo }).Distinct().ToList();
+							if (resol_prefijo != null && resol_prefijo.Count > 0)
+							{
+								if (resolucion_PostP.StrPrefijo == resol_prefijo.FirstOrDefault().Prefijo)
+								{
+									Tercero_EDS_PostP = true;
+								}
+
+							}
+						}
+					}
+					catch (Exception exep)
+					{
+						Ctl_Log.Guardar(exep, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.seleccion, "Error haciendo cambio en el Plan de EDS para POS");
+					}
+
 				}
 
 
@@ -166,7 +192,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
-				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count(), TipoDocPlanes.Documento.GetHashCode());
+				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count(), TipoDocPlanes.Documento.GetHashCode(), Tercero_EDS_PostP);
 
 				if (ListaPlanes == null)
 				{

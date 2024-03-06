@@ -442,7 +442,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="identificacion">Identificación del facturador</param>
 		/// <param name="cantidaddoc">Cantidad de documentos a procesar</param>
 		/// <returns></returns>
-		public List<ObjPlanEnProceso> ObtenerPlanesActivos(string identificacion, int cantidaddoc, int TipoDoc)
+		public List<ObjPlanEnProceso> ObtenerPlanesActivos(string identificacion, int cantidaddoc, int TipoDoc, bool Tercero_EDS_Postpago = false)
 		{
 			context.Configuration.LazyLoadingEnabled = false;
 
@@ -531,7 +531,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					cantidaddoc = 0;
 					break;
 				}
-				else
+				else if (Tercero_EDS_Postpago == false)
 				{
 					docdisponibles = (plan.IntNumTransaccCompra - (plan.IntNumTransaccProcesadas + plan.IntNumTransaccProceso));
 					if (docdisponibles > 0)
