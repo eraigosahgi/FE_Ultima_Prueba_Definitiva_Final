@@ -406,10 +406,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			TblDocumentos numero_documento = new TblDocumentos();
 			Ctl_Documento num_doc = new Ctl_Documento();
 
+			//Contingencia de la DIAN 2024-03-09 desde las 6:00 am hasta las 6:00 PM
+			DateTime fecha_ini_cont = new DateTime(2024, 03, 09, 6, 0, 0);
+			DateTime fecha_fin_cont = new DateTime(2024, 03, 09, 18, 0, 0);
+
 			try
 			{
 				if (string.IsNullOrEmpty(item.NumeroResolucion))
 					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
+
+				//Contingencia DIAN
+				if ((item.TipoOperacion == 3 || item.TipoOperacion > 4) && (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont))
+				{
+					throw new ApplicationException("Nos permitimos informar que el 09 de marzo de 2024, a partir de las 06:00 am y hasta las 6:00 pm, se realizará una ventana de mantenimiento en el Sistema de Facturación Electrónica DIAN, por lo que durante este tiempo no estará disponible este servicio informático, Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma unas horas despues pasada la contingencia de la DIAN");
+				}
 
 				//valida si el Documento ya existe en Base de Datos
 				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
@@ -455,6 +465,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 						else if (numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.EnvioZip.GetHashCode())
 						{
+							//Contingencia DIAN
+							if (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont)
+							{
+								throw new ApplicationException("Nos permitimos informar que el 09 de marzo de 2024, a partir de las 06:00 am y hasta las 6:00 pm, se realizará una ventana de mantenimiento en el Sistema de Facturación Electrónica DIAN, por lo que durante este tiempo no estará disponible este servicio informático, Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma unas horas despues pasada la contingencia de la DIAN");
+							}
+
 							// procesa el documento en V2
 							item_respuesta = ProcesarV2(numero_documento, true);
 							if (item_respuesta.Error == null)

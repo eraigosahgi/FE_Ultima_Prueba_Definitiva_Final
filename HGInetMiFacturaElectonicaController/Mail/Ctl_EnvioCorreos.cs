@@ -1034,6 +1034,16 @@ namespace HGInetMiFacturaElectonicaController
 
 							bool archivo_attach = Archivo.ValidarExistencia(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo));
 
+							//Contingencia de la DIAN 2024-03-09 desde las 6:00 am hasta las 6:00 PM
+							DateTime fecha_ini_cont = new DateTime(2024, 03, 09, 6, 0, 0);
+							DateTime fecha_fin_cont = new DateTime(2024, 03, 09, 18, 0, 0);
+
+							if (documento.DatFechaIngreso >= fecha_ini_cont && documento.DatFechaIngreso < fecha_fin_cont && archivo_attach == true)
+							{
+								Archivo.Borrar(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo));
+								archivo_attach = false;
+							}
+
 							if (archivo_attach == true && reenvio_documento == false)
 								generar_attach = false;
 
@@ -1344,8 +1354,9 @@ namespace HGInetMiFacturaElectonicaController
 
 										}
 
-										if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo)))
-											Archivo.Borrar(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo));
+										//Se quita la aliminacion del attached como 
+										//if (Archivo.ValidarExistencia(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo)))
+										//	Archivo.Borrar(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_archivo));
 									}
 
 								}

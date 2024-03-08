@@ -164,5 +164,10 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Version de la DIAN que fue enviado el Documento
 		/// </summary>
 		public int IdVersionDian { get; set; }
+
+		/// <summary>
+		/// Ruta http del archivo XML en estándar UBL relacionado con el documento.
+		/// </summary>
+		public string UrlXmlAttachUbl { get; set; }
 	}
 }

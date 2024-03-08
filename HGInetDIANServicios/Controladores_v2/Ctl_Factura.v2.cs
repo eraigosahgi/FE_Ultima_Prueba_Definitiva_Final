@@ -434,6 +434,14 @@ namespace HGInetDIANServicios
 							respuesta = new DianResponse();
 							respuesta.StatusCode = "94";
 							respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma").ToArray();
+							//Contingencia de la DIAN 2024-03-09 desde las 6:00 am hasta las 6:00 PM
+							DateTime fecha_ini_cont = new DateTime(2024, 03, 09, 6, 0, 0);
+							DateTime fecha_fin_cont = new DateTime(2024, 03, 09, 18, 0, 0);
+
+							if (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont)
+							{
+								respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("Nos permitimos informar que el 09 de marzo de 2024, a partir de las 06:00 am y hasta las 6:00 pm, se realizará una ventana de mantenimiento en el Sistema de Facturación Electrónica DIAN, por lo que durante este tiempo no estará disponible este servicio informático,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma unas horas despues pasada la contingencia de la DIAN").ToArray();
+							}
 							respuesta.IsValid = false;
 							respuesta_dian.Add(respuesta);
 						}

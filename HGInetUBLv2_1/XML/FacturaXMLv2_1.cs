@@ -346,6 +346,15 @@ namespace HGInetUBLv2_1
 					InvoiceTypeCode.Value = "01";
 				}
 
+				//Contingencia de la DIAN 2024-03-09 desde las 6:00 am hasta las 6:00 PM
+				DateTime fecha_ini_cont = new DateTime(2024, 03, 09, 6, 0, 0);
+				DateTime fecha_fin_cont = new DateTime(2024, 03, 09, 18, 0, 0);
+
+				if (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont)
+				{
+					InvoiceTypeCode.Value = "0";
+				}
+
 				facturaXML.InvoiceTypeCode = InvoiceTypeCode;
 				#endregion
 
@@ -800,7 +809,7 @@ namespace HGInetUBLv2_1
 				UUIDType UUID = new UUIDType();
 				//-----Se agrega Ambiente al cual se va enviar el documento
 				string CUFE = string.Empty;
-				if (facturaXML.InvoiceTypeCode.Value.Equals("01") || facturaXML.InvoiceTypeCode.Value.Equals("02"))
+				if (facturaXML.InvoiceTypeCode.Value.Equals("01") || facturaXML.InvoiceTypeCode.Value.Equals("02") || facturaXML.InvoiceTypeCode.Value.Equals("04"))
 				{
 					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);//resolucion.ClaveTecnicaDIAN
 					UUID.schemeName = "CUFE-SHA384";

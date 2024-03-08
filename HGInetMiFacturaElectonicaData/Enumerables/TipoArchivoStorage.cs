@@ -29,5 +29,8 @@ namespace HGInetMiFacturaElectonicaData
 
 		[Description("Xml-Ubl Respuesta DIAN")]
 		XMLRESPDIAN = 7,
+
+		[Description("Xml-Ubl Attachdocument")]
+		XMLAttached = 8,
 	}
 }

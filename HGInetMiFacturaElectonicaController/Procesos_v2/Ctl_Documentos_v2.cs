@@ -82,6 +82,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					ProcesoFinalizado = 0,
 					UrlPdf = "",
 					UrlXmlUbl = "",
+					UrlXmlAttachUbl = "",
 					IdPeticion = id_peticion,
 					IdentificacionObligado = (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) ? documento_obj.DatosEmpleador.Identificacion : documento_obj.DatosObligado.Identificacion,
 					UrlAuditoria = string.Format("{0}{1}", datos_plataforma.RutaPublica, Constantes.PaginaConsultaAuditoriaDoc.Replace("{id_seguridad_doc}", id_radicado.ToString())),
@@ -513,6 +514,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "", null, false);
 
+						//Contingencia de la DIAN 2024-03-09 desde las 6:00 am hasta las 6:00 PM
+						DateTime fecha_ini_cont = new DateTime(2024, 03, 09, 6, 0, 0);
+						DateTime fecha_fin_cont = new DateTime(2024, 03, 09, 18, 0, 0);
+
 						//Se valida que no sea un documento para probar la respuesta de los servicios
 						if (documentoBd.IntTipoOperacion != 50 || documento_obj.TipoOperacion != 50)
 						{
@@ -524,22 +529,37 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							if (acuse.Response == 200)
 								respuesta = Consultar(documentoBd, empresa, ref respuesta, acuse.KeyV2);
 
+							//Contingencia DIAN
+							if (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont)
+							{
+								respuesta.EstadoDian.EstadoDocumento = EstadoDocumentoDian.Aceptado.GetHashCode();
+							}
 
 							// envía el mail de documentos al adquiriente
 							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode() )
 							{
 								//Crea el attached para poder ser enviado en el correo con los demas archivos menos en nomina.
+								bool attached = false;
 								if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste && documento_obj.TipoOperacion != 3)
 								{
 									try
 									{
-										bool attached = Ctl_Documento.ConvertirAttachedDoc(documento_obj, documentoBd, empresa);
+										attached = Ctl_Documento.ConvertirAttachedDoc(documento_obj, documentoBd, empresa);
 									}
 									catch (Exception excepcion)
 									{
 										Ctl_Alertas alerta = new Ctl_Alertas();
 										alerta.Alertas(empresa.StrIdentificacion, string.Format("{0}{1}", documentoBd.StrPrefijo, documentoBd.IntNumero), LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(excepcion.Message), 1, false);
 									}
+								}
+
+								if (attached == true)
+								{
+									// url pública del xml - Attached
+									string nombre_archivo = HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), empresa.StrIdentificacion, TipoDocumento.Attached, documentoBd.StrPrefijo);
+									string url_ppal = string.Format("{0}/{1}/{2}", datos_plataforma.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, documento_result.IdSeguridadTercero.ToString());
+									respuesta.UrlXmlAttachUbl = string.Format(@"{0}/{1}/{2}.xml", url_ppal, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombre_archivo);
+
 								}
 
 								bool enviar_correo = true;
@@ -551,7 +571,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//Validacion para documentos diferentes de Nomina que no tengan correo electronico el adquiriente.
 								if (enviar_correo == true && (tipo_doc != TipoDocumento.Nomina || tipo_doc != TipoDocumento.NominaAjuste))
 								{
-									if (string.IsNullOrWhiteSpace(documento_obj.DatosAdquiriente.Email))
+									if (string.IsNullOrWhiteSpace(documento_obj.DatosAdquiriente.Email) || documento_obj.DatosAdquiriente.Identificacion == "222222222222")
 										enviar_correo = false;
 								}
 									
@@ -670,6 +690,31 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.ProcesoPausadoPlataformaDian);
 								respuesta.FechaUltimoProceso = Fecha.GetFecha();
 								respuesta.IdProceso = ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
+
+								//Actualiza Documento en Base de Datos
+								documentoBd.DatFechaActualizaEstado = Fecha.GetFecha();
+								documentoBd.IntIdEstado = (short)respuesta.IdProceso;
+
+								//Actualizo el estado del documento para enviar al proveedor receptor
+								documento_tmp = new Ctl_Documento();
+								documento_tmp.Actualizar(documentoBd);
+
+								//Actualiza la categoria con el nuevo estado
+								respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+
+							}
+
+							//****Contingencia de la DIAN 2024-03-09 
+							if (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont)
+							{
+								//Se actualiza respuesta
+								//LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("Nos permitimos informar que el 09 de marzo de 2024, a partir de las 06:00 am y hasta las 6:00 pm, se realizará una ventana de mantenimiento en el Sistema de Facturación Electrónica DIAN, por lo que durante este tiempo no estará disponible este servicio informático,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma unas horas despues pasada la contingencia de la DIAN").ToArray();
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error("Nos permitimos informar que el 09 de marzo de 2024, a partir de las 06:00 am y hasta las 6:00 pm, se realizará una ventana de mantenimiento en el Sistema de Facturación Electrónica DIAN, por lo que durante este tiempo no estará disponible este servicio informático,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma unas horas despues pasada la contingencia de la DIAN", LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.ProcesoPausadoPlataformaDian);
+								respuesta.FechaUltimoProceso = Fecha.GetFecha();
+								respuesta.IdProceso = ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode();
+								respuesta.EstadoDian.EstadoDocumento = EstadoDocumentoDian.Pendiente.GetHashCode();
 
 								//Actualiza Documento en Base de Datos
 								documentoBd.DatFechaActualizaEstado = Fecha.GetFecha();

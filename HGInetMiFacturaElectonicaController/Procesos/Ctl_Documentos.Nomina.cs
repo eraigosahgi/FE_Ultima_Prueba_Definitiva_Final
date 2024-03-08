@@ -55,6 +55,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (!facturador_electronico.IntObligado)
 					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
 
+				//Contingencia de la DIAN 2024-03-09 desde las 6:00 am hasta las 6:00 PM
+				DateTime fecha_ini_cont = new DateTime(2024, 03, 09, 6, 0, 0);
+				DateTime fecha_fin_cont = new DateTime(2024, 03, 09, 18, 0, 0);
+
+				if (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont)
+				{
+					throw new ApplicationException("Nos permitimos informar que el 09 de marzo de 2024, a partir de las 06:00 am y hasta las 6:00 pm, se realizará una ventana de mantenimiento en el Sistema de Facturación Electrónica DIAN, por lo que durante este tiempo no estará disponible este servicio informático,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma unas horas despues pasada la contingencia de la DIAN");
+				}
+
 				List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
 
 				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();

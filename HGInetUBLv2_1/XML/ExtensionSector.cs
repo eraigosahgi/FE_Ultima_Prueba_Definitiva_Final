@@ -120,7 +120,7 @@ namespace HGInetUBLv2_1
 					{
 						ModalidadDePago dato_enum = Enumeracion.GetValueFromAmbiente<ModalidadDePago>(datos.CamposSector[i].Valor);
 						coleccion_datos.Value.Value = Enumeracion.GetDescription(dato_enum);
-						coleccion_datos.Value.schemeName = "salud_identificación.gc";
+						coleccion_datos.Value.schemeName = "salud_modalidad_pago.gc";
 						coleccion_datos.Value.schemeID = datos.CamposSector[i].Valor;
 					}
 
