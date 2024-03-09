@@ -160,6 +160,10 @@ namespace HGInetDIANServicios
 
 				respuesta_dian = new List<DianResponse>();
 
+				//Contingencia de la DIAN 2024-03-09 desde las 6:00 am hasta las 6:00 PM
+				DateTime fecha_ini_cont = new DateTime(2024, 03, 09, 6, 0, 0);
+				DateTime fecha_fin_cont = new DateTime(2024, 03, 09, 18, 0, 0);
+
 				try
 				{
 					log_categoria = MensajeCategoria.ServicioDian;
@@ -182,12 +186,22 @@ namespace HGInetDIANServicios
 					//Ejecución de produccion DIAN Enviando archivo ZIP	
 					try
 					{
-						if (tipo_doc < TipoDocumento.AcuseRecibo.GetHashCode())
-							respuesta = webServiceHab.SendBillSync(nombre_archivo, bytes);
-						else if (tipo_doc == TipoDocumento.AcuseRecibo.GetHashCode())
-							respuesta = webServiceHab.SendEventUpdateStatus(bytes);
+						//Se agrega validacion hasta una hora antes para que no vaya a los servicios de la DIAN y no demore el proceso
+						if (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont.AddHours(-1))
+						{
+							throw new ApplicationException("No se pudo establecer una relación de confianza para el canal seguro SSL/TLS con la autoridad 'vpfe.dian.gov.co'");
+						}
 						else
-							respuesta = webServiceHab.SendNominaSync(bytes);
+						{
+
+							if (tipo_doc < TipoDocumento.AcuseRecibo.GetHashCode())
+								respuesta = webServiceHab.SendBillSync(nombre_archivo, bytes);
+							else if (tipo_doc == TipoDocumento.AcuseRecibo.GetHashCode())
+								respuesta = webServiceHab.SendEventUpdateStatus(bytes);
+							else
+								respuesta = webServiceHab.SendNominaSync(bytes);
+
+						}
 
 						log_categoria = MensajeCategoria.Archivos;
 						log_accion = MensajeAccion.creacion;
@@ -434,9 +448,7 @@ namespace HGInetDIANServicios
 							respuesta = new DianResponse();
 							respuesta.StatusCode = "94";
 							respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma").ToArray();
-							//Contingencia de la DIAN 2024-03-09 desde las 6:00 am hasta las 6:00 PM
-							DateTime fecha_ini_cont = new DateTime(2024, 03, 09, 6, 0, 0);
-							DateTime fecha_fin_cont = new DateTime(2024, 03, 09, 18, 0, 0);
+							
 
 							if (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont)
 							{
