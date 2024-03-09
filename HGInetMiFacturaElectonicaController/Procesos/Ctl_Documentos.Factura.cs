@@ -416,7 +416,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, "NumeroResolucion", "string"));
 
 				//Contingencia DIAN
-				if ((item.TipoOperacion == 3 || item.TipoOperacion > 4) && (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont))
+				if ((item.TipoOperacion == 3 || item.TipoOperacion == 5 || item.TipoOperacion == 6) && (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont))
 				{
 					throw new ApplicationException("Nos permitimos informar que el 09 de marzo de 2024, a partir de las 06:00 am y hasta las 6:00 pm, se realizará una ventana de mantenimiento en el Sistema de Facturación Electrónica DIAN, por lo que durante este tiempo no estará disponible este servicio informático, Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma unas horas despues pasada la contingencia de la DIAN");
 				}
