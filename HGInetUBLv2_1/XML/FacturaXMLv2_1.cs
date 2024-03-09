@@ -352,7 +352,7 @@ namespace HGInetUBLv2_1
 
 				if (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont)
 				{
-					InvoiceTypeCode.Value = "0";
+					InvoiceTypeCode.Value = "04";
 				}
 
 				facturaXML.InvoiceTypeCode = InvoiceTypeCode;
