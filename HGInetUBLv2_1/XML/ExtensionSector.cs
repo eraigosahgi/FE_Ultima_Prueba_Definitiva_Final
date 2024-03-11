@@ -95,8 +95,8 @@ namespace HGInetUBLv2_1
 			List<Collection> datos_usuario = new List<Collection>();
 
 			int campo_validador = 0;
-			//Informacion como indica Resolucion 510 que corresponde a 11 campos
-			if (datos.CamposSector.Count > 0)
+			//Informacion como indica Resolucion 510 y 2275 que corresponde a 11 campos
+			if (datos.CamposSector.Count > 0 && datos.CamposSector.Count != 21)
 			{
 				for (int i = 0; i < datos.CamposSector.Count; i++)
 				{
