@@ -451,7 +451,7 @@ namespace HGInetUBLv2_1
 										{
 											porcentaje_impto = factura_ubl.InvoiceLine[i].TaxTotal[x].TaxSubtotal[j].TaxCategory.Percent.Value;
 											//Impuesto ultraprocesados sin clasificar
-											if (porcentaje_impto == 10 && tipo_impto.Equals("ZZ"))
+											if (!string.IsNullOrWhiteSpace(tipo_impto) && porcentaje_impto == 10 && tipo_impto.Equals("ZZ"))
 												tipo_impto = "35";
 										}
 
@@ -480,14 +480,14 @@ namespace HGInetUBLv2_1
 											detalle.ReteFuenteValor = valor_impto;
 											factura_obj.ValorReteFuente += detalle.ReteFuenteValor;
 										}
-										else if (tipo_impto.Equals("22"))//Impuesto a la bolsa
+										else if (!string.IsNullOrWhiteSpace(tipo_impto) && tipo_impto.Equals("22"))//Impuesto a la bolsa
 										{
 											detalle.Aiu = 4;
 											detalle.ValorImpuestoConsumo = valor_impto;
 											factura_obj.ValorImpuestoConsumo += detalle.ValorImpuestoConsumo;
 										}
 
-										if (tipo_impto.Equals("35") || tipo_impto.Equals("34"))//Impuesto saludable (35 - Ultraprocesados, 34 - Bebidas Azucaradas)
+										if (!string.IsNullOrWhiteSpace(tipo_impto) && (tipo_impto.Equals("35") || tipo_impto.Equals("34")))//Impuesto saludable (35 - Ultraprocesados, 34 - Bebidas Azucaradas)
 										{
 											if (tipo_impto.Equals("34"))
 											{
