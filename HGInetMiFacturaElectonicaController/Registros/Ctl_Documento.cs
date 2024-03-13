@@ -6763,7 +6763,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							int diasmes = DateTime.DaysInMonth(anyo, j);
 
-							if (ultimo_registro.DatFechaRegistroDoc.Month == j)
+							if (ultimo_registro != null && ultimo_registro.DatFechaRegistroDoc.Month == j)
 								fecha_inicio = new DateTime(anyo, j, dia, hora, min, 0);
 							else
 								fecha_inicio = new DateTime(anyo, j, 1);
