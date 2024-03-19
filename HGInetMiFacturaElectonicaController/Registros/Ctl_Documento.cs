@@ -59,20 +59,36 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 
 		#region Consulta Documento Soporte
-		public TblDocumentos ConsultaDocSoporte(string identificacion, int documento, int tipo_doc, string identificacion_adquiriente)
+		public TblDocumentos ConsultaDocSoporte(string identificacion, int documento, int tipo_doc, string identificacion_adquiriente, string prefijo)
 		{
 
 			try
 			{
+				TblDocumentos docs = new TblDocumentos();
+				if (string.IsNullOrWhiteSpace(prefijo))
+				{
+					docs = (from datos in context.TblDocumentos.AsNoTracking()
+							where datos.StrEmpresaFacturador == identificacion
+								  && datos.IntNumero == documento
+								  && datos.IntDocTipo == tipo_doc
+								  && datos.IntTipoOperacion == 3
+								  && datos.StrEmpresaAdquiriente == identificacion_adquiriente
+							orderby datos.IntNumero descending
+							select datos).FirstOrDefault();
+				}
+				else
+				{
+					docs = (from datos in context.TblDocumentos.AsNoTracking()
+							where datos.StrEmpresaFacturador == identificacion
+								  && datos.IntNumero == documento
+								  && datos.IntDocTipo == tipo_doc
+								  && datos.IntTipoOperacion == 3
+								  && datos.StrEmpresaAdquiriente == identificacion_adquiriente
+								  && datos.StrPrefijo == prefijo
+							orderby datos.IntNumero descending
+							select datos).FirstOrDefault();
+				}
 
-				TblDocumentos docs = (from datos in context.TblDocumentos.AsNoTracking()
-									  where datos.StrEmpresaFacturador == identificacion
-											&& datos.IntNumero == documento
-											&& datos.IntDocTipo == tipo_doc
-											&& datos.IntTipoOperacion == 3
-											&& datos.StrEmpresaAdquiriente == identificacion_adquiriente
-									  orderby datos.IntNumero descending
-									  select datos).FirstOrDefault();
 				return docs;
 			}
 			catch (Exception)
