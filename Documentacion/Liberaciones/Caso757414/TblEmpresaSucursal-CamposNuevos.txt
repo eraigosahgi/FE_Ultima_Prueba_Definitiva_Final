@@ -1,0 +1,29 @@
+/********** Nuevos Campos **********/
+ALTER TABLE TblPlanesTransacciones
+ADD IntSucursal int NOT NULL default(0);
+
+ALTER TABLE TblDocumentos
+ADD IntSucursal int NOT NULL default(0);
+
+
+/********** Nueva Tabla  **********/
+CREATE TABLE [dbo].[TblEmpresaSucursal](
+	[StrIdentificacion] [varchar](50) NOT NULL,
+	[IntCodigoSucursal] [int] NOT NULL,
+	[StrDescSucursal] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_TblEmpresaSucursal] PRIMARY KEY CLUSTERED 
+(
+	[StrIdentificacion] ASC,
+	[IntCodigoSucursal] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[TblEmpresaSucursal] ADD  CONSTRAINT [DF_TblEmpresaSucursal_IntCodigoSucursal]  DEFAULT ((0)) FOR [IntCodigoSucursal]
+GO
+
+ALTER TABLE [dbo].[TblEmpresaSucursal]  WITH CHECK ADD  CONSTRAINT [FK_TblEmpresaSucursal_TblEmpresas] FOREIGN KEY([StrIdentificacion])
+REFERENCES [dbo].[TblEmpresas] ([StrIdentificacion])
+GO
+
+ALTER TABLE [dbo].[TblEmpresaSucursal] CHECK CONSTRAINT [FK_TblEmpresaSucursal_TblEmpresas]

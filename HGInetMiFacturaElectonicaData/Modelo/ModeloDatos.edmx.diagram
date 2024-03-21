@@ -55,6 +55,8 @@
         <EntityTypeShape EntityType="Modelo.TblRegistroRecepcion" Width="1.5" PointX="7.625" PointY="19.625" />
         <EntityTypeShape EntityType="Modelo.TblImportacionDoc" Width="1.5" PointX="5.375" PointY="19.75" />
         <EntityTypeShape EntityType="Modelo.TblProcesoCorreo" Width="1.5" PointX="0.75" PointY="13.75" />
+        <EntityTypeShape EntityType="Modelo.TblEmpresaSucursal" Width="1.5" PointX="9.5" PointY="10" />
+        <AssociationConnector Association="Modelo.FK_TblEmpresaSucursal_TblEmpresas" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

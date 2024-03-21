@@ -38,6 +38,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public string DocumentoRef { get; set; }
         public Nullable<System.DateTime> DatFechaInicio { get; set; }
         public int IntTipoDocumento { get; set; }
+        public int IntSucursal { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblDocumentos> TblDocumentos { get; set; }
