@@ -1126,7 +1126,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			Tercero empresa_obj = new Tercero();
 
 			empresa_obj.Identificacion = empresa.StrIdentificacion;
-			empresa_obj.IdentificacionDv = empresa.IntIdentificacionDv;
+			int dv_calculado = LibreriaGlobalHGInet.HgiNet.FuncionesIdentificacion.Dv(empresa.StrIdentificacion);
+			empresa_obj.IdentificacionDv = empresa.IntIdentificacionDv == dv_calculado ? empresa.IntIdentificacionDv : dv_calculado;
 			empresa_obj.TipoIdentificacion = Convert.ToInt16(empresa.StrTipoIdentificacion);
 			empresa_obj.RazonSocial = empresa.StrRazonSocial;
 			empresa_obj.Email = empresa.StrMailAdmin;
