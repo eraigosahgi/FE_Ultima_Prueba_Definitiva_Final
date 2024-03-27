@@ -100,6 +100,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string PaginaWeb { get; set; }
 
+		/// <summary>
+		/// Codigo de la Sucursal, aplica para el obligado a facturar para saber de que plan de documento se descuenta el saldo si no tiene ese manejo seria enviar 0
+		/// </summary>
+		public int CodigoSucursal { get; set; }
+
 
 	}
 }

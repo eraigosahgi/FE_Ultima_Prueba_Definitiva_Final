@@ -4162,6 +4162,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					tbl_documento.IntValorNeto = documento_obj.Neto;
 					tbl_documento.IntTipoOperacion = documento_obj.TipoOperacion;
 					tbl_documento.StrLineaNegocio = documento_obj.LineaNegocio;
+					tbl_documento.IntSucursal = documento_obj.DatosAdquiriente.Identificacion;
 				}
 				else
 				{
@@ -4172,6 +4173,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					tbl_documento.IntVlrTotal = documento_obj.ComprobanteTotal;
 					tbl_documento.IntValorSubtotal = documento_obj.ComprobanteTotal;
 					tbl_documento.IntValorNeto = documento_obj.ComprobanteTotal;
+					tbl_documento.IntSucursal = documento_obj.DatosEmpleador.CodigoSucursal;
 				}
 
 				tbl_documento.DatFechaIngreso = respuesta.FechaRecepcion;
@@ -5482,7 +5484,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								tipo_doc_plan = TipoDocPlanes.Documento.GetHashCode();
 							}
 							//Obtengo el plan con el que voy a descontar el saldo
-							obj_plan = controladorplanes.ObtenerPlanesActivos(item.StrEmpresaFacturador, 1, tipo_doc_plan);
+							obj_plan = controladorplanes.ObtenerPlanesActivos(item.StrEmpresaFacturador, 1, tipo_doc_plan, 0);
 							if (obj_plan != null)
 							{
 								item.StrIdPlanTransaccion = obj_plan[0].plan;

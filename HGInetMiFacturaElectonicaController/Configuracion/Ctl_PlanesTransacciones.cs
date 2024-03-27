@@ -442,7 +442,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// <param name="identificacion">Identificación del facturador</param>
 		/// <param name="cantidaddoc">Cantidad de documentos a procesar</param>
 		/// <returns></returns>
-		public List<ObjPlanEnProceso> ObtenerPlanesActivos(string identificacion, int cantidaddoc, int TipoDoc, bool Tercero_EDS_Postpago = false)
+		public List<ObjPlanEnProceso> ObtenerPlanesActivos(string identificacion, int cantidaddoc, int TipoDoc, int sucursal, bool Tercero_EDS_Postpago = false)
 		{
 			context.Configuration.LazyLoadingEnabled = false;
 
@@ -462,6 +462,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 														&& t.IntEstado == Estado && ((t.DatFechaVencimiento >= Fecha_Actual) || t.DatFechaVencimiento == null)
 														&& (((t.IntNumTransaccCompra - t.IntNumTransaccProcesadas) > 0) || (t.IntTipoProceso == Plan_PostPago))
 														&& ((t.IntTipoDocumento == TipoDoc) || t.IntTipoDocumento == tipo_doc_mixto)
+														&& (t.IntSucursal == sucursal)
 													   select t).OrderBy(x => new { x.IntTipoProceso, x.DatFecha }).ToList();
 
 			//Calculamos el saldo disponible de la lista de planes del facturador

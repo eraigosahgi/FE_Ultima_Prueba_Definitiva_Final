@@ -277,7 +277,7 @@ namespace HGInetUBLv2_1
 						//Número de matrícula mercantil (identificador de sucursal: punto de facturación)
 						//---Validar--ocurrencia 0..1
 						PartyLegalEntity.CorporateRegistrationScheme.Name = new NameType1();
-						PartyLegalEntity.CorporateRegistrationScheme.Name.Value = "0";//empresa.NombreComercial; //"HGI SAS";
+						PartyLegalEntity.CorporateRegistrationScheme.Name.Value = empresa.CodigoSucursal.ToString();//"0";//empresa.NombreComercial; //"HGI SAS";
 					}
 
 					if (!string.IsNullOrEmpty(empresa.ActividadEconomica))

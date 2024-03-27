@@ -1818,7 +1818,7 @@ namespace HGInetInteroperabilidad.Procesos
 						//asignacion plan de documentos
 						try
 						{
-							ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_receptor.StrIdentificacion, 1, TipoDocPlanes.Documento.GetHashCode());
+							ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_receptor.StrIdentificacion, 1, TipoDocPlanes.Documento.GetHashCode(), 0);
 						}
 						catch (Exception excepcion)
 						{

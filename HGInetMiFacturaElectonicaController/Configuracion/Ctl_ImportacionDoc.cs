@@ -496,7 +496,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					//asignacion plan de documentos
 					try
 					{
-						ListaPlanes = Planestransacciones.ObtenerPlanesActivos(empresa_descuenta_plan, 1, TipoDocPlanes.Documento.GetHashCode());
+						ListaPlanes = Planestransacciones.ObtenerPlanesActivos(empresa_descuenta_plan, 1, TipoDocPlanes.Documento.GetHashCode(), 0);
 					}
 					catch (Exception excepcion)
 					{

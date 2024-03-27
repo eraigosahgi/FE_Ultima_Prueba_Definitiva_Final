@@ -65,6 +65,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//****Esto es temporal, se debe implementar el manejo por sucursal el manejo de planes
 				bool Tercero_EDS_PostP = false;
+				int Sucursal_Obligado = documentos.FirstOrDefault().DatosObligado.CodigoSucursal;
 
 				// sobre escribe los datos del facturador electrónico si se encuentra en estado de habilitación
 				if (facturador_electronico.IntHabilitacion < Habilitacion.Produccion.GetHashCode())
@@ -156,7 +157,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//***** ESTACIONES PRIVADAS NACIONALES S.A.S.
 					try
 					{
-						if (facturador_electronico.StrIdentificacion.Equals("900141446"))
+						if (facturador_electronico.StrIdentificacion.Equals("900141446") && Sucursal_Obligado == 0)
 						{
 							TblEmpresasResoluciones resolucion_PostP = lista_resolucion.FirstOrDefault(x => x.ComercioConfigDescrip == "PostEDS"); //.Where(x => x.ComercioConfigDescrip == "PostEDS").Select(res => res.StrNumResolucion).ToList<string>();
 							var resol_prefijo = documentos.Where(x => x.NumeroResolucion == resolucion_PostP.StrNumResolucion && x.Prefijo == resolucion_PostP.StrPrefijo).ToList().Select(_res => new { _res.NumeroResolucion, _res.Prefijo }).Distinct().ToList();
@@ -192,7 +193,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
-				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count(), TipoDocPlanes.Documento.GetHashCode(), Tercero_EDS_PostP);
+				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count(), TipoDocPlanes.Documento.GetHashCode(), Sucursal_Obligado, Tercero_EDS_PostP);
 
 				if (ListaPlanes == null)
 				{

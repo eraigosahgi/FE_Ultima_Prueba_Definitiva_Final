@@ -62,6 +62,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ApplicationException("Nos permitimos informar que el 09 de marzo de 2024, a partir de las 06:00 am y hasta las 6:00 pm, se realizará una ventana de mantenimiento en el Sistema de Facturación Electrónica DIAN, por lo que durante este tiempo no estará disponible este servicio informático,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma unas horas despues pasada la contingencia de la DIAN");
 				}
 
+				int Sucursal_Obligado = documentos.FirstOrDefault().DatosEmpleador.CodigoSucursal;
+
 				List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
 
 				Ctl_EmpresaResolucion _resolucion = new Ctl_EmpresaResolucion();
@@ -100,7 +102,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
-				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count(), TipoDocPlanes.Nomina.GetHashCode());
+				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count(), TipoDocPlanes.Nomina.GetHashCode(), Sucursal_Obligado);
 
 				if (ListaPlanes == null)
 				{
