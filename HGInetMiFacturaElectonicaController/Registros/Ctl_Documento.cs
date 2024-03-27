@@ -4162,7 +4162,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					tbl_documento.IntValorNeto = documento_obj.Neto;
 					tbl_documento.IntTipoOperacion = documento_obj.TipoOperacion;
 					tbl_documento.StrLineaNegocio = documento_obj.LineaNegocio;
-					tbl_documento.IntSucursal = documento_obj.DatosAdquiriente.Identificacion;
+					tbl_documento.IntSucursal = documento_obj.DatosObligado.CodigoSucursal;
 				}
 				else
 				{
