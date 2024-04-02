@@ -117,6 +117,15 @@
           <Property Name="IntValorPagar" Type="numeric" Precision="17" Scale="2" Nullable="false" />
           <Property Name="IntFormaPago" Type="smallint" Nullable="false" />
           <Property Name="IntSucursal" Type="int" Nullable="false" />
+          <Property Name="StrIdIntegrador" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TblEmpresaIntegradores">
+          <Key>
+            <PropertyRef Name="StrIdentificacionEmp" />
+            <PropertyRef Name="StrIdentificacionInt" />
+          </Key>
+          <Property Name="StrIdentificacionEmp" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrIdentificacionInt" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
@@ -280,6 +289,14 @@
           <Property Name="IntVlrTotal" Type="numeric" Precision="17" Scale="2" Nullable="false" />
           <Property Name="StrEstadoDian" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrGrupo" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TblIntegradores">
+          <Key>
+            <PropertyRef Name="StrIdentificacion" />
+          </Key>
+          <Property Name="StrIdentificacion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrRazonSocial" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="IntId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="TblOpciones">
           <Key>
@@ -655,6 +672,30 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TblEmpresaIntegradores_TblEmpresas">
+          <End Role="TblEmpresas" Type="Self.TblEmpresas" Multiplicity="1" />
+          <End Role="TblEmpresaIntegradores" Type="Self.TblEmpresaIntegradores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblEmpresas">
+              <PropertyRef Name="StrIdentificacion" />
+            </Principal>
+            <Dependent Role="TblEmpresaIntegradores">
+              <PropertyRef Name="StrIdentificacionEmp" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TblEmpresaIntegradores_TblIntegradores">
+          <End Role="TblIntegradores" Type="Self.TblIntegradores" Multiplicity="1" />
+          <End Role="TblEmpresaIntegradores" Type="Self.TblEmpresaIntegradores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblIntegradores">
+              <PropertyRef Name="StrIdentificacion" />
+            </Principal>
+            <Dependent Role="TblEmpresaIntegradores">
+              <PropertyRef Name="StrIdentificacionInt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TblEmpresasResoluciones_TblEmpresas">
           <End Role="TblEmpresas" Type="Self.TblEmpresas" Multiplicity="1" />
           <End Role="TblEmpresasResoluciones" Type="Self.TblEmpresasResoluciones" Multiplicity="*" />
@@ -700,6 +741,18 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             </Principal>
             <Dependent Role="TblFormatos">
               <PropertyRef Name="StrEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TblIntegradores_TblEmpresas">
+          <End Role="TblEmpresas" Type="Self.TblEmpresas" Multiplicity="1" />
+          <End Role="TblIntegradores" Type="Self.TblIntegradores" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TblEmpresas">
+              <PropertyRef Name="StrIdentificacion" />
+            </Principal>
+            <Dependent Role="TblIntegradores">
+              <PropertyRef Name="StrIdentificacion" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -869,12 +922,14 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySet Name="TblConfiguracionInteroperabilidad" EntityType="Self.TblConfiguracionInteroperabilidad" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblCorreosRecepcion" EntityType="Self.TblCorreosRecepcion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblDocumentos" EntityType="Self.TblDocumentos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblEmpresaIntegradores" EntityType="Self.TblEmpresaIntegradores" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEmpresas" EntityType="Self.TblEmpresas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEmpresasResoluciones" EntityType="Self.TblEmpresasResoluciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEmpresaSucursal" EntityType="Self.TblEmpresaSucursal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblEventosRadian" EntityType="Self.TblEventosRadian" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblFormatos" EntityType="Self.TblFormatos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblImportacionDoc" EntityType="Self.TblImportacionDoc" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblIntegradores" EntityType="Self.TblIntegradores" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpciones" EntityType="Self.TblOpciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpcionesERP" EntityType="Self.TblOpcionesERP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblOpcionesPerfil" EntityType="Self.TblOpcionesPerfil" Schema="dbo" store:Type="Tables" />
@@ -953,6 +1008,14 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             <End Role="TblPlanesTransacciones" EntitySet="TblPlanesTransacciones" />
             <End Role="TblDocumentos" EntitySet="TblDocumentos" />
           </AssociationSet>
+          <AssociationSet Name="FK_TblEmpresaIntegradores_TblEmpresas" Association="Self.FK_TblEmpresaIntegradores_TblEmpresas">
+            <End Role="TblEmpresas" EntitySet="TblEmpresas" />
+            <End Role="TblEmpresaIntegradores" EntitySet="TblEmpresaIntegradores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TblEmpresaIntegradores_TblIntegradores" Association="Self.FK_TblEmpresaIntegradores_TblIntegradores">
+            <End Role="TblIntegradores" EntitySet="TblIntegradores" />
+            <End Role="TblEmpresaIntegradores" EntitySet="TblEmpresaIntegradores" />
+          </AssociationSet>
           <AssociationSet Name="FK_TblEmpresasResoluciones_TblEmpresas" Association="Self.FK_TblEmpresasResoluciones_TblEmpresas">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblEmpresasResoluciones" EntitySet="TblEmpresasResoluciones" />
@@ -968,6 +1031,10 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <AssociationSet Name="FK_TblFormatos_TblEmpresas" Association="Self.FK_TblFormatos_TblEmpresas">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblFormatos" EntitySet="TblFormatos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TblIntegradores_TblEmpresas" Association="Self.FK_TblIntegradores_TblEmpresas">
+            <End Role="TblEmpresas" EntitySet="TblEmpresas" />
+            <End Role="TblIntegradores" EntitySet="TblIntegradores" />
           </AssociationSet>
           <AssociationSet Name="FK_TblOpcionesPerfil_TblOpciones" Association="Self.FK_TblOpcionesPerfil_TblOpciones">
             <End Role="TblOpciones" EntitySet="TblOpciones" />
@@ -1149,6 +1216,15 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <AssociationSet Name="FK_TblEmpresaSucursal_TblEmpresas" Association="Modelo.FK_TblEmpresaSucursal_TblEmpresas">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblEmpresaSucursal" EntitySet="TblEmpresaSucursal" />
+          </AssociationSet>
+          <EntitySet Name="TblIntegradores" EntityType="Modelo.TblIntegradores" />
+          <AssociationSet Name="FK_TblIntegradores_TblEmpresas" Association="Modelo.FK_TblIntegradores_TblEmpresas">
+            <End Role="TblEmpresas" EntitySet="TblEmpresas" />
+            <End Role="TblIntegradores" EntitySet="TblIntegradores" />
+          </AssociationSet>
+          <AssociationSet Name="TblEmpresaIntegradores" Association="Modelo.TblEmpresaIntegradores">
+            <End Role="TblEmpresas" EntitySet="TblEmpresas" />
+            <End Role="TblIntegradores" EntitySet="TblIntegradores" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="TblOpcionesUsuario">
@@ -1453,6 +1529,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="IntFormaPago" Type="Int16" Nullable="false" />
           <NavigationProperty Name="TblAlmacenamientoDocs" Relationship="Modelo.FK_TblAlmacenamientoDocs_TblDocumentos" FromRole="TblDocumentos" ToRole="TblAlmacenamientoDocs" />
           <Property Name="IntSucursal" Type="Int32" Nullable="false" />
+          <Property Name="StrIdIntegrador" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor">
           <End Type="Modelo.TblConfiguracionInteroperabilidad" Role="TblConfiguracionInteroperabilidad" Multiplicity="0..1" />
@@ -1561,6 +1638,8 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="IntTipoOperador" Type="Int32" Nullable="false" />
           <Property Name="IntEnvioSms" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="TblEmpresaSucursal" Relationship="Modelo.FK_TblEmpresaSucursal_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresaSucursal" />
+          <NavigationProperty Name="TblIntegradores" Relationship="Modelo.FK_TblIntegradores_TblEmpresas" FromRole="TblEmpresas" ToRole="TblIntegradores" />
+          <NavigationProperty Name="TblIntegradores1" Relationship="Modelo.TblEmpresaIntegradores" FromRole="TblEmpresas" ToRole="TblIntegradores" />
         </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -2051,6 +2130,32 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TblIntegradores">
+          <Key>
+            <PropertyRef Name="StrIdentificacion" />
+          </Key>
+          <Property Name="StrIdentificacion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrRazonSocial" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IntId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblIntegradores_TblEmpresas" FromRole="TblIntegradores" ToRole="TblEmpresas" />
+          <NavigationProperty Name="TblEmpresas1" Relationship="Modelo.TblEmpresaIntegradores" FromRole="TblIntegradores" ToRole="TblEmpresas" />
+        </EntityType>
+        <Association Name="FK_TblIntegradores_TblEmpresas">
+          <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
+          <End Type="Modelo.TblIntegradores" Role="TblIntegradores" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TblEmpresas">
+              <PropertyRef Name="StrIdentificacion" />
+            </Principal>
+            <Dependent Role="TblIntegradores">
+              <PropertyRef Name="StrIdentificacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TblEmpresaIntegradores">
+          <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="*" />
+          <End Type="Modelo.TblIntegradores" Role="TblIntegradores" Multiplicity="*" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2246,6 +2351,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySetMapping Name="TblDocumentos">
             <EntityTypeMapping TypeName="Modelo.TblDocumentos">
               <MappingFragment StoreEntitySet="TblDocumentos">
+                <ScalarProperty Name="StrIdIntegrador" ColumnName="StrIdIntegrador" />
                 <ScalarProperty Name="IntSucursal" ColumnName="IntSucursal" />
                 <ScalarProperty Name="IntFormaPago" ColumnName="IntFormaPago" />
                 <ScalarProperty Name="IntValorPagar" ColumnName="IntValorPagar" />
@@ -2609,6 +2715,23 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="TblIntegradores">
+            <EntityTypeMapping TypeName="Modelo.TblIntegradores">
+              <MappingFragment StoreEntitySet="TblIntegradores">
+                <ScalarProperty Name="IntId" ColumnName="IntId" />
+                <ScalarProperty Name="StrRazonSocial" ColumnName="StrRazonSocial" />
+                <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="TblEmpresaIntegradores" TypeName="Modelo.TblEmpresaIntegradores" StoreEntitySet="TblEmpresaIntegradores">
+            <EndProperty Name="TblIntegradores">
+              <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacionInt" />
+            </EndProperty>
+            <EndProperty Name="TblEmpresas">
+              <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacionEmp" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

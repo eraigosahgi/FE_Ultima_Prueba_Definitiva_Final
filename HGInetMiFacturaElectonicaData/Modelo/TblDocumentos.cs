@@ -67,6 +67,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public decimal IntValorPagar { get; set; }
         public short IntFormaPago { get; set; }
         public int IntSucursal { get; set; }
+        public string StrIdIntegrador { get; set; }
     
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadEmisor { get; set; }
         public virtual TblConfiguracionInteroperabilidad TblConfiguracionInteroperabilidadReceptor { get; set; }

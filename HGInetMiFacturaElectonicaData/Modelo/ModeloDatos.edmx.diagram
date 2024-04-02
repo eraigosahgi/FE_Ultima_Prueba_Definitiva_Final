@@ -57,6 +57,9 @@
         <EntityTypeShape EntityType="Modelo.TblProcesoCorreo" Width="1.5" PointX="0.75" PointY="13.75" />
         <EntityTypeShape EntityType="Modelo.TblEmpresaSucursal" Width="1.5" PointX="9.5" PointY="10" />
         <AssociationConnector Association="Modelo.FK_TblEmpresaSucursal_TblEmpresas" />
+        <EntityTypeShape EntityType="Modelo.TblIntegradores" Width="1.5" PointX="9.5" PointY="23.75" />
+        <AssociationConnector Association="Modelo.FK_TblIntegradores_TblEmpresas" />
+        <AssociationConnector Association="Modelo.TblEmpresaIntegradores" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

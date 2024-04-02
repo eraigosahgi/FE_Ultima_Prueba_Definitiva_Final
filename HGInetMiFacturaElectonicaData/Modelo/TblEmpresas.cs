@@ -27,6 +27,7 @@ namespace HGInetMiFacturaElectonicaData.Modelo
             this.TblPagosElectronicos1 = new HashSet<TblPagosElectronicos>();
             this.TblPlanesTransacciones = new HashSet<TblPlanesTransacciones>();
             this.TblEmpresaSucursal = new HashSet<TblEmpresaSucursal>();
+            this.TblIntegradores1 = new HashSet<TblIntegradores>();
         }
     
         public string StrIdentificacion { get; set; }
@@ -119,5 +120,8 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         public virtual ICollection<TblPlanesTransacciones> TblPlanesTransacciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TblEmpresaSucursal> TblEmpresaSucursal { get; set; }
+        public virtual TblIntegradores TblIntegradores { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TblIntegradores> TblIntegradores1 { get; set; }
     }
 }
