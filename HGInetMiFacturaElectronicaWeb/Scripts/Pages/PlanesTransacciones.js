@@ -34,9 +34,107 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 	$scope.Tdisponibles = "";
 	$scope.FechaInicio = "";
 
-	SrvFiltro.ObtenerFiltro('Empresa', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', true, 1).then(function (Datos) {
-		$scope.Facturador = Datos;
+	//SrvFiltro.ObtenerFiltro('Empresa', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', true, 1).then(function (Datos) {
+	//	$scope.Facturador = Datos;
+	//});
+
+
+	//****************************************
+
+	$('#IdSucursal').dxLookup({
 	});
+
+	$http.get('/api/Empresas?Facturador=true').then(function (data) {
+		var codigo = 'Identificacion';
+		var descripcion = 'RazonSocial';
+		var titulo = 'Facturador';
+
+		$('#Facturador').dxLookup({
+			//tabIndex: index,
+			//*****************************************************************
+			dataSource: data.data,
+			//*****************************************************************		
+			searchExpr: [codigo, descripcion],
+			valueExpr: codigo,
+			displayExpr: descripcion,
+			showPopupTitle: false,
+			placeholder: "Seleccionar " + titulo,
+			useNativeScrolling: true,
+			cancelButtonText: "Cancelar",
+			showClearButton: true,
+			//clearButtonText: (opcionTodos != undefined) ? opcionTodos : 'Limpiar',
+			dropDownOptions: {
+				hideOnOutsideClick: true,
+				showTitle: true,
+			},
+
+			onValueChanged: function (e) {
+				//Buscar las sucursales del facturador
+				$http.get('/api/ObtenerEmpresaSucursal?IdentificacionEmpresa=' + e.value).then(function (data) {
+					$("#wait").hide();
+					try {
+						var codigo = 'id';
+						var descripcion = 'sucursal';
+						$('#IdSucursal').dxLookup({
+							showPopupTitle: false,
+							dataSource: data.data,
+							displayExpr: 'sucursal',
+							inputAttr: { 'aria-label': 'Product' },
+							valueExpr: 'id',
+							searchEnabled: true,
+							cancelButtonText: "Cancelar",
+							showClearButton: true,
+							fieldTemplate: function (d) {
+								try {
+
+									return d[codigo] + ' - ' + d[descripcion];
+								} catch (e) { }
+							},
+							itemTemplate: function (d) {
+								try {
+
+									return d[codigo] + ' - ' + d[descripcion];
+
+
+								} catch (e) { }
+							},
+						}).dxValidator({
+							validationRules: [{
+								type: "required",
+								message: "Debe indicar la sucursal"
+							}]
+						});
+
+					} catch (err) {
+						DevExpress.ui.notify(err.message, 'error', 3000);
+					}
+				}, function errorCallback(response) {
+					$('#wait').hide();
+					DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+				});
+
+			},
+			fieldTemplate: function (datos) {
+				try {
+
+					return datos[codigo] + ' - ' + datos[descripcion];
+				} catch (e) { }
+			},
+			itemTemplate: function (datos) {
+				try {
+
+					return datos[codigo] + ' - ' + datos[descripcion];
+
+
+				} catch (e) { }
+			},
+
+		});
+	});
+	//****************************************
+
+
+
 
 
 	$http.get('/api/DatosSesion/').then(function (response) {
@@ -84,6 +182,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 			});
 		});
+
 
 	});
 
@@ -218,6 +317,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 		});
 
 
+
+
 		//Campo cantidad de transacciones del plan
 		$("#CantidadTransacciones").dxNumberBox({
 			format: "#,##0",
@@ -328,8 +429,8 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 		onValueChanged: function (data) {
 			Datos_Vence = data.value;
 			if (Datos_Vence) {
-			    $scope.Vence = true;
-			    $('#panelfechaVencimiento').show();
+				$scope.Vence = true;
+				$('#panelfechaVencimiento').show();
 			} else {
 				$scope.Vence = false;
 				$('#panelfechaVencimiento').hide();
@@ -398,20 +499,20 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 		}
 	};
 
-	function GuardarPlan() {   
-		if (txt_hgi_Facturador != null && txt_hgi_Facturador != "") {
+	function GuardarPlan() {
+		//if (txt_hgi_Facturador != null && txt_hgi_Facturador != "") {
 
-			try {
-				var empresaFactura = txt_hgi_Facturador.split(' -- ');
-				empresa = empresaFactura[0];
-			} catch (e) {
-				empresa = txt_hgi_Facturador;
-			}
+		//	try {
+		//		var empresaFactura = txt_hgi_Facturador.split(' -- ');
+		//		empresa = empresaFactura[0];
+		//	} catch (e) {
+		//		empresa = txt_hgi_Facturador;
+		//	}
 
-		} else {
-			DevExpress.ui.notify("Debe seleccionar el Facturador", 'error', 3000);
-			return false;
-		}
+		//} else {
+		//	DevExpress.ui.notify("Debe seleccionar el Facturador", 'error', 3000);
+		//	return false;
+		//}
 
 		var Meses = Datos_Meses_Vence + "";
 		var n = Meses.includes(".");
@@ -430,9 +531,9 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 		}
 
 		if (Datos_FechaVence == null) {
-		    Datos_FechaVence = FVence.toISOString();
+			Datos_FechaVence = FVence.toISOString();
 		}
-        
+
 		var data = $.param({
 			IntTipoProceso: Datos_TiposProceso,
 			StrEmpresa: codigo_facturador,
@@ -442,25 +543,25 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 			IntValor: Datos_valor_plan,
 			Estado: Datos_E_Plan,
 			StrObservaciones: Datos_obsrvaciones,
-			StrEmpresaFacturador: empresa,
+			StrEmpresaFacturador: $('#Facturador').dxLookup("instance").option().value,
 			Envia_email: Datos_Email,
 			Vence: Datos_Vence,
 			FechaVence: Datos_FechaVence,
 			MesesVence: Datos_Meses_Vence,
 			DocRef: Datos_DocRef,
 			TipoDoc: Datos_TiposDoc,
-			editfecha: Datos_editfecha
+			editfecha: Datos_editfecha,
+			Sucursal: $('#IdSucursal').dxLookup("instance").option().value
 		});
-        
+
 		var IdActualizar = (StrIdSeguridad) ? '&' + $.param({ StrIdSeguridad: StrIdSeguridad, Editar: true }) : '';
 
 		$("#wait").show();
 		$http.post('/api/PlanesTransacciones?' + data + IdActualizar).then(function (response) {
 			$("#wait").hide();
 			try {
-				
-				if (response.data == "")
-				{
+
+				if (response.data == "") {
 					DevExpress.ui.notify({ message: "El plan ha sido registrado con exito.", position: { my: "center top", at: "center top" } }, "success", 1500);
 					$("#button").hide();
 					$("#btncancelar").hide();
@@ -478,7 +579,7 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				else {
 					DevExpress.ui.notify(response.data, 'error', 5000);
 				}
-				
+
 
 
 
@@ -522,17 +623,18 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				if (Datos_TiposDoc == 0 || Datos_TiposDoc == 1 || Datos_TiposDoc == 2) {
 					$("#TipoDoc").dxRadioGroup({ value: TiposDoc[BuscarID(TiposDoc, Datos_TiposDoc)] });
 				}
-
-				//$("#txtempresaasociada").dxTextBox({ value: codigo_empresa + ' -- ' + Datos_Nombre_facturador });
-				Set_Facturador(codigo_empresa + ' -- ' + Datos_Nombre_facturador);
-				Bloquear_Facturador();
+				
+				//Set_Facturador(codigo_empresa + ' -- ' + Datos_Nombre_facturador);
+				$('#Facturador').dxLookup({ value: codigo_empresa });
+				//Bloquear_Facturador();
+				$('#Facturador').dxLookup({ disabled:true });
 				$("#CantidadTransacciones").dxNumberBox({ value: Datos_T_compra });
 
 				$("#ValorPlan").dxNumberBox({ value: Datos_valor_plan });
 				if (Datos_E_Plan == 2) {
 					$scope.consumido = true;
 				} else {
-				    $("#EstadoPlan").dxRadioGroup({ value: EstadosPlanes[BuscarID(EstadosPlanes, Datos_E_Plan)] });
+					$("#EstadoPlan").dxRadioGroup({ value: EstadosPlanes[BuscarID(EstadosPlanes, Datos_E_Plan)] });
 				}
 
 				if (Datos_obsrvaciones != null) {
@@ -577,6 +679,11 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 					$scope.FechaInicio = "";
 				}
 
+				try {
+					$('#IdSucursal').dxLookup({ value: response.data[0].IntSucursal, disabled: true });
+				} catch (e) {
+
+				}
 
 
 			} catch (err) {
@@ -717,56 +824,56 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 					  , allowColumnResizing: true
 				 , columns: [
 					 {
-						width: 50,
-						cellTemplate: function (container, options) {
-							$("<div style='text-align:center'>")
+					 	width: 50,
+					 	cellTemplate: function (container, options) {
+					 		$("<div style='text-align:center'>")
 								.append($("<a target='_blank' class='icon-file-eye' onClick=ConsultarDetalle('" + options.data.id + "')  ><a taget=_self style='margin-left:20%;' class='icon-pencil3' title='Editar' href='GestionPlanesTransacciones.aspx?IdSeguridad=" + options.data.id + "'>"))
 								.appendTo(container);
-						}
+					 	}
 					 },
 					 {
-						caption: "Fecha",
-						dataField: "Fecha",
-						dataType: "date",
-						format: "yyyy-MM-dd HH:mm"
+					 	caption: "Fecha",
+					 	dataField: "Fecha",
+					 	dataType: "date",
+					 	format: "yyyy-MM-dd HH:mm"
 					 },
 
 				 {
-					caption: "Doc. Facturador",
-					dataField: "Facturador"
+				 	caption: "Doc. Facturador",
+				 	dataField: "Facturador"
 				 },
 					 ,
 					  {
 
-						caption: "Empresa Compra",
-						dataField: "EmpresaFacturador"
+					  	caption: "Empresa Compra",
+					  	dataField: "EmpresaFacturador"
 					  },
 					 {
 
-						caption: "Transacciones",
-						dataField: "TCompra"
+					 	caption: "Transacciones",
+					 	dataField: "TCompra"
 					 },
 					  {
 
-						caption: "Valor",
-						dataField: "Valor"
+					  	caption: "Valor",
+					  	dataField: "Valor"
 					  },
 					 {
 
-						caption: "Procesadas",
-						dataField: "TProcesadas"
+					 	caption: "Procesadas",
+					 	dataField: "TProcesadas"
 					 }
 					 ,
 					 {
 
-						caption: "Saldo",
-						dataField: "Saldo"
+					 	caption: "Saldo",
+					 	dataField: "Saldo"
 					 }
 					 ,
 					 {
 
-						caption: "DocRef",
-						dataField: "DocRef"
+					 	caption: "DocRef",
+					 	dataField: "DocRef"
 					 }
 
 					 //, {
@@ -782,55 +889,55 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 					 //}
 
 				 , {
-					dataField: "Porcentaje",
-					caption: "Porcentaje %",
-					alignment: "right",
-					width: 100,
-					cellTemplate: CrearGraficoBarra,
-					cssClass: "bullet"
+				 	dataField: "Porcentaje",
+				 	caption: "Porcentaje %",
+				 	alignment: "right",
+				 	width: 100,
+				 	cellTemplate: CrearGraficoBarra,
+				 	cssClass: "bullet"
 				 },
 					 , {
 
-						caption: "Empresa",
-						dataField: "Empresa",
-						visible: false
+					 	caption: "Empresa",
+					 	dataField: "Empresa",
+					 	visible: false
 					 },
 					 {
 
-						caption: "Usuario",
-						dataField: "Usuario",
-						visible: false
+					 	caption: "Usuario",
+					 	dataField: "Usuario",
+					 	visible: false
 					 }
 					 ,
 					 {
 
-						caption: "Tipo",
-						dataField: "Tipoproceso"
+					 	caption: "Tipo",
+					 	dataField: "Tipoproceso"
 					 }
 					 ,
 					 {
 
-						caption: "TipoDoc",
-						dataField: "TipoDoc"
+					 	caption: "TipoDoc",
+					 	dataField: "TipoDoc"
 					 }
 					 ,
 					  {
 
-						caption: 'Estado',
-						dataField: 'Estado',
-						cellTemplate: function (container, options) {
-							$("<div style='text-align:center'>")
+					  	caption: 'Estado',
+					  	dataField: 'Estado',
+					  	cellTemplate: function (container, options) {
+					  		$("<div style='text-align:center'>")
 								.append($("<a taget=_self class='icon-circle2'" + estado + ">"))
 								.appendTo(container);
-						}
+					  	}
 					  }
 				 ], summary: {
-					groupItems: [{
-						column: "Valor",
-						summaryType: "sum",
-						displayFormat: " {0} Total ",
-						valueFormat: "currency"
-					}]
+				 	groupItems: [{
+				 		column: "Valor",
+				 		summaryType: "sum",
+				 		displayFormat: " {0} Total ",
+				 		valueFormat: "currency"
+				 	}]
 
 					, totalItems: [{
 						column: "Valor",
@@ -895,8 +1002,7 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 					$('#hgi_porcentaje_plan').html(Number(porcentaje).toFixed(2) + "%");
 				}
 
-				if (response.data[0].DocRef == "-1")
-				{
+				if (response.data[0].DocRef == "-1") {
 					$scope.Facturado = "NO";
 				}
 				else {

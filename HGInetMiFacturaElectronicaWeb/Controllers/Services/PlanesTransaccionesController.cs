@@ -310,7 +310,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					MesesVence = d.IntMesesVence,
 					DocRef = d.DocumentoRef,
 					FechaInicio = (d.DatFechaInicio == null) ? "" : d.DatFechaInicio.Value.ToString(Fecha.formato_fecha_hginet),
-					TipoDoc = d.IntTipoDocumento
+					TipoDoc = d.IntTipoDocumento,
+					d.IntSucursal
 				});
 
 				return Ok(retorno);
@@ -336,7 +337,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// <param name="StrEmpresaFacturador"></param>
 		/// <param name="Tipo"></param>
 		/// <returns></returns>
-		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri] short MesesVence, [FromUri] string DocRef, [FromUri]int TipoDoc, [FromUri]bool editfecha)
+		public IHttpActionResult Post([FromUri]byte IntTipoProceso, [FromUri]string StrEmpresa, [FromUri]string StrUsuario, [FromUri]int IntNumTransaccCompra, [FromUri]int IntNumTransaccProcesadas, [FromUri] decimal IntValor, [FromUri]int Estado, [FromUri]string StrObservaciones, [FromUri]string StrEmpresaFacturador, [FromUri] bool Envia_email, [FromUri]bool Vence, [FromUri] DateTime FechaVence, [FromUri] short MesesVence, [FromUri] string DocRef, [FromUri]int TipoDoc, [FromUri]bool editfecha, [FromUri] int Sucursal)
 		{
 			try
 			{
@@ -355,6 +356,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				ObjPlanTransacciones.StrObservaciones = StrObservaciones;
 				ObjPlanTransacciones.StrEmpresaFacturador = StrEmpresaFacturador.Trim();
 				ObjPlanTransacciones.DocumentoRef = DocRef;
+				ObjPlanTransacciones.IntSucursal = Sucursal;
 				if (Vence)
 				{
 					ObjPlanTransacciones.IntMesesVence = MesesVence;

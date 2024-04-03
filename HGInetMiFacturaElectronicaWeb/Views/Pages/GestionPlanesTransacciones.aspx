@@ -43,7 +43,11 @@
 									</div>
 
 									<div class="col-md-6 col-xs-12" style="margin-top: 16px">
-										<div data-hgi-filtro="Facturador"></div>
+										<%--<div data-hgi-filtro="Facturador"></div>--%>
+										<div class="dx-field-label" style="font-size: 14px; width: auto;">Facturador:<strom style="color: red;">*</strom></div>
+										<div class="dx-field-value">
+											<div id="Facturador" style="margin-left: -4%;"></div>
+										</div>
 									</div>
 
 									<div class="col-md-12 col-xs-12" style="margin-top: 16px; z-index: 9;">
@@ -109,6 +113,10 @@
 										<div class="col-md-2" style="margin-top:-8px">
 											<label style="margin-top: 16px;">Documento Ref:</label>
 											<div id="DocRef"></div>
+										</div>
+										<div class="col-md-4" style="margin-top:-8px">
+											<label style="margin-top: 16px;">Sucursal:</label>
+											<div id="IdSucursal"></div>
 										</div>
 
 									</div>

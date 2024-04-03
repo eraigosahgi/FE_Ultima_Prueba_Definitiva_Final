@@ -173,7 +173,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 		codigo_facturador = response.data[0].Identificacion;
 		Habilitacion = response.data[0].Habilitacion;
-		console.log(response);
+
 		var tipo = response.data[0].Admin;
 		if (tipo) {
 			$scope.Admin = true;
@@ -182,6 +182,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			//Bloquear_EmpresaDescuenta();
 			//Bloquear_EmpresaAsociada();
 		};
+		//***********************************************
+
+
 		$scope.AdminIntegrador = $scope.Admin;
 
 		//Aqui valido si regreso al Listado o me quedo en la misma vista de empresa
@@ -1066,7 +1069,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 		}
 
-        // Certificado
+		// Certificado
 		$("#CerFirma").dxRadioGroup({
 			searchEnabled: true,
 			caption: 'Firma',
@@ -1077,11 +1080,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_CertFirma = data.value.ID;
 
 				if (Datos_CertFirma == 0) {
-				    // Ocultar panel con campos para firmar certificado como Proveedor
-				    $('#PanelFirmaFacturador').hide();
+					// Ocultar panel con campos para firmar certificado como Proveedor
+					$('#PanelFirmaFacturador').hide();
 
-				    // Mostrar panel con campos para firmar certificado como HGI SAS
-				    $('#PanelFirmaHGI').show();
+					// Mostrar panel con campos para firmar certificado como HGI SAS
+					$('#PanelFirmaHGI').show();
 
 					//Coloco como NO requerido el proveedor del certificado
 					$("#cboProveedor").dxValidator({ validationRules: [] });
@@ -1091,21 +1094,21 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					try {
 						//Coloco como NO requerida la clave del certificado						
 						//Se coloca dentro de try porque este campo no existe cuando la empresa es nueva
-					    $("#VenceCert").dxTextBox({ validationRules: [] });
+						$("#VenceCert").dxTextBox({ validationRules: [] });
 					} catch (e) { }
 
-				    // Asignar valor fecha vencimiento para firmar como HGI SAS
+					// Asignar valor fecha vencimiento para firmar como HGI SAS
 					$("#fechaVencimientoCertificadoHGI").dxDateBox({ value: Datos_FechaCert });
 
 				} else {
-				    // Resetear valor fecha vencimiento para firmar como HGI SAS
-				    $("#fechaVencimientoCertificadoHGI").dxDateBox({ value: Datos_FechaCert });
+					// Resetear valor fecha vencimiento para firmar como HGI SAS
+					$("#fechaVencimientoCertificadoHGI").dxDateBox({ value: Datos_FechaCert });
 
-				    // Ocultar panel con campos para firmar certificado como HGI SAS
-				    $('#PanelFirmaHGI').hide();
+					// Ocultar panel con campos para firmar certificado como HGI SAS
+					$('#PanelFirmaHGI').hide();
 
-                    // Mostrar panel con campos para firmar certificado como Proveedor
-				    $('#PanelFirmaFacturador').show();
+					// Mostrar panel con campos para firmar certificado como Proveedor
+					$('#PanelFirmaFacturador').show();
 
 					//Coloco como requerido el proveedor del certificado
 					//$("#cboProveedor").dxValidator({
@@ -1236,15 +1239,15 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			}
 		});
 
-	    // Fecha de vencimiento certificado HGI SAS
+		// Fecha de vencimiento certificado HGI SAS
 		$("#fechaVencimientoCertificadoHGI").dxDateBox({
-		    type: 'date',
-		    width: '100%',
-		    displayFormat: "yyyy-MM-dd",
-		    min: now,
-		    onValueChanged: function (data) {
-		        Datos_FechaCert = data.value;
-		    }
+			type: 'date',
+			width: '100%',
+			displayFormat: "yyyy-MM-dd",
+			min: now,
+			onValueChanged: function (data) {
+				Datos_FechaCert = data.value;
+			}
 		});
 
 		/////////////////////////////////////Tooltip
@@ -1793,7 +1796,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 
 
-    //Funciones
+	//Funciones
 	function validar() {
 		if (Datos_Adquiriente == true || Datos_Obligado == true) {
 			return false;
@@ -1803,11 +1806,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 	//Validación de Email
 	function validarEmailEnvio() {
-	    if (Datos_Habilitacion != 99) {
-	        return true
-	    }
+		if (Datos_Habilitacion != 99) {
+			return true
+		}
 
-	    if (Datos_estado != 3) {
+		if (Datos_estado != 3) {
 			if (Datos_Email_Envio == "" || Datos_Email_Envio == undefined) {
 				return false;
 			}
@@ -1819,11 +1822,11 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	}
 
 	function validarEmailRecepcion() {
-	    if (Datos_Habilitacion != 99) {
-	        return true
-	    }
+		if (Datos_Habilitacion != 99) {
+			return true
+		}
 
-	    if (Datos_estado != 3) {  
+		if (Datos_estado != 3) {
 			if (Datos_Email_Recepcion == "" || Datos_Email_Recepcion == undefined) {
 				return false;
 			}
@@ -1835,9 +1838,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	}
 
 	function validarEmailAcuse() {
-	    if (Datos_Habilitacion != 99) {
-	        return true
-	    }
+		if (Datos_Habilitacion != 99) {
+			return true
+		}
 
 		if (Datos_estado != 3) {
 			if (Datos_Email_Acuse == "" || Datos_Email_Acuse == undefined) {
@@ -1851,9 +1854,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	}
 
 	function validarEmailPagos() {
-	    if (Datos_Habilitacion != 99) {
-	        return true
-	    }
+		if (Datos_Habilitacion != 99) {
+			return true
+		}
 
 		if (Datos_estado != 3) {
 			if (Datos_Email_Pagos == "" || Datos_Email_Pagos == undefined) {
@@ -1881,7 +1884,6 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	if (id_seguridad == '' || id_seguridad == undefined) {
 		$("#CerFirma").dxRadioGroup({ value: TiposCertFirma[BuscarID(TiposCertFirma, 0)] });
 		$("#CerFirma").dxRadioGroup({ readOnly: true });
-
 	}
 
 
@@ -1918,14 +1920,14 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				Datos_PermiteConsultarTodosLosDocumentos = response.data[0].IntPagosPermiteConsTodos;
 				Datos_EmailRecepcion = response.data[0].IntEmailRecepcion;
 				Datos_EnvioNominaMail = response.data[0].IntEnvioNominaMail;
-				Datos_estado = (response.data[0].Estado == 0) ? 2 : response.data[0].Estado ;
+				Datos_estado = (response.data[0].Estado == 0) ? 2 : response.data[0].Estado;
 				Datos_postpago = response.data[0].Postpago;
 				Datos_Email_Envio = response.data[0].StrMailEnvio;
 				Datos_Email_Recepcion = response.data[0].StrMailRecepcion;
 				Datos_Email_Acuse = response.data[0].StrMailAcuse;
 				Datos_Email_Pagos = response.data[0].StrMailPagos;
 				Datos_telefono = response.data[0].telefono;
-				Datos_VersionDIAN = (response.data[0].VersionDIAN == 0) ? 1 : response.data[0].VersionDIAN; 
+				Datos_VersionDIAN = (response.data[0].VersionDIAN == 0) ? 1 : response.data[0].VersionDIAN;
 				Datos_TipoPlan = response.data[0].IntTipoPlan
 
 				Datos_Serial_Cloud = response.data[0].SerialCloudServices;
@@ -2097,25 +2099,25 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 						}
 					} catch (e) { }
 
-                    //Check Radian
-				    try {
-				        if (Datos_Radian == 1) {
-				            $("#Radian").dxCheckBox({ value: true });
-				            if (Datos_CertFirma == 0 && Datos_Habilitacion == 99) {
-				                $('#PanelRepresentante').show();
-				            }
-				        }
-				        else {
-				            $('#PanelRepresentante').hide();
-				        }
-				    } catch (e) { }
+					//Check Radian
+					try {
+						if (Datos_Radian == 1) {
+							$("#Radian").dxCheckBox({ value: true });
+							if (Datos_CertFirma == 0 && Datos_Habilitacion == 99) {
+								$('#PanelRepresentante').show();
+							}
+						}
+						else {
+							$('#PanelRepresentante').hide();
+						}
+					} catch (e) { }
 
 					//Check Radian
 					try {
 						if (Datos_Sms == 1) {
 							$("#SMS").dxCheckBox({ value: true });
 						}
-						
+
 					} catch (e) { }
 
 					//Certificado
@@ -2143,10 +2145,10 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					$("#ClaveCert").dxTextBox({ value: Datos_ClaveCert });
 				} catch (e) { }
 				try {
-				    $("#VenceCert").dxTextBox({ value: Datos_FechaCert });
+					$("#VenceCert").dxTextBox({ value: Datos_FechaCert });
 
-				    // Asignar valor fecha vencimiento para firmar como HGI SAS
-				    $("#fechaVencimientoCertificadoHGI").dxDateBox({ value: Datos_FechaCert });
+					// Asignar valor fecha vencimiento para firmar como HGI SAS
+					$("#fechaVencimientoCertificadoHGI").dxDateBox({ value: Datos_FechaCert });
 				} catch (e) { }
 
 
@@ -2162,12 +2164,131 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				AsigEstado("Proc_MailAcuse", Proc_MailAcuse);
 				AsigEstado("Proc_MailPagos", Proc_MailPagos);
 
+				if (Datos_Obligado == 1) {
+					consultarSucursales(Datos_Idententificacion);
+				}
 
 			} catch (err) {
 				DevExpress.ui.notify(err.message + ' Validar Estado Producción', 'error', 7000);
 			}
 		});
 	}
+
+	//*************************************************************************************
+
+	function consultarSucursales(empresa) {
+		$http.get('/api/ObtenerEmpresaSucursal?IdentificacionEmpresa=' + empresa).then(function (data) {
+			$("#gridSucursales").dxDataGrid({
+				dataSource: data.data,
+				keyExpr: "id",
+				paging: {
+					pageSize: 3
+
+				},
+				allowColumnResizing: true,
+				pager: {
+					showPageSizeSelector: true,
+					allowedPageSizes: [3, 10, 20],
+					showInfo: true
+				},
+				//"export": {
+				//	enabled: true,
+				//	fileName: "Alertas",
+				//	allowExportSelectedData: true
+				//},
+				editing: {
+					mode: "popup",
+					allowUpdating: false,
+					allowAdding: $scope.Admin,
+					allowDeleting: $scope.Admin,
+					popup: {
+						title: "Datos de la sucursal",
+						showTitle: true,
+						width: 'auto',
+						height: 'auto',
+						position: {
+							my: "center",
+							at: "center",
+							of: window
+						}
+					},
+					texts: {
+						addRow: "Agregar nueva Sucursal",
+						cancelAllChanges: "Descartar cambios",
+						cancelRowChanges: "Cancelar",
+						confirmDeleteTitle: "",
+						editRow: "Ver",
+						saveAllChanges: "Guardar cambios",
+						saveRowChanges: "Guardar",
+						validationCancelChanges: "Cancelar cambios"
+					},
+					form: {
+						items: [{
+							itemType: 'group',
+							colCount: 1,
+							colSpan: 2,
+							items: [
+							{
+								dataField: 'id'
+							},
+								 'sucursal'
+							//	colSpan: 1,
+
+							],
+						},
+						]
+					},
+				},
+				onRowValidating: function (e) {
+					console.log(e.newData);
+					if (validarVista(e.newData)) {
+
+						e.isValid = false;
+					} else {
+
+						e.isValid = true;
+						GuardarSucursal(e.newData);
+
+					}
+				},
+				onRowRemoving(e) {
+					EliminarSucursal(e.data);
+				},
+				onToolbarPreparing: function (e) {
+					var dataGrid = e.component;
+
+					e.toolbarOptions.items.unshift({
+
+						location: "after",
+						widget: "dxButton",
+						options: {
+							icon: "refresh",
+							onClick: function () {
+								consultarSucursales();
+							}
+						}
+					})
+				},
+
+				columns: [
+
+					{
+						dataField: "id",
+						caption: "Código",
+						width: 'auto',
+						dataType: 'number',
+					},
+				{
+					dataField: "sucursal",
+					caption: "Nombre Sucursal",
+				},
+
+				]
+			});
+		});
+	}
+	//*************************************************************************************
+	//***********************************************
 
 	function AsigEstado(mail, Proceso) {
 		var Icono_Registro = "icon-cross2 text-danger-400";
@@ -2413,6 +2534,108 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 	});
 	//**************************
 
+
+
+
+
+	////*************************************************************************************************************
+
+
+	function validarVista(options) {
+		//Si existe algun error debe retornar true.
+
+		var IntIdEstado = 0;
+
+		try {
+			var id = options.id;
+		} catch (e) { }
+
+		if (id === undefined || id === '') {
+			DevExpress.ui.notify("Debe indicar el Codigo", 'error', 3000);
+			return true;
+		}
+
+		try {
+			var sucursal = options.sucursal;
+		} catch (e) { }
+
+		if (sucursal == undefined || sucursal == '') {
+			DevExpress.ui.notify("Debe indicar el Nombre", 'error', 3000);
+			return true;
+		}
+
+		return false;
+	}
+
+
+
+
+
+	function GuardarSucursal(datos) {
+		var data = {
+			empresa: codigo_facturador,
+			id: datos.id,
+			sucursal: datos.sucursal
+		};
+
+
+		$("#wait").show();
+		$http({ url: '/api/GuardarEmpresaSucursal', data: data, method: 'Post' }).then(function (response) {
+			$("#wait").hide();
+			try {
+
+				if (response.data == "") {
+					DevExpress.ui.notify({ message: "Registro guardado con exito.", position: { my: "center top", at: "center top" } }, "success", 1500);
+
+					setTimeout(consultarSucursales(), 1000);
+				}
+				else {
+					DevExpress.ui.notify(response.data, 'error', 5000);
+				}
+			} catch (err) {
+				DevExpress.ui.notify(err.message, 'error', 3000);
+			}
+		}, function errorCallback(response) {
+			$('#wait').hide();
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+		});
+	}
+
+	function EliminarSucursal(datos) {
+		var data = {
+			empresa: codigo_facturador,
+			id: datos.id,
+			sucursal: datos.sucursal
+		};
+
+
+		$("#wait").show();
+		$http({ url: '/api/EliminarEmpresaSucursal?empresa=' + codigo_facturador + '&id=' + datos.id, method: 'Delete' }).then(function (response) {
+			$("#wait").hide();
+			try {
+
+				if (response.data == "") {
+					DevExpress.ui.notify({ message: "Registro eliminado con exito.", position: { my: "center top", at: "center top" } }, "success", 1500);
+
+					setTimeout(consultarSucursales(), 1000);
+				}
+				else {
+					setTimeout(consultarSucursales(), 1000);
+					DevExpress.ui.notify(response.data, 'error', 5000);
+				}
+			} catch (err) {
+				setTimeout(consultarSucursales(), 1000);
+				DevExpress.ui.notify(err.message, 'error', 3000);
+			}
+		}, function errorCallback(response) {
+			$('#wait').hide();
+			setTimeout(consultarSucursales(), 1000);
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+		});
+	}
+
+
+	////*************************************************************************************************************
 
 });
 

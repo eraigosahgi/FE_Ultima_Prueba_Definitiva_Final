@@ -222,6 +222,17 @@
 								<div id="ttMailPagos"></div>
 							</div>
 
+							<div class="col-md-12" style="z-index: 9; padding-top:5px">
+								<%--<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Sucursales:<strom style="color: red;">*</strom></label>--%>
+								<div class="col-md-11" style="z-index: 9; margin-left: -10px;">
+									<div id="gridSucursales"></div>
+								</div>
+								<%--<div class="col-md-1" style="z-index: 9; margin-top: 6px;">
+									<i id="HtmlProc_MailPagos"></i>
+								</div>
+								<div id="ttMailPagos"></div>--%>
+							</div>
+
 						</div>
 					</div>
 				</div>

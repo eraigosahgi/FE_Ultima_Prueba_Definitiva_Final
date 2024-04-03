@@ -115,6 +115,7 @@
     <Compile Include="Configuracion\Ctl_AlmacenamientoDocs.cs" />
     <Compile Include="Configuracion\Ctl_ConfiguracionInteroperabilidad.cs" />
     <Compile Include="Configuracion\Ctl_EmpresaResolucion.cs" />
+    <Compile Include="Configuracion\Ctl_EmpresaSucursales.cs" />
     <Compile Include="Configuracion\Ctl_EventosRadian.cs" />
     <Compile Include="Configuracion\Ctl_Formatos.cs" />
     <Compile Include="Configuracion\Ctl_ImportacionDoc.cs" />
