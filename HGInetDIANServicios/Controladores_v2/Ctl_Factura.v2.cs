@@ -106,7 +106,7 @@ namespace HGInetDIANServicios
 					else
 					{
 						archivo = string.Format("{0}-{1}.xml", Path.GetFileNameWithoutExtension(ruta_zip), proceso_acuse);
-					} 
+					}
 
 					// almacena el mensaje de respuesta del servicio web
 					archivo = Xml.GuardarObjeto(resultadoHab, carpeta, archivo);
@@ -256,10 +256,10 @@ namespace HGInetDIANServicios
 						//se valida si ya se envio para consultarlo con el cufe que retorna
 						try
 						{
-							if (respuesta.ErrorMessage != null)
+							if (respuesta.ErrorMessage != null && respuesta.ErrorMessage.Count() > 0)
 							{
-								bool consultar_nuevamente = (cufe_doc.Equals(respuesta.XmlDocumentKey) && tipo_doc != TipoDocumento.AcuseRecibo.GetHashCode()) ? true : false; 
-			
+								bool consultar_nuevamente = (cufe_doc.Equals(respuesta.XmlDocumentKey) && tipo_doc != TipoDocumento.AcuseRecibo.GetHashCode()) ? true : false;
+
 								if ((respuesta.ErrorMessage.Length > 0) && (!string.IsNullOrEmpty(respuesta.ErrorMessage.FirstOrDefault())) && consultar_nuevamente == true)
 								{
 									if (respuesta.ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento"))
@@ -279,7 +279,7 @@ namespace HGInetDIANServicios
 										if (respuesta_consulta.XmlBase64Bytes == null && respuesta.XmlBase64Bytes != null)
 											respuesta_consulta.XmlBase64Bytes = respuesta.XmlBase64Bytes;
 
-											respuesta = respuesta_consulta;
+										respuesta = respuesta_consulta;
 
 										string nom_archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
 
@@ -401,7 +401,7 @@ namespace HGInetDIANServicios
 								}
 							}
 
-							if (respuesta.ErrorMessage != null)
+							if (respuesta.ErrorMessage != null && respuesta.ErrorMessage.Count() > 0)
 							{
 								try
 								{

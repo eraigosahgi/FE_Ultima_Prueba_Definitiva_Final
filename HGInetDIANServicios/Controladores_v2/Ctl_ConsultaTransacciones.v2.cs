@@ -102,123 +102,123 @@ namespace HGInetDIANServicios
 					{
 						log_categoria = MensajeCategoria.ServicioDian;
 						log_accion = MensajeAccion.ninguna;
-						throw new ApplicationException("No se encontro trackid");	
+						throw new ApplicationException("No se encontro trackid");
 					}
 				}
 
 				if (resultado != null && resultado[0] != null)
+				{
+
+					if (string.IsNullOrEmpty(xml_archivo))
+						xml_archivo = string.Format("{0}", TrackId);
+
+					//Guardo la respuesta en XML
+					foreach (var respuesta in resultado)
 					{
 
-						if (string.IsNullOrEmpty(xml_archivo))
-							xml_archivo = string.Format("{0}", TrackId);
-
-						//Guardo la respuesta en XML
-						foreach (var respuesta in resultado)
+						if (respuesta.StatusCode.Equals("0") || respuesta.StatusCode.Equals("00") || respuesta.StatusCode.Equals("99"))
 						{
-
-							if (respuesta.StatusCode.Equals("0") || respuesta.StatusCode.Equals("00") || respuesta.StatusCode.Equals("99"))
+							if (respuesta.XmlBase64Bytes != null)
 							{
-								if (respuesta.XmlBase64Bytes != null)
+								//if(string.IsNullOrEmpty(xml_archivo))
+								//	xml_archivo = string.Format("{0}", respuesta.XmlFileName);
+
+								FileStream fs = null;
+
+								try
 								{
-									//if(string.IsNullOrEmpty(xml_archivo))
-									//	xml_archivo = string.Format("{0}", respuesta.XmlFileName);
-
-									FileStream fs = null;
-
-									try
+									//Guardo el Base64 de la Respuesta 
+									using (fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, xml_archivo),
+										FileMode.Create, FileAccess.ReadWrite))
 									{
-										//Guardo el Base64 de la Respuesta 
-										using (fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, xml_archivo),
-											FileMode.Create, FileAccess.ReadWrite))
-										{
-											BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
-											bw.Write(respuesta.XmlBase64Bytes);
+										BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
+										bw.Write(respuesta.XmlBase64Bytes);
 										bw.Close();
-											fs.Close();
-										}
+										fs.Close();
+									}
 
-										xml_archivo = string.Format("{0}-WS", xml_archivo);
+									xml_archivo = string.Format("{0}-WS", xml_archivo);
 
-									}
-									catch (Exception excepcion)
-									{
-										respuesta.StatusCode = "94";
-										respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion
-											.ConvertirLista(string.Format(
-												"No se guardo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}",
-												TrackId)).ToArray();
-										respuesta.IsValid = false;
-										log_categoria = MensajeCategoria.ServicioDian;
-										log_accion = MensajeAccion.consulta;
-										RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
-									}
-									finally
-									{
-										if (fs != null)
-											fs.Close();
-									}
 								}
-								else if (respuesta.StatusDescription.Equals("En proceso de validación"))
+								catch (Exception excepcion)
 								{
 									respuesta.StatusCode = "94";
-									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}", TrackId)).ToArray();
+									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion
+										.ConvertirLista(string.Format(
+											"No se guardo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}",
+											TrackId)).ToArray();
 									respuesta.IsValid = false;
+									log_categoria = MensajeCategoria.ServicioDian;
+									log_accion = MensajeAccion.consulta;
+									RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+								}
+								finally
+								{
+									if (fs != null)
+										fs.Close();
 								}
 							}
-							else if (respuesta.IsValid.Equals(false) && !string.IsNullOrEmpty(respuesta.StatusDescription) && !respuesta.StatusCode.Equals("66") && !respuesta.StatusDescription.Contains("Batch en proceso"))
-							{
-								respuesta.StatusCode = "99";
-								respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("Se generó inconsistencia en la Plataforma de la DIAN: {0}, Radicado:{1}", respuesta.StatusDescription, TrackId)).ToArray();
-							}
-							else
+							else if (respuesta.StatusDescription.Equals("En proceso de validación"))
 							{
 								respuesta.StatusCode = "94";
 								respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}", TrackId)).ToArray();
 								respuesta.IsValid = false;
 							}
-
 						}
-
-						// Guarda resultado del servicio web de consulta de la DIAN por TrackId
-						TextWriter writer = null;
-						try
+						else if (respuesta.IsValid.Equals(false) && !string.IsNullOrEmpty(respuesta.StatusDescription) && !respuesta.StatusCode.Equals("66") && !respuesta.StatusDescription.Contains("Batch en proceso"))
 						{
-							using (writer = new StreamWriter(string.Format(@"{0}\{1}.xml", ruta_xml, xml_archivo)))
-							{
-								var ser = new XmlSerializer(typeof(List<DianWSValidacionPrevia.DianResponse>));
-								ser.Serialize(writer, resultado);
-								writer.Close();
-							}
-						}
-						catch (Exception e)
-						{
-						}
-						finally
-						{
-							if (writer != null)
-								writer.Close();
-						}
-
-
-
-					}
-					else
-					{
-						log_categoria = MensajeCategoria.ServicioDian;
-						log_accion = MensajeAccion.consulta;
-						if (resultado[0] == null)
-						{
-							DianResponse respuesta = new DianResponse();
-							respuesta.StatusCode = "94";
-							respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}",TrackId)).ToArray();
-							respuesta.IsValid = false;
-							resultado[0]=respuesta;
+							respuesta.StatusCode = "99";
+							respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("Se generó inconsistencia en la Plataforma de la DIAN: {0}, Radicado:{1}", respuesta.StatusDescription, TrackId)).ToArray();
 						}
 						else
 						{
-							throw new ApplicationException("No se obtuvo respuesta de la Plataforma de la DIAN");
+							respuesta.StatusCode = "94";
+							respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}", TrackId)).ToArray();
+							respuesta.IsValid = false;
+						}
+
+					}
+
+					// Guarda resultado del servicio web de consulta de la DIAN por TrackId
+					TextWriter writer = null;
+					try
+					{
+						using (writer = new StreamWriter(string.Format(@"{0}\{1}.xml", ruta_xml, xml_archivo)))
+						{
+							var ser = new XmlSerializer(typeof(List<DianWSValidacionPrevia.DianResponse>));
+							ser.Serialize(writer, resultado);
+							writer.Close();
 						}
 					}
+					catch (Exception e)
+					{
+					}
+					finally
+					{
+						if (writer != null)
+							writer.Close();
+					}
+
+
+
+				}
+				else
+				{
+					log_categoria = MensajeCategoria.ServicioDian;
+					log_accion = MensajeAccion.consulta;
+					if (resultado[0] == null)
+					{
+						DianResponse respuesta = new DianResponse();
+						respuesta.StatusCode = "94";
+						respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}", TrackId)).ToArray();
+						respuesta.IsValid = false;
+						resultado[0] = respuesta;
+					}
+					else
+					{
+						throw new ApplicationException("No se obtuvo respuesta de la Plataforma de la DIAN");
+					}
+				}
 
 
 				return resultado;
@@ -257,7 +257,7 @@ namespace HGInetDIANServicios
 					resultado.CodigoEstadoDian = doc_valido.StatusCode;
 					resultado.EstadoDianDescripcion = doc_valido.StatusDescription;
 					resultado.Estado = EstadoDocumentoDian.Aceptado;
-					if (doc_valido.ErrorMessage != null)
+					if (doc_valido.ErrorMessage != null && doc_valido.ErrorMessage.Count() > 0)
 						resultado.Mensaje = LibreriaGlobalHGInet.Formato.Coleccion.ConvertListToString(doc_valido.ErrorMessage.ToList(), ";");
 				}
 				else

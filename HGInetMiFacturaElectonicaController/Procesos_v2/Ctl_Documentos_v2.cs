@@ -236,7 +236,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Calculo del CUFE no es correcto respecto al calculo de la plataforma que lo hace con los valores: {0}. Como resultado genera el CUFE: {1}, Por Favor validar y enviar de nuevo el documento", cadena_cufe, documento_result.CUFE), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
 								throw new ApplicationException(string.Format("Calculo del CUFE no es correcto respecto al calculo de la plataforma que lo hace con los valores: {0}. Como resultado genera el CUFE: {1}, Por Favor validar y enviar de nuevo el documento", cadena_cufe, documento_result.CUFE));
 							}
-							
+
 						}
 						else if (documento_obj.DocumentoFormato != null && documento_obj.DocumentoFormato.Codigo == 99 && documento_adquisi == false)
 						{
@@ -326,11 +326,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										{
 											documento_obj.DocumentoFormato.CamposPredeterminados.Add(formato);
 										}
-										
+
 									}
 									catch (Exception)
 									{
-									  
+
 									}
 								}
 								else
@@ -360,7 +360,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 							Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlPdf);
 						}
-						
+
 
 						// almacena Anexos enviados
 						if ((tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste) && documento_obj.ArchivoAnexos != null)
@@ -459,7 +459,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al obtener el Adquiriente Detalle. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
-							Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);							
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
 							throw excepcion;
 						}
 
@@ -483,7 +483,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						catch (Exception excepcion)
 						{
 							respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al guardar el documento. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
-							Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);							
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
 							throw excepcion;
 						}
 
@@ -536,7 +536,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 
 							// envía el mail de documentos al adquiriente
-							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode() )
+							if (respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
 							{
 								//Crea el attached para poder ser enviado en el correo con los demas archivos menos en nomina.
 								bool attached = false;
@@ -565,8 +565,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								bool enviar_correo = true;
 
 								//Se hace validacion si es documento de nomina y no tiene habilitado el envio de correo
-								if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && empresa.IntEnvioNominaMail == false || documento_obj.TipoOperacion == 3)
+								if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && empresa.IntEnvioNominaMail == false)
 									enviar_correo = false;
+
+								if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste && documento_obj.TipoOperacion != 3)
+								{
+									enviar_correo = false;
+								}
 
 								//Validacion para documentos diferentes de Nomina que no tengan correo electronico el adquiriente.
 								if (enviar_correo == true && (tipo_doc != TipoDocumento.Nomina || tipo_doc != TipoDocumento.NominaAjuste))
@@ -574,9 +579,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									if (string.IsNullOrWhiteSpace(documento_obj.DatosAdquiriente.Email) || documento_obj.DatosAdquiriente.Identificacion == "222222222222")
 										enviar_correo = false;
 								}
-									
 
-								if (((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo)) && (enviar_correo == true) )
+
+								if (((documentoBd.StrProveedorReceptor == null) || documentoBd.StrProveedorReceptor.Equals(Constantes.NitResolucionsinPrefijo)) && (enviar_correo == true))
 								{
 									//Registro el documento en la tabla correo para gestionarlo
 									try
@@ -585,7 +590,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										proceso_correo.Crear(documentoBd.StrIdSeguridad);
 									}
 									catch (Exception)
-									{}
+									{ }
 
 									//Envio de correo
 									respuesta = Envio(documento_obj, documentoBd, empresa, ref respuesta, ref documento_result);
@@ -594,7 +599,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 									{
 										Ctl_Log.Guardar(new ApplicationException("Envio Correo"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
 									}
-									
+
 
 
 									//Se registra el valor de la nota como pago si la empresa maneja pagos electronicos para que afecte el saldo de la factura a pagar
@@ -650,7 +655,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 										//int estado_doc = Ctl_Documento.ObtenerCategoria(documentoBd.IntIdEstado);
 										//string mensaje = (string.IsNullOrEmpty(respuesta.IdPeticion.ToString()) ? "Reenvio de Documento" : "Proceso Completo");
-									 // //clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, empresa_obligado.StrIdentificacion, proceso, TipoRegistro.Proceso, procedencia, usuario, "No fue posible el envio del documento, favor validar con el Adquiriente ó hacer el reenvío del documento desde nuestra Plataforma ", string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
+										// //clase_auditoria.Crear(documento.StrIdSeguridad, Guid.Empty, empresa_obligado.StrIdentificacion, proceso, TipoRegistro.Proceso, procedencia, usuario, "No fue posible el envio del documento, favor validar con el Adquiriente ó hacer el reenvío del documento desde nuestra Plataforma ", string.Format("{0}", excepcion.InnerException), documento.StrPrefijo, Convert.ToString(documento.IntNumero), estado_doc);
 										//clase_auditoria.Crear(documentoBd.StrIdSeguridad, Guid.Empty, empresa.StrIdentificacion, ProcesoEstado.Finalizacion, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, mensaje, string.Empty, null, documentoBd.StrPrefijo, Convert.ToString(documentoBd.IntNumero), estado_doc);
 									}
 									catch (Exception) { }
