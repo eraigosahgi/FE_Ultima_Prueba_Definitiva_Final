@@ -27,12 +27,16 @@ GO
 CREATE TABLE TblEmpresaIntegradores(
 	StrIdentificacionEmp varchar(50) NOT NULL,
 	StrIdentificacionInt varchar(50) NOT NULL,
+	StrIdSeguridad uniqueidentifier NOT NULL,
  CONSTRAINT PK_TblEmpresaIntegradores PRIMARY KEY CLUSTERED 
 (
 	StrIdentificacionEmp ASC,
 	StrIdentificacionInt ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+
+ALTER TABLE TblEmpresaIntegradores ADD  CONSTRAINT DF_TblEmpresaIntegradores_StrIdSeguridad  DEFAULT (newid()) FOR StrIdSeguridad
 GO
 
 ALTER TABLE TblEmpresaIntegradores  WITH CHECK ADD  CONSTRAINT FK_TblEmpresaIntegradores_TblEmpresas FOREIGN KEY(StrIdentificacionEmp)

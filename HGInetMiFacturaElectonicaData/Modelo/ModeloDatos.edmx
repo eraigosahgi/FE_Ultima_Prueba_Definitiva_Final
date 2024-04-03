@@ -126,6 +126,7 @@
           </Key>
           <Property Name="StrIdentificacionEmp" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StrIdentificacionInt" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StrIdSeguridad" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresas">
           <Key>
@@ -1217,12 +1218,17 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblEmpresaSucursal" EntitySet="TblEmpresaSucursal" />
           </AssociationSet>
+          <EntitySet Name="TblEmpresaIntegradores" EntityType="Modelo.TblEmpresaIntegradores" />
           <EntitySet Name="TblIntegradores" EntityType="Modelo.TblIntegradores" />
-          <AssociationSet Name="FK_TblIntegradores_TblEmpresas" Association="Modelo.FK_TblIntegradores_TblEmpresas">
+          <AssociationSet Name="FK_TblEmpresaIntegradores_TblEmpresas" Association="Modelo.FK_TblEmpresaIntegradores_TblEmpresas">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
-            <End Role="TblIntegradores" EntitySet="TblIntegradores" />
+            <End Role="TblEmpresaIntegradores" EntitySet="TblEmpresaIntegradores" />
           </AssociationSet>
-          <AssociationSet Name="TblEmpresaIntegradores" Association="Modelo.TblEmpresaIntegradores">
+          <AssociationSet Name="FK_TblEmpresaIntegradores_TblIntegradores" Association="Modelo.FK_TblEmpresaIntegradores_TblIntegradores">
+            <End Role="TblIntegradores" EntitySet="TblIntegradores" />
+            <End Role="TblEmpresaIntegradores" EntitySet="TblEmpresaIntegradores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TblIntegradores_TblEmpresas" Association="Modelo.FK_TblIntegradores_TblEmpresas">
             <End Role="TblEmpresas" EntitySet="TblEmpresas" />
             <End Role="TblIntegradores" EntitySet="TblIntegradores" />
           </AssociationSet>
@@ -1638,9 +1644,9 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="IntTipoOperador" Type="Int32" Nullable="false" />
           <Property Name="IntEnvioSms" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="TblEmpresaSucursal" Relationship="Modelo.FK_TblEmpresaSucursal_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresaSucursal" />
+          <NavigationProperty Name="TblEmpresaIntegradores" Relationship="Modelo.FK_TblEmpresaIntegradores_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresaIntegradores" />
           <NavigationProperty Name="TblIntegradores" Relationship="Modelo.FK_TblIntegradores_TblEmpresas" FromRole="TblEmpresas" ToRole="TblIntegradores" />
-          <NavigationProperty Name="TblIntegradores1" Relationship="Modelo.TblEmpresaIntegradores" FromRole="TblEmpresas" ToRole="TblIntegradores" />
-        </EntityType>
+          </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
           <End Type="Modelo.TblDocumentos" Role="TblDocumentos" Multiplicity="*" />
@@ -2130,6 +2136,17 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TblEmpresaIntegradores">
+          <Key>
+            <PropertyRef Name="StrIdentificacionEmp" />
+            <PropertyRef Name="StrIdentificacionInt" />
+          </Key>
+          <Property Name="StrIdentificacionEmp" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrIdentificacionInt" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblEmpresaIntegradores_TblEmpresas" FromRole="TblEmpresaIntegradores" ToRole="TblEmpresas" />
+          <NavigationProperty Name="TblIntegradores" Relationship="Modelo.FK_TblEmpresaIntegradores_TblIntegradores" FromRole="TblEmpresaIntegradores" ToRole="TblIntegradores" />
+        </EntityType>
         <EntityType Name="TblIntegradores">
           <Key>
             <PropertyRef Name="StrIdentificacion" />
@@ -2137,9 +2154,33 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <Property Name="StrIdentificacion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="StrRazonSocial" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="IntId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="TblEmpresaIntegradores" Relationship="Modelo.FK_TblEmpresaIntegradores_TblIntegradores" FromRole="TblIntegradores" ToRole="TblEmpresaIntegradores" />
           <NavigationProperty Name="TblEmpresas" Relationship="Modelo.FK_TblIntegradores_TblEmpresas" FromRole="TblIntegradores" ToRole="TblEmpresas" />
-          <NavigationProperty Name="TblEmpresas1" Relationship="Modelo.TblEmpresaIntegradores" FromRole="TblIntegradores" ToRole="TblEmpresas" />
         </EntityType>
+        <Association Name="FK_TblEmpresaIntegradores_TblEmpresas">
+          <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
+          <End Type="Modelo.TblEmpresaIntegradores" Role="TblEmpresaIntegradores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblEmpresas">
+              <PropertyRef Name="StrIdentificacion" />
+            </Principal>
+            <Dependent Role="TblEmpresaIntegradores">
+              <PropertyRef Name="StrIdentificacionEmp" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TblEmpresaIntegradores_TblIntegradores">
+          <End Type="Modelo.TblIntegradores" Role="TblIntegradores" Multiplicity="1" />
+          <End Type="Modelo.TblEmpresaIntegradores" Role="TblEmpresaIntegradores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TblIntegradores">
+              <PropertyRef Name="StrIdentificacion" />
+            </Principal>
+            <Dependent Role="TblEmpresaIntegradores">
+              <PropertyRef Name="StrIdentificacionInt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TblIntegradores_TblEmpresas">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
           <End Type="Modelo.TblIntegradores" Role="TblIntegradores" Multiplicity="0..1" />
@@ -2151,10 +2192,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
               <PropertyRef Name="StrIdentificacion" />
             </Dependent>
           </ReferentialConstraint>
-        </Association>
-        <Association Name="TblEmpresaIntegradores">
-          <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="*" />
-          <End Type="Modelo.TblIntegradores" Role="TblIntegradores" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -2715,6 +2752,15 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="TblEmpresaIntegradores">
+            <EntityTypeMapping TypeName="Modelo.TblEmpresaIntegradores">
+              <MappingFragment StoreEntitySet="TblEmpresaIntegradores">
+                <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+                <ScalarProperty Name="StrIdentificacionInt" ColumnName="StrIdentificacionInt" />
+                <ScalarProperty Name="StrIdentificacionEmp" ColumnName="StrIdentificacionEmp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="TblIntegradores">
             <EntityTypeMapping TypeName="Modelo.TblIntegradores">
               <MappingFragment StoreEntitySet="TblIntegradores">
@@ -2724,14 +2770,6 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="TblEmpresaIntegradores" TypeName="Modelo.TblEmpresaIntegradores" StoreEntitySet="TblEmpresaIntegradores">
-            <EndProperty Name="TblIntegradores">
-              <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacionInt" />
-            </EndProperty>
-            <EndProperty Name="TblEmpresas">
-              <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacionEmp" />
-            </EndProperty>
-          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -230,6 +230,9 @@
     <Compile Include="Modelo\TblDocumentos.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\TblEmpresaIntegradores.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\TblEmpresas.cs">
       <DependentUpon>ModeloDatos.tt</DependentUpon>
     </Compile>

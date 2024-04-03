@@ -17,15 +17,15 @@ namespace HGInetMiFacturaElectonicaData.Modelo
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public TblIntegradores()
         {
-            this.TblEmpresas1 = new HashSet<TblEmpresas>();
+            this.TblEmpresaIntegradores = new HashSet<TblEmpresaIntegradores>();
         }
     
         public string StrIdentificacion { get; set; }
         public string StrRazonSocial { get; set; }
         public int IntId { get; set; }
     
-        public virtual TblEmpresas TblEmpresas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TblEmpresas> TblEmpresas1 { get; set; }
+        public virtual ICollection<TblEmpresaIntegradores> TblEmpresaIntegradores { get; set; }
+        public virtual TblEmpresas TblEmpresas { get; set; }
     }
 }
