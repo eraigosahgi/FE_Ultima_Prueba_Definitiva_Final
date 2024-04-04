@@ -4191,6 +4191,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				tbl_documento.StrVersion = documento_obj.VersionAplicativo;
 				tbl_documento.StrProveedorEmisor = Constantes.NitResolucionsinPrefijo;
 				tbl_documento.IntVersionDian = empresa.IntVersionDian;
+				tbl_documento.StrIdIntegrador = documento_obj.IdentificacionIntegrador;
 
 				//validacion si es un formato de integrador para guardar los campos predeterminados
 				//if (documento_obj.DocumentoFormato != null && documento_obj.DocumentoFormato.Codigo > 0 && empresa.IntVersionDian == 2)
