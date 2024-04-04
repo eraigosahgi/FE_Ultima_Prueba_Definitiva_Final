@@ -2270,7 +2270,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 						options: {
 							icon: "refresh",
 							onClick: function () {
-								consultarSucursales();
+								consultarSucursales(Datos_Idententificacion);
 							}
 						}
 					})
@@ -2593,7 +2593,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				if (response.data == "") {
 					DevExpress.ui.notify({ message: "Registro guardado con exito.", position: { my: "center top", at: "center top" } }, "success", 1500);
 
-					setTimeout(consultarSucursales(), 1000);
+					setTimeout(consultarSucursales(Datos_Idententificacion), 1000);
 				}
 				else {
 					DevExpress.ui.notify(response.data, 'error', 5000);
@@ -2623,7 +2623,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				if (response.data == "") {
 					DevExpress.ui.notify({ message: "Registro guardado con exito.", position: { my: "center top", at: "center top" } }, "success", 1500);
 
-					setTimeout(consultarSucursales(), 1000);
+					setTimeout(consultarSucursales(Datos_Idententificacion), 1000);
 				}
 				else {
 					DevExpress.ui.notify(response.data, 'error', 5000);
