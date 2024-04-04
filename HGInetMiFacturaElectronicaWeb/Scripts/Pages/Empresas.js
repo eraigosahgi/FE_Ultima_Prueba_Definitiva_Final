@@ -2198,9 +2198,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				//},
 				editing: {
 					mode: "popup",
-					allowUpdating: false,
+					allowUpdating: $scope.Admin,
 					allowAdding: $scope.Admin,
-					allowDeleting: $scope.Admin,
+					allowDeleting: false,
 					popup: {
 						title: "Datos de la sucursal",
 						showTitle: true,
@@ -2241,14 +2241,20 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				},
 				onRowValidating: function (e) {
 					console.log(e.newData);
-					if (validarVista(e.newData)) {
-
-						e.isValid = false;
+					if (e.key > 0) {
+						//Edicion
+						ActualizarSucursal(e);
 					} else {
+						//Nuevo
+						if (validarVista(e.newData)) {
 
-						e.isValid = true;
-						GuardarSucursal(e.newData);
+							e.isValid = false;
+						} else {
 
+							e.isValid = true;
+							GuardarSucursal(e.newData);
+
+						}
 					}
 				},
 				onRowRemoving(e) {
@@ -2601,35 +2607,32 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 		});
 	}
 
-	function EliminarSucursal(datos) {
+	function ActualizarSucursal(datos) {
 		var data = {
 			empresa: codigo_facturador,
-			id: datos.id,
-			sucursal: datos.sucursal
+			id: datos.key,
+			sucursal: datos.newData.sucursal
 		};
 
 
 		$("#wait").show();
-		$http({ url: '/api/EliminarEmpresaSucursal?empresa=' + codigo_facturador + '&id=' + datos.id, method: 'Delete' }).then(function (response) {
+		$http({ url: '/api/ActualizarEmpresaSucursal', data: data, method: 'Put' }).then(function (response) {
 			$("#wait").hide();
 			try {
 
 				if (response.data == "") {
-					DevExpress.ui.notify({ message: "Registro eliminado con exito.", position: { my: "center top", at: "center top" } }, "success", 1500);
+					DevExpress.ui.notify({ message: "Registro guardado con exito.", position: { my: "center top", at: "center top" } }, "success", 1500);
 
 					setTimeout(consultarSucursales(), 1000);
 				}
 				else {
-					setTimeout(consultarSucursales(), 1000);
 					DevExpress.ui.notify(response.data, 'error', 5000);
 				}
 			} catch (err) {
-				setTimeout(consultarSucursales(), 1000);
 				DevExpress.ui.notify(err.message, 'error', 3000);
 			}
 		}, function errorCallback(response) {
 			$('#wait').hide();
-			setTimeout(consultarSucursales(), 1000);
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
 	}

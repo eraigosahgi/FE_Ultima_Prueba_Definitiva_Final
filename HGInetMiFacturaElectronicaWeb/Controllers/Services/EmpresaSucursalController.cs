@@ -94,9 +94,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
-		[HttpDelete]
-		[Route("api/EliminarEmpresaSucursal")]
-		public IHttpActionResult EliminarEmpresaSucursal(string empresa, int id)
+		[HttpPut]
+		[Route("api/ActualizarEmpresaSucursal")]
+		public IHttpActionResult ActualizarEmpresaSucursal(Sucursales sucursal)
 		{
 			Sesion.ValidarSesion();
 
@@ -106,19 +106,16 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				TblEmpresaSucursal empresa_sucursal = new TblEmpresaSucursal();
 
+				var sucur = _Sucursal.Obtener(sucursal.empresa, sucursal.id);
 
-				var sucur = _Sucursal.Obtener(empresa, id);
+				sucur.StrDescSucursal = sucursal.sucursal;
 
-				_Sucursal.Delete(sucur);
+				_Sucursal.Edit(sucur);
 
 				return Ok();
 			}
 			catch (Exception ex)
-			{
-				if (id == 0)
-				{
-					throw new ApplicationException("No se puede eliminar la sucursal 0");
-				}
+			{				
 				throw ex;
 			}
 		}
