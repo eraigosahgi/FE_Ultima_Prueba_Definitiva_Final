@@ -37,7 +37,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			context.Configuration.LazyLoadingEnabled = LazyLoading;
 
 			TblEmpresaSucursal datos = (from item in context.TblEmpresaSucursal
-											  where item.StrIdentificacion.Equals(Identificacion)
+											  where item.StrIdentificacion.Equals(Identificacion) && item.IntCodigoSucursal == id_sucursal
 											  select item).FirstOrDefault();
 
 			return datos;
