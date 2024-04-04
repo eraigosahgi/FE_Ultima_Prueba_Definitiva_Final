@@ -313,6 +313,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				return item_respuesta;
 			}
 
+			//**Se agrega validacion y asignacion del aplicativo emisor del documento.
+
+			DateTime fecha_control = new DateTime(2024, 05, 06, 0, 0, 0);
+			Ctl_EmpresaIntegradores Emp_int = new Ctl_EmpresaIntegradores();
+
+			if (string.IsNullOrWhiteSpace(item.IdentificacionIntegrador) && (Fecha.GetFecha() <= fecha_control))
+			{
+				item.IdentificacionIntegrador = Emp_int.Obtener(facturador_electronico.StrIdentificacion).FirstOrDefault().StrIdentificacionInt;//facturador_electronico.TblEmpresaIntegradores.FirstOrDefault().StrIdentificacionInt;
+			}
+			else if (!string.IsNullOrWhiteSpace(item.IdentificacionIntegrador))
+			{
+				List<TblEmpresaIntegradores> integradores = Emp_int.Obtener(facturador_electronico.StrIdentificacion);
+				if (!integradores.Select(x => x.StrIdentificacionInt == item.IdentificacionIntegrador && x.StrIdentificacionEmp == facturador_electronico.StrIdentificacion).FirstOrDefault())
+					throw new ApplicationException(string.Format("La identificación del Integrador '{0}' correspondiente al aplicativo emisor no esta habilitado en nuestra plataforma", item.IdentificacionIntegrador));
+			}
+			else
+			{
+				throw new ApplicationException("No se encontró información del Integrador correspondiente al aplicativo emisor, por favor indicar a su proveedor de software de esta inconsistencia");
+			}
+
 			//Obtiene el tipo de Documento que se va afectar con este ajuste
 			TipoDocumento tipo_doc_pred = TipoDocumento.Nomina;
 

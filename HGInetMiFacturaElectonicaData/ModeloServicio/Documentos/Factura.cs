@@ -330,6 +330,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public InformacionPos DatosPos { get; set; }
 
+		/// <summary>
+		/// Identificacion de la empresa generadora (Integrador) del documento
+		/// </summary>
+		public string IdentificacionIntegrador { get; set; }
+
 
 		#endregion
 
