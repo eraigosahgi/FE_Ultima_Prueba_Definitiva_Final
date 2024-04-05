@@ -36,6 +36,7 @@
       <xs:element minOccurs="0" name="FechaVence" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FormaPago" type="xs:int" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />
+      <xs:element minOccurs="0" name="IdentificacionIntegrador" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdentificacionProveedor" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="LineaNegocio" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
@@ -116,6 +117,7 @@
       <xs:element minOccurs="0" name="CodigoDepartamento" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CodigoPais" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="CodigoPostal" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoSucursal" type="xs:int" />
       <xs:element minOccurs="0" name="CodigoTributo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Departamento" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Direccion" nillable="true" type="xs:string" />
@@ -386,6 +388,7 @@
       <xs:element minOccurs="0" name="UrlAnexo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UrlAuditoria" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UrlPdf" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UrlXmlAttachUbl" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UrlXmlUbl" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>

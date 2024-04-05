@@ -21,17 +21,17 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://habilitacion.hgidocs.co/wcf/nomina.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="nomina.xsd" MetadataType="Schema" ID="398d3d7b-4c42-42b8-ada7-dc54b6601d8d" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd1" />
-    <MetadataFile FileName="nomina1.xsd" MetadataType="Schema" ID="69c01cb4-109d-4eef-a22a-011615f9b046" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd3" />
-    <MetadataFile FileName="nomina2.xsd" MetadataType="Schema" ID="939c2fe4-b081-4c13-8cef-03cb77413f7a" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd2" />
-    <MetadataFile FileName="nomina3.xsd" MetadataType="Schema" ID="965111ea-3003-4296-a4a6-b882b026b62a" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd0" />
-    <MetadataFile FileName="nomina4.xsd" MetadataType="Schema" ID="fda09009-77f6-4187-b122-241657592fb8" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd4" />
-    <MetadataFile FileName="nomina.disco" MetadataType="Disco" ID="ef1f25f2-d135-4ac7-bc37-6053894c2352" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?disco" />
-    <MetadataFile FileName="nomina.wsdl" MetadataType="Wsdl" ID="03f445a2-d1f3-4374-8b85-6be877a17323" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?wsdl" />
-    <MetadataFile FileName="nomina1.wsdl" MetadataType="Wsdl" ID="776a1b96-fcda-4ebf-bb7c-111f3c125c63" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="nomina5.xsd" MetadataType="Schema" ID="698e0baa-24dc-470c-a7e3-b0bf4e166a7e" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/nomina.svc?xsd=xsd2" />
+    <MetadataFile FileName="nomina1.disco" MetadataType="Disco" ID="cbffa7eb-2340-4ae6-ab4b-3f04b16eceb2" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/nomina.svc?disco" />
+    <MetadataFile FileName="nomina51.xsd" MetadataType="Schema" ID="5a5f769d-d748-4339-bb0d-b101742cce07" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/nomina.svc?xsd=xsd4" />
+    <MetadataFile FileName="nomina2.wsdl" MetadataType="Wsdl" ID="e0288821-9cda-4a11-b22f-434d95688e5f" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/nomina.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="nomina52.xsd" MetadataType="Schema" ID="7e374656-7802-41c9-9cbd-df852ead4b53" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/nomina.svc?xsd=xsd3" />
+    <MetadataFile FileName="nomina53.xsd" MetadataType="Schema" ID="dbc30f85-c3dd-4b44-b9fe-664d0944f354" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/nomina.svc?xsd=xsd1" />
+    <MetadataFile FileName="nomina54.xsd" MetadataType="Schema" ID="14fea2dd-1bf7-43f9-b599-00b16473b35c" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/nomina.svc?xsd=xsd0" />
+    <MetadataFile FileName="nomina21.wsdl" MetadataType="Wsdl" ID="101c5adf-7663-4ddf-bcd3-37b5fbcc314d" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/nomina.svc?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

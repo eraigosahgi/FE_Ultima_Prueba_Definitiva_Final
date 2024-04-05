@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="FYV3mrNvfHhhWfbR2Lv8snl/1p8=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="3ufTChMhzQog+h9w1RUwxlIsjXU=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="soap5">
       <properties>
@@ -221,10 +221,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="soap5" contract="ServicioListaFe.ServicioListaFe" bindingType="basicHttpBinding" address="http://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc" bindingConfiguration="soap5">
+    <endpoint name="soap5" contract="ServicioListaFe.ServicioListaFe" bindingType="basicHttpBinding" address="http://habilitacion.hgidocs.co/wcf/listaFe.svc" bindingConfiguration="soap5">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc</serializedValue>
+          <serializedValue>http://habilitacion.hgidocs.co/wcf/listaFe.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -306,10 +306,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="soap13" contract="ServicioListaFe.ServicioListaFe" bindingType="basicHttpBinding" address="https://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc" bindingConfiguration="soap13">
+    <endpoint name="soap13" contract="ServicioListaFe.ServicioListaFe" bindingType="basicHttpBinding" address="https://habilitacion.hgidocs.co/wcf/listaFe.svc" bindingConfiguration="soap13">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>https://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc</serializedValue>
+          <serializedValue>https://habilitacion.hgidocs.co/wcf/listaFe.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

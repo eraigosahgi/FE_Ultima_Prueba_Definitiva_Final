@@ -132,32 +132,32 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioAcuseRecibo\acuserecibo.wsdl" />
-    <None Include="Service References\ServicioAcuseRecibo\acuserecibo.xsd">
+    <None Include="Service References\ServicioAcuseRecibo\acuserecibo2.wsdl" />
+    <None Include="Service References\ServicioAcuseRecibo\acuserecibo2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioAcuseRecibo\acuserecibo1.wsdl" />
-    <None Include="Service References\ServicioAcuseRecibo\acuserecibo1.xsd">
+    <None Include="Service References\ServicioAcuseRecibo\acuserecibo21.wsdl" />
+    <None Include="Service References\ServicioAcuseRecibo\acuserecibo21.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioAcuseRecibo\HGInetFeAPI.ServicioAcuseRecibo.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioAjusteNomina\ajustenomina.wsdl" />
-    <None Include="Service References\ServicioAjusteNomina\ajustenomina.xsd">
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina2.wsdl" />
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina21.wsdl" />
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina5.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioAjusteNomina\ajustenomina1.wsdl" />
-    <None Include="Service References\ServicioAjusteNomina\ajustenomina1.xsd">
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina51.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioAjusteNomina\ajustenomina2.xsd">
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina52.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioAjusteNomina\ajustenomina3.xsd">
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina53.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioAjusteNomina\ajustenomina4.xsd">
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina54.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioAjusteNomina\HGInetFeAPI.ServicioAjusteNomina.RecepcionResponse.datasource">
@@ -166,18 +166,18 @@
     <None Include="Service References\ServicioAjusteNomina\HGInetFeAPI.ServicioAjusteNomina.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos.wsdl" />
-    <None Include="Service References\ServicioDocumento\documentos.xsd">
+    <None Include="Service References\ServicioDocumento\documentos2.wsdl" />
+    <None Include="Service References\ServicioDocumento\documentos21.wsdl" />
+    <None Include="Service References\ServicioDocumento\documentos4.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos1.wsdl" />
-    <None Include="Service References\ServicioDocumento\documentos1.xsd">
+    <None Include="Service References\ServicioDocumento\documentos41.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos2.xsd">
+    <None Include="Service References\ServicioDocumento\documentos42.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioDocumento\documentos3.xsd">
+    <None Include="Service References\ServicioDocumento\documentos43.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroResponse.datasource">
@@ -265,18 +265,18 @@
     <None Include="Service References\ServicioListaFe\HGInetFeAPI.ServicioListaFe.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioListaFe\listaFe.wsdl" />
-    <None Include="Service References\ServicioListaFe\listaFe.xsd">
+    <None Include="Service References\ServicioListaFe\listaFe2.wsdl" />
+    <None Include="Service References\ServicioListaFe\listaFe21.wsdl" />
+    <None Include="Service References\ServicioListaFe\listaFe4.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioListaFe\listaFe1.wsdl" />
-    <None Include="Service References\ServicioListaFe\listaFe1.xsd">
+    <None Include="Service References\ServicioListaFe\listaFe41.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioListaFe\listaFe2.xsd">
+    <None Include="Service References\ServicioListaFe\listaFe42.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioListaFe\listaFe3.xsd">
+    <None Include="Service References\ServicioListaFe\listaFe43.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioNomina\HGInetFeAPI.ServicioNomina.RecepcionResponse.datasource">
@@ -285,21 +285,21 @@
     <None Include="Service References\ServicioNomina\HGInetFeAPI.ServicioNomina.TestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ServicioNomina\nomina.wsdl" />
-    <None Include="Service References\ServicioNomina\nomina.xsd">
+    <None Include="Service References\ServicioNomina\nomina2.wsdl" />
+    <None Include="Service References\ServicioNomina\nomina21.wsdl" />
+    <None Include="Service References\ServicioNomina\nomina5.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNomina\nomina1.wsdl" />
-    <None Include="Service References\ServicioNomina\nomina1.xsd">
+    <None Include="Service References\ServicioNomina\nomina51.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNomina\nomina2.xsd">
+    <None Include="Service References\ServicioNomina\nomina52.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNomina\nomina3.xsd">
+    <None Include="Service References\ServicioNomina\nomina53.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ServicioNomina\nomina4.xsd">
+    <None Include="Service References\ServicioNomina\nomina54.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServicioNotaCredito\HGInetFeAPI.ServicioNotaCredito.ObtenerPorFechasAdquirienteResponse.datasource">
@@ -478,9 +478,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioAcuseRecibo\acuserecibo.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ServicioAcuseRecibo\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -557,12 +554,6 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioDocumento\documentos.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioListaFe\listaFe.disco" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioListaFe\configuration91.svcinfo" />
@@ -646,12 +637,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ServicioAjusteNomina\ajustenomina.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ServicioNomina\nomina.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos11.disco" />
   </ItemGroup>
   <ItemGroup>
@@ -665,6 +650,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ServicioEmpresas\empresas1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAcuseRecibo\acuserecibo1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioDocumento\documentos1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioListaFe\listaFe1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNomina\nomina1.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

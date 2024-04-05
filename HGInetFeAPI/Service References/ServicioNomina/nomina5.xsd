@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:import schemaLocation="https://habilitacion.mifacturaenlinea.com.co/wcf/nomina.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+  <xs:import schemaLocation="https://habilitacion.hgidocs.co/wcf/nomina.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="https://habilitacion.hgidocs.co/wcf/nomina.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="https://habilitacion.hgidocs.co/wcf/nomina.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
   <xs:complexType name="ArrayOfNomina">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="Nomina" nillable="true" type="tns:Nomina" />
@@ -28,6 +28,7 @@
       <xs:element minOccurs="0" name="FechaGen" type="xs:dateTime" />
       <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="FechasPagos" nillable="true" type="q1:ArrayOfdateTime" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />
+      <xs:element minOccurs="0" name="IdentificacionIntegrador" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
       <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Notas" nillable="true" type="q2:ArrayOfstring" />
       <xs:element minOccurs="0" name="NumeroResolucion" nillable="true" type="xs:string" />
@@ -234,6 +235,7 @@
   <xs:complexType name="Empleador">
     <xs:sequence>
       <xs:element minOccurs="0" name="CiudadNombre" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodigoSucursal" type="xs:int" />
       <xs:element minOccurs="0" name="DV" type="xs:int" />
       <xs:element minOccurs="0" name="DepartamentoEstado" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="DepartamentoNombre" nillable="true" type="xs:string" />
@@ -327,9 +329,27 @@
   <xs:element name="FormatoCampo" nillable="true" type="tns:FormatoCampo" />
   <xs:complexType name="TasaCambio">
     <xs:sequence>
+      <xs:element minOccurs="0" name="DescuentoDetalleCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="FctConvCop" type="xs:decimal" />
       <xs:element minOccurs="0" name="FechaTrm" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ImpOtroCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="MntDctoCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="MntImpCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="MntRcgoCop" type="xs:decimal" />
       <xs:element minOccurs="0" name="Moneda" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RecargoDetalleCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteFueCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteIcaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ReteIvaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SubTotalCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotAnticiposCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotBolCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotIncCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotIvaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotalBrutoFacturaCop" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotalNetoFacturaCop" type="xs:decimal" />
       <xs:element minOccurs="0" name="Valor" type="xs:decimal" />
+      <xs:element minOccurs="0" name="VlrPagarCop" type="xs:decimal" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="TasaCambio" nillable="true" type="tns:TasaCambio" />
@@ -371,6 +391,7 @@
       <xs:element minOccurs="0" name="UrlAnexo" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UrlAuditoria" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UrlPdf" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UrlXmlAttachUbl" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="UrlXmlUbl" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>

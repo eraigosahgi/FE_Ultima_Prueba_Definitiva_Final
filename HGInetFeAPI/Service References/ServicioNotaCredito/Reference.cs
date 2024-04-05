@@ -93,6 +93,9 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         private System.Guid IdPlanField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionIntegradorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string IdentificacionProveedorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -481,6 +484,19 @@ namespace HGInetFeAPI.ServicioNotaCredito {
                 if ((this.IdPlanField.Equals(value) != true)) {
                     this.IdPlanField = value;
                     this.RaisePropertyChanged("IdPlan");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionIntegrador {
+            get {
+                return this.IdentificacionIntegradorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionIntegradorField, value) != true)) {
+                    this.IdentificacionIntegradorField = value;
+                    this.RaisePropertyChanged("IdentificacionIntegrador");
                 }
             }
         }
@@ -966,6 +982,9 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         private string CodigoPostalField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int CodigoSucursalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CodigoTributoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1115,6 +1134,19 @@ namespace HGInetFeAPI.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.CodigoPostalField, value) != true)) {
                     this.CodigoPostalField = value;
                     this.RaisePropertyChanged("CodigoPostal");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int CodigoSucursal {
+            get {
+                return this.CodigoSucursalField;
+            }
+            set {
+                if ((this.CodigoSucursalField.Equals(value) != true)) {
+                    this.CodigoSucursalField = value;
+                    this.RaisePropertyChanged("CodigoSucursal");
                 }
             }
         }
@@ -1601,13 +1633,25 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaCredito.CampoValor> CamposSectorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioNotaCredito.Tercero DatosBeneficiarioField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaCredito.ReferenciaDocumento> DocumentosreferenciaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaFinField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaIniField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaCredito.CampoValor> ParametrosDescargaAdjuntosField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaCredito.CampoValor> ParametrosWebServiceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int TipoOperacionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string URLDescargaAdjuntosField;
@@ -1639,6 +1683,19 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioNotaCredito.Tercero DatosBeneficiario {
+            get {
+                return this.DatosBeneficiarioField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DatosBeneficiarioField, value) != true)) {
+                    this.DatosBeneficiarioField = value;
+                    this.RaisePropertyChanged("DatosBeneficiario");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public System.Collections.Generic.List<HGInetFeAPI.ServicioNotaCredito.ReferenciaDocumento> Documentosreferencia {
             get {
                 return this.DocumentosreferenciaField;
@@ -1647,6 +1704,32 @@ namespace HGInetFeAPI.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.DocumentosreferenciaField, value) != true)) {
                     this.DocumentosreferenciaField = value;
                     this.RaisePropertyChanged("Documentosreferencia");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaFin {
+            get {
+                return this.FechaFinField;
+            }
+            set {
+                if ((this.FechaFinField.Equals(value) != true)) {
+                    this.FechaFinField = value;
+                    this.RaisePropertyChanged("FechaFin");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaIni {
+            get {
+                return this.FechaIniField;
+            }
+            set {
+                if ((this.FechaIniField.Equals(value) != true)) {
+                    this.FechaIniField = value;
+                    this.RaisePropertyChanged("FechaIni");
                 }
             }
         }
@@ -1673,6 +1756,19 @@ namespace HGInetFeAPI.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.ParametrosWebServiceField, value) != true)) {
                     this.ParametrosWebServiceField = value;
                     this.RaisePropertyChanged("ParametrosWebService");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int TipoOperacion {
+            get {
+                return this.TipoOperacionField;
+            }
+            set {
+                if ((this.TipoOperacionField.Equals(value) != true)) {
+                    this.TipoOperacionField = value;
+                    this.RaisePropertyChanged("TipoOperacion");
                 }
             }
         }
@@ -3428,6 +3524,9 @@ namespace HGInetFeAPI.ServicioNotaCredito {
         private string UrlPdfField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlXmlAttachUblField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UrlXmlUblField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -3826,6 +3925,19 @@ namespace HGInetFeAPI.ServicioNotaCredito {
                 if ((object.ReferenceEquals(this.UrlPdfField, value) != true)) {
                     this.UrlPdfField = value;
                     this.RaisePropertyChanged("UrlPdf");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlXmlAttachUbl {
+            get {
+                return this.UrlXmlAttachUblField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlXmlAttachUblField, value) != true)) {
+                    this.UrlXmlAttachUblField = value;
+                    this.RaisePropertyChanged("UrlXmlAttachUbl");
                 }
             }
         }

@@ -21,16 +21,16 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://habilitacion.hgidocs.co/wcf/listaFe.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="listaFe.disco" MetadataType="Disco" ID="15452683-52e9-42de-a5af-ff7a5a577a45" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc?disco" />
-    <MetadataFile FileName="listaFe.wsdl" MetadataType="Wsdl" ID="c0e1fa1d-45ee-4f4a-80c6-5512e1d44627" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc?wsdl=wsdl0" />
-    <MetadataFile FileName="listaFe.xsd" MetadataType="Schema" ID="04a770f4-4d96-452e-b76f-31937f9bb567" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc?xsd=xsd3" />
-    <MetadataFile FileName="listaFe1.xsd" MetadataType="Schema" ID="c3b36cdd-fc10-412f-b924-a85f1db8fe82" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc?xsd=xsd2" />
-    <MetadataFile FileName="listaFe2.xsd" MetadataType="Schema" ID="3fb9a2f2-e844-4758-a058-827ddc7d8da5" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc?xsd=xsd1" />
-    <MetadataFile FileName="listaFe3.xsd" MetadataType="Schema" ID="a5961c19-0742-4ede-a2f9-6cb93b570204" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc?xsd=xsd0" />
-    <MetadataFile FileName="listaFe1.wsdl" MetadataType="Wsdl" ID="726ff8ae-bba8-4b93-86e0-78a34121dad6" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/listaFe.svc?wsdl" />
+    <MetadataFile FileName="listaFe4.xsd" MetadataType="Schema" ID="89710c45-7b63-442b-89a8-91c194f78a1e" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?xsd=xsd2" />
+    <MetadataFile FileName="listaFe2.wsdl" MetadataType="Wsdl" ID="42fe55d0-bb72-4d9f-9a46-794750cc88ac" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?wsdl" />
+    <MetadataFile FileName="listaFe41.xsd" MetadataType="Schema" ID="663f35d5-2226-49ff-9bfc-4eb98860ea8a" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?xsd=xsd0" />
+    <MetadataFile FileName="listaFe1.disco" MetadataType="Disco" ID="a98aacc3-035b-4db0-bd8c-f210efc0349b" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?disco" />
+    <MetadataFile FileName="listaFe42.xsd" MetadataType="Schema" ID="25358152-5493-4f23-9a6e-e15147139fd6" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?xsd=xsd3" />
+    <MetadataFile FileName="listaFe21.wsdl" MetadataType="Wsdl" ID="82563284-7afa-4c21-9a0d-c6324c23eaeb" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="listaFe43.xsd" MetadataType="Schema" ID="4fd25a92-166d-49c0-86ab-7130b783efbe" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

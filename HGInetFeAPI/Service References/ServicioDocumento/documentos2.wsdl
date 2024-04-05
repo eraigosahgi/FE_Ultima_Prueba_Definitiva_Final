@@ -25,7 +25,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsdl:import namespace="HGInetFacturaElectronica.ServiciosWcf" location="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc?wsdl=wsdl0" />
+  <wsdl:import namespace="HGInetFacturaElectronica.ServiciosWcf" location="https://habilitacion.hgidocs.co/wcf/documentos.svc?wsdl=wsdl0" />
   <wsdl:types />
   <wsdl:binding name="soap" type="i0:ServicioDocumentos">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -174,10 +174,10 @@
   </wsdl:binding>
   <wsdl:service name="documentos">
     <wsdl:port name="soap" binding="tns:soap">
-      <soap:address location="http://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc" />
+      <soap:address location="http://habilitacion.hgidocs.co/wcf/documentos.svc" />
     </wsdl:port>
     <wsdl:port name="soap1" binding="tns:soap1">
-      <soap:address location="https://habilitacion.mifacturaenlinea.com.co/wcf/documentos.svc" />
+      <soap:address location="https://habilitacion.hgidocs.co/wcf/documentos.svc" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

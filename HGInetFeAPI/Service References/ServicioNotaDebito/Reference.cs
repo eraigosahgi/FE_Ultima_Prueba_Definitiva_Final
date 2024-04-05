@@ -90,6 +90,9 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private System.Guid IdPlanField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionIntegradorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string IdentificacionProveedorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -465,6 +468,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((this.IdPlanField.Equals(value) != true)) {
                     this.IdPlanField = value;
                     this.RaisePropertyChanged("IdPlan");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionIntegrador {
+            get {
+                return this.IdentificacionIntegradorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionIntegradorField, value) != true)) {
+                    this.IdentificacionIntegradorField = value;
+                    this.RaisePropertyChanged("IdentificacionIntegrador");
                 }
             }
         }
@@ -950,6 +966,9 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private string CodigoPostalField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int CodigoSucursalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CodigoTributoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1099,6 +1118,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((object.ReferenceEquals(this.CodigoPostalField, value) != true)) {
                     this.CodigoPostalField = value;
                     this.RaisePropertyChanged("CodigoPostal");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int CodigoSucursal {
+            get {
+                return this.CodigoSucursalField;
+            }
+            set {
+                if ((this.CodigoSucursalField.Equals(value) != true)) {
+                    this.CodigoSucursalField = value;
+                    this.RaisePropertyChanged("CodigoSucursal");
                 }
             }
         }
@@ -1585,13 +1617,25 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaDebito.CampoValor> CamposSectorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private HGInetFeAPI.ServicioNotaDebito.Tercero DatosBeneficiarioField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaDebito.ReferenciaDocumento> DocumentosreferenciaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaFinField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaIniField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaDebito.CampoValor> ParametrosDescargaAdjuntosField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Collections.Generic.List<HGInetFeAPI.ServicioNotaDebito.CampoValor> ParametrosWebServiceField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int TipoOperacionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string URLDescargaAdjuntosField;
@@ -1623,6 +1667,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public HGInetFeAPI.ServicioNotaDebito.Tercero DatosBeneficiario {
+            get {
+                return this.DatosBeneficiarioField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DatosBeneficiarioField, value) != true)) {
+                    this.DatosBeneficiarioField = value;
+                    this.RaisePropertyChanged("DatosBeneficiario");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public System.Collections.Generic.List<HGInetFeAPI.ServicioNotaDebito.ReferenciaDocumento> Documentosreferencia {
             get {
                 return this.DocumentosreferenciaField;
@@ -1631,6 +1688,32 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((object.ReferenceEquals(this.DocumentosreferenciaField, value) != true)) {
                     this.DocumentosreferenciaField = value;
                     this.RaisePropertyChanged("Documentosreferencia");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaFin {
+            get {
+                return this.FechaFinField;
+            }
+            set {
+                if ((this.FechaFinField.Equals(value) != true)) {
+                    this.FechaFinField = value;
+                    this.RaisePropertyChanged("FechaFin");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaIni {
+            get {
+                return this.FechaIniField;
+            }
+            set {
+                if ((this.FechaIniField.Equals(value) != true)) {
+                    this.FechaIniField = value;
+                    this.RaisePropertyChanged("FechaIni");
                 }
             }
         }
@@ -1657,6 +1740,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((object.ReferenceEquals(this.ParametrosWebServiceField, value) != true)) {
                     this.ParametrosWebServiceField = value;
                     this.RaisePropertyChanged("ParametrosWebService");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int TipoOperacion {
+            get {
+                return this.TipoOperacionField;
+            }
+            set {
+                if ((this.TipoOperacionField.Equals(value) != true)) {
+                    this.TipoOperacionField = value;
+                    this.RaisePropertyChanged("TipoOperacion");
                 }
             }
         }
@@ -1708,13 +1804,67 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal DescuentoDetalleCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal FctConvCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.DateTime FechaTrmField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ImpOtroCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal MntDctoCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal MntImpCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal MntRcgoCopField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string MonedaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal RecargoDetalleCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ReteFueCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ReteIcaCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal ReteIvaCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal SubTotalCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal TotAnticiposCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal TotBolCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal TotIncCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal TotIvaCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal TotalBrutoFacturaCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal TotalNetoFacturaCopField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private decimal VlrPagarCopField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -1727,6 +1877,32 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal DescuentoDetalleCop {
+            get {
+                return this.DescuentoDetalleCopField;
+            }
+            set {
+                if ((this.DescuentoDetalleCopField.Equals(value) != true)) {
+                    this.DescuentoDetalleCopField = value;
+                    this.RaisePropertyChanged("DescuentoDetalleCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal FctConvCop {
+            get {
+                return this.FctConvCopField;
+            }
+            set {
+                if ((this.FctConvCopField.Equals(value) != true)) {
+                    this.FctConvCopField = value;
+                    this.RaisePropertyChanged("FctConvCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public System.DateTime FechaTrm {
             get {
                 return this.FechaTrmField;
@@ -1735,6 +1911,58 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((this.FechaTrmField.Equals(value) != true)) {
                     this.FechaTrmField = value;
                     this.RaisePropertyChanged("FechaTrm");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ImpOtroCop {
+            get {
+                return this.ImpOtroCopField;
+            }
+            set {
+                if ((this.ImpOtroCopField.Equals(value) != true)) {
+                    this.ImpOtroCopField = value;
+                    this.RaisePropertyChanged("ImpOtroCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal MntDctoCop {
+            get {
+                return this.MntDctoCopField;
+            }
+            set {
+                if ((this.MntDctoCopField.Equals(value) != true)) {
+                    this.MntDctoCopField = value;
+                    this.RaisePropertyChanged("MntDctoCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal MntImpCop {
+            get {
+                return this.MntImpCopField;
+            }
+            set {
+                if ((this.MntImpCopField.Equals(value) != true)) {
+                    this.MntImpCopField = value;
+                    this.RaisePropertyChanged("MntImpCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal MntRcgoCop {
+            get {
+                return this.MntRcgoCopField;
+            }
+            set {
+                if ((this.MntRcgoCopField.Equals(value) != true)) {
+                    this.MntRcgoCopField = value;
+                    this.RaisePropertyChanged("MntRcgoCop");
                 }
             }
         }
@@ -1753,6 +1981,149 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal RecargoDetalleCop {
+            get {
+                return this.RecargoDetalleCopField;
+            }
+            set {
+                if ((this.RecargoDetalleCopField.Equals(value) != true)) {
+                    this.RecargoDetalleCopField = value;
+                    this.RaisePropertyChanged("RecargoDetalleCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ReteFueCop {
+            get {
+                return this.ReteFueCopField;
+            }
+            set {
+                if ((this.ReteFueCopField.Equals(value) != true)) {
+                    this.ReteFueCopField = value;
+                    this.RaisePropertyChanged("ReteFueCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ReteIcaCop {
+            get {
+                return this.ReteIcaCopField;
+            }
+            set {
+                if ((this.ReteIcaCopField.Equals(value) != true)) {
+                    this.ReteIcaCopField = value;
+                    this.RaisePropertyChanged("ReteIcaCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal ReteIvaCop {
+            get {
+                return this.ReteIvaCopField;
+            }
+            set {
+                if ((this.ReteIvaCopField.Equals(value) != true)) {
+                    this.ReteIvaCopField = value;
+                    this.RaisePropertyChanged("ReteIvaCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal SubTotalCop {
+            get {
+                return this.SubTotalCopField;
+            }
+            set {
+                if ((this.SubTotalCopField.Equals(value) != true)) {
+                    this.SubTotalCopField = value;
+                    this.RaisePropertyChanged("SubTotalCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal TotAnticiposCop {
+            get {
+                return this.TotAnticiposCopField;
+            }
+            set {
+                if ((this.TotAnticiposCopField.Equals(value) != true)) {
+                    this.TotAnticiposCopField = value;
+                    this.RaisePropertyChanged("TotAnticiposCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal TotBolCop {
+            get {
+                return this.TotBolCopField;
+            }
+            set {
+                if ((this.TotBolCopField.Equals(value) != true)) {
+                    this.TotBolCopField = value;
+                    this.RaisePropertyChanged("TotBolCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal TotIncCop {
+            get {
+                return this.TotIncCopField;
+            }
+            set {
+                if ((this.TotIncCopField.Equals(value) != true)) {
+                    this.TotIncCopField = value;
+                    this.RaisePropertyChanged("TotIncCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal TotIvaCop {
+            get {
+                return this.TotIvaCopField;
+            }
+            set {
+                if ((this.TotIvaCopField.Equals(value) != true)) {
+                    this.TotIvaCopField = value;
+                    this.RaisePropertyChanged("TotIvaCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal TotalBrutoFacturaCop {
+            get {
+                return this.TotalBrutoFacturaCopField;
+            }
+            set {
+                if ((this.TotalBrutoFacturaCopField.Equals(value) != true)) {
+                    this.TotalBrutoFacturaCopField = value;
+                    this.RaisePropertyChanged("TotalBrutoFacturaCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal TotalNetoFacturaCop {
+            get {
+                return this.TotalNetoFacturaCopField;
+            }
+            set {
+                if ((this.TotalNetoFacturaCopField.Equals(value) != true)) {
+                    this.TotalNetoFacturaCopField = value;
+                    this.RaisePropertyChanged("TotalNetoFacturaCop");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public decimal Valor {
             get {
                 return this.ValorField;
@@ -1761,6 +2132,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((this.ValorField.Equals(value) != true)) {
                     this.ValorField = value;
                     this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal VlrPagarCop {
+            get {
+                return this.VlrPagarCopField;
+            }
+            set {
+                if ((this.VlrPagarCopField.Equals(value) != true)) {
+                    this.VlrPagarCopField = value;
+                    this.RaisePropertyChanged("VlrPagarCop");
                 }
             }
         }
@@ -3124,6 +3508,9 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private string UrlPdfField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlXmlAttachUblField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UrlXmlUblField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -3522,6 +3909,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((object.ReferenceEquals(this.UrlPdfField, value) != true)) {
                     this.UrlPdfField = value;
                     this.RaisePropertyChanged("UrlPdf");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlXmlAttachUbl {
+            get {
+                return this.UrlXmlAttachUblField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlXmlAttachUblField, value) != true)) {
+                    this.UrlXmlAttachUblField = value;
+                    this.RaisePropertyChanged("UrlXmlAttachUbl");
                 }
             }
         }

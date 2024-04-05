@@ -96,6 +96,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private System.Guid IdPlanField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string IdentificacionIntegradorField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string IdentificacionProveedorField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -515,6 +518,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((this.IdPlanField.Equals(value) != true)) {
                     this.IdPlanField = value;
                     this.RaisePropertyChanged("IdPlan");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdentificacionIntegrador {
+            get {
+                return this.IdentificacionIntegradorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.IdentificacionIntegradorField, value) != true)) {
+                    this.IdentificacionIntegradorField = value;
+                    this.RaisePropertyChanged("IdentificacionIntegrador");
                 }
             }
         }
@@ -1078,6 +1094,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private string CodigoPostalField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int CodigoSucursalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CodigoTributoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -1227,6 +1246,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((object.ReferenceEquals(this.CodigoPostalField, value) != true)) {
                     this.CodigoPostalField = value;
                     this.RaisePropertyChanged("CodigoPostal");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int CodigoSucursal {
+            get {
+                return this.CodigoSucursalField;
+            }
+            set {
+                if ((this.CodigoSucursalField.Equals(value) != true)) {
+                    this.CodigoSucursalField = value;
+                    this.RaisePropertyChanged("CodigoSucursal");
                 }
             }
         }
@@ -4340,6 +4372,9 @@ namespace HGInetFeAPI.ServicioFactura {
         private string UrlPdfField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlXmlAttachUblField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UrlXmlUblField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -4738,6 +4773,19 @@ namespace HGInetFeAPI.ServicioFactura {
                 if ((object.ReferenceEquals(this.UrlPdfField, value) != true)) {
                     this.UrlPdfField = value;
                     this.RaisePropertyChanged("UrlPdf");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlXmlAttachUbl {
+            get {
+                return this.UrlXmlAttachUblField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlXmlAttachUblField, value) != true)) {
+                    this.UrlXmlAttachUblField = value;
+                    this.RaisePropertyChanged("UrlXmlAttachUbl");
                 }
             }
         }

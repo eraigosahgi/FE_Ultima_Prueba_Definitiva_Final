@@ -114,6 +114,9 @@ namespace HGInetFeAPI.ServicioDocumento {
         private string UrlPdfField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string UrlXmlAttachUblField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string UrlXmlUblField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -512,6 +515,19 @@ namespace HGInetFeAPI.ServicioDocumento {
                 if ((object.ReferenceEquals(this.UrlPdfField, value) != true)) {
                     this.UrlPdfField = value;
                     this.RaisePropertyChanged("UrlPdf");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string UrlXmlAttachUbl {
+            get {
+                return this.UrlXmlAttachUblField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.UrlXmlAttachUblField, value) != true)) {
+                    this.UrlXmlAttachUblField = value;
+                    this.RaisePropertyChanged("UrlXmlAttachUbl");
                 }
             }
         }

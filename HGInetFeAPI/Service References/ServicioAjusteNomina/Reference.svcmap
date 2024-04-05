@@ -21,17 +21,17 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="ajustenomina.xsd" MetadataType="Schema" ID="d31eb522-5d64-4485-b767-2c72b5c373eb" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?xsd=xsd4" />
-    <MetadataFile FileName="ajustenomina1.xsd" MetadataType="Schema" ID="c8ac3e02-1d20-4a20-8feb-21f72c844b7f" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?xsd=xsd3" />
-    <MetadataFile FileName="ajustenomina2.xsd" MetadataType="Schema" ID="df8d6c8f-7830-49bc-a18c-52a357823153" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?xsd=xsd2" />
-    <MetadataFile FileName="ajustenomina.disco" MetadataType="Disco" ID="5854bab1-20b3-4966-b39d-e998216a5a2c" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?disco" />
-    <MetadataFile FileName="ajustenomina3.xsd" MetadataType="Schema" ID="858733a9-7035-4bed-b488-2620d51d502b" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?xsd=xsd0" />
-    <MetadataFile FileName="ajustenomina4.xsd" MetadataType="Schema" ID="94b65cdc-691b-4f3e-86d8-0db70813a16b" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?xsd=xsd1" />
-    <MetadataFile FileName="ajustenomina.wsdl" MetadataType="Wsdl" ID="bb01cd13-5a75-41af-9dc5-c69dc2bb76eb" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?wsdl=wsdl0" />
-    <MetadataFile FileName="ajustenomina1.wsdl" MetadataType="Wsdl" ID="3e34bc2e-9b14-48b6-821f-3b5ca7c91044" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/ajustenomina.svc?wsdl" />
+    <MetadataFile FileName="ajustenomina5.xsd" MetadataType="Schema" ID="ee10d31f-3589-4ee2-9cea-ab8814caffb2" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?xsd=xsd3" />
+    <MetadataFile FileName="ajustenomina51.xsd" MetadataType="Schema" ID="d3a30f9c-343f-4953-8d68-f8a4525b2f38" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?xsd=xsd2" />
+    <MetadataFile FileName="ajustenomina52.xsd" MetadataType="Schema" ID="e5dfd33d-35ca-4bc0-bb9d-c006f3b9b8df" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?xsd=xsd1" />
+    <MetadataFile FileName="ajustenomina53.xsd" MetadataType="Schema" ID="12c04414-176e-4979-8dc9-b1ed1357b5f3" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?xsd=xsd0" />
+    <MetadataFile FileName="ajustenomina2.wsdl" MetadataType="Wsdl" ID="eec96c50-c0d3-4049-bdc1-f1e02b197573" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="ajustenomina21.wsdl" MetadataType="Wsdl" ID="b177f99b-0da5-4337-b092-ba4a2a3e8ae5" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?wsdl" />
+    <MetadataFile FileName="ajustenomina1.disco" MetadataType="Disco" ID="1e1060d5-a408-4a17-b1ba-58547aa6b9b3" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?disco" />
+    <MetadataFile FileName="ajustenomina54.xsd" MetadataType="Schema" ID="cdf7d243-40db-4bbc-a73d-f2958fa66eef" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?xsd=xsd4" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
