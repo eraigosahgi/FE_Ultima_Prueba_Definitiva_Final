@@ -2921,6 +2921,13 @@
     <Compile Include="..\Documentacion\Librerias\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ApiServicios\Controller\Services\AjustenominaController.cs" />
+    <Compile Include="ApiServicios\Controller\Services\DocumentosApiController.cs" />
+    <Compile Include="ApiServicios\Controller\Services\FacturaController.cs" />
+    <Compile Include="ApiServicios\Controller\Services\NominaController.cs" />
+    <Compile Include="ApiServicios\Controller\Services\NotacreditoController.cs" />
+    <Compile Include="ApiServicios\Controller\Services\NotadebitoController.cs" />
+    <Compile Include="ApiServicios\Controller\Services\ResolucionController.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Services\AlertasController.cs" />
     <Compile Include="Controllers\Services\AuditoriasController.cs" />
@@ -2944,7 +2951,7 @@
     <Compile Include="Controllers\Services\DatosSesionController.cs" />
     <Compile Include="Controllers\Services\DocumentosController.cs" />
     <Compile Include="Controllers\Services\EmpresasController.cs" />
-    <Compile Include="Controllers\Services\FacturaController.cs" />
+    <Compile Include="Controllers\Services\FacturaPruebaApiController.cs" />
     <Compile Include="Controllers\Services\MaestrosEnumController.cs" />
     <Compile Include="Controllers\Services\PermisosController.cs" />
     <Compile Include="Controllers\Services\Peticion.cs" />
@@ -3691,7 +3698,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61438/</IISUrl>
+          <IISUrl>http://localhost:61428/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
