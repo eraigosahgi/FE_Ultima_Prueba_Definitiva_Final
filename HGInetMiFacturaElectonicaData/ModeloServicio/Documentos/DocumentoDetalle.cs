@@ -47,22 +47,22 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// <summary>
 		/// Cantidad del producto y/o servicio
 		/// </summary>
-		[Required(ErrorMessage = "{0} es un campo obligatorio")]
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		//[Required(ErrorMessage = "{0} es un campo obligatorio")]
+  //      [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal Cantidad { get; set; }
 
 		/// <summary>
 		/// Valor unitario del producto y/o servicio; sin aplicar descuentos e impuestos
 		/// </summary>
-		[Required(ErrorMessage = "{0} es un campo obligatorio")]
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		//[Required(ErrorMessage = "{0} es un campo obligatorio")]
+		//[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorUnitario { get; set; }
 
         /// <summary>
         /// Valor subtotal del detalle 
         /// </summary>
-        [Required(ErrorMessage = "{0} es un campo obligatorio")]
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        //[Required(ErrorMessage = "{0} es un campo obligatorio")]
+        //[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorSubtotal { get; set; }
 
 		/// <summary>

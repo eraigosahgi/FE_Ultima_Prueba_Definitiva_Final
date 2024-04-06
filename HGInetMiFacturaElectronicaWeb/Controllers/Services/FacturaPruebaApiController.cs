@@ -7,13 +7,15 @@ using System.Web.Http;
 using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using LibreriaGlobalHGInet.Objetos;
+using LibreriaGlobalHGInet.Error;
+using System.ServiceModel;
 
 namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 {
-    public class FacturaController : ApiController
+    public class FacturaPruebaApiController : ApiController
     {
 
-        Factura[] documentos = new Factura[]
+		Factura[] documentos = new Factura[]
         {
             new Factura { Documento = 1, Fecha = new DateTime(2018,1,1), Nota = "Factura #1", Valor = 120000 },
             new Factura { Documento = 2, Fecha = new DateTime(2018,1,2), Nota = "Factura #2", Valor = 125000 },

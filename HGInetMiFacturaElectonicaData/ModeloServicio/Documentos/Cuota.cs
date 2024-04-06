@@ -21,7 +21,7 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// <summary>
 		/// Valor de la Cuota
 		/// </summary>
-		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		//[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
 		public decimal Valor { get; set; }
 
 		/// <summary>
