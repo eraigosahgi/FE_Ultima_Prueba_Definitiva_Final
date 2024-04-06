@@ -126,21 +126,21 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
         /// <summary>
         /// Valor del documento sin descuentos y sin impuestos
         /// </summary>
-        [Required(ErrorMessage = "{0} es un campo obligatorio")]
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        //[Required(ErrorMessage = "{0} es un campo obligatorio")]
+        //[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal Valor { get; set; }
 
         /// <summary>
         /// Subtotal del documento: valor del documento con descuentos y sin impuestos
         /// </summary>
-        [Required(ErrorMessage = "{0} es un campo obligatorio")]
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        //[Required(ErrorMessage = "{0} es un campo obligatorio")]
+        //[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorSubtotal { get; set; }
 
         /// <summary>
         /// Valor de descuento total del documento
         /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        //[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorDescuento { get; set; }
 
         /// <summary>
@@ -161,43 +161,43 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// <summary>
 		/// Valor total de IVA del documento
 		/// </summary>
-		[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+		//[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorIva { get; set; }
 
         /// <summary>
         /// Valor total de Retención de IVA del documento
         /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        //[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorReteIva { get; set; }
 
         /// <summary>
         /// Valor total de Impuesto al consumo del documento
         /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        //[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorImpuestoConsumo { get; set; }
 
         /// <summary>
         /// Valor total de Retención en la Fuente del documento
         /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        //[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorReteFuente { get; set; }
 
         /// <summary>
         /// Valor total de Retención de ICA del documento.
         /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        //[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal ValorReteIca { get; set; }
 
         /// <summary>
         /// Valor total del documento: Subtotal incluyendo descuentos e impuestos agregados
         /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        //[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal Total { get; set; }
 
         /// <summary>
         /// Valor neto del documento aplicando impuestos de retención
         /// </summary>
-        [Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
+        //[Range(typeof(decimal), "0", "9999999999.99", ErrorMessage = "El valor de {0} debe estar entre {1} y {2}")]
         public decimal Neto { get; set; }
 
         /// <summary>
