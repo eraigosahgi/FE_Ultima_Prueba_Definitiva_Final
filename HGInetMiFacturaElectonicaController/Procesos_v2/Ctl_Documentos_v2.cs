@@ -568,7 +568,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								if ((tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) && empresa.IntEnvioNominaMail == false)
 									enviar_correo = false;
 
-								if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste && documento_obj.TipoOperacion != 3)
+								if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste && documento_obj.TipoOperacion == 3)
 								{
 									enviar_correo = false;
 								}
