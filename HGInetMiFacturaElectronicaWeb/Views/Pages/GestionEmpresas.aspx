@@ -443,7 +443,14 @@
 									</div>
 								</div>
 
-								<div class="col-md-12  text-center" style="z-index: 9;">
+								<div class="col-md-8  text-center" style="z-index: 9;">
+										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Integrador(es):</label>
+										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
+											<div id="EmpresaIntegradores"></div>											
+										</div>
+								</div>
+
+								<div class="col-md-4  text-center" style="z-index: 9;">
 										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Debug:</label>
 										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
 											<div id="debug"></div>

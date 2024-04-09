@@ -2933,12 +2933,14 @@
     <Compile Include="Controllers\Services\AlertasController.cs" />
     <Compile Include="Controllers\Services\AuditoriasController.cs" />
     <Compile Include="Controllers\Services\CorreosController.cs" />
+    <Compile Include="Controllers\Services\EmpresaIntegradoresController.cs" />
     <Compile Include="Controllers\Services\EmpresaResolucionController.cs" />
     <Compile Include="Controllers\Services\EmpresaSucursalController.cs" />
     <Compile Include="Controllers\Services\EventosRadianController.cs" />
     <Compile Include="Controllers\Services\FormatosController.cs" />
     <Compile Include="Controllers\Services\ImportacionDocController.cs" />
     <Compile Include="Controllers\Services\IndicadoresController.cs" />
+    <Compile Include="Controllers\Services\IntegradoresController.cs" />
     <Compile Include="Controllers\Services\InteroperabilidadController.cs" />
     <Compile Include="Controllers\Services\PagosController.cs" />
     <Compile Include="Controllers\Services\PlanesController.cs" />

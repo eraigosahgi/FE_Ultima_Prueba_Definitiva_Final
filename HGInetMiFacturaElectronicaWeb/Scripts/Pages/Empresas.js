@@ -224,6 +224,72 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			});
 		});
 
+
+
+		//Cargar los datos de Integradores, solo si es HGI
+		if(codigo_facturador=='811021438'){
+			$http.get('/Api/Integradores/Obtener').then(function (datos) {
+
+				const makeAsyncDataSource = function () {		
+					return new DevExpress.data.CustomStore({
+						loadMode: 'raw',
+						key: 'StrIdentificacion',
+						load() {
+							return JSON.parse(JSON.stringify(datos.data));
+						},
+					});
+				};
+
+				$('#EmpresaIntegradores').dxDropDownBox({
+					//value: [3],
+					valueExpr: 'StrIdentificacion',
+					placeholder: 'Select a value...',
+					displayExpr: 'StrRazonSocial',
+					showClearButton: true,
+					inputAttr: { 'aria-label': 'Owner' },
+					dataSource: makeAsyncDataSource(),
+					contentTemplate(e) {
+						const v = e.component.option('value');
+						const $dataGrid = $('<div>').dxDataGrid({
+							dataSource: e.component.getDataSource(),
+							columns: [
+							{ 	
+								caption: "Identificación",
+								dataField: "StrIdentificacion",
+								width:'auto'
+							},
+							{ 	
+								caption: "Nombre",
+								dataField: "StrRazonSocial"
+							}
+							],
+							hoverStateEnabled: true,
+							paging: { enabled: false, pageSize: 10 },
+							filterRow: { visible: true },
+							scrolling: { mode: 'virtual' },
+							//height: 345,
+							selection: { mode: 'multiple' },
+							selectedRowKeys: v,
+							onSelectionChanged(selectedItems) {
+								const keys = selectedItems.selectedRowKeys;
+								e.component.option('value', keys);								
+							},
+						});
+
+						dataGrid = $dataGrid.dxDataGrid('instance');
+
+						e.component.on('valueChanged', (args) => {
+							const { value } = args;
+							dataGrid.selectRows(value, false);
+						});
+
+						return $dataGrid;
+					},
+				});
+			});
+		}
+
+
 		CargarFormulario();
 	});
 
@@ -2131,6 +2197,12 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					try {
 						$("#Hgi_Responsable").dxCheckBox({ value: Datos_Hgi_Responsable });
 					} catch (e) { }
+
+
+					$http.get('/Api/ObtenerEmpresaIntegradores?identificacion='+Datos_Idententificacion).then(function (datos) {						
+						$('#EmpresaIntegradores').dxDropDownBox({value:datos.data});
+					});
+
 				}
 
 
@@ -2419,27 +2491,60 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				StrTipoIdentificacionRep: Datos_TipoidentificacionRep,
 				StrNombresRep: Datos_NombresRep,
 				StrApellidosRep: Datos_ApellidosRep,
-				StrCargo: Datos_CargoRep
+				StrCargo: Datos_CargoRep,
+
 			});
 			var tipo = Datos_Tipo;
-
-			$http({ url: '/api/GuardarEmpresa/', data: ObjEmpresa, method: 'Post' }).then(function (response) {
-				//$http.post('/api/Empresas?' + data).then(function (response) {
-				try {
-					//Aqui se debe colocar los pasos a seguir
-					DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
-					$("#button").hide();
-					$("#btncancelar").hide();
-					setTimeout(IrAConsulta, 2000);
-				} catch (err) {
-					DevExpress.ui.notify(err.message, 'error', 3000);
+				
+			if (codigo_facturador=='811021438'){
+				if($('#EmpresaIntegradores').dxDropDownBox("instance").option().value.length>0) {
+					GrabarEmpresa(ObjEmpresa);
+				}else{
+					DevExpress.ui.notify("Debe seleccionar el Integrador de este Facturador (Si no tiene integrador, debe seleccionar HGI SAS o Gruposoft)", 'error', 3000);
 				}
-			}, function errorCallback(response) {
-				DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
-			});
+			}else{
+				GrabarEmpresa(ObjEmpresa);
+			}
 		}
 	}
 
+	function GrabarEmpresa(ObjEmpresa){
+		$http({ url: '/api/GuardarEmpresa/', data: ObjEmpresa, method: 'Post' }).then(function (response) {
+			//$http.post('/api/Empresas?' + data).then(function (response) {
+			try {
+
+				//Aqui se debe colocar los pasos a seguir
+				DevExpress.ui.notify({ message: "Empresa Guardada con exito", position: { my: "center top", at: "center top" } }, "success", 1500);
+
+				if(codigo_facturador=='811021438'){
+					var ObjEmpresaIntegradores = ({
+						Identificacion: Datos_Idententificacion,
+						Integradores: $('#EmpresaIntegradores').dxDropDownBox("instance").option().value,						
+					});
+
+				
+					$http({ url: '/api/GuardarEmpresaIntegradores/', data: ObjEmpresaIntegradores, method: 'Post' }).then(function (response) {
+						$("#button").hide();
+						$("#btncancelar").hide();
+					
+						setTimeout(IrAConsulta, 2000);
+					});
+				}else{
+					$("#button").hide();
+					$("#btncancelar").hide();
+					
+					setTimeout(IrAConsulta, 2000);
+				}
+
+					
+
+			} catch (err) {
+				DevExpress.ui.notify(err.message, 'error', 3000);
+			}
+		}, function errorCallback(response) {
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+		});
+	}
 
 	///********************Pagos
 	$("#ModalConfiguracionPagos").dxButton({
@@ -2636,10 +2741,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
 		});
 	}
-
-
 	////*************************************************************************************************************
 
+	
 });
 
 //Controlador para gestionar la consulta de empresas
@@ -2659,22 +2763,22 @@ EmpresasApp.controller('ConsultaEmpresasController', function ConsultaEmpresasCo
 	$scope.Admin = false;
 
 	$scope.filtros =
-    {
-    	TipoTercero: {
-    		searchEnabled: true,
-    		//Carga la data del control
-    		dataSource: new DevExpress.data.ArrayStore({
-    			data: items_TipoTercero,
-    			key: "ID"
-    		}),
-    		displayExpr: "Texto",
-    		Enabled: true,
-    		placeholder: "Facturador",
-    		onValueChanged: function (data) {
-    			Item_TipoTercero = data.value.ID;
-    		}
-    	}
-    }
+	{
+		TipoTercero: {
+			searchEnabled: true,
+			//Carga la data del control
+			dataSource: new DevExpress.data.ArrayStore({
+				data: items_TipoTercero,
+				key: "ID"
+			}),
+			displayExpr: "Texto",
+			Enabled: true,
+			placeholder: "Facturador",
+			onValueChanged: function (data) {
+				Item_TipoTercero = data.value.ID;
+			}
+		}
+	}
 
 	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/Empresas?Facturador=true', 'Identificacion', 'RazonSocial', false, 2).then(function (Datos) {
 		$scope.Facturador = Datos;
@@ -2914,19 +3018,19 @@ function BuscarID(miArray, ID) {
 }
 
 var TiposIdentificacion =
-    [
-        { ID: "11", Texto: 'Registro civil' },
-        { ID: "12", Texto: 'Tarjeta de identidad' },
-        { ID: "13", Texto: 'Cédula de ciudadanía' },
-        { ID: "21", Texto: 'Tarjeta de extranjería' },
-        { ID: "22", Texto: 'Cédula de extranjería' },
-        { ID: "31", Texto: 'NIT' },
-        { ID: "41", Texto: 'Pasaporte' },
-        { ID: "42", Texto: 'Documento de identificación extranjero' },
+	[
+		{ ID: "11", Texto: 'Registro civil' },
+		{ ID: "12", Texto: 'Tarjeta de identidad' },
+		{ ID: "13", Texto: 'Cédula de ciudadanía' },
+		{ ID: "21", Texto: 'Tarjeta de extranjería' },
+		{ ID: "22", Texto: 'Cédula de extranjería' },
+		{ ID: "31", Texto: 'NIT' },
+		{ ID: "41", Texto: 'Pasaporte' },
+		{ ID: "42", Texto: 'Documento de identificación extranjero' },
 		{ ID: "47", Texto: 'PEP' },
-        { ID: "50", Texto: 'NIT de otro país' },
-        { ID: "91", Texto: 'NUIP' },
-    ];
+		{ ID: "50", Texto: 'NIT de otro país' },
+		{ ID: "91", Texto: 'NUIP' },
+	];
 
 
 var TiposEstado =

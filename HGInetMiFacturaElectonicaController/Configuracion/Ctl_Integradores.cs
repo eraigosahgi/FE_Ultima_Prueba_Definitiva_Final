@@ -25,7 +25,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 			TblIntegradores datos = (from item in context.TblIntegradores
 									 where item.StrIdentificacion.Equals(Identificacion)
-											select item).FirstOrDefault();
+									 select item).FirstOrDefault();
+
+			return datos;
+		}
+
+		/// <summary>
+		/// Obtiene la lista de integradores
+		/// </summary>
+		/// <param name="LazyLoading">Indica si se desea lazyLoading</param>
+		/// <returns></returns>
+		public List<TblIntegradores> Obtener(bool LazyLoading = false)
+		{
+			context.Configuration.LazyLoadingEnabled = LazyLoading;
+
+			List<TblIntegradores> datos = (from item in context.TblIntegradores
+										   select item).ToList();
 
 			return datos;
 		}
