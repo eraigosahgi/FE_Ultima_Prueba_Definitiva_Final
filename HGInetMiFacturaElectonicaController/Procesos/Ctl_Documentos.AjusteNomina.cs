@@ -320,7 +320,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			if (string.IsNullOrWhiteSpace(item.IdentificacionIntegrador) && (Fecha.GetFecha() <= fecha_control))
 			{
-				item.IdentificacionIntegrador = Emp_int.Obtener(facturador_electronico.StrIdentificacion).FirstOrDefault().StrIdentificacionInt;//facturador_electronico.TblEmpresaIntegradores.FirstOrDefault().StrIdentificacionInt;
+				try
+				{
+					item.IdentificacionIntegrador = Emp_int.Obtener(facturador_electronico.StrIdentificacion).FirstOrDefault().StrIdentificacionInt;
+					if (string.IsNullOrWhiteSpace(item.IdentificacionIntegrador))
+						RegistroLog.EscribirLog(new ApplicationException(string.Format("Validacion de la identificacion del integrador, Facturador: {0} - Prefijo: {1} - Doc: {2} - IdIntegrador: {3}", facturador_electronico.StrIdentificacion, item.Prefijo, item.Documento, item.IdentificacionIntegrador)), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+
+				}
+				catch (Exception ex)
+				{
+					RegistroLog.EscribirLog(ex, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Validacion de la identificacion del integrador, Facturador: {0} - Prefijo: {1} - Doc: {2} - IdIntegrador: {3}", facturador_electronico.StrIdentificacion, item.Prefijo, item.Documento, item.IdentificacionIntegrador));
+				}
 			}
 			else if (!string.IsNullOrWhiteSpace(item.IdentificacionIntegrador))
 			{
