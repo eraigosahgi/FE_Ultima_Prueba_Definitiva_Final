@@ -2923,7 +2923,7 @@
     </Compile>
     <Compile Include="ApiServicios\Controller\Services\AjustenominaController.cs" />
     <Compile Include="ApiServicios\Controller\Services\DocumentosApiController.cs" />
-    <Compile Include="ApiServicios\Controller\Services\EmpresasController.cs" />
+    <Compile Include="ApiServicios\Controller\Services\EmpresasApiController.cs" />
     <Compile Include="ApiServicios\Controller\Services\FacturaController.cs" />
     <Compile Include="ApiServicios\Controller\Services\NominaController.cs" />
     <Compile Include="ApiServicios\Controller\Services\NotacreditoController.cs" />

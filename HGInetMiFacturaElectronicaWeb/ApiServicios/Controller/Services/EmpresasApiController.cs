@@ -13,10 +13,10 @@ using System.Web.Http;
 
 namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 {
-    public class EmpresasController : ApiController
+    public class EmpresasApiController : ApiController
     {
 		[HttpGet]
-		[Route("Api/Empresas/Obtener")]
+		[Route("Api/EmpresasApi/Obtener")]
 		public HttpResponseMessage Obtener(string DataKey, string Identificacion)
 		{
 			try
@@ -55,7 +55,7 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 
 
 		[HttpGet]
-		[Route("Api/Empresas/ConsultarAdquiriente")]
+		[Route("Api/EmpresasApi/ConsultarAdquiriente")]
 		public HttpResponseMessage ConsultarAdquiriente(string DataKey, string IdentificacionEmisor, string IdentificacionAdquiriente)
 		{
 			try
