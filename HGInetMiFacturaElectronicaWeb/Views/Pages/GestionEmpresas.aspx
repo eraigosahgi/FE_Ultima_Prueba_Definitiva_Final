@@ -89,14 +89,14 @@
 								</div>
 
 								<div class="col-md-6" style="z-index: 9;">
-										<label style="margin: 0px; margin-left: 0px; margin-top: 16px">Email Nómina:</label>
-										<div class="col-md-12" style="z-index: 9; margin-top: 1%; margin-left: 30px">
-											<div id="EnvioNominaMail"></div>
-											<div id="tooltip_EnvioNomina">Indica si envia la Nómina del empleado al email cuando el documento es procesado correctamente en la DIAN</div>
-										</div>
+									<label style="margin: 0px; margin-left: 0px; margin-top: 16px">Email Nómina:</label>
+									<div class="col-md-12" style="z-index: 9; margin-top: 1%; margin-left: 30px">
+										<div id="EnvioNominaMail"></div>
+										<div id="tooltip_EnvioNomina">Indica si envia la Nómina del empleado al email cuando el documento es procesado correctamente en la DIAN</div>
 									</div>
+								</div>
 
-<%--								<div class="col-md-6" style="z-index: 9;">
+								<%--								<div class="col-md-6" style="z-index: 9;">
 										<label style="margin: 0px; margin-left: 0px; margin-top: 16px">RADIAN:</label>
 										<div class="col-md-12" style="z-index: 9; margin-top: 1%; margin-left: 30px">
 											<div id="Radia"></div>
@@ -222,7 +222,7 @@
 								<div id="ttMailPagos"></div>
 							</div>
 
-							<div class="col-md-12" style="z-index: 9; padding-top:5px">
+							<div class="col-md-12" style="z-index: 9; padding-top: 5px">
 								<%--<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Sucursales:<strom style="color: red;">*</strom></label>--%>
 								<div class="col-md-11" style="z-index: 9; margin-left: -10px;">
 									<div id="gridSucursales"></div>
@@ -257,7 +257,7 @@
 								<div class="col-md-11" style="z-index: 9; margin-left: -10px;">
 									<div id="txtIdentificacionRep"></div>
 								</div>
-		
+
 							</div>
 							<div class="col-md-12" style="z-index: 9;">
 								<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Tipo de Identificación:</label>
@@ -319,16 +319,16 @@
 									<br />
 									<%--<div class="dx-field-label" style="font-size: 14px;">Recepción:</div>--%>
 									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
-										<div id="Interoperabilidad" style="margin-top: 1%"></div>
-										<div id="tooltip_Interoper">Indica si la empresa procesa documentos de un proveedor diferente a HGI</div>
+									<div id="Interoperabilidad" style="margin-top: 1%"></div>
+									<div id="tooltip_Interoper">Indica si la empresa procesa documentos de un proveedor diferente a HGI</div>
 									<br />
 									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
-										<div id="Radian" style="margin-top: 1%"></div>
-										<div id="tooltip_Radian">Indica si la empresa genera eventos de las facturas en la DIAN</div>
+									<div id="Radian" style="margin-top: 1%"></div>
+									<div id="tooltip_Radian">Indica si la empresa genera eventos de las facturas en la DIAN</div>
 									<br />
 									<div class="dx-field-label" style="font-size: 14px; margin-top: 1%"></div>
-										<div id="SMS" style="margin-top: 1%"></div>
-										<div id="tooltip_SMS">Indica si la empresa envía SMS de los documentos Electrónicos emitidos a la DIAN</div>
+									<div id="SMS" style="margin-top: 1%"></div>
+									<div id="tooltip_SMS">Indica si la empresa envía SMS de los documentos Electrónicos emitidos a la DIAN</div>
 								</div>
 
 								<%--<div class="col-md-12  text-center" style="z-index: 9;">
@@ -407,15 +407,21 @@
 
 								<div class="col-md-12">
 
-									<div class="col-md-6" style="z-index: 9;">
+									<div class="col-md-4" style="z-index: 9;">
 										<label style="margin: 0px; margin-left: 0px; margin-top: 16px; margin-bottom: 1%">Email Recepcion:</label>
 										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: 30px">
 											<div id="EmailRecepcion"></div>
 											<div id="tooltip_EmailRecepcion">Indica si envia Email al adquiriente cuando la plataforma recibe el documento de Factura Electrónica</div>
 										</div>
 									</div>
-
-									<div class="col-md-6  text-center" style="z-index: 9;">
+									<div class="col-md-4  text-center" style="z-index: 9;">
+										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Debug:</label>
+										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
+											<div id="debug"></div>
+											<div id="tooltip_debug">Indica si a la empresa se le puede hacer seguimiento de pruebas</div>
+										</div>
+									</div>
+									<div class="col-md-4  text-center" style="z-index: 9;">
 										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Post-Pago Auto.:</label>
 										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
 											<div id="postpagoaut"></div>
@@ -443,20 +449,14 @@
 									</div>
 								</div>
 
-								<div class="col-md-8  text-center" style="z-index: 9;">
-										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Integrador(es):</label>
-										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
-											<div id="EmpresaIntegradores"></div>											
-										</div>
+								<div class="col-md-12  text-center" style="z-index: 9;">
+									<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Integrador(es):</label>
+									<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
+										<div id="EmpresaIntegradores"></div>
+									</div>
 								</div>
 
-								<div class="col-md-4  text-center" style="z-index: 9;">
-										<label style="margin: 0px; margin-left: -25px; margin-top: 16px; margin-bottom: 1%">Debug:</label>
-										<div class="col-md-12" style="z-index: 9; margin-top: 5%; margin-left: -10px">
-											<div id="debug"></div>
-											<div id="tooltip_debug">Indica si a la empresa se le puede hacer seguimiento de pruebas</div>
-										</div>
-								</div>
+
 
 							</div>
 						</div>
@@ -489,12 +489,12 @@
 										</div>
 									</div>
 
-                                    <div class="col-md-12" id="PanelFirmaHGI">			
-                                        <div class="dx-field-label" style="font-size: 14px;">Fecha de vencimiento: <strong style="color: red;">*</strong></div>
-                                        <div class="dx-field-value">
+									<div class="col-md-12" id="PanelFirmaHGI">
+										<div class="dx-field-label" style="font-size: 14px;">Fecha de vencimiento: <strong style="color: red;">*</strong></div>
+										<div class="dx-field-value">
 											<div id="fechaVencimientoCertificadoHGI"></div>
 										</div>
-                                    </div>
+									</div>
 
 									<div class="col-md-12" id="PanelFirmaFacturador" data-ng-show="id_seguridad != ''">
 										<div class="col-md-6">

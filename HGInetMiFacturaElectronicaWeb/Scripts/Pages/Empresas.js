@@ -244,8 +244,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 					//value: [3],
 					valueExpr: 'StrIdentificacion',
 					placeholder: 'Select a value...',
-					displayExpr: 'StrRazonSocial',
-					showClearButton: true,
+					displayExpr: 'StrRazonSocial',					
 					inputAttr: { 'aria-label': 'Owner' },
 					dataSource: makeAsyncDataSource(),
 					contentTemplate(e) {
@@ -256,7 +255,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 							{ 	
 								caption: "Identificación",
 								dataField: "StrIdentificacion",
-								width:'auto'
+								width:'20%'
 							},
 							{ 	
 								caption: "Nombre",
@@ -2236,9 +2235,9 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				AsigEstado("Proc_MailAcuse", Proc_MailAcuse);
 				AsigEstado("Proc_MailPagos", Proc_MailPagos);
 
-				if (Datos_Obligado == 1) {
-					consultarSucursales(Datos_Idententificacion);
-				}
+				//if (Datos_Obligado == 1) {
+				consultarSucursales();
+				//}
 
 			} catch (err) {
 				DevExpress.ui.notify(err.message + ' Validar Estado Producción', 'error', 7000);
@@ -2248,8 +2247,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 	//*************************************************************************************
 
-	function consultarSucursales(empresa) {
-		$http.get('/api/ObtenerEmpresaSucursal?IdentificacionEmpresa=' + empresa).then(function (data) {
+	function consultarSucursales() {
+		$http.get('/api/ObtenerEmpresaSucursal?IdentificacionEmpresa=' + $("#NumeroIdentificacion").dxTextBox("instance").option().value).then(function (data) {
 			$("#gridSucursales").dxDataGrid({
 				dataSource: data.data,
 				keyExpr: "id",
@@ -2270,8 +2269,8 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 				//},
 				editing: {
 					mode: "popup",
-					allowUpdating: $scope.Admin,
-					allowAdding: $scope.Admin,
+					allowUpdating: true,
+					allowAdding: true,
 					allowDeleting: false,
 					popup: {
 						title: "Datos de la sucursal",
@@ -2311,8 +2310,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 						]
 					},
 				},
-				onRowValidating: function (e) {
-					console.log(e.newData);
+				onRowValidating: function (e) {					
 					if (e.key > 0) {
 						//Edicion
 						ActualizarSucursal(e);
@@ -2684,7 +2682,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 	function GuardarSucursal(datos) {
 		var data = {
-			empresa: codigo_facturador,
+			empresa: $("#NumeroIdentificacion").dxTextBox("instance").option().value,
 			id: datos.id,
 			sucursal: datos.sucursal
 		};
@@ -2714,7 +2712,7 @@ EmpresasApp.controller('GestionEmpresasController', function GestionEmpresasCont
 
 	function ActualizarSucursal(datos) {
 		var data = {
-			empresa: codigo_facturador,
+			empresa: $("#NumeroIdentificacion").dxTextBox("instance").option().value,
 			id: datos.key,
 			sucursal: datos.newData.sucursal
 		};
