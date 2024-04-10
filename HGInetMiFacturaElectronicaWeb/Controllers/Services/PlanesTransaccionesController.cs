@@ -53,7 +53,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				var retorno = datos.Select(d => new
 				{
-					Empresa = d.TblUsuarios != null ? d.TblUsuarios.TblEmpresas.StrRazonSocial: "HGI",
+					Empresa = d.TblUsuarios != null ? d.TblUsuarios.TblEmpresas.StrRazonSocial : "HGI",
 					Usuario = d.StrUsuario,
 					Valor = d.IntValor,
 					TCompra = d.IntNumTransaccCompra,
@@ -376,7 +376,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					if (datos != null && datos.Count > 0)
 						return Ok("El Facturador Electrónico tiene registrado otro plan como Mixto, realice el ajuste de ese plan y a continuacion genere este nuevo plan");
 				}
-				
+
 
 
 				//if (Vence && MesesVence>0)
@@ -564,7 +564,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					NitEmpresa = Sesion.DatosEmpresa.StrIdentificacion,
 					RazonSocial = Sesion.DatosEmpresa.StrRazonSocial,
 					Administrador = (Sesion.DatosEmpresa.IntAdministrador) ? true : false,
-					
+
 					IdSeguridad = "",//d.StrIdSeguridad,
 				});
 
@@ -582,7 +582,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpPost]
 		[Route("api/ComprarPlan")]
-		public IHttpActionResult ComprarPlan(int cantidad, decimal valor_unit, decimal valor_total, int tipo_doc, int codigo_plan)
+		public IHttpActionResult ComprarPlan(int cantidad, decimal valor_unit, decimal valor_total, int tipo_doc, int codigo_plan, int codigo_sucursal = 0)
 		{
 			try
 			{
@@ -615,7 +615,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						if (valor_plan != valor_total)
 							valor_total = valor_plan;
 					}
-					
+
 				}
 				catch (Exception)
 				{
@@ -641,18 +641,18 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					ObjPlanTransacciones.StrObservaciones = "Pendiente por Facturar";
 					ObjPlanTransacciones.StrEmpresaFacturador = Sesion.DatosEmpresa.StrIdentificacion;
 					ObjPlanTransacciones.DocumentoRef = "-1";
+					ObjPlanTransacciones.IntSucursal = codigo_sucursal;
+					//Se valida si el numero de documentos comprados es mayor a 4999 para no asignarle vencimiento al plan comprado
+					if (ObjPlanTransacciones.IntNumTransaccCompra >= 5000)
+					{
+						ObjPlanTransacciones.IntMesesVence = 0;
+					}
+					else
+					{
+						ObjPlanTransacciones.IntMesesVence = 12;
+					}
 
-                    //Se valida si el numero de documentos comprados es mayor a 4999 para no asignarle vencimiento al plan comprado
-                    if (ObjPlanTransacciones.IntNumTransaccCompra >= 5000)
-                    {
-                        ObjPlanTransacciones.IntMesesVence = 0;
-                    }
-                    else
-                    {
-                        ObjPlanTransacciones.IntMesesVence = 12;
-                    }
-                    
-					
+
 					ObjPlanTransacciones.IntTipoDocumento = tipo_doc;
 
 					//Caso 718725
@@ -669,7 +669,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 					return Ok();
 				}
-				else if(postpago != null && postpago.IntTipoProceso == 3)
+				else if (postpago != null && postpago.IntTipoProceso == 3)
 				{
 					return Ok("El Facturador Electrónico tiene registrado un plan Postpago que no le permite activar uno nuevo.<br /><br /> Cualquier inquietud comunicarse con nuestra area de Soporte.");
 				}

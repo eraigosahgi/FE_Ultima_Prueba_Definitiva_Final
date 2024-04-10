@@ -23,7 +23,7 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 						opc_editar = response.data[0].Editar;
 						opc_gestion = response.data[0].Gestion;
 
-						
+
 
 						$scope.CargarPlanes();
 					}
@@ -37,6 +37,54 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 			});
 
 		});
+
+
+
+		$http.get('/api/ObtenerEmpresaSucursal?IdentificacionEmpresa=' + identificacion_empresa_autenticada).then(function (data) {
+			$("#wait").hide();
+			try {
+				var codigo = 'id';
+				var descripcion = 'sucursal';
+				$('#IdSucursal').dxLookup({
+					showPopupTitle: false,
+					dataSource: data.data,
+					displayExpr: 'sucursal',
+					inputAttr: { 'aria-label': 'Product' },
+					valueExpr: 'id',
+					searchEnabled: true,
+					cancelButtonText: "Cancelar",
+					showClearButton: true,
+					fieldTemplate: function (d) {
+						try {
+
+							return d[codigo] + ' - ' + d[descripcion];
+						} catch (e) { }
+					},
+					itemTemplate: function (d) {
+						try {
+
+							return d[codigo] + ' - ' + d[descripcion];
+
+
+						} catch (e) { }
+					},
+				}).dxValidator({
+					//validationGroup: ValidarGestionDocumento,
+					validationRules: [{
+						type: "required",
+						message: "Debe seleccionar la sucursal"
+					}]
+
+				});
+
+			} catch (err) {
+				DevExpress.ui.notify(err.message, 'error', 3000);
+			}
+		}, function errorCallback(response) {
+			$('#wait').hide();
+			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+		});
+
 
 	}), function errorCallback(response) {
 		Mensaje(response.data.ExceptionMessage, "error");
@@ -69,7 +117,7 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 			return "panel-default";
 	}
 
-	
+
 
 	//Evento para la carga del modal de creación/asignación de formatos.
 	$scope.AbrirModal = function (Plan, Desde, Hasta, Valor_Unit) {
@@ -79,6 +127,7 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 		$scope.tipo_documento = 0;
 		$scope.Valor_Total = Desde * Valor_Unit;
 		$scope.codigo_Plan = Plan;
+		$scope.codigo_sucursal = 0;
 
 		$("#txtPlan").dxTextBox({
 			value: Plan,
@@ -123,7 +172,7 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 				min: Desde,
 				message: "La cantidad de documentos debe estar en el rango seleccionado"
 			}]
-			
+
 		});
 
 		//Caso 718725
@@ -141,6 +190,9 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 		//		message: "Debe seleccionar el Tipo de Documento"
 		//	}]
 		//});
+
+		$('#IdSucursal').dxLookup({ value: "" });
+
 
 		$('#modal_comprar_plan').modal('show');
 	};

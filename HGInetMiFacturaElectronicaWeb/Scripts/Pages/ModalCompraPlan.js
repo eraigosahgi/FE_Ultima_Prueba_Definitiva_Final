@@ -17,10 +17,10 @@ GestionCompraPlanesApp.controller('ModalComprarPlanController', function ModalCo
 
 
 	function GuardarCompra() {
-		
+
 		//Caso 718725
 		//$http.post('/api/ComprarPlan?cantidad=' + $scope.cantidad + '&valor_unit=' + $scope.Valor_Unit + '&valor_total=' + $scope.Valor_Total + '&tipo_doc=' + $scope.tipo_documento + '&codigo_plan=' + $scope.codigo_Plan).then(function (response) {
-		$http.post('/api/ComprarPlan?cantidad=' + $scope.cantidad + '&valor_unit=' + $scope.Valor_Unit + '&valor_total=' + $scope.Valor_Total + '&tipo_doc=' + 0 + '&codigo_plan=' + $scope.codigo_Plan).then(function (response) {
+		$http.post('/api/ComprarPlan?cantidad=' + $scope.cantidad + '&valor_unit=' + $scope.Valor_Unit + '&valor_total=' + $scope.Valor_Total + '&tipo_doc=' + 0 + '&codigo_plan=' + $scope.codigo_Plan + '&codigo_sucursal=' + $('#IdSucursal').dxLookup("instance").option().value).then(function (response) {
 			$("#wait").hide();
 			try {
 
@@ -29,8 +29,7 @@ GestionCompraPlanesApp.controller('ModalComprarPlanController', function ModalCo
 				//Resetea los campos del formulario.
 				//document.getElementById("FormularioCompraPlan").reset();
 
-				if (response.data == "")
-				{
+				if (response.data == "") {
 					//Carga notificación de creación con opción de editar formato.
 					//var myDialog = DevExpress.ui.dialog.custom({
 					//	title: "Proceso Éxitoso",
@@ -93,8 +92,8 @@ GestionCompraPlanesApp.controller('ModalComprarPlanController', function ModalCo
 
 
 
-				
-				
+
+
 
 			} catch (err) {
 				DevExpress.ui.notify(err.message, 'error', 3000);

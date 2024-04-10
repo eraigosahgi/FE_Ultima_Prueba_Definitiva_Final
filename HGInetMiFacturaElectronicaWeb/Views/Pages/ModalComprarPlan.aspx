@@ -4,9 +4,9 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
+	<title></title>
 </head>
-<body>    
+<body>
 	<script src="../../Scripts/Pages/ModalCompraPlan.js?vjs20220401"></script>
 	<form id="FormularioCompraPlan">
 		<div id="modal_comprar_plan" class="modal fade" style="display: none;">
@@ -26,7 +26,9 @@
 							<div data-ng-controller="ModalComprarPlanController">
 
 								<div class="col-md-12">
-									<label style="margin: 0px; margin-top: 16px;">Plan <strom style="color: red;" id="txtPlan"></label>
+									<label style="margin: 0px; margin-top: 16px;">Plan
+										<strom style="color: red;" id="txtPlan">
+									</label>
 									<%--<div id="MPlan"></div>--%>
 								</div>
 
@@ -55,6 +57,10 @@
 									<div id="txtTotal"></div>
 								</div>
 
+								<div class="col-md-12" style="margin-top: -8px">
+									<label style="margin-top: 16px;">Sucursal:</label>
+									<div id="IdSucursal"></div>
+								</div>
 								<%--<div class="col-md-12">
 									<label style="margin: 0px; margin-top: 16px; margin-bottom: 1%">Tipo Documento:<strom style="color: red;">*</label>
 									<div id="SelectTipoDoc"></div>
