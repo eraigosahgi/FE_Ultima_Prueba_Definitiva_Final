@@ -5829,6 +5829,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									{
 										ReenviarCorreoSonda(item);
 									}
+									else if (correo == null && item.IntEnvioMail == false)
+									{
+										correo = procesos_correo.Crear(item.StrIdSeguridad);
+										ReenviarCorreoSonda(item);
+									}
 									item.IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
 									item.DatFechaActualizaEstado = Fecha.GetFecha();
 									item.IntEnvioMail = true;
