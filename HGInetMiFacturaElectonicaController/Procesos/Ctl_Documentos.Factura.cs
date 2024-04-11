@@ -155,26 +155,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					//*****Esto se quita cuando se haga el cambio a plan por sucursal
 					//***** ESTACIONES PRIVADAS NACIONALES S.A.S.
-					try
-					{
-						if (facturador_electronico.StrIdentificacion.Equals("900141446") && Sucursal_Obligado == 0)
-						{
-							TblEmpresasResoluciones resolucion_PostP = lista_resolucion.FirstOrDefault(x => x.ComercioConfigDescrip == "PostEDS"); //.Where(x => x.ComercioConfigDescrip == "PostEDS").Select(res => res.StrNumResolucion).ToList<string>();
-							var resol_prefijo = documentos.Where(x => x.NumeroResolucion == resolucion_PostP.StrNumResolucion && x.Prefijo == resolucion_PostP.StrPrefijo).ToList().Select(_res => new { _res.NumeroResolucion, _res.Prefijo }).Distinct().ToList();
-							if (resol_prefijo != null && resol_prefijo.Count > 0)
-							{
-								if (resolucion_PostP.StrPrefijo == resol_prefijo.FirstOrDefault().Prefijo)
-								{
-									Tercero_EDS_PostP = true;
-								}
+					//try
+					//{
+					//	if (facturador_electronico.StrIdentificacion.Equals("900141446") && Sucursal_Obligado == 0)
+					//	{
+					//		TblEmpresasResoluciones resolucion_PostP = lista_resolucion.FirstOrDefault(x => x.ComercioConfigDescrip == "PostEDS"); //.Where(x => x.ComercioConfigDescrip == "PostEDS").Select(res => res.StrNumResolucion).ToList<string>();
+					//		var resol_prefijo = documentos.Where(x => x.NumeroResolucion == resolucion_PostP.StrNumResolucion && x.Prefijo == resolucion_PostP.StrPrefijo).ToList().Select(_res => new { _res.NumeroResolucion, _res.Prefijo }).Distinct().ToList();
+					//		if (resol_prefijo != null && resol_prefijo.Count > 0)
+					//		{
+					//			if (resolucion_PostP.StrPrefijo == resol_prefijo.FirstOrDefault().Prefijo)
+					//			{
+					//				Tercero_EDS_PostP = true;
+					//			}
 
-							}
-						}
-					}
-					catch (Exception exep)
-					{
-						Ctl_Log.Guardar(exep, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.seleccion, "Error haciendo cambio en el Plan de EDS para POS");
-					}
+					//		}
+					//	}
+					//}
+					//catch (Exception exep)
+					//{
+					//	Ctl_Log.Guardar(exep, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.seleccion, "Error haciendo cambio en el Plan de EDS para POS");
+					//}
 
 				}
 
