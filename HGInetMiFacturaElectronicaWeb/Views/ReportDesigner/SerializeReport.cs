@@ -308,7 +308,7 @@ namespace HGInetMiFacturaElectronicaWeb
 			relation_Descuentos.Nested = true;
 			ds.Tables["Descuentos"].ParentRelations.Add(relation_Descuentos);
 
-			//DATOS TABLA DATOS DE DESCUENTOS
+			//DATOS TABLA DATOS DE ReferenciaPago
 			DataTable ReferenciaPago = new DataTable("ReferenciaPago");
 			ReferenciaPago.TableName = "ReferenciaPago";
 			foreach (PropertyInfo info in typeof(ReferenciaPago).GetProperties())
@@ -322,6 +322,21 @@ namespace HGInetMiFacturaElectronicaWeb
 			DataRelation relation_RefPago = new DataRelation("ReferenciaPago", principal, datos_RefPago);
 			relation_RefPago.Nested = true;
 			ds.Tables["ReferenciaPago"].ParentRelations.Add(relation_RefPago);
+
+			//DATOS TABLA DATOS DE TasaCambio
+			DataTable TasaCambio = new DataTable("TasaCambio");
+			TasaCambio.TableName = "TasaCambio";
+			foreach (PropertyInfo info in typeof(TasaCambio).GetProperties())
+			{
+				TasaCambio.Columns.Add(info.Name.ToString());
+			}
+
+			ds.Tables.Add(TasaCambio);
+
+			DataColumn datos_TasaCambio = ds.Tables["TasaCambio"].Columns["Moneda"];
+			DataRelation relation_TasaCambio = new DataRelation("TasaCambio", principal, datos_TasaCambio);
+			relation_TasaCambio.Nested = true;
+			ds.Tables["TasaCambio"].ParentRelations.Add(relation_TasaCambio);
 
 			return ds;
 		}
