@@ -27,5 +27,6 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		public string Identificacion_EmpresaEmisor { get; set; }
 		public bool FacturaE { get; set; }
 		public bool NominaE { get; set; }
+		public int ValidacionVersion { get; set; }
 	}
 }
