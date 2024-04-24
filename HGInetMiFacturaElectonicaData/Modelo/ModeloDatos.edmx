@@ -201,6 +201,7 @@
           <Property Name="StrCargo" Type="varchar" MaxLength="50" />
           <Property Name="IntTipoOperador" Type="int" Nullable="false" />
           <Property Name="IntEnvioSms" Type="bit" Nullable="false" />
+          <Property Name="IntValidacionVersion" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TblEmpresasResoluciones">
           <Key>
@@ -1646,6 +1647,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <NavigationProperty Name="TblEmpresaSucursal" Relationship="Modelo.FK_TblEmpresaSucursal_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresaSucursal" />
           <NavigationProperty Name="TblEmpresaIntegradores" Relationship="Modelo.FK_TblEmpresaIntegradores_TblEmpresas" FromRole="TblEmpresas" ToRole="TblEmpresaIntegradores" />
           <NavigationProperty Name="TblIntegradores" Relationship="Modelo.FK_TblIntegradores_TblEmpresas" FromRole="TblEmpresas" ToRole="TblIntegradores" />
+          <Property Name="IntValidacionVersion" Type="Int32" Nullable="false" />
           </EntityType>
         <Association Name="FK_TblDocumentos_TblEmpresasAdquiriente">
           <End Type="Modelo.TblEmpresas" Role="TblEmpresas" Multiplicity="1" />
@@ -2440,6 +2442,7 @@ advertencia 6002: La tabla o vista 'ModeloNetFacturacionElectronica.dbo.QryEmple
           <EntitySetMapping Name="TblEmpresas">
             <EntityTypeMapping TypeName="Modelo.TblEmpresas">
               <MappingFragment StoreEntitySet="TblEmpresas">
+                <ScalarProperty Name="IntValidacionVersion" ColumnName="IntValidacionVersion" />
                 <ScalarProperty Name="IntEnvioSms" ColumnName="IntEnvioSms" />
                 <ScalarProperty Name="IntTipoOperador" ColumnName="IntTipoOperador" />
                 <ScalarProperty Name="StrCargo" ColumnName="StrCargo" />

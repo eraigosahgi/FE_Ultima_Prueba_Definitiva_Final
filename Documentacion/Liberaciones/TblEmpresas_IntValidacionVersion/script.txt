@@ -1,0 +1,3 @@
+/*CAMPO IntValidacionVersion*/
+ALTER TABLE TblEmpresas
+ADD IntValidacionVersion int NOT NULL default(0);
