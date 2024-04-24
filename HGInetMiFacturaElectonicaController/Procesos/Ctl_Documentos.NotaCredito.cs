@@ -163,11 +163,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Valida que si tiene certificado digital de HGI la fecha presupuestada para permitir firmar documentos con el certificado del Proveedor este vigente
-				//if (facturador_electronico.IntCertFirma == 0)
-				//{
-				//	if (facturador_electronico.DatCertVence < Fecha.GetFecha())
-				//		throw new ApplicationException(string.Format("Certificado digital con fecha de vigencia {0}, se encuentra vencido", facturador_electronico.DatCertVence));
-				//}
+				if (facturador_electronico.IntCertFirma == 0)
+				{
+					if (facturador_electronico.DatCertVence < Fecha.GetFecha())
+						throw new ApplicationException("El certificado digital se encuentra vencido");
+				}
 
 				int i = 0;
 				//Planes y transacciones

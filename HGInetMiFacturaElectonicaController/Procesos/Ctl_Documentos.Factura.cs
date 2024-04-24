@@ -193,11 +193,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//Valida que si tiene certificado digital de HGI la fecha presupuestada para permitir firmar documentos con el certificado del Proveedor este vigente
-				//if (facturador_electronico.IntCertFirma == 0)
-				//{
-				//	if (facturador_electronico.DatCertVence < Fecha.GetFecha())
-				//		throw new ApplicationException(string.Format("Certificado digital con fecha de vigencia {0}, se encuentra vencido", facturador_electronico.DatCertVence));
-				//}
+				if (facturador_electronico.IntCertFirma == 0)
+				{
+					if (facturador_electronico.DatCertVence < Fecha.GetFecha())
+						throw new ApplicationException("El certificado digital se encuentra vencido");
+				}
 
 				//Obtiene la lista de objetos de planes para trabajar(Reserva, procesar, idplan) esto puede generar una lista de objetos, ya que pueda que se requiera mas de un plan
 				ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count(), TipoDocPlanes.Documento.GetHashCode(), Sucursal_Obligado, Tercero_EDS_PostP);
