@@ -75,6 +75,9 @@ namespace HGInetFeAPI.ServicioEmpresas {
         private int TipoIdentificacionField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int ValidacionVersionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int VersionDianField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -307,6 +310,19 @@ namespace HGInetFeAPI.ServicioEmpresas {
                 if ((this.TipoIdentificacionField.Equals(value) != true)) {
                     this.TipoIdentificacionField = value;
                     this.RaisePropertyChanged("TipoIdentificacion");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ValidacionVersion {
+            get {
+                return this.ValidacionVersionField;
+            }
+            set {
+                if ((this.ValidacionVersionField.Equals(value) != true)) {
+                    this.ValidacionVersionField = value;
+                    this.RaisePropertyChanged("ValidacionVersion");
                 }
             }
         }
