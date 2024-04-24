@@ -451,12 +451,57 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				else if (!string.IsNullOrWhiteSpace(item.IdentificacionIntegrador))
 				{
 					List<TblEmpresaIntegradores> integradores = Emp_int.Obtener(facturador_electronico.StrIdentificacion);
-					if (!integradores.Select(x => x.StrIdentificacionInt == item.IdentificacionIntegrador && x.StrIdentificacionEmp == facturador_electronico.StrIdentificacion).FirstOrDefault())
+					if (integradores != null && !integradores.Select(x => x.StrIdentificacionInt == item.IdentificacionIntegrador && x.StrIdentificacionEmp == facturador_electronico.StrIdentificacion).FirstOrDefault())
 					{
-						RegistroLog.EscribirLog(new ApplicationException(string.Format("Validacion de la identificacion del integrador, Facturador: {0} - Prefijo: {1} - Doc: {2} - IdIntegrador: {3}", facturador_electronico.StrIdentificacion, item.Prefijo, item.Documento, item.IdentificacionIntegrador)), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
-						throw new ApplicationException(string.Format("La identificación del Integrador '{0}' correspondiente al aplicativo emisor no esta habilitado en nuestra plataforma", item.IdentificacionIntegrador));
+						if (Fecha.GetFecha() < fecha_control)
+						{
+							Ctl_Empresa ctr_empresa = new Ctl_Empresa();
+							TblEmpresas Integrador = ctr_empresa.Obtener(item.IdentificacionIntegrador);
+							if (Integrador.IntIntegrador == true)
+							{
+								TblEmpresaIntegradores empresa_inte = new TblEmpresaIntegradores();
+								empresa_inte.StrIdentificacionEmp = facturador_electronico.StrIdentificacion;
+								empresa_inte.StrIdentificacionInt = item.IdentificacionIntegrador;
+
+								Emp_int.Crear(empresa_inte);
+							}
+							else
+							{
+								//throw new ApplicationException(string.Format("La identificación del Integrador '{0}' correspondiente al aplicativo emisor no esta habilitado en nuestra plataforma", item.IdentificacionIntegrador));
+								RegistroLog.EscribirLog(new ApplicationException(string.Format("Validacion de la identificacion del integrador, Facturador: {0} - Prefijo: {1} - Doc: {2} - IdIntegrador: {3}", facturador_electronico.StrIdentificacion, item.Prefijo, item.Documento, item.IdentificacionIntegrador)), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+							}
+						}
+						else
+						{
+							throw new ApplicationException(string.Format("La identificación del Integrador '{0}' correspondiente al aplicativo emisor no esta habilitado en nuestra plataforma", item.IdentificacionIntegrador));
+						}
 					}
-						
+					else if (integradores == null)
+					{
+						if (Fecha.GetFecha() < fecha_control)
+						{
+							Ctl_Empresa ctr_empresa = new Ctl_Empresa();
+							TblEmpresas Integrador = ctr_empresa.Obtener(item.IdentificacionIntegrador);
+							if (Integrador.IntIntegrador == true)
+							{
+								TblEmpresaIntegradores empresa_inte = new TblEmpresaIntegradores();
+								empresa_inte.StrIdentificacionEmp = facturador_electronico.StrIdentificacion;
+								empresa_inte.StrIdentificacionInt = item.IdentificacionIntegrador;
+
+								Emp_int.Crear(empresa_inte);
+							}
+							else
+							{
+								//throw new ApplicationException(string.Format("La identificación del Integrador '{0}' correspondiente al aplicativo emisor no esta habilitado en nuestra plataforma", item.IdentificacionIntegrador));
+								RegistroLog.EscribirLog(new ApplicationException(string.Format("Validacion de la identificacion del integrador, Facturador: {0} - Prefijo: {1} - Doc: {2} - IdIntegrador: {3}", facturador_electronico.StrIdentificacion, item.Prefijo, item.Documento, item.IdentificacionIntegrador)), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+							}
+						}
+						else
+						{
+							throw new ApplicationException(string.Format("La identificación del Integrador '{0}' correspondiente al aplicativo emisor no esta habilitado en nuestra plataforma", item.IdentificacionIntegrador));
+						}
+					}
+
 				}
 				else
 				{
