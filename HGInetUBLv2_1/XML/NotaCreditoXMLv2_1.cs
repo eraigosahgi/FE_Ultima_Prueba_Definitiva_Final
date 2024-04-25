@@ -154,9 +154,9 @@ namespace HGInetUBLv2_1
 
 					nota_credito.ProfileID.Value = "DIAN 2.1: Nota de ajuste crédito al documento equivalente";
 
-					nota_credito.CreditNoteTypeCode.Value = "20";
-					if (documento.TipoOperacion == 6)
-						nota_credito.CreditNoteTypeCode.Value = "35";
+					nota_credito.CreditNoteTypeCode.Value = "94";
+					//if (documento.TipoOperacion == 6)
+					//	nota_credito.CreditNoteTypeCode.Value = "35";
 
 					nombre_archivo_xml = nombre_archivo_xml.Replace("nc", "ncs");
 				}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HGInetUBLv2_1;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,28 +9,28 @@ namespace HGInetUBLv2_1
 {
 	public partial class TotalesCopType
 	{
-		private decimal FctConvCopField;
-		private string MonedaCopField;
-		private decimal SubTotalCopField;
-		private decimal DescuentoDetalleCopField;
-		private decimal RecargoDetalleCopField;
-		private decimal TotalBrutoFacturaCopField;
-		private decimal TotIvaCopField;
-		private decimal TotIncCopField;
-		private decimal TotBolCopField;
-		private decimal ImpOtroCopField;
-		private decimal MntImpCopField;
-		private decimal TotalNetoFacturaCopField;
-		private decimal MntDctoCopField;
-		private decimal MntRcgoCopField;
-		private decimal VlrPagarCopField;
-		private decimal ReteFueCopField;
-		private decimal ReteIvaCopField;
-		private decimal ReteIcaCopField;
-		private decimal TotAnticiposCopField;
+		private FctConvCopType FctConvCopField;
+		private MonedaCopType MonedaCopField;
+		private SubTotalCopType SubTotalCopField;
+		private DescuentoDetalleCopType DescuentoDetalleCopField;
+		private RecargoDetalleCopType RecargoDetalleCopField;
+		private TotalBrutoFacturaCopType TotalBrutoFacturaCopField;
+		private TotIvaCopType TotIvaCopField;
+		private TotIncCopType TotIncCopField;
+		private TotBolCopType TotBolCopField;
+		private ImpOtroCopType ImpOtroCopField;
+		private MntImpCopType MntImpCopField;
+		private TotalNetoFacturaCopType TotalNetoFacturaCopField;
+		private MntDctoCopType MntDctoCopField;
+		private MntRcgoCopType MntRcgoCopField;
+		private VlrPagarCopType VlrPagarCopField;
+		private ReteFueCopType ReteFueCopField;
+		private ReteIvaCopType ReteIvaCopField;
+		private ReteIcaCopType ReteIcaCopField;
+		private TotAnticiposCopType TotAnticiposCopField;
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal FctConvCop
+		//[System.Xml.Serialization.XmlElementAttribute("FctConvCop")]
+		public FctConvCopType FctConvCop
 		{
 			get
 			{
@@ -41,8 +42,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public string MonedaCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("MonedaCop")]
+		public MonedaCopType MonedaCop
 		{
 			get
 			{
@@ -54,8 +55,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal SubTotalCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("SubTotalCop")]
+		public SubTotalCopType SubTotalCop
 		{
 			get
 			{
@@ -67,8 +68,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal DescuentoDetalleCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("DescuentoDetalleCop")]
+		public DescuentoDetalleCopType DescuentoDetalleCop
 		{
 			get
 			{
@@ -80,8 +81,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal RecargoDetalleCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("RecargoDetalleCop")]
+		public RecargoDetalleCopType RecargoDetalleCop
 		{
 			get
 			{
@@ -93,8 +94,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal TotalBrutoFacturaCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("TotalBrutoFacturaCop")]
+		public TotalBrutoFacturaCopType TotalBrutoFacturaCop
 		{
 			get
 			{
@@ -106,8 +107,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal TotIvaCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("TotIvaCop")]
+		public TotIvaCopType TotIvaCop
 		{
 			get
 			{
@@ -119,8 +120,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal TotIncCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("TotIncCop")]
+		public TotIncCopType TotIncCop
 		{
 			get
 			{
@@ -132,8 +133,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal TotBolCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("TotBolCop")]
+		public TotBolCopType TotBolCop
 		{
 			get
 			{
@@ -145,8 +146,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal ImpOtroCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("ImpOtroCop")]
+		public ImpOtroCopType ImpOtroCop
 		{
 			get
 			{
@@ -158,8 +159,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal MntImpCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("MntImpCop")]
+		public MntImpCopType MntImpCop
 		{
 			get
 			{
@@ -171,8 +172,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal TotalNetoFacturaCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("TotalNetoFacturaCop")]
+		public TotalNetoFacturaCopType TotalNetoFacturaCop
 		{
 			get
 			{
@@ -184,8 +185,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal MntDctoCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("MntDctoCop")]
+		public MntDctoCopType MntDctoCop
 		{
 			get
 			{
@@ -197,8 +198,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal MntRcgoCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("MntRcgoCop")]
+		public MntRcgoCopType MntRcgoCop
 		{
 			get
 			{
@@ -210,8 +211,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal VlrPagarCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("VlrPagarCop")]
+		public VlrPagarCopType VlrPagarCop
 		{
 			get
 			{
@@ -223,8 +224,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal ReteFueCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("ReteFueCop")]
+		public ReteFueCopType ReteFueCop
 		{
 			get
 			{
@@ -236,8 +237,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal ReteIvaCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("ReteIvaCop")]
+		public ReteIvaCopType ReteIvaCop
 		{
 			get
 			{
@@ -249,8 +250,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal ReteIcaCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("ReteIcaCop")]
+		public ReteIcaCopType ReteIcaCop
 		{
 			get
 			{
@@ -262,8 +263,8 @@ namespace HGInetUBLv2_1
 			}
 		}
 
-		[System.Xml.Serialization.XmlAttributeAttribute()]
-		public decimal TotAnticiposCop
+		//[System.Xml.Serialization.XmlAttributeAttribute("TotAnticiposCop")]
+		public TotAnticiposCopType TotAnticiposCop
 		{
 			get
 			{
