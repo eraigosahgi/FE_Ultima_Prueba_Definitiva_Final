@@ -411,7 +411,7 @@ namespace HGInetUBLv2_1
 
 				#region período al que aplica el documento
 				// <cac:InvoicePeriod>
-				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5)
+				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5 && documento.TipoOperacion != 6)
 				{
 					PeriodType PeriodType = new PeriodType()
 					{
@@ -457,7 +457,7 @@ namespace HGInetUBLv2_1
 					documento.OrderReference.Documento = documento.DocumentoRef;
 				}
 
-				if (documento.OrderReference != null && documento.TipoOperacion != 5)
+				if (documento.OrderReference != null && documento.TipoOperacion != 5 && documento.TipoOperacion != 6)
 				{
 					facturaXML.OrderReference = new OrderReferenceType();
 
@@ -472,7 +472,7 @@ namespace HGInetUBLv2_1
 
 				#region facturaXML.DespatchDocumentReference 
 
-				if (documento.DespatchDocument != null && documento.TipoOperacion != 5)
+				if (documento.DespatchDocument != null && documento.TipoOperacion != 5 && documento.TipoOperacion != 6)
 				{
 					//Referencia un documento
 					facturaXML.DespatchDocumentReference = new DocumentReferenceType[documento.DespatchDocument.Count];
@@ -492,7 +492,7 @@ namespace HGInetUBLv2_1
 				//Referencia Adicional si se utiliza y cuando es contingencia
 				#region facturaXML.AdditionalDocumentReference
 
-				if (documento.DocumentosReferencia != null && documento.TipoOperacion != 5)
+				if (documento.DocumentosReferencia != null && documento.TipoOperacion != 5 && documento.TipoOperacion != 6)
 				{
 					List<DocumentReferenceType> AdditionalDocument = new List<DocumentReferenceType>();
 					foreach (var item in documento.DocumentosReferencia)
@@ -513,7 +513,7 @@ namespace HGInetUBLv2_1
 
 				#region facturaXML.ReceiptDocument 
 
-				if (documento.ReceiptDocument != null && documento.TipoOperacion != 5)
+				if (documento.ReceiptDocument != null && documento.TipoOperacion != 5 && documento.TipoOperacion != 6)
 				{
 					//Referencia un documento
 					facturaXML.ReceiptDocumentReference = new DocumentReferenceType[documento.ReceiptDocument.Count];
@@ -532,7 +532,7 @@ namespace HGInetUBLv2_1
 
 				/*** QUEMADO ***/
 				//---Validar persona autorizada por el emisor a descargar el documento desde la base de datos de la DIAN
-				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5)
+				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5 && documento.TipoOperacion != 6)
 				{
 					#region facturaXML.TaxRepresentativeParty - Grupo con informaciones que definen una persona autorizada por el emisor a descargar el documento desde la base de datos de la DIAN 
 					PartyType TaxRepresentativeParty = new PartyType();
@@ -593,7 +593,7 @@ namespace HGInetUBLv2_1
 				if ((documento.Descuentos != null && documento.Descuentos.Sum(x => (x.Valor)) > 0) || (documento.Cargos != null && documento.Cargos.Sum(x => (x.Valor)) > 0))
 					facturaXML.AllowanceCharge = ValoresAdicionalesXML.ObtenerValoresAd(documento);
 
-				if (documento.DatosAdquiriente.DireccionEntrega != null && documento.TipoOperacion != 5)
+				if (documento.DatosAdquiriente.DireccionEntrega != null && documento.TipoOperacion != 5 && documento.TipoOperacion != 6)
 				{
 					DeliveryType[] delivery = new DeliveryType[1];
 					DeliveryType deliverytype = new DeliveryType();
@@ -684,7 +684,7 @@ namespace HGInetUBLv2_1
 				}
 
 
-				if (documento.TipoOperacion == TipoOperacion.FacturaExportacion.GetHashCode() && documento.TipoEntrega != null && documento.TipoOperacion != 5)
+				if (documento.TipoOperacion == TipoOperacion.FacturaExportacion.GetHashCode() && documento.TipoEntrega != null && documento.TipoOperacion != 5 && documento.TipoOperacion != 6)
 				{
 					ListaTipoEntrega list_tipo_entrega = new ListaTipoEntrega();
 					ListaItem entrega = list_tipo_entrega.Items.Where(d => d.Codigo.Equals(documento.TipoEntrega.CodCondicionEntrega)).FirstOrDefault();
@@ -736,7 +736,7 @@ namespace HGInetUBLv2_1
 				//---Validar Se llena con informacion del ejemplo Factura Genericas
 				#region PaymentExchangeRate - Conversión de divisas: cac:PaymentExchangeRate 
 
-				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5)
+				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5 && documento.TipoOperacion != 6)
 				{
 					ExchangeRateType PaymentExchangeRate = new ExchangeRateType();
 					//---5.3.3. Moneda (ISO 4217):
@@ -814,7 +814,7 @@ namespace HGInetUBLv2_1
 					CUFE = CalcularCUFE(facturaXML, resolucion.ClaveTecnicaDIAN, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);//resolucion.ClaveTecnicaDIAN
 					UUID.schemeName = "CUFE-SHA384";
 				}
-				else if (facturaXML.InvoiceTypeCode.Value.Equals("03") || facturaXML.InvoiceTypeCode.Value.Equals("20"))
+				else if (facturaXML.InvoiceTypeCode.Value.Equals("03") || facturaXML.InvoiceTypeCode.Value.Equals("20") || facturaXML.InvoiceTypeCode.Value.Equals("35"))
 				{
 					CUFE = CalcularCUFE(facturaXML, resolucion.PinSoftware, facturaXML.ProfileExecutionID.Value, ref cadena_cufe);
 					UUID.schemeName = "CUDE-SHA384";
@@ -931,6 +931,14 @@ namespace HGInetUBLv2_1
 					}
 
 				}
+
+				if (documento.TipoOperacion == 2)
+				{
+					UBLExtensionType UBLExtensionSector = new UBLExtensionType();
+					UBLExtensionSector.ExtensionContent = ExtensionExportacion.Obtener(documento.Trm);
+					UBLExtensions.Add(UBLExtensionSector);
+				}
+
 
 				// Extension de HGI
 				//UBLExtensionType UBLExtensionHgi = new UBLExtensionType();
