@@ -335,6 +335,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string IdentificacionIntegrador { get; set; }
 
+		/// <summary>
+		/// Campo donde la plataforma llenera la informacion completa de la resolucion solo para la generacion del PDF
+		/// </summary>
+		public string ResolucionCompleta { get; set; }
+
 
 		#endregion
 
