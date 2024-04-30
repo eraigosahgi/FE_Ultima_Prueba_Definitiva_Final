@@ -895,7 +895,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						{
 							try
 							{
-								if (CerrarplanesPostpago(item.StrIdentificacion))
+								int sucursal_plan = 0;
+								if (CerrarplanesPostpago(item.StrIdentificacion,ref sucursal_plan))
 								{
 									plan = new TblPlanesTransacciones();
 									//Se suma un mes al primer dia del mes
@@ -916,6 +917,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 									string fecha_creacion = plan.DatFecha.ToString(Fecha.formato_fecha_hora);
 									string fecha_vencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
 									plan.StrObservaciones = string.Format(Constantes.RecargaAutomaticaPostPago, fecha_creacion, fecha_vencimiento);
+									plan.IntSucursal = sucursal_plan;
 									Crear(plan, Notifica);
 								}
 							}
@@ -935,7 +937,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Cierra los planes postpago de un facturador en especifico
 		/// </summary>
 		/// <param name="Facturador">Documento del Facturador</param>
-		public bool CerrarplanesPostpago(string Facturador)
+		public bool CerrarplanesPostpago(string Facturador, ref int sucursal)
 		{
 			bool CrearPlan = true;
 			try
@@ -965,6 +967,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						item.IntEstado = EstadoPlan.Procesado.GetHashCode();
 						item.StrObservaciones = string.Format("{0}{1}{2}{3}", item.StrObservaciones, Environment.NewLine, Environment.NewLine, string.Format(Constantes.CierreAutomaticoPostPago, fecha_creacion, item.IntNumTransaccProcesadas, fecha_vencimiento));
 						this.Edit(item);
+						sucursal = item.IntSucursal;
 					}
 				}
 				return CrearPlan;
