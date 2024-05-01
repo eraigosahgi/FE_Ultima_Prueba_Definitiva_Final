@@ -736,7 +736,7 @@ namespace HGInetUBLv2_1
 				//---Validar Se llena con informacion del ejemplo Factura Genericas
 				#region PaymentExchangeRate - Conversión de divisas: cac:PaymentExchangeRate 
 
-				if (documento.TipoOperacion != 3 && documento.TipoOperacion != 5 && documento.TipoOperacion != 6)
+				if (documento.TipoOperacion == 2 && documento.Trm != null)
 				{
 					ExchangeRateType PaymentExchangeRate = new ExchangeRateType();
 					//---5.3.3. Moneda (ISO 4217):
