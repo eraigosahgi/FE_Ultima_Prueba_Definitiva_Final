@@ -94,7 +94,7 @@ namespace HGInetUBLv2_1
 
 				#region nota_credito.IssueTime //Hora de la nota_credito
 				IssueTimeType IssueTime = new IssueTimeType();
-				IssueTime.Value = documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa));
+				IssueTime.Value = documento.Fecha.ToString(Fecha.formato_hora_zona);//documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa));
 				nota_credito.IssueTime = IssueTime;
 				#endregion
 

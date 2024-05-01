@@ -2395,7 +2395,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						if (item.IdVersionDian != 2)
 							throw new ApplicationException(string.Format("No se encuentra disponible el cálculo para la versión {0} indicada.", item.IdVersionDian));
 
-						string FecFac = string.Format("{0}{1}", item.Fecha.ToString(Fecha.formato_fecha_hginet), item.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona));
+						string FecFac = string.Format("{0}{1}", item.Fecha.ToString(Fecha.formato_fecha_hginet), item.Fecha.ToString(Fecha.formato_hora_zona));
+						//string FecFac = item.Fecha.ToString(Fecha.formato_hora_zona);
 
 						switch (item.DocumentoTipo)
 						{

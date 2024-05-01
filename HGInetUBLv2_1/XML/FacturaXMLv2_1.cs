@@ -195,7 +195,7 @@ namespace HGInetUBLv2_1
 				//----Se debe enviar la hora de emision con -5 horas
 				IssueTimeType IssueTime = new IssueTimeType();
 				//string hora_documento = fecha_univ.ToString("HH:mm:sszzz");
-				IssueTime.Value = documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona);//Convert.ToDateTime(hora_documento);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//
+				IssueTime.Value = documento.Fecha.ToString(Fecha.formato_hora_zona);//documento.Fecha.AddHours(5).ToString(Fecha.formato_hora_zona);//Convert.ToDateTime(hora_documento);//Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_hora_completa)).AddHours(5);//
 				facturaXML.IssueTime = IssueTime;
 				#endregion
 
