@@ -186,7 +186,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//**Se agrega validacion y asignacion del aplicativo emisor del documento.
 
-				DateTime fecha_control = new DateTime(2024, 05, 06, 0, 0, 0);
+				DateTime fecha_control = new DateTime(2024, 05, 13, 0, 0, 0);
 				Ctl_EmpresaIntegradores Emp_int = new Ctl_EmpresaIntegradores();
 				List<TblEmpresaIntegradores> integradores = Emp_int.Obtener(facturador_electronico.StrIdentificacion);
 				//string integrador_peticion = string.Empty;
@@ -905,8 +905,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			else
 			{
-				if (documento.Fecha.Date != Fecha.GetFecha().Date)
-					throw new ApplicationException(string.Format("La fecha de elaboración {0} no puede ser diferente a la fecha actual.", documento.Fecha));
+				if (documento.Fecha.Date != Fecha.GetFecha().Date && !documento.TipoOperacion.Equals(1) && !documento.TipoOperacion.Equals(3))
+					throw new ApplicationException(string.Format("La fecha de elaboración del Documento no puede ser diferente a la fecha actual. Fecha Documento: {0}", documento.Fecha.ToString("yyyy-MM-dd")));
 
 				if (documento.FormaPago != 0)
 				{

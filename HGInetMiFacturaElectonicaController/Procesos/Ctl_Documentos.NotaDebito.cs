@@ -157,7 +157,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//**Se agrega validacion y asignacion del aplicativo emisor del documento.
 
-				DateTime fecha_control = new DateTime(2024, 05, 06, 0, 0, 0);
+				DateTime fecha_control = new DateTime(2024, 05, 13, 0, 0, 0);
 				Ctl_EmpresaIntegradores Emp_int = new Ctl_EmpresaIntegradores();
 				List<TblEmpresaIntegradores> integradores = Emp_int.Obtener(facturador_electronico.StrIdentificacion);
 				//string integrador_peticion = string.Empty;
@@ -944,12 +944,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			if (facturador.IntVersionDian == 1)
 			{
 				if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-2).Date || documento.Fecha.Date > Fecha.GetFecha().Date)
-					throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha));
+					throw new ApplicationException(string.Format("La fecha de elaboración {0} no está dentro los términos.", documento.Fecha.Date));
 			}
 			else
 			{
 				if (documento.Fecha.Date != Fecha.GetFecha().Date)
-					throw new ApplicationException(string.Format("La fecha de elaboración {0} no puede ser diferente a la fecha actual.", documento.Fecha));
+					throw new ApplicationException(string.Format("La fecha de elaboración del Documento no puede ser diferente a la fecha actual. Fecha Documento: {0}", documento.Fecha.ToString("yyyy-MM-dd")));
 
 				ListaConceptoNotaDebito list_concepto = new ListaConceptoNotaDebito();
 				ListaItem concepto = list_concepto.Items.Where(d => d.Codigo.Equals(documento.Concepto)).FirstOrDefault();
