@@ -905,8 +905,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
 			else
 			{
-				if (documento.Fecha.Date < Fecha.GetFecha().AddDays(-10).Date || documento.Fecha.Date > Fecha.GetFecha().Date.AddDays(10))
-					throw new ApplicationException(string.Format("La fecha de elaboración {0} no puede ser 10 dias superior o inferior a la fecha actual.", documento.Fecha));
+				if (documento.Fecha.Date != Fecha.GetFecha().Date)
+					throw new ApplicationException(string.Format("La fecha de elaboración {0} no puede ser diferente a la fecha actual.", documento.Fecha));
 
 				if (documento.FormaPago != 0)
 				{
