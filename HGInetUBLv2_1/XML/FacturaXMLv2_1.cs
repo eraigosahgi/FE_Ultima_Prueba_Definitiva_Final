@@ -732,10 +732,11 @@ namespace HGInetUBLv2_1
 
 				#endregion
 
-				/*** QUEMADO ***/
+				//Se quita esta informacion para Anexo V1.9 solo se transmite documentos en Pesos
 				//---Validar Se llena con informacion del ejemplo Factura Genericas
 				#region PaymentExchangeRate - Conversión de divisas: cac:PaymentExchangeRate 
 
+				/*
 				if (documento.TipoOperacion == 2 && documento.Trm != null)
 				{
 					ExchangeRateType PaymentExchangeRate = new ExchangeRateType();
@@ -761,7 +762,7 @@ namespace HGInetUBLv2_1
 					PaymentExchangeRate.Date.Value = ((documento.Trm != null) ? Convert.ToDateTime(documento.Trm.FechaTrm.ToString(Fecha.formato_fecha_hginet)) : Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet)));
 					facturaXML.PaymentExchangeRate = PaymentExchangeRate;
 				}
-
+				*/
 				#endregion
 
 				#region facturaXML.InvoiceLine - Línea de facturaXML

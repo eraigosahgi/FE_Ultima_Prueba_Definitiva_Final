@@ -210,6 +210,9 @@ namespace HGInetUBLv2_1
 					DocumentReference.ID.Value = documento.DocumentoRef;
 					DocumentReference.UUID = new UUIDType();
 					DocumentReference.UUID.Value = documento.CufeFactura;
+					DocumentReference.UUID.schemeName = "CUFE-SHA384";
+					if (documento.TipoOperacion == 3)
+						DocumentReference.UUID.schemeName = "CUDS-SHA384";
 					DocumentReference.IssueDate = new IssueDateType();
 					DocumentReference.IssueDate.Value = documento.FechaFactura;
 					DocReference.InvoiceDocumentReference = DocumentReference;
