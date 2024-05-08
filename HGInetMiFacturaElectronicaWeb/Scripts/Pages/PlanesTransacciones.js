@@ -623,11 +623,11 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				if (Datos_TiposDoc == 0 || Datos_TiposDoc == 1 || Datos_TiposDoc == 2) {
 					$("#TipoDoc").dxRadioGroup({ value: TiposDoc[BuscarID(TiposDoc, Datos_TiposDoc)] });
 				}
-				
+
 				//Set_Facturador(codigo_empresa + ' -- ' + Datos_Nombre_facturador);
 				$('#Facturador').dxLookup({ value: codigo_empresa });
 				//Bloquear_Facturador();
-				$('#Facturador').dxLookup({ disabled:true });
+				$('#Facturador').dxLookup({ disabled: true });
 				$("#CantidadTransacciones").dxNumberBox({ value: Datos_T_compra });
 
 				$("#ValorPlan").dxNumberBox({ value: Datos_valor_plan });
@@ -680,7 +680,56 @@ GestionPlanesApp.controller('GestionPlanesController', function GestionPlanesCon
 				}
 
 				try {
-					$('#IdSucursal').dxLookup({ value: response.data[0].IntSucursal, disabled: true });
+					//$('#IdSucursal').dxLookup({ value: response.data[0].IntSucursal, disabled: true });
+					//***********************************************************************************
+					$http.get('/api/ObtenerEmpresaSucursal?IdentificacionEmpresa=' + codigo_empresa).then(function (data) {
+						$("#wait").hide();
+						try {
+							var codigo = 'id';
+							var descripcion = 'sucursal';
+							$('#IdSucursal').dxLookup({
+								value: response.data[0].IntSucursal,
+								disabled: true,
+								showPopupTitle: false,
+								dataSource: data.data,
+								displayExpr: 'sucursal',
+								inputAttr: { 'aria-label': 'Product' },
+								valueExpr: 'id',
+								searchEnabled: true,
+								cancelButtonText: "Cancelar",
+								showClearButton: true,
+								fieldTemplate: function (d) {
+									try {
+
+										return d[codigo] + ' - ' + d[descripcion];
+									} catch (e) { }
+								},
+								itemTemplate: function (d) {
+									try {
+
+										return d[codigo] + ' - ' + d[descripcion];
+
+
+									} catch (e) { }
+								},
+							}).dxValidator({
+								validationRules: [{
+									type: "required",
+									message: "Debe indicar la sucursal"
+								}]
+							});
+
+						} catch (err) {
+							DevExpress.ui.notify(err.message, 'error', 3000);
+						}
+					}, function errorCallback(response) {
+						$('#wait').hide();
+						DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
+					});
+					//***********************************************************************************
+
+
+
 				} catch (e) {
 
 				}
@@ -919,6 +968,10 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
 
 					 	caption: "TipoDoc",
 					 	dataField: "TipoDoc"
+					 },
+					 {
+					 	caption: "Sucursal",
+					 	dataField: "IntSucursal"
 					 }
 					 ,
 					  {

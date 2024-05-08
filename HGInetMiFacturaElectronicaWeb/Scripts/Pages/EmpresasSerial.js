@@ -3,16 +3,27 @@ var opc_pagina = "1333";
 var ModalSerialEmpresaApp = angular.module('ModalSerialEmpresaApp', []);
 
 var SerialEmpresaApp = angular.module('SerialEmpresaApp', ['ModalSerialEmpresaApp', 'dx', 'appsrvusuario']);
-
+var identificacion_empresa = "";
 //Servicio para gestionar la consulta de las empresas 
+
+function uuidv4() {
+	return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+		(+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+	);
+}
+
 angular.module("appsrvusuario", [])
 .factory("srvusuario", function ($http) {
+
+
+	
+
 
 	var Scope = function () { }
 	Scope.consulta = function () {
 		$("#wait").show();
 		$http.get('/api/Empresas?Facturador=true').then(function (response) {
-			$("#wait").hide();			
+			$("#wait").hide();
 			$("#gridEmpresas").dxDataGrid({
 				dataSource: response.data,
 				keyExpr: "Identificacion",
@@ -72,6 +83,7 @@ angular.module("appsrvusuario", [])
 							 			$("#txtemail").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
 
 							 			Scope.nitEmpresa = options.data.Identificacion;
+							 			identificacion_empresa = options.data.Identificacion;
 							 			$('#txtnitEmpresa').dxTextBox({ value: Scope.nitEmpresa });
 							 			$("#txtnitEmpresa").removeClass("dx-textbox dx-texteditor dx-state-readonly dx-widget");
 
@@ -81,6 +93,15 @@ angular.module("appsrvusuario", [])
 
 							 			$("#txtResolucion").dxTextBox({ value: options.data.Resolucion });
 							 			$("#txtSerial").dxTextBox({ value: options.data.Serial });
+
+							 			$("#btnGenerar").dxButton({
+							 				text: "Generar",
+							 				onClick: function () {
+							 					var d = uuidv4();
+							 					$("#txtSerial").dxTextBox({ value: d });
+							 				}
+							 			});
+
 							 		}
 							 	}
 							 }).removeClass("dx-button dx-button-normal dx-widget")
@@ -386,13 +407,13 @@ ModalSerialEmpresaApp.controller('ModalSerialEmpresaController', function ModalS
 	}
 
 
+
 	function guardarSerial() {
 		if (Datos_Resolucion != '' && Datos_Serial != '') {
 
 
-			Datos_Identificacion = $scope.nitEmpresa;
 			var data = $.param({
-				Identificacion: Datos_Identificacion,
+				Identificacion: identificacion_empresa,
 				Serial: Datos_Serial,
 				Resolucion: Datos_Resolucion
 			});

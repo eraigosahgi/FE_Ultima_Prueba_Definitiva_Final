@@ -43,6 +43,11 @@
                             <div class="col-md-10 col-xs-12">
                                 <div id="txtemail"></div>
                             </div>
+
+							<div class="col-xs-12 text-right" style="z-index: 9999;">
+                                <div id="btnGenerar" style="margin-bottom: -60px;"></div>
+                            </div>
+							
                             <div class="col-md-12">
                                 <label style="margin: 0px; margin-top: 16px;">Serial de Activación:<strom style="color: red;">*</label>
                                 <div id="txtSerial"></div>

@@ -70,7 +70,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					CodCompra = d.IntTipoProceso,
 					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0,
 					TipoDoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocPlanes>(d.IntTipoDocumento)),
-					DocRef = (d.DocumentoRef == "" || d.DocumentoRef == null) ? "0" : d.DocumentoRef
+					DocRef = (d.DocumentoRef == "" || d.DocumentoRef == null) ? "0" : d.DocumentoRef,
+					IntSucursal = d.IntSucursal
 				});
 
 				return Ok(retorno);

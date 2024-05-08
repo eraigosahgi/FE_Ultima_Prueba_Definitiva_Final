@@ -18,7 +18,7 @@ ModalAsignarFormatoApp.controller('ModalAsignarFormatoController', function Moda
 				stopTaskStatusDataSet = response.data[0].RazonSocial;
 			});
 
-			$("#SelectEmpresa").dxSelectBox({
+			$("#SelectEmpresa").dxLookup({
 				value: stopTaskStatusDataSet,
 				placeholder: "Seleccione la Empresa",
 				displayExpr: "RazonSocial",
@@ -26,9 +26,29 @@ ModalAsignarFormatoApp.controller('ModalAsignarFormatoController', function Moda
 				dataSource: response.data,
 				searchExpr: ["RazonSocial", "Identificacion"],
 				searchEnabled: true,
+				cancelButtonText: "Cancelar",
+				showClearButton: true,
+				dropDownOptions: {
+					hideOnOutsideClick: true,
+					showTitle: true,
+				},
 				onValueChanged: function (data) {
 					seleccion_empresa = data.value;
-				}
+				},
+				fieldTemplate: function (datos) {
+					try {
+
+						return datos['Identificacion'] + ' - ' + datos['RazonSocial'];
+					} catch (e) { }
+				},
+				itemTemplate: function (datos) {
+					try {
+
+						return datos['Identificacion'] + ' - ' + datos['RazonSocial'];
+
+
+					} catch (e) { }
+				},
 			}).dxValidator({
 				validationRules: [{
 					type: "required",
