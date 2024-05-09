@@ -903,7 +903,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					if (!Numero.Tolerancia(documento.ValorImpuestoConsumo, detalle.Sum(v => (v.ValorImpuestoConsumo)) + detalle.Sum(v => (v.ValorImpuestoConsumo2)), 10))
 						//if (detalle.Sum(v => (v.ValorImpuestoConsumo)) != documento.ValorImpuestoConsumo)
-						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria del detalle con valor {2}", "ImpuestoConsumo", documento.ValorImpuestoConsumo, detalle.Sum(v => (v.ValorImpuestoConsumo))));
+						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria del detalle con valor {2}", "ImpuestoConsumo", documento.ValorImpuestoConsumo, detalle.Sum(v => (v.ValorImpuestoConsumo)) + detalle.Sum(v => (v.ValorImpuestoConsumo2))));
 
 					//Validacion del Anticipo calculado con el que es enviado en el documento
 					if (documento.Anticipos == null)
