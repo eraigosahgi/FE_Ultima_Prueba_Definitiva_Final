@@ -894,7 +894,7 @@ namespace HGInetUBLv2_1
 						#endregion
 					}
 
-					if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == false)
+					if (DocDet.ValorImpuestoConsumo > 0)
 					{
 
 						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
@@ -1014,110 +1014,110 @@ namespace HGInetUBLv2_1
 						TaxTotal.TaxSubtotal = TaxesSubtotal;
 						TaxesTotal.Add(TaxTotal);
 					}
-					else if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == true)
-					{
-						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
-						TaxTotalType TaxTotal = new TaxTotalType();
+					//else if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ProductoGratis == true)
+					//{
+					//	//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
+					//	TaxTotalType TaxTotal = new TaxTotalType();
 
-						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
-						// <cbc:TaxAmount>
-						TaxTotal.TaxAmount = new TaxAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorImpuestoConsumo// decimal.Round(DocDet.ValorImpuestoConsumo, 2)
-						};
+					//	// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
+					//	// <cbc:TaxAmount>
+					//	TaxTotal.TaxAmount = new TaxAmountType()
+					//	{
+					//		currencyID = moneda_detalle.ToString(),
+					//		Value = DocDet.ValorImpuestoConsumo// decimal.Round(DocDet.ValorImpuestoConsumo, 2)
+					//	};
 
-						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
-						// <cbc:TaxEvidenceIndicator>
-						TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
-						{
-							Value = false
-						};
+					//	// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
+					//	// <cbc:TaxEvidenceIndicator>
+					//	TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+					//	{
+					//		Value = false
+					//	};
 
-						RoundingAmountType Rouding = new RoundingAmountType();
-						Rouding.Value = 0;
-						Rouding.currencyID = moneda_detalle.ToString();
-						TaxTotal.RoundingAmount = Rouding;
+					//	RoundingAmountType Rouding = new RoundingAmountType();
+					//	Rouding.Value = 0;
+					//	Rouding.currencyID = moneda_detalle.ToString();
+					//	TaxTotal.RoundingAmount = Rouding;
 
-						// Debe ser informado un grupo de estos para cada tarifa. 
-						// <cac:TaxSubtotal>
-						TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
+					//	// Debe ser informado un grupo de estos para cada tarifa. 
+					//	// <cac:TaxSubtotal>
+					//	TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
 
-						TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
+					//	TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
 
-						// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
-						//Base Imponible sobre la que se calcula el valor del tributo
-						//----Se debe Solicitar la base con la que calculo el impuesto
-						TaxSubtotalConsumo.BaseUnitMeasure = new BaseUnitMeasureType()
-						{
-							unitCode = DebitedQuantity.unitCode,
-							Value = DocDet.Cantidad //1.00M//decimal.Round(DocDet.Cantidad, 6)
-						};
+					//	// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+					//	//Base Imponible sobre la que se calcula el valor del tributo
+					//	//----Se debe Solicitar la base con la que calculo el impuesto
+					//	TaxSubtotalConsumo.BaseUnitMeasure = new BaseUnitMeasureType()
+					//	{
+					//		unitCode = DebitedQuantity.unitCode,
+					//		Value = DocDet.Cantidad //1.00M//decimal.Round(DocDet.Cantidad, 6)
+					//	};
 
-						// El monto de este subtotal fiscal.
-						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
-						// <cbc:TaxAmount>
-						TaxSubtotalConsumo.TaxAmount = new TaxAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorImpuestoConsumo
-						};
+					//	// El monto de este subtotal fiscal.
+					//	//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
+					//	// <cbc:TaxAmount>
+					//	TaxSubtotalConsumo.TaxAmount = new TaxAmountType()
+					//	{
+					//		currencyID = moneda_detalle.ToString(),
+					//		Value = DocDet.ValorImpuestoConsumo
+					//	};
 
-						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
-						//Tarifa del tributo
-						// <cbc:Percent>
-						TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round((DocDet.ValorImpuestoConsumo) / DocDet.Cantidad, 6) + 0.00M//decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2) + 0.00M//
-						};
+					//	// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+					//	//Tarifa del tributo
+					//	// <cbc:Percent>
+					//	TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
+					//	{
+					//		currencyID = moneda_detalle.ToString(),
+					//		Value = decimal.Round((DocDet.ValorImpuestoConsumo) / DocDet.Cantidad, 6) + 0.00M//decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2) + 0.00M//
+					//	};
 
-						// categoría de impuestos aplicable a este subtotal.
-						//Grupo de informaciones sobre el tributo 
-						// <cac:TaxCategory>
-						TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
+					//	// categoría de impuestos aplicable a este subtotal.
+					//	//Grupo de informaciones sobre el tributo 
+					//	// <cac:TaxCategory>
+					//	TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
 
-						string codigo_impuesto = string.Empty;
-						//
-						if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ImpoConsumoPorcentaje == 0)
-						{
-							if (DocDet.Aiu != 4)
-							{
-								codigo_impuesto = "02";
-							}
-							else
-							{
-								codigo_impuesto = "22";
-							}
-						}
-						else
-						{
-							codigo_impuesto = "04";
-						}
+					//	string codigo_impuesto = string.Empty;
+					//	//
+					//	if (DocDet.ValorImpuestoConsumo > 0 && DocDet.ImpoConsumoPorcentaje == 0)
+					//	{
+					//		if (DocDet.Aiu != 4)
+					//		{
+					//			codigo_impuesto = "02";
+					//		}
+					//		else
+					//		{
+					//			codigo_impuesto = "22";
+					//		}
+					//	}
+					//	else
+					//	{
+					//		codigo_impuesto = "04";
+					//	}
 
 
-						// <cac:TaxScheme>
-						//Grupo de informaciones específicas sobre el tributo
-						TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
-						ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
-						ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals(codigo_impuesto)).FirstOrDefault();
-						//Identificador del tributo
-						TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
-						TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"22";//TipoImpuestos.Consumo,
-																   //Nombre del tributo
-						TaxSchemeConsumo.Name = new NameType1();
-						TaxSchemeConsumo.Name.Value = tipoimp.Nombre; //"Bolsas"; /*** QUEMADO ***/
+					//	// <cac:TaxScheme>
+					//	//Grupo de informaciones específicas sobre el tributo
+					//	TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
+					//	ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
+					//	ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals(codigo_impuesto)).FirstOrDefault();
+					//	//Identificador del tributo
+					//	TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
+					//	TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"22";//TipoImpuestos.Consumo,
+					//											   //Nombre del tributo
+					//	TaxSchemeConsumo.Name = new NameType1();
+					//	TaxSchemeConsumo.Name.Value = tipoimp.Nombre; //"Bolsas"; /*** QUEMADO ***/
 
-						TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
-						TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
-						TaxesSubtotal[0] = TaxSubtotalConsumo;
-						TaxTotal.TaxSubtotal = TaxesSubtotal;
-						TaxesTotal.Add(TaxTotal);
+					//	TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
+					//	TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
+					//	TaxesSubtotal[0] = TaxSubtotalConsumo;
+					//	TaxTotal.TaxSubtotal = TaxesSubtotal;
+					//	TaxesTotal.Add(TaxTotal);
 
-					}
+					//}
 
 					#region Impuesto2 saludable
-					if (DocDet.ValorImpuestoConsumo2 > 0 && DocDet.ProductoGratis == false)
+					if (DocDet.ValorImpuestoConsumo2 > 0)
 					{
 
 
@@ -1251,109 +1251,109 @@ namespace HGInetUBLv2_1
 						TaxTotal.TaxSubtotal = TaxesSubtotal;
 						TaxesTotal.Add(TaxTotal);
 					}
-					else if (DocDet.ValorImpuestoConsumo2 > 0 && DocDet.ProductoGratis == true)
-					{
-						//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
-						TaxTotalType TaxTotal = new TaxTotalType();
+					//else if (DocDet.ValorImpuestoConsumo2 > 0 && DocDet.ProductoGratis == true)
+					//{
+					//	//Grupo de campos para informaciones relacionadas con un tributo aplicable a esta línea de la factura 
+					//	TaxTotalType TaxTotal = new TaxTotalType();
 
-						// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
-						// <cbc:TaxAmount>
-						TaxTotal.TaxAmount = new TaxAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorImpuestoConsumo2// decimal.Round(DocDet.ValorImpuestoConsumo, 2)
-						};
+					//	// importe total de impuestos, por ejemplo, IVA; la suma de los subtotales fiscales para cada categoría de impuestos dentro del esquema impositivo
+					//	// <cbc:TaxAmount>
+					//	TaxTotal.TaxAmount = new TaxAmountType()
+					//	{
+					//		currencyID = moneda_detalle.ToString(),
+					//		Value = DocDet.ValorImpuestoConsumo2// decimal.Round(DocDet.ValorImpuestoConsumo, 2)
+					//	};
 
-						// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
-						// <cbc:TaxEvidenceIndicator>
-						TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
-						{
-							Value = false
-						};
+					//	// indicador que este total se reconoce como evidencia legal a efectos impositivos (verdadero)o no(falso).
+					//	// <cbc:TaxEvidenceIndicator>
+					//	TaxTotal.TaxEvidenceIndicator = new TaxEvidenceIndicatorType()
+					//	{
+					//		Value = false
+					//	};
 
-						RoundingAmountType Rouding = new RoundingAmountType();
-						Rouding.Value = 0;
-						Rouding.currencyID = moneda_detalle.ToString();
-						TaxTotal.RoundingAmount = Rouding;
+					//	RoundingAmountType Rouding = new RoundingAmountType();
+					//	Rouding.Value = 0;
+					//	Rouding.currencyID = moneda_detalle.ToString();
+					//	TaxTotal.RoundingAmount = Rouding;
 
-						// Debe ser informado un grupo de estos para cada tarifa. 
-						// <cac:TaxSubtotal>
-						TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
+					//	// Debe ser informado un grupo de estos para cada tarifa. 
+					//	// <cac:TaxSubtotal>
+					//	TaxSubtotalType[] TaxesSubtotal = new TaxSubtotalType[1];
 
-						TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
+					//	TaxSubtotalType TaxSubtotalConsumo = new TaxSubtotalType();
 
-						// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
-						//Base Imponible sobre la que se calcula el valor del tributo
-						//----Se debe Solicitar la base con la que calculo el impuesto
-						TaxSubtotalConsumo.BaseUnitMeasure = new BaseUnitMeasureType()
-						{
-							unitCode = DebitedQuantity.unitCode,
-							Value = DocDet.Cantidad //1.00M//decimal.Round(DocDet.Cantidad, 6)
-						};
+					//	// importe neto al que se aplica el porcentaje del impuesto (tasa) para calcular el importe del impuesto.
+					//	//Base Imponible sobre la que se calcula el valor del tributo
+					//	//----Se debe Solicitar la base con la que calculo el impuesto
+					//	TaxSubtotalConsumo.BaseUnitMeasure = new BaseUnitMeasureType()
+					//	{
+					//		unitCode = DebitedQuantity.unitCode,
+					//		Value = DocDet.Cantidad //1.00M//decimal.Round(DocDet.Cantidad, 6)
+					//	};
 
-						// El monto de este subtotal fiscal.
-						//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
-						// <cbc:TaxAmount>
-						TaxSubtotalConsumo.TaxAmount = new TaxAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = DocDet.ValorImpuestoConsumo2
-						};
+					//	// El monto de este subtotal fiscal.
+					//	//Valor del tributo: producto del porcentaje aplicado sobre la base imponible
+					//	// <cbc:TaxAmount>
+					//	TaxSubtotalConsumo.TaxAmount = new TaxAmountType()
+					//	{
+					//		currencyID = moneda_detalle.ToString(),
+					//		Value = DocDet.ValorImpuestoConsumo2
+					//	};
 
-						// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
-						//Tarifa del tributo
-						// <cbc:Percent>
-						TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
-						{
-							currencyID = moneda_detalle.ToString(),
-							Value = decimal.Round((DocDet.ValorImpuestoConsumo2) / DocDet.Cantidad, 6) + 0.00M//decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2) + 0.00M//
-						};
+					//	// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
+					//	//Tarifa del tributo
+					//	// <cbc:Percent>
+					//	TaxSubtotalConsumo.PerUnitAmount = new PerUnitAmountType()
+					//	{
+					//		currencyID = moneda_detalle.ToString(),
+					//		Value = decimal.Round((DocDet.ValorImpuestoConsumo2) / DocDet.Cantidad, 6) + 0.00M//decimal.Round((DocDet.ValorImpuestoConsumo) / TaxSubtotalConsumo.BaseUnitMeasure.Value, 2) + 0.00M//
+					//	};
 
-						// categoría de impuestos aplicable a este subtotal.
-						//Grupo de informaciones sobre el tributo 
-						// <cac:TaxCategory>
-						TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
-						string codigo_impuesto = string.Empty;
-						//
-						if (DocDet.ValorImpuestoConsumo2 > 0 && DocDet.ImpoConsumo2Porcentaje == 0)
-						{
-							//if (DocDet.Aiu != 4)
-							//{
-							//	codigo_impuesto = "02";
-							//}
-							//else
-							//{
-							//	codigo_impuesto = "22";
-							//}
+					//	// categoría de impuestos aplicable a este subtotal.
+					//	//Grupo de informaciones sobre el tributo 
+					//	// <cac:TaxCategory>
+					//	TaxCategoryType TaxCategoryConsumo = new TaxCategoryType();
+					//	string codigo_impuesto = string.Empty;
+					//	//
+					//	if (DocDet.ValorImpuestoConsumo2 > 0 && DocDet.ImpoConsumo2Porcentaje == 0)
+					//	{
+					//		//if (DocDet.Aiu != 4)
+					//		//{
+					//		//	codigo_impuesto = "02";
+					//		//}
+					//		//else
+					//		//{
+					//		//	codigo_impuesto = "22";
+					//		//}
 
-							codigo_impuesto = "34";
+					//		codigo_impuesto = "34";
 
-						}
-						else
-						{
-							codigo_impuesto = "35";
-						}
+					//	}
+					//	else
+					//	{
+					//		codigo_impuesto = "35";
+					//	}
 
 
-						// <cac:TaxScheme>
-						//Grupo de informaciones específicas sobre el tributo
-						TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
-						ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
-						ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals(codigo_impuesto)).FirstOrDefault();
-						//Identificador del tributo
-						TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
-						TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"22";//TipoImpuestos.Consumo,
-																   //Nombre del tributo
-						TaxSchemeConsumo.Name = new NameType1();
-						TaxSchemeConsumo.Name.Value = tipoimp.Nombre; //"Bolsas"; /*** QUEMADO ***/
+					//	// <cac:TaxScheme>
+					//	//Grupo de informaciones específicas sobre el tributo
+					//	TaxSchemeType TaxSchemeConsumo = new TaxSchemeType();
+					//	ListaTipoImpuesto list_tipoimp = new ListaTipoImpuesto();
+					//	ListaItem tipoimp = list_tipoimp.Items.Where(d => d.Codigo.Equals(codigo_impuesto)).FirstOrDefault();
+					//	//Identificador del tributo
+					//	TaxSchemeConsumo.ID = new IDType(); /*** QUEMADO ***/
+					//	TaxSchemeConsumo.ID.Value = tipoimp.Codigo;//"22";//TipoImpuestos.Consumo,
+					//											   //Nombre del tributo
+					//	TaxSchemeConsumo.Name = new NameType1();
+					//	TaxSchemeConsumo.Name.Value = tipoimp.Nombre; //"Bolsas"; /*** QUEMADO ***/
 
-						TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
-						TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
-						TaxesSubtotal[0] = TaxSubtotalConsumo;
-						TaxTotal.TaxSubtotal = TaxesSubtotal;
-						TaxesTotal.Add(TaxTotal);
+					//	TaxCategoryConsumo.TaxScheme = TaxSchemeConsumo;
+					//	TaxSubtotalConsumo.TaxCategory = TaxCategoryConsumo;
+					//	TaxesSubtotal[0] = TaxSubtotalConsumo;
+					//	TaxTotal.TaxSubtotal = TaxesSubtotal;
+					//	TaxesTotal.Add(TaxTotal);
 
-					}
+					//}
 					#endregion
 
 					#region impuesto: Ica -- Hacer cambio 

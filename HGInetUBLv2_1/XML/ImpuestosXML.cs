@@ -87,7 +87,7 @@ namespace HGInetUBLv2_1
 						}
 
 						//Validacion de muestras
-						List<DocumentoDetalle> muestra = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje && docDet.ProductoGratis.Equals(true) && docDet.ValorImpuestoConsumo.Equals(0) && docDet.ValorImpuestoConsumo2.Equals(0)).ToList();
+						List<DocumentoDetalle> muestra = documentoDetalle.Where(docDet => docDet.IvaPorcentaje == item.IvaPorcentaje && docDet.ProductoGratis.Equals(true)).ToList();
 						decimal BaseimponibleMuestra = 0;
 						foreach (var DocMues in muestra)
 						{
@@ -279,7 +279,7 @@ namespace HGInetUBLv2_1
 						}
 						else
 						{
-							BaseImponibleBedidas = decimal.Round(item.ValorImpuestoConsumo2, 2);
+							BaseImponibleBedidas = decimal.Round(doc_.Where(docDet => docDet.ValorImpuestoConsumo2 != 0 && docDet.ImpoConsumo2Porcentaje == item.ImpoConsumo2Porcentaje && docDet.Aiu == 5).Sum(docDet => docDet.ValorImpuestoConsumo2), 2, MidpointRounding.AwayFromZero);//decimal.Round(item.ValorImpuestoConsumo2, 2);
 							imp_doc.Porcentaje = Bebidas.Cantidad;//decimal.Round(0.00M);//
 							ListaTipoImpuesto list_impBolsa = new ListaTipoImpuesto();
 							ListaItem impBolsa = list_impBolsa.Items.Where(d => d.Codigo.Equals("34")).FirstOrDefault();
@@ -287,8 +287,12 @@ namespace HGInetUBLv2_1
 							imp_doc.TipoImpuesto = impBolsa.Codigo;
 							imp_doc.Nombre = impBolsa.Nombre;//bolsa.UnidadCodigo;
 							imp_doc.Codigo = Bebidas.UnidadCodigo;
-							imp_doc.BaseImponible = decimal.Round(Bebidas.ProductoContenido, 2) + 0.00M;
+							imp_doc.BaseImponible = decimal.Round(doc_.Where(docDet => docDet.ValorImpuestoConsumo2 != 0 && docDet.ImpoConsumo2Porcentaje == item.ImpoConsumo2Porcentaje && docDet.Aiu == 5).Sum(docDet => docDet.ProductoContenido), 2, MidpointRounding.AwayFromZero);//decimal.Round(Bebidas.ProductoContenido, 2) + 0.00M;
 							imp_doc.ValorImpuesto = BaseImponibleBedidas;
+							//foreach (var docDet in doc_)
+							//{
+							//	imp_doc.ValorImpuesto += decimal.Round(docDet.ProductoContenido, 2, MidpointRounding.AwayFromZero);
+							//}
 
 							if (imp_doc.ValorImpuesto > 0)
 								doc_impuestos.Add(imp_doc);
