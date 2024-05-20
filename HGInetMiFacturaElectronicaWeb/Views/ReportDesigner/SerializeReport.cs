@@ -75,7 +75,7 @@ namespace HGInetMiFacturaElectronicaWeb
 					DtPrincipal.TableName = "NotaDebito";
 					foreach (PropertyInfo info in typeof(NotaDebito).GetProperties())
 					{
-						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional))
+						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional) && info.PropertyType != typeof(TasaCambio))
 						{
 							DtPrincipal.Columns.Add(info.Name.ToString());
 						}
@@ -94,7 +94,7 @@ namespace HGInetMiFacturaElectronicaWeb
 					DtPrincipal.TableName = "NotaCredito";
 					foreach (PropertyInfo info in typeof(NotaCredito).GetProperties())
 					{
-						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional))
+						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional) && info.PropertyType != typeof(TasaCambio))
 						{
 							DtPrincipal.Columns.Add(info.Name.ToString());
 						}
@@ -112,7 +112,7 @@ namespace HGInetMiFacturaElectronicaWeb
 					DtPrincipal.TableName = "Factura";
 					foreach (PropertyInfo info in typeof(Factura).GetProperties())
 					{
-						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional) && info.PropertyType != typeof(ReferenciaPago))
+						if (info.PropertyType != typeof(Tercero) && !info.PropertyType.Name.Equals("List`1") && info.PropertyType != typeof(ReferenciaAdicional) && info.PropertyType != typeof(ReferenciaPago) && info.PropertyType != typeof(TasaCambio))
 						{
 							DtPrincipal.Columns.Add(info.Name.ToString());
 						}
@@ -324,19 +324,19 @@ namespace HGInetMiFacturaElectronicaWeb
 			ds.Tables["ReferenciaPago"].ParentRelations.Add(relation_RefPago);
 
 			//DATOS TABLA DATOS DE TasaCambio
-			DataTable TasaCambio = new DataTable("TasaCambio");
-			TasaCambio.TableName = "TasaCambio";
+			DataTable Trm = new DataTable("Trm");
+			Trm.TableName = "Trm";
 			foreach (PropertyInfo info in typeof(TasaCambio).GetProperties())
 			{
-				TasaCambio.Columns.Add(info.Name.ToString());
+				Trm.Columns.Add(info.Name.ToString());
 			}
 
-			ds.Tables.Add(TasaCambio);
+			ds.Tables.Add(Trm);
 
-			DataColumn datos_TasaCambio = ds.Tables["TasaCambio"].Columns["Moneda"];
-			DataRelation relation_TasaCambio = new DataRelation("TasaCambio", principal, datos_TasaCambio);
+			DataColumn datos_TasaCambio = ds.Tables["Trm"].Columns["Moneda"];
+			DataRelation relation_TasaCambio = new DataRelation("Trm", principal, datos_TasaCambio);
 			relation_TasaCambio.Nested = true;
-			ds.Tables["TasaCambio"].ParentRelations.Add(relation_TasaCambio);
+			ds.Tables["Trm"].ParentRelations.Add(relation_TasaCambio);
 
 			return ds;
 		}
