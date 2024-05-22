@@ -86,7 +86,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					IdPeticion = id_peticion,
 					IdentificacionObligado = (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste) ? documento_obj.DatosEmpleador.Identificacion : documento_obj.DatosObligado.Identificacion,
 					UrlAuditoria = string.Format("{0}{1}", datos_plataforma.RutaPublica, Constantes.PaginaConsultaAuditoriaDoc.Replace("{id_seguridad_doc}", id_radicado.ToString())),
-					IdVersionDian = empresa.IntVersionDian
+					IdVersionDian = empresa.IntVersionDian,
+					IdAmbiente = (empresa.IntHabilitacion < Habilitacion.Produccion.GetHashCode()) ? 2 : 1,
 				};
 
 				try

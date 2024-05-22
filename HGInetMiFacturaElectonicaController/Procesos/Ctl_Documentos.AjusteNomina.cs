@@ -43,6 +43,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			// genera un id único de la plataforma
 			Guid id_peticion = Guid.NewGuid();
 
+			////Planes y transacciones
+			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+
 			try
 			{
 				Ctl_Empresa Peticion = new Ctl_Empresa();
@@ -96,7 +100,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//**Se agrega validacion y asignacion del aplicativo emisor del documento.
 
-				DateTime fecha_control = new DateTime(2024, 05, 21, 0, 0, 0);
+				DateTime fecha_control = new DateTime(2024, 06, 21, 0, 0, 0);
 				Ctl_EmpresaIntegradores Emp_int = new Ctl_EmpresaIntegradores();
 				List<TblEmpresaIntegradores> integradores = Emp_int.Obtener(facturador_electronico.StrIdentificacion);
 				//string integrador_peticion = string.Empty;
@@ -137,31 +141,47 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						if (Fecha.GetFecha() < fecha_control)
 						{
-							Ctl_Empresa ctr_empresa = new Ctl_Empresa();
-							TblEmpresas Integrador = ctr_empresa.Obtener(integrador_peticion);
-							if (Integrador.IntIntegrador == true)
+							try
 							{
-								TblEmpresaIntegradores empresa_inte = new TblEmpresaIntegradores();
-								empresa_inte.StrIdentificacionEmp = facturador_electronico.StrIdentificacion;
-								empresa_inte.StrIdentificacionInt = integrador_peticion;
-								empresa_inte.StrIdSeguridad = Guid.NewGuid();
-
 								try
 								{
-									Emp_int = new Ctl_EmpresaIntegradores();
-									Emp_int.Crear(empresa_inte);
+									Ctl_Empresa ctr_empresa = new Ctl_Empresa();
+									TblEmpresas Integrador = ctr_empresa.Obtener(integrador_peticion);
+									if (Integrador.IntIntegrador == true)
+									{
+										TblEmpresaIntegradores empresa_inte = new TblEmpresaIntegradores();
+										empresa_inte.StrIdentificacionEmp = facturador_electronico.StrIdentificacion;
+										empresa_inte.StrIdentificacionInt = integrador_peticion;
+										empresa_inte.StrIdSeguridad = Guid.NewGuid();
+
+										try
+										{
+											Emp_int = new Ctl_EmpresaIntegradores();
+											Emp_int.Crear(empresa_inte);
+										}
+										catch (Exception ex)
+										{
+
+											RegistroLog.EscribirLog(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Validacion de la identificacion del integrador, Facturador: {0} - IdIntegrador: {1}", facturador_electronico.StrIdentificacion, integrador_peticion));
+										}
+
+									}
+									else
+									{
+										//throw new ApplicationException(string.Format("La identificación del Integrador '{0}' correspondiente al aplicativo emisor no esta habilitado en nuestra plataforma", item.IdentificacionIntegrador));
+										RegistroLog.EscribirLog(new ApplicationException(string.Format("Validacion de la identificacion del integrador, Facturador: {0} - IdIntegrador: {1}", facturador_electronico.StrIdentificacion, integrador_peticion)), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+									}
 								}
 								catch (Exception ex)
 								{
 
 									RegistroLog.EscribirLog(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Validacion de la identificacion del integrador, Facturador: {0} - IdIntegrador: {1}", facturador_electronico.StrIdentificacion, integrador_peticion));
 								}
-
 							}
-							else
+							catch (Exception ex)
 							{
-								//throw new ApplicationException(string.Format("La identificación del Integrador '{0}' correspondiente al aplicativo emisor no esta habilitado en nuestra plataforma", item.IdentificacionIntegrador));
-								RegistroLog.EscribirLog(new ApplicationException(string.Format("Validacion de la identificacion del integrador, Facturador: {0} - IdIntegrador: {1}", facturador_electronico.StrIdentificacion, integrador_peticion)), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+
+								RegistroLog.EscribirLog(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Validacion de la identificacion del integrador, Facturador: {0} - IdIntegrador: {1}", facturador_electronico.StrIdentificacion, integrador_peticion));
 							}
 						}
 						else
@@ -173,30 +193,38 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						if (Fecha.GetFecha() < fecha_control)
 						{
-							Ctl_Empresa ctr_empresa = new Ctl_Empresa();
-							TblEmpresas Integrador = ctr_empresa.Obtener(integrador_peticion);
-							if (Integrador.IntIntegrador == true)
+							try
 							{
-								TblEmpresaIntegradores empresa_inte = new TblEmpresaIntegradores();
-								empresa_inte.StrIdentificacionEmp = facturador_electronico.StrIdentificacion;
-								empresa_inte.StrIdentificacionInt = integrador_peticion;
-								empresa_inte.StrIdSeguridad = Guid.NewGuid();
-
-								try
+								Ctl_Empresa ctr_empresa = new Ctl_Empresa();
+								TblEmpresas Integrador = ctr_empresa.Obtener(integrador_peticion);
+								if (Integrador.IntIntegrador == true)
 								{
-									Emp_int = new Ctl_EmpresaIntegradores();
-									Emp_int.Crear(empresa_inte);
+									TblEmpresaIntegradores empresa_inte = new TblEmpresaIntegradores();
+									empresa_inte.StrIdentificacionEmp = facturador_electronico.StrIdentificacion;
+									empresa_inte.StrIdentificacionInt = integrador_peticion;
+									empresa_inte.StrIdSeguridad = Guid.NewGuid();
+
+									try
+									{
+										Emp_int = new Ctl_EmpresaIntegradores();
+										Emp_int.Crear(empresa_inte);
+									}
+									catch (Exception ex)
+									{
+
+										RegistroLog.EscribirLog(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Validacion de la identificacion del integrador, Facturador: {0} - IdIntegrador: {1}", facturador_electronico.StrIdentificacion, integrador_peticion));
+									}
 								}
-								catch (Exception ex)
+								else
 								{
-
-									RegistroLog.EscribirLog(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Validacion de la identificacion del integrador, Facturador: {0} - IdIntegrador: {1}", facturador_electronico.StrIdentificacion, integrador_peticion));
+									//throw new ApplicationException(string.Format("La identificación del Integrador '{0}' correspondiente al aplicativo emisor no esta habilitado en nuestra plataforma", item.IdentificacionIntegrador));
+									RegistroLog.EscribirLog(new ApplicationException(string.Format("Validacion de la identificacion del integrador, Facturador: {0} - IdIntegrador: {1}", facturador_electronico.StrIdentificacion, integrador_peticion)), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
 								}
 							}
-							else
+							catch (Exception ex)
 							{
-								//throw new ApplicationException(string.Format("La identificación del Integrador '{0}' correspondiente al aplicativo emisor no esta habilitado en nuestra plataforma", item.IdentificacionIntegrador));
-								RegistroLog.EscribirLog(new ApplicationException(string.Format("Validacion de la identificacion del integrador, Facturador: {0} - IdIntegrador: {1}", facturador_electronico.StrIdentificacion, integrador_peticion)), MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta);
+
+								RegistroLog.EscribirLog(ex, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.consulta, string.Format("Validacion de la identificacion del integrador, Facturador: {0} - IdIntegrador: {1}", facturador_electronico.StrIdentificacion, integrador_peticion));
 							}
 						}
 						else
@@ -312,9 +340,6 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				var datos = Planestransacciones.ConciliarPlanes(ListaPlanes, respuesta);
 
-				////Planes y transacciones
-				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
-
 				//Valida la plataforma para envio de sms
 				if (plataforma_datos.EnvioSms)
 				{
@@ -362,7 +387,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						IdPeticion = id_peticion,
 						IdentificacionObligado = (item.DatosEmpleador != null) ? item.DatosEmpleador.Identificacion : "",
 						DescuentaSaldo = false,
-						IdVersionDian = (facturador_electronico != null) ? facturador_electronico.IntVersionDian : 0
+						IdVersionDian = (facturador_electronico != null) ? facturador_electronico.IntVersionDian : 0,
+						IdAmbiente = (plataforma_datos.RutaPublica.Contains("habilitacion") || plataforma_datos.RutaPublica.Contains("localhost")) ? 2 : 1,
 					};
 					respuesta.Add(item_respuesta);
 				});

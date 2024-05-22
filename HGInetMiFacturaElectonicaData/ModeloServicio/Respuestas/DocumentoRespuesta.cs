@@ -169,5 +169,10 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// Ruta http del archivo XML en estándar UBL relacionado con el documento.
 		/// </summary>
 		public string UrlXmlAttachUbl { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public int IdAmbiente { get; set; }
 	}
 }
