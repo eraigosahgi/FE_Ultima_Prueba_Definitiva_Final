@@ -1266,6 +1266,77 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		}
 
 		/// <summary>
+		/// Metodo para obtener los documentos rechazados y visualizarlos en una vista
+		/// </summary>
+		/// <param name="fecha_inicio"></param>
+		/// <param name="fecha_fin"></param>
+		/// <returns></returns>
+		public List<ObjDocumentos> ObtenerDocumentosRechazado( DateTime fecha_inicio, DateTime fecha_fin)
+		{
+
+			fecha_inicio = fecha_inicio.Date;
+
+			fecha_fin = new DateTime(fecha_fin.Year, fecha_fin.Month, fecha_fin.Day, 23, 59, 59, 999);
+
+
+			List<ObjDocumentos> documentos = new List<ObjDocumentos>();
+
+			context.Configuration.LazyLoadingEnabled = false;
+
+			documentos = (from datos in context.TblDocumentos.AsNoTracking()
+						  where (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
+						   && (datos.IntIdEstado == 93)
+						  orderby datos.DatFechaIngreso descending
+						  select new ObjDocumentos
+						  {
+							  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+							  Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+							  Prefijo = datos.StrPrefijo,
+							  NumeroDocumento = datos.StrPrefijo + datos.IntNumero.ToString(),
+							  DatFechaIngreso = datos.DatFechaIngreso,
+							  DatFechaDocumento = datos.DatFechaDocumento,
+							  DatFechaVencDocumento = datos.DatFechaVencDocumento,
+							  EstadoFactura = datos.IntIdEstado,
+							  EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+							  IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+							  NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+							  Xml = datos.StrUrlArchivoUbl,
+							  Pdf = datos.StrUrlArchivoPdf,
+							  StrIdSeguridad = datos.StrIdSeguridad,
+							  tipodoc = datos.IntDocTipo,
+							  RutaServDian = ((datos.IntIdEstado >= 8 && datos.IntIdEstado < 93) || datos.IntIdEstado == 99) ? datos.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",//datos.StrUrlArchivoUbl,
+							  Estado = datos.IdCategoriaEstado
+						  }).ToList();
+
+
+			return documentos;
+		}
+
+		public string ObtenerMensajeRechazo(string ruta)
+		{
+			string respuesta = string.Empty;
+
+			//string url_acuse = resp.EstadoDian.UrlXmlRespuesta.Replace("FacturaEConsultaDian", "XmlAcuse");
+
+			string contenido_xml = Archivo.ObtenerContenido(ruta);
+
+			// valida el contenido del archivo
+			if (string.IsNullOrWhiteSpace(contenido_xml))
+				throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
+
+			// convierte el contenido de texto a xml
+			XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+
+			// convierte el objeto de acuerdo con el tipo de documento
+			XmlSerializer serializacion1 = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
+
+			HGInetUBLv2_1.ApplicationResponseType conversion = (HGInetUBLv2_1.ApplicationResponseType)serializacion1.Deserialize(xml_reader);
+
+
+			return respuesta;
+		}
+
+		/// <summary>
 		/// Obtiene los documentos del Facturador
 		/// </summary>
 		/// <param name="codigo_facturador"></param>
