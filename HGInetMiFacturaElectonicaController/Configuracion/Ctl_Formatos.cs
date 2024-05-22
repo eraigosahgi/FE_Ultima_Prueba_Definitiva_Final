@@ -502,34 +502,36 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 										 select formato).FirstOrDefault();
 				}
 
+				//2024-05-22 Si no envian un formato correcto a nombre propio o del integrador se rechaza el documento
 				//Si no se obtiene Formato con las Condiciones enviadas, se hace con el formato generico de HGI segun el tipo de documento
-				if (formato_resultado == null)
-				{
-					int codigo_formato = 1;
-					switch (tipo_doc)
-					{
-						case TipoDocumento.Factura:
-							codigo_formato = 1;
-							break;
-						case TipoDocumento.NotaDebito:
-							codigo_formato = 2;
-							break;
-						case TipoDocumento.NotaCredito:
-							codigo_formato = 2;
-							break;
-						default:
-							codigo_formato = 1;
-							break;
-					}
+				//**Se cambia el formato por defecto al 28, porque se identifico que el 1 estaba para happgi, este formato es validado por QA y gerencia
+				//if (formato_resultado == null)
+				//{
+				//	int codigo_formato = 28;
+				//	switch (tipo_doc)
+				//	{
+				//		case TipoDocumento.Factura:
+				//			codigo_formato = 28;
+				//			break;
+				//		case TipoDocumento.NotaDebito:
+				//			codigo_formato = 28;
+				//			break;
+				//		case TipoDocumento.NotaCredito:
+				//			codigo_formato = 28;
+				//			break;
+				//		default:
+				//			codigo_formato = 28;
+				//			break;
+				//	}
 
-					formato_resultado = (from formato in context.TblFormatos
-										 where formato.IntCodigoFormato == codigo_formato
-										 && formato.IntTipo == tipo_formato
-										 && (formato.StrEmpresa.Equals("811021438"))
-										 && formato.IntEstado != estado_formato
-										 select formato).FirstOrDefault();
+				//	formato_resultado = (from formato in context.TblFormatos
+				//						 where formato.IntCodigoFormato == codigo_formato
+				//						 && formato.IntTipo == tipo_formato
+				//						 && (formato.StrEmpresa.Equals("811021438"))
+				//						 && formato.IntEstado != estado_formato
+				//						 select formato).FirstOrDefault();
 
-				}
+				//}
 
 				return formato_resultado;
 			}

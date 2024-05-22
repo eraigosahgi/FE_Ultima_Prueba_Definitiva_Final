@@ -195,57 +195,58 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{}
 
 					}
-					else if(facturador.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
-					{
-						switch (formato_documento.Codigo)
-						{
-							case 1:
-								switch (documento_result.DocumentoTipo)
-								{
-									case TipoDocumento.Factura:
-										reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
-										break;
-									case TipoDocumento.NotaDebito:
-										reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
-										break;
-									case TipoDocumento.NotaCredito:
-										reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
-										break;
-								}
-								break;
-							case 2:
-								reporte_pdf = new HGInetFacturaEReports.Facturas.Formato2();
-								reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
-								break;
-							case 3:
-								reporte_pdf = new HGInetFacturaEReports.Facturas.Formato3();
-								reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
-								break;
-							case 4:
-								reporte_pdf = new HGInetFacturaEReports.Facturas.Formato4();
-								reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
-								break;
-							case 5:
-								reporte_pdf = new HGInetFacturaEReports.Facturas.Formato5();
-								reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
-								break;
+					//2024-05-22 Si no envian un formato correcto a nombre propio o del integrador se rechaza el documento
+					//else if(facturador.IntHabilitacion == Habilitacion.Produccion.GetHashCode())
+					//{
+					//	switch (formato_documento.Codigo)
+					//	{
+					//		case 1:
+					//			switch (documento_result.DocumentoTipo)
+					//			{
+					//				case TipoDocumento.Factura:
+					//					reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
+					//					break;
+					//				case TipoDocumento.NotaDebito:
+					//					reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
+					//					break;
+					//				case TipoDocumento.NotaCredito:
+					//					reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
+					//					break;
+					//			}
+					//			break;
+					//		case 2:
+					//			reporte_pdf = new HGInetFacturaEReports.Facturas.Formato2();
+					//			reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
+					//			break;
+					//		case 3:
+					//			reporte_pdf = new HGInetFacturaEReports.Facturas.Formato3();
+					//			reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
+					//			break;
+					//		case 4:
+					//			reporte_pdf = new HGInetFacturaEReports.Facturas.Formato4();
+					//			reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
+					//			break;
+					//		case 5:
+					//			reporte_pdf = new HGInetFacturaEReports.Facturas.Formato5();
+					//			reporte_pdf.ReportParameters["TipoDocumento"].Value = documento_result.DocumentoTipo.GetHashCode();
+					//			break;
 
-							default:
-								switch (documento_result.DocumentoTipo)
-								{
-									case TipoDocumento.Factura:
-										reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
-										break;
-									case TipoDocumento.NotaDebito:
-										reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
-										break;
-									case TipoDocumento.NotaCredito:
-										reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
-										break;
-								}
-								break;
-						}
-					}
+					//		default:
+					//			switch (documento_result.DocumentoTipo)
+					//			{
+					//				case TipoDocumento.Factura:
+					//					reporte_pdf = new HGInetFacturaEReports.Facturas.Formato1();
+					//					break;
+					//				case TipoDocumento.NotaDebito:
+					//					reporte_pdf = new HGInetFacturaEReports.NotasDebito.Formato1();
+					//					break;
+					//				case TipoDocumento.NotaCredito:
+					//					reporte_pdf = new HGInetFacturaEReports.NotasCredito.Formato1();
+					//					break;
+					//			}
+					//			break;
+					//	}
+					//}
 					else
 					{
 						throw new ArgumentException(string.Format("No se encuentra registrado el codigo del formato {0} del Facturador {1}", formato_documento.Codigo,facturador.StrIdentificacion));
