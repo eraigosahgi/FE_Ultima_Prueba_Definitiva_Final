@@ -313,6 +313,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1374.
+        /// </summary>
+        internal static string MonitorDeRechazos {
+            get {
+                return ResourceManager.GetString("MonitorDeRechazos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 1372.
         /// </summary>
         internal static string PagosAdministracion {

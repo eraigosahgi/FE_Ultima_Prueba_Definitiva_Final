@@ -1,6 +1,7 @@
 ﻿using HGInetMiFacturaElectonicaController.Procesos;
 using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using HGInetMiFacturaElectonicaData.Objetos;
 using HGInetMiFacturaElectronicaWeb.Controllers.Services;
 using LibreriaGlobalHGInet.Error;
 using System;
@@ -14,8 +15,8 @@ using System.Web.Http;
 
 namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 {
-    public class DocumentosApiController : ApiController
-    {
+	public class DocumentosApiController : ApiController
+	{
 
 		[HttpGet]
 		[Route("Api/DocumentosApi/ConsultaPorNumeros")]
@@ -180,6 +181,41 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 			}
 		}
 
+
+		[HttpGet]
+		[Route("Api/ObtenerDocumentosRechazado")]
+		public HttpResponseMessage ObtenerDocumentosRechazado(DateTime FechaInicial, DateTime FechaFinal)
+		{
+			try
+			{
+
+				if (FechaInicial == null)
+					throw new ApplicationException("Fecha inicial inválida.");
+				if (FechaFinal == null)
+					throw new ApplicationException("Fecha final inválida.");
+
+				if (FechaFinal < FechaInicial)
+					throw new ApplicationException("Fecha final inválida.");
+
+				long dif_fecha = LibreriaGlobalHGInet.Funciones.Fecha.Diferencia(FechaInicial, FechaFinal, LibreriaGlobalHGInet.Funciones.Fecha.DateInterval.Day);
+
+				//if (dif_fecha > 5)
+				//	throw new ApplicationException("La consulta supera el maximo de 5 dias; por favor realice la consulta teniendo en cuenta este maximo");
+
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				//Obtiene los datos
+				List<ObjDocumentos> respuesta = ctl_documento.ObtenerDocumentosRechazado(FechaInicial, FechaFinal);
+
+				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
 
 	}
 }

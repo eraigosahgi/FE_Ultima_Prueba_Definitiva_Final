@@ -220,4 +220,7 @@
   <data name="ConsultaEmpresaCertificado" xml:space="preserve">
     <value>1354</value>
   </data>
+  <data name="MonitorDeRechazos" xml:space="preserve">
+    <value>1374</value>
+  </data>
 </root>

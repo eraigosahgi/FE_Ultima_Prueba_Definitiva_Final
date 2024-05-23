@@ -1962,6 +1962,7 @@
     <Content Include="Scripts\Pages\ModalConsultaProveedores.js" />
     <Content Include="Scripts\Pages\ModalDetalleEmpresa.js" />
     <Content Include="Scripts\Pages\ModalPagos.js" />
+    <Content Include="Scripts\Pages\MonitorDeRechazos.js" />
     <Content Include="Scripts\Pages\ProcesarDocumentos.js" />
     <Content Include="Scripts\Pages\EmpresasSerial.js" />
     <Content Include="Scripts\Pages\Empresas.js" />
@@ -2863,6 +2864,7 @@
     <Content Include="Views\Pages\ModalDetallePlan.html" />
     <Content Include="Views\Pages\ModalPagos.aspx" />
     <Content Include="Views\Pages\ModalConsultaProveedores.aspx" />
+    <Content Include="Views\Pages\MonitorDeRechazos.aspx" />
     <Content Include="Views\Pages\Partials\EventosRadian.html" />
     <Content Include="Views\Pages\Partials\LoadingRegistros.html" />
     <Content Include="Views\Pages\Partials\ModalFormasDePago.html" />
@@ -3348,6 +3350,13 @@
     </Compile>
     <Compile Include="Views\Pages\ModalConsultaProveedores.aspx.designer.cs">
       <DependentUpon>ModalConsultaProveedores.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MonitorDeRechazos.aspx.cs">
+      <DependentUpon>MonitorDeRechazos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\MonitorDeRechazos.aspx.designer.cs">
+      <DependentUpon>MonitorDeRechazos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\ProcesarDocumentos.aspx.cs">
       <DependentUpon>ProcesarDocumentos.aspx</DependentUpon>
