@@ -469,7 +469,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			var Saldo = datos_plan.Sum(x => x.IntNumTransaccCompra - (x.IntNumTransaccProcesadas + x.IntNumTransaccProceso));
 
 			//Si el saldo es menor a la cantidad de documentos a procesar, entonces consultamos los planes del facturador y las del asociado
-			if (Saldo < cantidaddoc)
+			if (Saldo < cantidaddoc &&  sucursal == 0)
 			{
 				//Validamos si la empresa tiene algun asociado para ver si podemos usar el saldo de este
 				var empresa_descuenta = (from d in context.TblEmpresas
