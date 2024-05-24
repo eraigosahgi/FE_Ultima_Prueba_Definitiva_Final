@@ -1285,14 +1285,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			documentos = (from datos in context.TblDocumentos.AsNoTracking()
 						  where (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
-						   && (datos.IntIdEstado == 93)
+						   && (datos.IntIdEstado == 92)
 						  orderby datos.DatFechaIngreso descending
 						  select new ObjDocumentos
 						  {
 							  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
 							  Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
 							  Prefijo = datos.StrPrefijo,
-							  NumeroDocumento = datos.StrPrefijo + datos.IntNumero.ToString(),
+							  NumeroDocumento = datos.IntNumero.ToString(),
 							  DatFechaIngreso = datos.DatFechaIngreso,
 							  DatFechaDocumento = datos.DatFechaDocumento,
 							  DatFechaVencDocumento = datos.DatFechaVencDocumento,
@@ -1304,34 +1304,91 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							  Pdf = datos.StrUrlArchivoPdf,
 							  StrIdSeguridad = datos.StrIdSeguridad,
 							  tipodoc = datos.IntDocTipo,
-							  RutaServDian = ((datos.IntIdEstado >= 8 && datos.IntIdEstado < 93) || datos.IntIdEstado == 99) ? datos.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",//datos.StrUrlArchivoUbl,
-							  Estado = datos.IdCategoriaEstado
+							  RutaServDian = datos.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian),//datos.StrUrlArchivoUbl,
+							  Estado = datos.IdCategoriaEstado,
+							  IdSeguridadFacturador = datos.TblEmpresasFacturador.StrIdSeguridad.ToString()
 						  }).ToList();
+
+			foreach (ObjDocumentos item in documentos)
+			{
+				item.MensajeError = ObtenerMensajeRechazo(item.IdSeguridadFacturador, item.IdFacturador, item.Xml, item.NumeroDocumento, item.Prefijo, item.tipodoc);
+				item.NumeroDocumento = item.Prefijo + item.NumeroDocumento.ToString();
+			}
 
 
 			return documentos;
 		}
 
-		public string ObtenerMensajeRechazo(string ruta)
+		public List<string> ObtenerMensajeRechazo(string StrIdSeguridad_Obligado, string identificacion_oligado, string ruta_xml, string Documento, string prefijo, int tipo_doc)
 		{
-			string respuesta = string.Empty;
+			List<string> respuesta = new List<string>();
 
-			//string url_acuse = resp.EstadoDian.UrlXmlRespuesta.Replace("FacturaEConsultaDian", "XmlAcuse");
+			try
+			{
+				TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(tipo_doc);
 
-			string contenido_xml = Archivo.ObtenerContenido(ruta);
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
-			// valida el contenido del archivo
-			if (string.IsNullOrWhiteSpace(contenido_xml))
-				throw new ArgumentException("El archivo XML UBL se encuentra vacío.");
+				// ruta física del xml
+				string carpeta_xml = string.Format(@"{0}/{1}/{2}", plataforma_datos.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, StrIdSeguridad_Obligado);
+				carpeta_xml = string.Format(@"{0}/{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
 
-			// convierte el contenido de texto a xml
-			XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+				// Nombre del archivo Xml 
+				string archivo_xml = string.Format(@"{0}.xml", HGInetUBLv2_1.NombramientoArchivo.ObtenerZip(Documento.ToString(), identificacion_oligado, doc_tipo, prefijo));
 
-			// convierte el objeto de acuerdo con el tipo de documento
-			XmlSerializer serializacion1 = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
 
-			HGInetUBLv2_1.ApplicationResponseType conversion = (HGInetUBLv2_1.ApplicationResponseType)serializacion1.Deserialize(xml_reader);
+				// ruta del xml
+				string ruta_respuestawcf_xml = string.Format(@"{0}/{1}", carpeta_xml, archivo_xml);
 
+				string contenido_xml = Archivo.ObtenerContenido(ruta_respuestawcf_xml);
+
+				bool respuesta_Dian = false;
+
+				XmlSerializer serializacion = null;
+
+				// valida el contenido del archivo
+				if (string.IsNullOrWhiteSpace(contenido_xml))
+				{
+					ruta_xml = ruta_xml.Replace(RecursoDms.CarpetaFacturaEDian, RecursoDms.CarpetaFacturaEConsultaDian);
+					contenido_xml = Archivo.ObtenerContenido(ruta_xml);
+
+					respuesta_Dian = true;
+				}
+
+				// convierte el contenido de texto a xml
+				XmlReader xml_reader = XmlReader.Create(new StringReader(contenido_xml));
+
+				if (respuesta_Dian == false)
+				{
+					// convierte el objeto de acuerdo con el tipo de documento
+					serializacion = new XmlSerializer(typeof(HGInetDIANServicios.DianWSValidacionPrevia.DianResponse));
+
+					HGInetDIANServicios.DianWSValidacionPrevia.DianResponse conversion = (HGInetDIANServicios.DianWSValidacionPrevia.DianResponse)serializacion.Deserialize(xml_reader);
+
+					respuesta = conversion.ErrorMessage.ToList();
+				}
+				else
+				{
+					serializacion = new XmlSerializer(typeof(HGInetUBLv2_1.ApplicationResponseType));
+
+					HGInetUBLv2_1.ApplicationResponseType conversion = (HGInetUBLv2_1.ApplicationResponseType)serializacion.Deserialize(xml_reader);
+
+
+					foreach (var item in conversion.DocumentResponse[0].LineResponse)
+					{
+						string mensaje = string.Format("{0}:{1}", item.Response[0].ResponseCode.Value, item.Response[0].Description[0].Value);
+						respuesta.Add(mensaje);
+					}
+
+					//list_mensajes = conversion.DocumentResponse[1].LineResponse.ToList();
+
+				}
+			}
+			catch (Exception)
+			{
+				string mensaje = "No se pudo obtener los mensajes de error, por favor validar la respuesta del documento";
+				respuesta.Add(mensaje);
+			}
 
 			return respuesta;
 		}

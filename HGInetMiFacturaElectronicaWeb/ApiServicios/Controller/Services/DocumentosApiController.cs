@@ -199,8 +199,8 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 
 				long dif_fecha = LibreriaGlobalHGInet.Funciones.Fecha.Diferencia(FechaInicial, FechaFinal, LibreriaGlobalHGInet.Funciones.Fecha.DateInterval.Day);
 
-				//if (dif_fecha > 5)
-				//	throw new ApplicationException("La consulta supera el maximo de 5 dias; por favor realice la consulta teniendo en cuenta este maximo");
+				if (dif_fecha > 5)
+					throw new ApplicationException("La consulta supera el maximo de 5 dias; por favor realice la consulta teniendo en cuenta este maximo");
 
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
