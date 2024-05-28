@@ -1523,6 +1523,7 @@ IndicadoresApp.controller('IndicadoresController', function IndicadoresControlle
 			}, {
 				caption: "Razón Social",
 				dataField: "RazonSocial",
+				width: 300,
 			}, {
 				caption: "Valor Flujo Actual",
 				dataField: "ValorTotalDocumentos",

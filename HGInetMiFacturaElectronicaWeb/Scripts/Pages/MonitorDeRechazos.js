@@ -157,6 +157,8 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 				, headerFilter: {
 					visible: true
 				}
+				, showRowLines: true
+				, rowAlternationEnabled: true
 				, allowColumnResizing: true
 				, allowColumnReordering: true
 				, columnChooser: {
@@ -171,6 +173,7 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 				, columns: [
 					{
 						caption: "Archivos",
+						width: 100,
 						cellTemplate: function (container, options) {
 
 							var permite_envio = "class='icon-mail-read' data-toggle='modal' data-target='#modal_enviar_email' style='margin-left:5%; font-size:19px'";
@@ -191,38 +194,42 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 							else
 								options.data.Xml = "#";
 
-							if (options.data.EstadoAcuse == 1 || options.data.EstadoAcuse == 2 || options.data.EstadoAcuse == 3)
-								visible_acuse = "href='" + options.data.RutaAcuse + "' title='ver acuse'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
-							else
-								visible_acuse = "#";
+
+							var visible_DIAN = "href='" + options.data.RutaServDian + "' class='icon-file-xml' title='ver respuesta DIAN'  style='pointer-events:auto;cursor: pointer; margin-left:5%; '";
 
 							$("<div>")
 								.append(
-									$("<a style='margin-left:5%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "><a style='margin-left:5%;' target='_blank'  " + visible_xml + ">"),
-									$("<a " + permite_envio + "></a>").dxButton({
-										onClick: function () {
-											$scope.showModal = true;
-											email_destino = options.data.MailAdquiriente;
-											id_seguridad = options.data.StrIdSeguridad;
-											$('input:text[name=EmailDestino]').val("");
-											SrvDocumento.ConsultarEmailUbl(options.data.StrIdSeguridad).then(function (data) {
-												$('input:text[name=EmailDestino]').val(data);
-											});
-										}
-									}).removeClass("dx-button dx-button-normal dx-widget")
-
-							)
-								.appendTo(container);
+									$("<a style='margin-left:10%;' target='_blank' class='icon-file-pdf'  " + visible_pdf + "><a style='margin-left:10%;' target='_blank'  " + visible_xml + "><a style='margin-left:10%;' target='_blank'  " + visible_DIAN + ">")).appendTo(container);
 
 						}
 					},
+					 {
+					 	caption: "Mensaje",
+					 	visible: true,
+					 	dataField: "MensajeError",
+					 	cellTemplate: function (container, options) {
+					 		try {
+					 			const datos = options.data.MensajeError;
+
+					 			for (let i = 0; i < datos.length; i++) {
+
+
+					 				$('<div>')
+									  .addClass('master-detail-caption')
+									  .text(`${datos[i]}`)
+									  .appendTo(container);
+					 			}
+					 		} catch (e) {
+
+					 		}
+					 	}
+					 },
 					{
 						caption: "Documento",
 
 						dataField: "NumeroDocumento",
 
 					},
-
 
 				{
 					caption: "Fecha Recepción",
@@ -263,21 +270,21 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 
 						dataField: "Facturador"
 					},
-					{
-						caption: "Valor Total",
-						visible: false,
-						dataField: "IntVlrTotal"
-					},
-					{
-						caption: "SubTotal",
-						visible: false,
-						dataField: "IntSubTotal"
-					},
-					{
-						caption: "Neto",
-						visible: false,
-						dataField: "IntNeto"
-					},
+					//{
+					//	caption: "Valor Total",
+					//	visible: false,
+					//	dataField: "IntVlrTotal"
+					//},
+					//{
+					//	caption: "SubTotal",
+					//	visible: false,
+					//	dataField: "IntSubTotal"
+					//},
+					//{
+					//	caption: "Neto",
+					//	visible: false,
+					//	dataField: "IntNeto"
+					//},
 					 {
 					 	caption: "Tipo Documento",
 					 	dataField: "tipodoc",
@@ -298,65 +305,54 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 					  	dataField: "NombreAdquiriente"
 					  },
 
-					   {
-					   	dataField: "EstadoCategoria",
-					   	caption: "Estado",
-					   	cssClass: "hidden-xs col-md-1",
-					   	lookup: {
-					   		dataSource: CategoriaEstado,
-					   		displayExpr: "Name",
-					   		valueExpr: "ID"
-					   	},
-					   	cellTemplate: function (container, options) {
+					  // {
+					  // 	dataField: "EstadoCategoria",
+					  // 	caption: "Estado",
+					  // 	cssClass: "hidden-xs col-md-1",
+					  // 	lookup: {
+					  // 		dataSource: CategoriaEstado,
+					  // 		displayExpr: "Name",
+					  // 		valueExpr: "ID"
+					  // 	},
+					  // 	cellTemplate: function (container, options) {
 
-					   		$("<div>")
+					  // 		$("<div>")
 
-								.append($(ColocarEstado(options.data.Estado, options.data.EstadoCategoria)))
-								.appendTo(container);
-					   	}
-					   },
-					  {
-					  	caption: "Proceso",
-					  	visible: true,
-					  	dataField: "EstadoFactura",
-					  	lookup: {
-					  		dataSource: ProcesoEstado,
-					  		displayExpr: "Name",
-					  		valueExpr: "ID"
-					  	},
+					  //  		.append($(ColocarEstado(options.data.Estado, options.data.EstadoCategoria)))
+					  //  		.appendTo(container);
+					  // 	}
+					  // },
+					  //{
+					  //	caption: "Proceso",
+					  //	visible: true,
+					  //	dataField: "EstadoFactura",
+					  //	lookup: {
+					  //		dataSource: ProcesoEstado,
+					  //		displayExpr: "Name",
+					  //		valueExpr: "ID"
+					  //	},
 
-					  },
+					  //},
 
 
-					  {
-					  	caption: "Mensaje",
-					  	visible: true,
-					  	dataField: "MensajeError",
-					  },
-					{
-						caption: "Estado Email",
-						visible: false,
-						dataField: "EstadoEnvioMail",
-						lookup: {
-							dataSource: EstadoEnvio,
-							displayExpr: "Name",
-							valueExpr: "ID"
-						},
-						cellTemplate: function (container, options) {
 
-							$("<a>")
-								.append($(ColocarEstadoEmail(options.data.EnvioMail, options.data.MensajeEnvio, options.data.EstadoEnvioMail, options.data.StrIdSeguridad)))
-								.appendTo(container);
-						}
-					}
+					//{
+					//	caption: "Estado Email",
+					//	visible: false,
+					//	dataField: "EstadoEnvioMail",
+					//	lookup: {
+					//		dataSource: EstadoEnvio,
+					//		displayExpr: "Name",
+					//		valueExpr: "ID"
+					//	},
+					//	cellTemplate: function (container, options) {
+
+					//		$("<a>")
+					//			.append($(ColocarEstadoEmail(options.data.EnvioMail, options.data.MensajeEnvio, options.data.EstadoEnvioMail, options.data.StrIdSeguridad)))
+					//			.appendTo(container);
+					//	}
+					//}
 				],
-
-			masterDetail: {
-				enabled: true,
-				template: function (container, options) {
-					container.append(ObtenerDetallle(options.data.Pdf, options.data.Xml, options.data.EstadoAcuse, options.data.RutaAcuse, options.data.XmlAcuse, options.data.zip, options.data.RutaServDian, options.data.StrIdSeguridad, options.data.IdFacturador, options.data.NumeroDocumento, "Admin", options.data.EstadoFactura));
-				}
-			},
 			filterRow: {
 				visible: true
 			}
@@ -447,10 +443,5 @@ var items_Tipo =
 
     ];
 
-var TiposFiltroFecha =
-    [
-    { ID: "1", Texto: 'Fecha Recepción' },
-    { ID: "2", Texto: 'Fecha Documento' }
-    ];
 
 

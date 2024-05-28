@@ -1271,7 +1271,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<ObjDocumentos> ObtenerDocumentosRechazado( DateTime fecha_inicio, DateTime fecha_fin)
+		public List<ObjDocumentos> ObtenerDocumentosRechazado(DateTime fecha_inicio, DateTime fecha_fin)
 		{
 
 			fecha_inicio = fecha_inicio.Date;
@@ -1365,7 +1365,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					HGInetDIANServicios.DianWSValidacionPrevia.DianResponse conversion = (HGInetDIANServicios.DianWSValidacionPrevia.DianResponse)serializacion.Deserialize(xml_reader);
 
-					respuesta = conversion.ErrorMessage.ToList();
+					respuesta = conversion.ErrorMessage.Where(x => x.ToString().Contains("Rechazo:")).ToList();
 				}
 				else
 				{
@@ -1844,7 +1844,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						try
 						{
 							List<Guid> docs = (from datos in context.TblDocumentos.AsNoTracking()
-											   where ((datos.IntAdquirienteRecibo < 2 || datos.IntAdquirienteRecibo.Equals(4)) && datos.IntDocTipo == 1 && datos.IntTipoOperacion != 3 
+											   where ((datos.IntAdquirienteRecibo < 2 || datos.IntAdquirienteRecibo.Equals(4)) && datos.IntDocTipo == 1 && datos.IntTipoOperacion != 3
 													&& datos.IntFormaPago == 2 && datos.IntIdEstado > Enviomail && datos.IntIdEstado < estado_error
 													&& datos.DatFechaIngreso > FechaConsulta
 													 && datos.StrEmpresaFacturador == item.StrIdentificacion
@@ -2148,7 +2148,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			//Para que consulte solo documentos soporte de adquisiciones o su respectiva nota
 			int tipo_operacion = 0;
-			
+
 			//Documento Soporte Adqui
 			if (TipoDocumento == 15)
 			{
@@ -2209,7 +2209,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									  StrIdSeguridad = datos.StrIdSeguridad,
 									  tipodoc = datos.IntDocTipo,
 									  zip = datos.StrUrlAnexo,
-									  RutaServDian = (datos.IntIdEstado >= 8 && datos.IntIdEstado <= 99)  ? datos.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",//datos.StrUrlArchivoUbl,
+									  RutaServDian = (datos.IntIdEstado >= 8 && datos.IntIdEstado <= 99) ? datos.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian) : "",//datos.StrUrlArchivoUbl,
 									  XmlAcuse = datos.StrUrlAcuseUbl,
 									  permiteenvio = (Int16)datos.IdCategoriaEstado,
 									  IntAdquirienteRecibo = datos.IntAdquirienteRecibo,
@@ -2271,7 +2271,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									  tipoOperacion = datos.IntTipoOperacion
 								  }).OrderByDescending(x => x.DatFechaIngreso).Skip(Desde).Take(Hasta).ToList();
 				}
-				
+
 			}
 			else
 			{
@@ -2660,7 +2660,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				bool adquiriente_hgi = (adquiriente.IntHabilitacion > Habilitacion.Valida_Objeto.GetHashCode() && adquiriente.IntObligado == true && adquiriente.IntAdquiriente == true && adquiriente.IntIdEstado == EstadoEmpresa.ACTIVA.GetHashCode()) ? true : false;
 
 				bool continuar_proceso = true;
-				
+
 				List<TblEventosRadian> list_evento = evento.Obtener(doc.StrIdSeguridad);
 
 				TblEventosRadian acuse = null;
@@ -2726,7 +2726,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 						}
 					}
-						
+
 
 					//Se valida si el adquiriente se esta habilitando en RADIAN o si va a registrar los eventos de Acuse en la DIAN
 					if (estado != CodigoResponseV2.AprobadoTacito.GetHashCode() && habilitacion_radian == false)
@@ -2894,12 +2894,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									}
 									else
 									{
-										
+
 										resultado = Ctl_Documento.ConvertirAcuse(doc, facturador, adquiriente, (short)CodigoResponseV2.Aceptado.GetHashCode(), motivo_rechazo, true);
 										recibo = EnviarAcuse(resultado, adquiriente, facturador, doc, (short)CodigoResponseV2.Aceptado.GetHashCode(), ref respuesta_error_dian);
 									}
-									
-									
+
+
 								}
 							}
 							else if (recibo != null && !doc.IntAdquirienteRecibo.Equals(estado))
@@ -2931,7 +2931,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									//Si la dian rechaza el evento por que supuestamente ya existe, se valida que ese evento este creado tabla
 									if (!string.IsNullOrEmpty(respuesta_error_dian) && (respuesta_error_dian.Contains("LGC01") || respuesta_error_dian.Contains("Regla: 90, Rechazo: Documento") || respuesta_error_dian.Contains("LGC12") || respuesta_error_dian.Contains("LGC13")))
 									{
-										
+
 
 										if (respuesta_error_dian.Contains("LGC12") || respuesta_error_dian.Contains("LGC13"))
 										{
@@ -2964,7 +2964,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 											expresa = EnviarAcuse(resultado, adquiriente, facturador, doc, estado, ref respuesta_error_dian);
 										}
 
-										
+
 									}
 								}
 
@@ -3285,7 +3285,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 					}
 					evento_enviar = EnviarAcuse(resultado, Emisor, Receptor, doc, (short)cod_acuse.GetHashCode(), ref respuesta_error_dian);
-					
+
 					if (evento_enviar != null && cod_acuse == CodigoResponseV2.PagoFvTV)
 					{
 						doc.IntValorPagar = tasa_descuento;
@@ -3649,7 +3649,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<DocumentTypeV2>(doc.IntDocTipo));
 
 			//Regla: AAH09, Se agrega validacion si es Factura de exportacion o contingecia para poner en el evento el mismo tipodocumento del original
-			if ( doc.IntDocTipo == TipoDocumento.Factura.GetHashCode() && doc.IntTipoOperacion == TipoOperacion.FacturaContingencia.GetHashCode())
+			if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode() && doc.IntTipoOperacion == TipoOperacion.FacturaContingencia.GetHashCode())
 			{
 				doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoOperacion>(doc.IntTipoOperacion));
 			}
@@ -3823,7 +3823,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					empresa_firma = facturador;
 				}
-				
+
 				respuesta = Ctl_Documentos.UblFirmar(empresa_firma, doc, ref respuesta, ref resultado);
 
 				//si hay problemas con el firmado genera mensaje para mostrar al usuario
@@ -5449,7 +5449,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		{
 			await Task.Factory.StartNew(() =>
 			{
-				
+
 
 				DateTime fecha_inicio = new DateTime(2017, 12, 31);
 				DateTime fecha_fin = Fecha.GetFecha();
@@ -7678,7 +7678,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				}
 				catch (Exception excepcion)
 				{
-					Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion,"Tarea de creacion del registro");
+					Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.creacion, "Tarea de creacion del registro");
 				}
 
 			});
@@ -7776,7 +7776,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 								item_eliminar.DatFechaBorrado = Fecha.GetFecha();
 								item_eliminar.IntBorrado = true;
-								
+
 
 								list_docs_act.Add(item_eliminar);
 
@@ -7801,11 +7801,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 							}
 
-							
+
 
 						});
 
-							
+
 
 						try
 						{
