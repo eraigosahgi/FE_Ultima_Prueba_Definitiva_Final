@@ -544,7 +544,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
 							numero_documento = num_doc.Actualizar(numero_documento);
 						}
-						else if (numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.EnvioZip.GetHashCode())
+						else if (numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.EnvioZip.GetHashCode() && numero_documento.DatFechaIngreso < Fecha.GetFecha().AddMinutes(-1))
 						{
 							// procesa el documento en V2
 							item_respuesta = ProcesarV2(numero_documento, true);
