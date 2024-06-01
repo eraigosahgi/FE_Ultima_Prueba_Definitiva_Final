@@ -428,7 +428,11 @@ GestionPlanesApp.controller('ConsultaPlanesController', function ConsultaPlanesC
                      	caption: "Tipo",
                      	dataField: "Tipoproceso"
                      }
+					 , {
 
+					 	caption: "Codigo Sucursal",
+					 	dataField: "IntSucursal"
+					 }
                      ,
                       {
 

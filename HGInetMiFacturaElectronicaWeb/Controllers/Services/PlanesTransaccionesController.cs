@@ -184,7 +184,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					Facturador = d.StrEmpresaFacturador,
 					CodCompra = d.IntTipoProceso,
 					Porcentaje = (d.IntTipoProceso != 3) ? (((float)d.IntNumTransaccProcesadas / (float)d.IntNumTransaccCompra) * 100) : 0,
-					TipoDoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocPlanes>(d.IntTipoDocumento))
+					TipoDoc = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoDocPlanes>(d.IntTipoDocumento)),
+					d.IntSucursal
 				});
 
 				return Ok(retorno);
