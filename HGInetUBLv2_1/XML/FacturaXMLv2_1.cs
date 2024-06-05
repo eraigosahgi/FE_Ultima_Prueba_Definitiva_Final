@@ -504,6 +504,11 @@ namespace HGInetUBLv2_1
 						ReceiptDocument.IssueDate.Value = item.FechaReferencia;
 						ReceiptDocument.DocumentTypeCode = new DocumentTypeCodeType();
 						ReceiptDocument.DocumentTypeCode.Value = item.CodigoReferencia;
+						if (documento.TipoOperacion == 1)
+						{
+							ReceiptDocument.UUID = new UUIDType();
+							ReceiptDocument.UUID.schemeID = "CUDE-SHA384";
+						}
 						AdditionalDocument.Add(ReceiptDocument);
 					}
 					facturaXML.AdditionalDocumentReference = AdditionalDocument.ToArray();

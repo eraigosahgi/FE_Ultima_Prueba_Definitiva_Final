@@ -951,9 +951,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					if (documento.DocumentosReferencia != null)
 					{
-						bool contingencia = documento.DocumentosReferencia.Exists(d => d.CodigoReferencia.Equals("FTC"));
-						if (contingencia == false)
-							throw new ApplicationException("El tipo de documento referenciado para el documento de contingencia no es válido según Estandar DIAN");
+						//bool contingencia = documento.DocumentosReferencia.Exists(d => d.CodigoReferencia.Equals("FTC"));
+						//if (contingencia == false)
+						//	throw new ApplicationException("El tipo de documento referenciado para el documento de contingencia no es válido según Estandar DIAN");
 					}
 					else
 					{
