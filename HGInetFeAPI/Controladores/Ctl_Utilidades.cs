@@ -193,6 +193,12 @@ namespace HGInetFeAPI
 					ambiente = 2;
 				}
 
+				//si la ruta contiene esta informacion es porque es una consulta, cambia el sitio
+				if (ruta.Contains("views"))
+				{
+					version = 3;
+				}
+
 				//Se consulta la ruta disponible para el integrador
 				//ServicioFacturaEClient cliente_ws = null;
 				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(url_plataforma);
@@ -240,7 +246,34 @@ namespace HGInetFeAPI
 				}
 				catch (Exception)
 				{
-					throw new ApplicationException(ex.Message, ex.InnerException);
+					//Se prueba consultando a otra ruta
+					string url_plataforma3 = "https://cloudservices.hgisas.com/Wcf/facturae.svc";
+
+					//Se consulta la ruta disponible para el integrador
+					//ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient();
+					EndpointAddress endpoint_address3 = new System.ServiceModel.EndpointAddress(url_plataforma3);
+					ServicioFacturaEClient cliente_ws3 = new ServicioFacturaEClient(ObtenerBinding(url_plataforma3), endpoint_address3);
+					cliente_ws3.Endpoint.Address = new System.ServiceModel.EndpointAddress(url_plataforma3);
+
+					try
+					{
+						// datos para la petición
+						ObtenerServidorFERequest peticion = new ObtenerServidorFERequest()
+						{
+							ambiente = ambiente,
+							identificacion_empresa = identificacion,
+							version = version
+						};
+
+						// ejecución del servicio web
+						ServicioRutasPlataforma.ObtenerServidorFEResponse respuesta = cliente_ws3.ObtenerServidorFE(peticion);
+						url_retorno = respuesta.ObtenerServidorFEResult;
+
+					}
+					catch (Exception)
+					{
+						throw new ApplicationException(ex.Message, ex.InnerException);
+					}
 				}
 
 				//var cod = cliente_rest.CodHttp;
