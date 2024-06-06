@@ -139,8 +139,8 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 				long dif_fecha = LibreriaGlobalHGInet.Funciones.Fecha.Diferencia(FechaInicial, FechaFinal, LibreriaGlobalHGInet.Funciones.Fecha.DateInterval.Day);
 
-				if (dif_fecha > 30)
-					throw new ApplicationException("La consulta supera el maximo de 30 dias; por favor realice la consulta teniendo en cuenta este maximo");
+				if (dif_fecha > 1)
+					throw new ApplicationException("La consulta supera el maximo de 1 día; por favor realice la consulta teniendo en cuenta este maximo");
 
 				List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
 
