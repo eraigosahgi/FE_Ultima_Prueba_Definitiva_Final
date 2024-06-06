@@ -674,6 +674,27 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					if (empresaSession.IntAdministrador)
 					{
 						var datos = ctl_empresa.Guardar(Empresa, ListaEmailRegistro);
+
+						//try
+						//{
+						//	if (ObjEmpresa.IntIntegrador == true)
+						//	{
+						//		Ctl_Integradores ctl_int = new Ctl_Integradores();
+						//		TblIntegradores integrador = ctl_int.Obtener(ObjEmpresa.StrTipoIdentificacion);
+						//		if (integrador == null)
+						//		{
+						//			integrador = new TblIntegradores();
+						//			integrador.StrIdentificacion = ObjEmpresa.StrTipoIdentificacion;
+						//			integrador.StrRazonSocial = ObjEmpresa.StrRazonSocial;
+						//			integrador.TblEmpresas = datos;
+						//			ctl_int.Crear(integrador);
+						//		}
+						//	}
+						//}
+						//catch (Exception)
+						//{
+
+						//}
 					}
 					else
 					{
@@ -692,8 +713,51 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						catch (Exception)
 						{ }
 						var datos = ctl_empresa.Editar(Empresa, Sesion.DatosEmpresa.IntAdministrador, ListaEmailRegistro, usuario_sesion);
+
+						//try
+						//{
+						//	if (ObjEmpresa.IntIntegrador == true)
+						//	{
+						//		Ctl_Integradores ctl_int = new Ctl_Integradores();
+						//		TblIntegradores integrador = ctl_int.Obtener(ObjEmpresa.StrTipoIdentificacion);
+						//		if (integrador == null)
+						//		{
+						//			integrador = new TblIntegradores();
+						//			integrador.StrIdentificacion = ObjEmpresa.StrTipoIdentificacion;
+						//			integrador.StrRazonSocial = ObjEmpresa.StrRazonSocial;
+						//			integrador.TblEmpresas = datos;
+						//			ctl_int.Crear(integrador);
+						//		}
+						//	}
+						//}
+						//catch (Exception)
+						//{
+
+						//}
 					}
 				}
+
+				//try
+				//{
+				//	if (ObjEmpresa.IntIntegrador == true)
+				//	{
+				//		Ctl_Integradores ctl_int = new Ctl_Integradores();
+				//		TblIntegradores integrador = ctl_int.Obtener(ObjEmpresa.StrTipoIdentificacion);
+				//		if (integrador == null)
+				//		{
+				//			integrador = new TblIntegradores();
+				//			integrador.StrIdentificacion = ObjEmpresa.StrTipoIdentificacion;
+				//			integrador.StrRazonSocial = ObjEmpresa.StrRazonSocial;
+				//			//integrador.TblEmpresas = Empresa;
+				//			ctl_int.Crear(integrador);
+				//		}
+				//	}
+				//}
+				//catch (Exception)
+				//{
+
+				//}
+
 				return Ok();
 			}
 
