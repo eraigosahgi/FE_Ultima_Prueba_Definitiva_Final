@@ -1476,7 +1476,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							throw new ApplicationException(string.Format("El campo {0} de la bolsa con valor {1} del detalle no está bien formado", "ValorImpuestoConsumo", Docdet.ValorImpuestoConsumo));
 
 						//Valida que si envien el impuesto2 saludable
-						if (Docdet.ValorImpuestoConsumo2 > 0 && Docdet.ImpoConsumo2Porcentaje > 0)
+						if (Docdet.ValorImpuestoConsumo2 > 0 && Docdet.ImpoConsumo2Porcentaje > 0 && Docdet.ProductoGratis == false)
 						{
 							decimal impconsumo2_cal = decimal.Round(Docdet.ValorSubtotal * (Docdet.ImpoConsumo2Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
 							if (Numero.Tolerancia(impconsumo2_cal, Docdet.ValorImpuestoConsumo2, 2))

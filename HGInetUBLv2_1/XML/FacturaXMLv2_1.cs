@@ -1993,6 +1993,10 @@ namespace HGInetUBLv2_1
 									currencyID = moneda_detalle.ToString(),
 									Value = DocDet.ValorSubtotal
 								};
+								if (DocDet.ProductoGratis == true)
+								{
+									TaxSubtotalConsumo.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 6, MidpointRounding.AwayFromZero);
+								}
 
 								// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
 								//Tarifa del tributo
@@ -2241,6 +2245,10 @@ namespace HGInetUBLv2_1
 									currencyID = moneda_detalle.ToString(),
 									Value = DocDet.ValorSubtotal
 								};
+								if (DocDet.ProductoGratis == true)
+								{
+									TaxSubtotalConsumo.TaxableAmount.Value = decimal.Round((DocDet.Cantidad * DocDet.ValorUnitario) - DocDet.DescuentoValor, 6, MidpointRounding.AwayFromZero);
+								}
 
 								// tasa de impuesto de la categoría de impuestos aplicada a este subtotal fiscal, expresada como un porcentaje.
 								//Tarifa del tributo

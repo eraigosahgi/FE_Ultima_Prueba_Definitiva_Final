@@ -161,30 +161,45 @@ namespace HGInetUBLv2_1
 										imp_doc.TipoImpuesto = "35";
 										//imp_doc.Codigo = "35";
 									}
-							}
-
-							imp_doc.Porcentaje = decimal.Round(item.ImpoConsumoPorcentaje, 2, MidpointRounding.AwayFromZero);
-
-								if (item.ImpoConsumoPorcentaje == 0 && imp_doc.TipoImpuesto == "04")
-									imp_doc.Porcentaje = 4.00M;
-
-								imp_doc.BaseImponible = BaseImponibleImpConsumo;
-								foreach (var docDet in doc_)
-								{
-									imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2, MidpointRounding.AwayFromZero);
 								}
 
-								doc_impuestos.Add(imp_doc);
+									imp_doc.Porcentaje = decimal.Round(item.ImpoConsumoPorcentaje, 2, MidpointRounding.AwayFromZero);
 
-								//if (imp_doc.Porcentaje >= 0 && imp_doc.ValorImpuesto > 0)
-								//{
-								//	//decimal imp_cal = decimal.Round(BaseImponibleImpConsumo * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+									if (item.ImpoConsumoPorcentaje == 0 && imp_doc.TipoImpuesto == "04")
+										imp_doc.Porcentaje = 4.00M;
 
-								//	//if (imp_cal != imp_doc.ValorImpuesto)
-								//	//	imp_doc.ValorImpuesto = imp_cal;
+									imp_doc.BaseImponible = BaseImponibleImpConsumo;
+									foreach (var docDet in doc_)
+									{
+										imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo, 2, MidpointRounding.AwayFromZero);
+									}
 
-								//	doc_impuestos.Add(imp_doc);
-								//}
+									//Validacion de muestras
+									List<DocumentoDetalle> muestra = documentoDetalle.Where(docDet => docDet.ImpoConsumoPorcentaje == item.ImpoConsumoPorcentaje && docDet.ProductoGratis.Equals(true)).ToList();
+									decimal BaseimponibleMuestra = 0;
+									foreach (var DocMues in muestra)
+									{
+										if (DocMues.ImpoConsumoPorcentaje > 0)
+											BaseimponibleMuestra = decimal.Round(BaseimponibleMuestra + ((DocMues.Cantidad * DocMues.ValorUnitario) - DocMues.DescuentoValor), 2, MidpointRounding.AwayFromZero);
+									}
+
+									if (BaseimponibleMuestra > 0)
+									{
+										BaseImponibleImpuesto += BaseimponibleMuestra;
+										imp_doc.BaseImponible += BaseimponibleMuestra;
+									}
+
+									doc_impuestos.Add(imp_doc);
+
+									//if (imp_doc.Porcentaje >= 0 && imp_doc.ValorImpuesto > 0)
+									//{
+									//	//decimal imp_cal = decimal.Round(BaseImponibleImpConsumo * (imp_doc.Porcentaje / 100), 2, MidpointRounding.AwayFromZero);
+
+									//	//if (imp_cal != imp_doc.ValorImpuesto)
+									//	//	imp_doc.ValorImpuesto = imp_cal;
+
+									//	doc_impuestos.Add(imp_doc);
+									//}
 
 							}
 							else
@@ -262,6 +277,21 @@ namespace HGInetUBLv2_1
 							foreach (var docDet in doc_)
 							{
 								imp_doc.ValorImpuesto = decimal.Round(imp_doc.ValorImpuesto + docDet.ValorImpuestoConsumo2, 2, MidpointRounding.AwayFromZero);
+							}
+
+							//Validacion de muestras
+							List<DocumentoDetalle> muestra = documentoDetalle.Where(docDet => docDet.ImpoConsumo2Porcentaje == item.ImpoConsumo2Porcentaje && docDet.ProductoGratis.Equals(true)).ToList();
+							decimal BaseimponibleMuestra = 0;
+							foreach (var DocMues in muestra)
+							{
+								if (DocMues.ImpoConsumo2Porcentaje > 0)
+									BaseimponibleMuestra = decimal.Round(BaseimponibleMuestra + ((DocMues.Cantidad * DocMues.ValorUnitario) - DocMues.DescuentoValor), 2, MidpointRounding.AwayFromZero);
+							}
+
+							if (BaseimponibleMuestra > 0)
+							{
+								BaseImponibleImpuesto += BaseimponibleMuestra;
+								imp_doc.BaseImponible += BaseimponibleMuestra;
 							}
 
 							doc_impuestos.Add(imp_doc);
