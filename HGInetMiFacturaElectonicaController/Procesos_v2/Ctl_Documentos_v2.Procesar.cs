@@ -344,6 +344,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 										enviar_correo = false;
 								}
 
+								//Validacion para documentos diferentes de Nomina que no tengan correo electronico el adquiriente ó que sea del consumidor Final.
+								if (enviar_correo == true)
+								{
+									if (string.IsNullOrWhiteSpace(documento_obj.DatosAdquiriente.Email) || documento_obj.DatosAdquiriente.Identificacion == "222222222222")
+										enviar_correo = false;
+								}
+
 								if ((documento.IntEnvioMail == null || documento.IntEnvioMail == false) && enviar_correo == true)
 								{
 									respuesta = Envio(documento_obj, documento, empresa, ref respuesta, ref documento_result);
