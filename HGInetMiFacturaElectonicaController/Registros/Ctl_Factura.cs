@@ -211,13 +211,15 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				List<TblDocumentos> respuesta = new List<TblDocumentos>();
 
+				context.Configuration.LazyLoadingEnabled = false;
+
 				if (Facturador == false)
 				{
 
 					// obtiene los documentos de acuerdo al id seguridad y con los estados de visibilidad pública
 					respuesta = (from datos in context.TblDocumentos
-								 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
-								 where (empresa.StrIdentificacion.Equals(identificacion_adquiriente))
+								 //join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+								 where (datos.StrEmpresaAdquiriente.Equals(identificacion_adquiriente))
 								 && (lista_documentos.Contains(datos.StrIdSeguridad.ToString()))
 								 && (estado_dian.Contains(datos.IntIdEstado.ToString()))
 								 orderby datos.IntNumero descending
@@ -227,8 +229,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					// obtiene los documentos de acuerdo al id seguridad y con los estados de visibilidad pública
 					respuesta = (from datos in context.TblDocumentos
-								 join empresa in context.TblEmpresas on datos.StrEmpresaFacturador equals empresa.StrIdentificacion
-								 where (empresa.StrIdentificacion.Equals(identificacion_adquiriente))
+								 //join empresa in context.TblEmpresas on datos.StrEmpresaFacturador equals empresa.StrIdentificacion
+								 where (datos.StrEmpresaFacturador.Equals(identificacion_adquiriente))
 								 && (lista_documentos.Contains(datos.StrIdSeguridad.ToString()))
 								 && (estado_dian.Contains(datos.IntIdEstado.ToString()))
 								 orderby datos.IntNumero descending

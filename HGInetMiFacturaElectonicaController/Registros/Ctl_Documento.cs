@@ -696,8 +696,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				context.Configuration.LazyLoadingEnabled = false;
 
 				var respuesta = from documento in context.TblDocumentos
-								join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
-								where empresa.StrIdentificacion.Equals(identificacion_obligado)
+								//join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
+								where documento.StrEmpresaFacturador.Equals(identificacion_obligado)
 								 && documento.IntDocTipo == tipo_documento
 								 && (documento.DatFechaIngreso >= FechaInicial && documento.DatFechaIngreso <= FechaFinal)
 								select documento;
