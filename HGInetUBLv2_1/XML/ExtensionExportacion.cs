@@ -34,7 +34,7 @@ namespace HGInetUBLv2_1
 			interoperabilidad.Group.schemeName = sector;
 			//interoperabilidad.Group.Collection = new Collection[1];
 
-			List<Collection> datos_usuario = new List<Collection>();
+			//List<Collection> datos_usuario = new List<Collection>();
 
 			Collection coleccion = new Collection();
 			coleccion.schemeName = coleccion_fijos;
@@ -63,8 +63,8 @@ namespace HGInetUBLv2_1
 			}
 
 			coleccion.AdditionalInformation = datos_adicionales.ToArray();
-			datos_usuario.Add(coleccion);
-			interoperabilidad.Group.Collection = datos_usuario.ToArray();
+			//datos_usuario.Add(coleccion);
+			interoperabilidad.Group.Collection = coleccion;
 			TagGeneral.Interoperabilidad = interoperabilidad;
 
 			TotalesCopType totales = new TotalesCopType();

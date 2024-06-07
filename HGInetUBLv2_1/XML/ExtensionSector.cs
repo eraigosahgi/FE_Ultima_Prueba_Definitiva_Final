@@ -92,7 +92,7 @@ namespace HGInetUBLv2_1
 
 			List<AdditionalInformationType1> datos_adicionales = new List<AdditionalInformationType1>();
 
-			List<Collection> datos_usuario = new List<Collection>();
+			Collection datos_usuario = new Collection();
 
 			int campo_validador = 0;
 			//Informacion como indica Resolucion 510 y 2275 que corresponde a 11 campos
@@ -141,7 +141,7 @@ namespace HGInetUBLv2_1
 						datos_coleccion.schemeName = usuario;
 						datos_coleccion.AdditionalInformation = datos_adicionales.ToArray();
 						datos_adicionales = new List<AdditionalInformationType1>();
-						datos_usuario.Add(datos_coleccion);
+						datos_usuario = datos_coleccion;
 					}
 				}
 			}
@@ -201,13 +201,13 @@ namespace HGInetUBLv2_1
 						datos_coleccion.schemeName = usuario;
 						datos_coleccion.AdditionalInformation = datos_adicionales.ToArray();
 						datos_adicionales = new List<AdditionalInformationType1>();
-						datos_usuario.Add(datos_coleccion);
+						datos_usuario = datos_coleccion;
 					}
 				}
 			}
 			
 			
-			interoperabilidad.Group.Collection = datos_usuario.ToArray();
+			interoperabilidad.Group.Collection = datos_usuario;
 
 			TagGeneral.Interoperabilidad = interoperabilidad;
 
