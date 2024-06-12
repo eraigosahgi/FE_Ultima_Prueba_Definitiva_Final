@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController;
+﻿using DevExtreme.AspNet.Mvc;
+using HGInetMiFacturaElectonicaController;
 using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaController.PagosElectronicos;
@@ -45,6 +46,41 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 	[EnableCors(origins: "*", headers: "*", methods: "*")]
 	public class DocumentosController : ApiController
 	{
+
+		[HttpGet]
+		[Route("Api/Documentos/Consultar")]
+		public HttpResponseMessage Consultar(DataSourceLoadOptions loadOptions, int skip, int take)
+		{
+			try
+			{
+				Ctl_Documento ctl_doc = new Ctl_Documento();
+				var documento = ctl_doc.Consultar(loadOptions);
+
+				return Request.CreateResponse(HttpStatusCode.OK, documento);
+			}
+			catch (Exception ex)
+			{
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/Documentos/Consultar")]
+		public HttpResponseMessage Consultar(DataSourceLoadOptions loadOptions)
+		{
+			try
+			{
+				Ctl_Documento ctl_doc = new Ctl_Documento();
+				var documento = ctl_doc.Consultar(loadOptions);
+
+				return Request.CreateResponse(HttpStatusCode.OK, documento);
+			}
+			catch (Exception ex)
+			{
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+			}
+		}
+
 		/// <summary>
 		/// Obtiene los documentos por adquiriente
 		/// </summary>
@@ -1709,7 +1745,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
-				List<ObjDocumentos> datos = ctl_documento.ObtenerAdministrador(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento, tipo_fecha, Desde, Hasta);
+				List<ObjDocumentos> datos = ctl_documento.ObtenerAdministradorNew(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento, tipo_fecha, Desde, Hasta);
 
 				if (datos == null)
 				{

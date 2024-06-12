@@ -68,6 +68,7 @@
 
 	<!-- /theme JS files -->
 
+	
 
 	<!-- Estilos CSS -->
 	<%-- <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.spa.css" />--%>
@@ -95,6 +96,8 @@
 	<%--<script src="../../Scripts/devall.js"></script>--%>
 	<%--<script src="https://cdn3.devexpress.com/jslib/19.1.6/js/dx.all.js"></script>--%>
 	<script src="../../Scripts/Scripts-descarga/dx.all.js"></script>
+
+	<script src="https://unpkg.com/devextreme-aspnet-data@3.0.0/js/dx.aspnet.data.js"></script>
 
 	<%--<script src="https://unpkg.com/devextreme-intl/dist/devextreme-intl.min.js"></script>--%>
 	<script src="../../Scripts/Scripts-descarga/devextreme-intl.min.js"></script>
@@ -134,7 +137,7 @@
 
 		$(document).ready(function () {
 			var dt = new Date();
-			window.setInterval("ValidarSesion()", 300000);
+			//window.setInterval("ValidarSesion()", 300000);
 		});
 
 
@@ -652,6 +655,12 @@
 												</div>
 												<br />
 												<!-- / Manual Adquiriente -->
+
+												<!-- Manual Integradores -->
+												<div class="media-left media-middle">
+													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://portal.hgidocs.co/GuíaIntegradorPlataformaHgiDocs.pdf');"><i class="icon-user-tie"></i>Manual Integradores</label>
+												</div>
+												<br />
 
 											</div>
 

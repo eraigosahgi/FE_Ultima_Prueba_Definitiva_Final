@@ -375,6 +375,7 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 		if (fecha_fin == "")
 			fecha_fin = now.toISOString();
 		$('#waitRegistros').show();
+		$('#wait').show();
 		SrvDocumento.ObtenerDocumentosRechazado(fecha_inicio, fecha_fin).then(function (data) {
 
 			Documentos = [];

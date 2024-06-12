@@ -1,4 +1,5 @@
-﻿using HGInetMiFacturaElectonicaController.Configuracion;
+﻿using DevExtreme.AspNet.Mvc;
+using HGInetMiFacturaElectonicaController.Configuracion;
 using HGInetMiFacturaElectonicaData;
 using HGInetMiFacturaElectonicaData.Modelo;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
@@ -13,8 +14,8 @@ using System.Web.Http;
 
 namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 {
-    public class EmpresasApiController : ApiController
-    {
+	public class EmpresasApiController : ApiController
+	{
 		[HttpGet]
 		[Route("Api/EmpresasApi/Obtener")]
 		public HttpResponseMessage Obtener(string DataKey, string Identificacion)
@@ -89,6 +90,39 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 			}
 		}
 
+		[HttpGet]
+		[Route("Api/EmpresasApi/Consultar")]
+		public HttpResponseMessage Consultar(DataSourceLoadOptions loadOptions, int skip, int take)
+		{
+			try
+			{
+				Ctl_Empresa ctl_empresa = new Ctl_Empresa();				
+				var documento = ctl_empresa.Consultar(loadOptions);				
+
+				return Request.CreateResponse(HttpStatusCode.OK, documento);
+			}
+			catch (Exception ex)
+			{
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/EmpresasApi/Consultar")]
+		public HttpResponseMessage Consultar(DataSourceLoadOptions loadOptions)
+		{
+			try
+			{				
+				Ctl_Empresa ctl_empresa = new Ctl_Empresa();				
+				var documento = ctl_empresa.Consultar(loadOptions);
+
+				return Request.CreateResponse(HttpStatusCode.OK, documento);
+			}
+			catch (Exception ex)
+			{
+				return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+			}
+		}
 
 	}
 }

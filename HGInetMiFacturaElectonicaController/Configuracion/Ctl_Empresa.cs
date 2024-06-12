@@ -27,6 +27,10 @@ using HGInetMiFacturaElectonicaController.Auditorias;
 using HGInetFirmaDigital;
 using LibreriaGlobalHGInet.Peticiones;
 using Newtonsoft.Json;
+using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
+using DevExtreme.AspNet.Data;
+using Newtonsoft.Json.Linq;
 
 namespace HGInetMiFacturaElectonicaController.Configuracion
 {
@@ -41,7 +45,51 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		#endregion
 
 
+		public LoadResult Consultar(DataSourceLoadOptions loadOptions)
+		{
+			try
+			{
 
+
+				// Agregar filtro empresa al loadOptions
+				var internalFilter = new JArray(loadOptions.Filter);
+				JArray combinedFilter = new JArray();
+				JArray customFilterEmpresa = new JArray(new object[] { "IntObligado", "=", 1 });
+
+
+				//JArray customFilterPuntoVenta = new JArray(new object[] { "IntObligado", "=", true });
+				//combinedFilter.Add(customFilterPuntoVenta);
+
+
+				if (loadOptions.Filter != null)
+				{
+					combinedFilter.Add(internalFilter);
+					combinedFilter.Add("and");
+				}
+
+				combinedFilter.Add(customFilterEmpresa);
+
+				loadOptions.Filter = combinedFilter;
+
+				LoadResult resultado = new LoadResult();
+				context.Configuration.LazyLoadingEnabled = false;
+				try
+				{
+					//resultado = DataSourceLoader.Load(context.TblPresentacion, loadOptions);
+					resultado = DataSourceLoader.Load(context.TblEmpresas, loadOptions);
+
+					return resultado;
+				}
+				catch (Exception e)
+				{
+					throw new ApplicationException(e.Message, e.InnerException);
+				}
+			}
+			catch (Exception e)
+			{
+				throw new ApplicationException(e.Message, e.InnerException);
+			}
+		}
 
 
 		public CertificadoDigital GuardarCertificadoDigital(HttpPostedFile File, System.Guid IdSeguridad, string clave, int certificadora)
@@ -475,14 +523,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		}
 
 
-		public static void Almacenar(string mensaje,string archivo,string nit)
+		public static void Almacenar(string mensaje, string archivo, string nit)
 		{
 			StreamWriter sw = null;
 
 			try
 			{
 
-				string directorio_logs = string.Format("{0}\\logs\\CambioEmpresas\\{1}\\", RecursoArchivosParametros.DirectorioArchivosApp,nit);
+				string directorio_logs = string.Format("{0}\\logs\\CambioEmpresas\\{1}\\", RecursoArchivosParametros.DirectorioArchivosApp, nit);
 
 				string directorio = string.Format("{0}{1}\\", Directorio.ObtenerDirectorioRaiz(), directorio_logs);
 
@@ -491,7 +539,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				// asegura la creación del archivo de auditoría
 				string ruta_archivo = string.Format("{0}{1}", directorio, archivo);
 				Crear(ruta_archivo);
-				
+
 				sw = new StreamWriter(ruta_archivo, true);
 
 				sw.WriteLine(string.Format("{0}", mensaje));
@@ -1485,25 +1533,25 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				datos_retorno.Identificacion = datos_empresa.StrIdentificacion;
 				datos_retorno.IdentificacionDv = datos_empresa.IntIdentificacionDv;
 				datos_retorno.RazonSocial = datos_empresa.StrRazonSocial;
-				datos_retorno.Telefono = datos_empresa.StrTelefono; 
+				datos_retorno.Telefono = datos_empresa.StrTelefono;
 				datos_retorno.EmailAdmin = datos_empresa.StrMailAdmin;
-                datos_retorno.TipoIdentificacion = int.Parse(datos_empresa.StrTipoIdentificacion);
+				datos_retorno.TipoIdentificacion = int.Parse(datos_empresa.StrTipoIdentificacion);
 
-                if (DatosEmisor == true)
-                {
-                   datos_retorno.HorasAcuseTacito = datos_empresa.IntAcuseTacito.Value;
-				    datos_retorno.ManejaAnexo = datos_empresa.IntManejaAnexos;
-				    datos_retorno.EmailEnvio = datos_empresa.StrMailEnvio;
-				    datos_retorno.EmailRecepcion = datos_empresa.StrMailRecepcion;
-				    datos_retorno.EmailAcuse = datos_empresa.StrMailAcuse;
-				    datos_retorno.EmailPagos = datos_empresa.StrMailPagos;
-				    datos_retorno.VersionDian = datos_empresa.IntVersionDian;
+				if (DatosEmisor == true)
+				{
+					datos_retorno.HorasAcuseTacito = datos_empresa.IntAcuseTacito.Value;
+					datos_retorno.ManejaAnexo = datos_empresa.IntManejaAnexos;
+					datos_retorno.EmailEnvio = datos_empresa.StrMailEnvio;
+					datos_retorno.EmailRecepcion = datos_empresa.StrMailRecepcion;
+					datos_retorno.EmailAcuse = datos_empresa.StrMailAcuse;
+					datos_retorno.EmailPagos = datos_empresa.StrMailPagos;
+					datos_retorno.VersionDian = datos_empresa.IntVersionDian;
 					datos_retorno.ValidacionVersion = datos_empresa.IntValidacionVersion;
 
-				    //Obtiene correo de la tabla que tiene registrado en la DIAN
-				    Ctl_ObtenerCorreos correo_dian = new Ctl_ObtenerCorreos();
-                    datos_retorno.EmailRecepcionDian = correo_dian.Obtener(datos_empresa.StrIdentificacion);
-                }
+					//Obtiene correo de la tabla que tiene registrado en la DIAN
+					Ctl_ObtenerCorreos correo_dian = new Ctl_ObtenerCorreos();
+					datos_retorno.EmailRecepcionDian = correo_dian.Obtener(datos_empresa.StrIdentificacion);
+				}
 
 				return datos_retorno;
 			}

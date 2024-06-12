@@ -30,6 +30,8 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		{
 			try
 			{
+				context.Configuration.LazyLoadingEnabled = false;
+
 				List<PorcentajesResumen> documentos_estado = (from documento in context.TblDocumentos
 															  where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
 															  && (documento.DatFechaIngreso >= fecha_inicio.Date && documento.DatFechaIngreso <= fecha_fin.Date)
@@ -93,6 +95,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 		{
 			try
 			{
+				context.Configuration.LazyLoadingEnabled = false;
 				List<PorcentajesResumen> documentos_estado = (from documento in context.TblDocumentos
 															  where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
 															   && (documento.DatFechaIngreso >= fecha_inicio.Date && documento.DatFechaIngreso <= fecha_fin.Date)
@@ -519,6 +522,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 				int mes_anterior = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(-1).Month;
 
 				List<TopTransaccional> resumen_transaccional = new List<TopTransaccional>();
+				
 
 				if (tipo_empresa == 2)
 				{
@@ -570,7 +574,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 													 ProveedorEmisor = datos_movimiento.FirstOrDefault().movimiento.StrProveedorEmisor
 												 }).OrderByDescending(d => d.TotalDocumentos).ToList();
 					}
-					
+
 				}
 
 
@@ -595,7 +599,7 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 				DateTime fecha_fin_anterior = fecha_fin;
 				int consecutivo = 1;
 
-
+				
 				switch (tipo_frecuencia)
 				{
 					case TipoFrecuencia.Hoy:
