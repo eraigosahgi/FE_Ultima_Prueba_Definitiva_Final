@@ -241,7 +241,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 											//Valida
 											if (item_row[i].ToString().Contains("débito"))
 												tipo_doc = 2;
-											if (item_row[i].ToString().Contains("Crédito"))
+											if (item_row[i].ToString().Contains("crédito"))
 												tipo_doc = 3;
 											else if (item_row[i].ToString().Contains("Application"))
 											{
