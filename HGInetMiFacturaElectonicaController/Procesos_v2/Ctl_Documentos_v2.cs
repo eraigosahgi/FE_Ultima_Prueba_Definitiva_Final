@@ -575,7 +575,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								}
 
 								//Validacion para documentos diferentes de Nomina que no tengan correo electronico el adquiriente.
-								if (enviar_correo == true && (tipo_doc != TipoDocumento.Nomina || tipo_doc != TipoDocumento.NominaAjuste))
+								if (enviar_correo == true && (tipo_doc == TipoDocumento.Factura || tipo_doc == TipoDocumento.NotaCredito || tipo_doc == TipoDocumento.NotaDebito))
 								{
 									if (string.IsNullOrWhiteSpace(documento_obj.DatosAdquiriente.Email) || documento_obj.DatosAdquiriente.Identificacion == "222222222222")
 										enviar_correo = false;

@@ -338,17 +338,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								if ((tipo_documento == TipoDocumento.Nomina || tipo_documento == TipoDocumento.NominaAjuste) && empresa.IntEnvioNominaMail == false)
 									enviar_correo = false;
 
-								if ((tipo_documento == TipoDocumento.Factura || tipo_documento == TipoDocumento.NotaCredito))
+								if (tipo_documento == TipoDocumento.Factura || tipo_documento == TipoDocumento.NotaCredito || tipo_documento == TipoDocumento.NotaDebito)
 								{
 									if (documento_obj.TipoOperacion == 3)
 										enviar_correo = false;
-								}
 
-								//Validacion para documentos diferentes de Nomina que no tengan correo electronico el adquiriente ó que sea del consumidor Final.
-								if (enviar_correo == true)
-								{
-									if (string.IsNullOrWhiteSpace(documento_obj.DatosAdquiriente.Email) || documento_obj.DatosAdquiriente.Identificacion == "222222222222")
-										enviar_correo = false;
+									//Validacion para documentos diferentes de Nomina que no tengan correo electronico el adquiriente ó que sea del consumidor Final.
+									if (enviar_correo == true)
+									{
+										if (string.IsNullOrWhiteSpace(documento_obj.DatosAdquiriente.Email) || documento_obj.DatosAdquiriente.Identificacion == "222222222222")
+											enviar_correo = false;
+									}
 								}
 
 								if ((documento.IntEnvioMail == null || documento.IntEnvioMail == false) && enviar_correo == true)
