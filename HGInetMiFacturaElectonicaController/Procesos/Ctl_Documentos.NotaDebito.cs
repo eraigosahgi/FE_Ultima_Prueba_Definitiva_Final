@@ -159,7 +159,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//**Se agrega validacion y asignacion del aplicativo emisor del documento.
 
-				DateTime fecha_control = new DateTime(2024, 06, 21, 0, 0, 0);
+				DateTime fecha_control = new DateTime(2024, 07, 21, 0, 0, 0);
 				Ctl_EmpresaIntegradores Emp_int = new Ctl_EmpresaIntegradores();
 				List<TblEmpresaIntegradores> integradores = Emp_int.Obtener(facturador_electronico.StrIdentificacion);
 				//string integrador_peticion = string.Empty;
@@ -536,6 +536,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//Se actualiza el estado para evitar que lo envien de nuevo mientras se termina este proceso
 							numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
 							numero_documento = num_doc.Actualizar(numero_documento);
+							//item_respuesta.Cufe = string.Empty;
+							//item_respuesta.UrlXmlUbl = string.Empty;
+							//item_respuesta.UrlPdf = string.Empty;
 						}
 						else if (numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.EnvioZip.GetHashCode() && numero_documento.DatFechaIngreso < Fecha.GetFecha().AddMinutes(-1))
 						{
@@ -810,7 +813,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				// [749311] Se agrega validación para que no cambie el proceso cuando se realice algun evento sobre el documento.
-				if (item_respuesta.IdProceso != (short)ProcesoEstado.RecepcionAcuse.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.EnvioRespuestaAcuse.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.AcuseVisto.GetHashCode())
+				if (item_respuesta.IdProceso != (short)ProcesoEstado.RecepcionAcuse.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.EnvioRespuestaAcuse.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.AcuseVisto.GetHashCode() && item_respuesta.IdProceso != (short)ProcesoEstado.ConsultaDian.GetHashCode())
 				{
 					item_respuesta.IdProceso = (short)ProcesoEstado.Validacion.GetHashCode();
 					item_respuesta.IdEstado = (short)CategoriaEstado.NoRecibido.GetHashCode();

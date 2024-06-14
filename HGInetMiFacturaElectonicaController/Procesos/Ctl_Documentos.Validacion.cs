@@ -74,6 +74,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					if (respuesta.IdProceso > ProcesoEstado.UBL.GetHashCode() && respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode())
 					{
 						respuesta.UrlXmlUbl = null;
+						//respuesta.Cufe = string.Empty;
+						//respuesta.UrlPdf = string.Empty;
 					}
 
 					try

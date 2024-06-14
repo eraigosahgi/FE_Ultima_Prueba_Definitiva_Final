@@ -290,7 +290,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 
 					//Valida estado del documento en la Plataforma de la DIAN
-					if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode() || respuesta.IdProceso == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode())
+					if (respuesta.IdProceso == ProcesoEstado.EnvioZip.GetHashCode() || respuesta.IdProceso == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || respuesta.IdProceso == ProcesoEstado.ConsultaDian.GetHashCode())
 					{
 						if ((respuesta.EstadoDian == null || respuesta.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Pendiente.GetHashCode()))
 						{

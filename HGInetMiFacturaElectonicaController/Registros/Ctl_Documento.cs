@@ -4844,7 +4844,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				obj_documento.Aceptacion = (respuesta.IntAdquirienteRecibo > CodigoResponseV2.Inscripcion.GetHashCode()) ? CodigoResponseV2.Inscripcion.GetHashCode() : respuesta.IntAdquirienteRecibo;
 				obj_documento.DescripcionAceptacion = (respuesta.IntAdquirienteRecibo > CodigoResponseV2.Inscripcion.GetHashCode()) ? "Titulo Valor" : Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CodigoResponseV2>(respuesta.IntAdquirienteRecibo));
 				obj_documento.CodigoRegistro = respuesta.StrObligadoIdRegistro;
-				obj_documento.Cufe = respuesta.StrCufe;
+				obj_documento.Cufe = respuesta.StrCufe; //(respuesta.IntIdEstado == 92 || respuesta.IntIdEstado == 93 || respuesta.IntIdEstado == 94) ? string.Empty : respuesta.StrCufe;
 				obj_documento.DocumentoTipo = respuesta.IntDocTipo;
 				obj_documento.Documento = respuesta.IntNumero;
 				obj_documento.FechaRecepcion = respuesta.DatFechaIngreso;
@@ -4867,8 +4867,8 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					obj_documento.ProcesoFinalizado = 0;
 				}
-				obj_documento.UrlPdf = respuesta.StrUrlArchivoPdf;
-				obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl;
+				obj_documento.UrlPdf = respuesta.StrUrlArchivoPdf; //(respuesta.IntIdEstado == 92 || respuesta.IntIdEstado == 93 || respuesta.IntIdEstado == 94) ? string.Empty : respuesta.StrUrlArchivoPdf;
+				obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl; //(respuesta.IntIdEstado == 92 || respuesta.IntIdEstado == 93 || respuesta.IntIdEstado == 94) ? string.Empty : respuesta.StrUrlArchivoUbl;
 				obj_documento.UrlAnexo = respuesta.StrUrlAnexo;
 
 				//Ctl_DocumentosAudit clase_audit = new Ctl_DocumentosAudit();

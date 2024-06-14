@@ -100,7 +100,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//**Se agrega validacion y asignacion del aplicativo emisor del documento.
 
-				DateTime fecha_control = new DateTime(2024, 06, 21, 0, 0, 0);
+				DateTime fecha_control = new DateTime(2024, 07, 21, 0, 0, 0);
 				Ctl_EmpresaIntegradores Emp_int = new Ctl_EmpresaIntegradores();
 				List<TblEmpresaIntegradores> integradores = Emp_int.Obtener(facturador_electronico.StrIdentificacion);
 				//string integrador_peticion = string.Empty;
@@ -542,7 +542,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						numero_documento.IntIdEstado = (short)ProcesoEstado.Recepcion.GetHashCode();
 						numero_documento = num_doc.Actualizar(numero_documento);
 					}
-					else if (numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.EnvioZip.GetHashCode())
+					else if (numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.EnvioZip.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.ConsultaDian.GetHashCode())
 					{
 						//procesa el documento en un estado pendiente validar proceso
 						item_respuesta = ProcesarV2(numero_documento, true);
