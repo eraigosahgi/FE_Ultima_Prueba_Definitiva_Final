@@ -469,8 +469,32 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							if (documento_existente == false)
 							{
-								documentoBd = documento_tmp.Crear(documentoBd);
-								respuesta.DescuentaSaldo = true;
+								Ctl_Documento num_doc = new Ctl_Documento();
+								TblDocumentos numero_documento = num_doc.Obtener(empresa.StrIdentificacion, documentoBd.IntNumero, documentoBd.StrPrefijo, documentoBd.IntDocTipo);
+
+								if (numero_documento == null)
+								{
+									documentoBd = documento_tmp.Crear(documentoBd);
+									respuesta.DescuentaSaldo = true;
+								}
+								else
+								{
+									respuesta.IdEstado = CategoriaEstado.NoRecibido.GetHashCode();
+									respuesta.DescripcionEstado = Enumeracion.GetDescription(CategoriaEstado.NoRecibido);
+									respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+									respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.Validacion);
+									respuesta.UrlPdf = null;
+									respuesta.UrlXmlUbl = null;
+									respuesta.Cufe = null;
+									respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("No se puede guardar El documento '{0}' con prefijo '{1}' y el Facturador Electrónico '{2}'", documentoBd.IntNumero, documentoBd.StrPrefijo, empresa.StrIdentificacion), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+
+									//Se da una pausa en proceso para que el primer proceso que hizo la insercion termine con el proceso
+									System.Threading.Thread.Sleep(8000);
+
+									Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "No se puede guardar El documento en BD porque ya existe");
+								}
+
+								
 							}
 							else
 							{

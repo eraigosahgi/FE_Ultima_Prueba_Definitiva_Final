@@ -50,6 +50,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			// genera un id único de la plataforma
 			Guid id_peticion = Guid.NewGuid();
+			bool peticion_unica = false;
+			Guid id_peticion_doc = Guid.NewGuid();
 
 			////Planes y transacciones
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
@@ -63,6 +65,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (!facturador_electronico.IntObligado)
 					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
+
+				//Se valida si es peticion con un unico documento y si no lo es valida que no lleguen repetidos en la misma peticion, para evitar duplicados por paralelismo o por peticion
+				if (documentos.Count == 1)
+				{
+					peticion_unica = true;
+				}
+				else
+				{
+					//Agrupamos la lista
+					int result = documentos.GroupBy(x => new { x.Documento, x.Prefijo }).Count();
+
+					if (result > 0)
+						throw new ApplicationException("Se encontraron documentos repetidos en la peticion, corrijan esta información y emitan de nuevo los documentos");
+				}
 
 				//Contingencia de la DIAN 2024-03-09 desde las 6:00 am hasta las 6:00 PM
 				DateTime fecha_ini_cont = new DateTime(2024, 03, 09, 6, 0, 0);
@@ -360,12 +376,26 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						ListaPlanes[i].reservado = ListaPlanes[i].reservado + 1;
 					}
 				}
-				//Planes y transacciones
-				Parallel.ForEach<NotaDebito>(documentos, item =>
+
+
+				if (peticion_unica == false)
 				{
-					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion, integrador_peticion);
-					respuesta.Add(item_respuesta);
-				});
+					Parallel.ForEach<NotaDebito>(documentos, item =>
+					{
+						DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion, integrador_peticion);
+						respuesta.Add(item_respuesta);
+					});
+				}
+				else
+				{
+					Parallel.ForEach<NotaDebito>(documentos, item =>
+					{
+						DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion, integrador_peticion, id_peticion_doc);
+						respuesta.Add(item_respuesta);
+					});
+				}
+
+				
 
 				//Conciliar Planes
 				var datos = Planestransacciones.ConciliarPlanes(ListaPlanes, respuesta);
@@ -443,7 +473,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="fecha_actual">fecha actual de recepción del documento</param>
 		/// <param name="lista_resolucion">resoluciones habilitadas para el facturador electrónico</param>
 		/// <returns>resultado del proceso</returns>
-		private static DocumentoRespuesta Procesar(NotaDebito item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion, string Integrador_Peticion)
+		private static DocumentoRespuesta Procesar(NotaDebito item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion, string Integrador_Peticion, Guid id_radicado_doc = new Guid())
 		{
 			TblEmpresasResoluciones resolucion = new TblEmpresasResoluciones();
 
@@ -493,7 +523,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				item.Prefijo = string.Empty;
 
 			//radicado del documento
-			Guid id_radicado = Guid.NewGuid();
+			Guid id_radicado = new Guid();
+
+			if (id_radicado_doc == Guid.Empty)
+			{
+				id_radicado = Guid.NewGuid();
+			}
+			else
+			{
+				id_radicado = id_radicado_doc;
+			}
 
 			string prefijo = item.Prefijo;
 			string numero = item.Documento.ToString();

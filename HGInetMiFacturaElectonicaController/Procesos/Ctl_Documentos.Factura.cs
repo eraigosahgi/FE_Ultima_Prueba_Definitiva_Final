@@ -49,6 +49,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			// genera un id único de la plataforma
 			Guid id_peticion = Guid.NewGuid();
 
+			bool peticion_unica = false;
+			Guid id_peticion_doc = Guid.NewGuid();
+
 			////Planes y transacciones
 			PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
 
@@ -61,6 +64,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (!facturador_electronico.IntObligado)
 					throw new ApplicationException(string.Format("Licencia inválida para la Identificacion {0}.", facturador_electronico.StrIdentificacion));
+
+				//Se valida si es peticion con un unico documento y si no lo es valida que no lleguen repetidos en la misma peticion, para evitar duplicados por paralelismo o por peticion
+				if (documentos.Count == 1)
+				{
+					peticion_unica = true;
+				}
+				else
+				{
+					//Agrupamos la lista
+					int result = documentos.GroupBy(x => new { x.Documento, x.Prefijo }).Count();
+
+					if (result > 0)
+						throw new ApplicationException("Se encontraron documentos repetidos en la peticion, corrijan esta información y emitan de nuevo los documentos");
+				}
 
 				List<TblEmpresasResoluciones> lista_resolucion = new List<TblEmpresasResoluciones>();
 
@@ -171,13 +188,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//				Tercero_EDS_PostP = true;
 					//			}
 
-					//		}
-					//	}
-					//}
-					//catch (Exception exep)
-					//{
-					//	Ctl_Log.Guardar(exep, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.seleccion, "Error haciendo cambio en el Plan de EDS para POS");
-					//}
+						//		}
+						//	}
+						//}
+						//catch (Exception exep)
+						//{
+						//	Ctl_Log.Guardar(exep, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.seleccion, "Error haciendo cambio en el Plan de EDS para POS");
+						//}
 
 				}
 
@@ -189,6 +206,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				//**Se agrega validacion y asignacion del aplicativo emisor del documento.
 
+				#region Informacion del Integrador del Documento
 				DateTime fecha_control = new DateTime(2024, 07, 21, 0, 0, 0);
 				Ctl_EmpresaIntegradores Emp_int = new Ctl_EmpresaIntegradores();
 				List<TblEmpresaIntegradores> integradores = Emp_int.Obtener(facturador_electronico.StrIdentificacion);
@@ -359,8 +377,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						throw new ApplicationException("No se encontró información del Integrador correspondiente al aplicativo emisor, por favor indicar a su proveedor de software de esta inconsistencia");
 					}
 
-					
-				}
+
+				} 
+				#endregion
 
 				//Valida que si tiene certificado digital este vigente
 				if (facturador_electronico.IntCertFirma == 1)
@@ -409,18 +428,31 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						ListaPlanes[i].reservado = ListaPlanes[i].reservado + 1;
 					}
 				}
-				//Planes y transacciones
-				Parallel.ForEach<Factura>(documentos, item =>
+
+				//Si es una peticion con un solo documento se envia el guid para evitar que en el paralelismo cree diferente registro con la misma informacion
+				if (peticion_unica == false)
 				{
-					DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion, integrador_peticion);
-					respuesta.Add(item_respuesta);
-				});
+					Parallel.ForEach<Factura>(documentos, item =>
+					{
+						DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion, integrador_peticion);
+						respuesta.Add(item_respuesta);
+					});
+				}
+				else
+				{
+					Parallel.ForEach<Factura>(documentos, item =>
+					{
+						DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion, integrador_peticion, id_peticion_doc);
+						respuesta.Add(item_respuesta);
+					});
+				}
 
 				if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
 				{
 					Ctl_Log.Guardar(new ApplicationException("Inicia conciliacion de Planes"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion);
 				}
 
+				//Planes y transacciones
 				var datos = Planestransacciones.ConciliarPlanes(ListaPlanes, respuesta);
 
 				if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
@@ -504,7 +536,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		/// <param name="fecha_actual">fecha actual de recepción del documento</param>
 		/// <param name="lista_resolucion">resoluciones habilitadas para el facturador electrónico</param>
 		/// <returns>resultado del proceso</returns>
-		private static DocumentoRespuesta Procesar(Factura item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion, string Integrador_Peticion)
+		private static DocumentoRespuesta Procesar(Factura item, TblEmpresas facturador_electronico, Guid id_peticion, DateTime fecha_actual, List<TblEmpresasResoluciones> lista_resolucion, string Integrador_Peticion, Guid id_radicado_doc = new Guid())
 		{
 			DocumentoRespuesta item_respuesta = new DocumentoRespuesta() { DescuentaSaldo = false };
 
@@ -514,7 +546,16 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			bool doc_existe = false;
 
 			//radicado del documento
-			Guid id_radicado = Guid.NewGuid();
+			Guid id_radicado = new Guid();
+			
+			if (id_radicado_doc == Guid.Empty)
+			{
+			   id_radicado = Guid.NewGuid();
+			}
+			else
+			{
+				id_radicado = id_radicado_doc;
+			}
 
 			string prefijo = item.Prefijo;
 			string numero = item.Documento.ToString();
