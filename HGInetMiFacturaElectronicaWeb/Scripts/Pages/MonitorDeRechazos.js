@@ -203,6 +203,20 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 
 						}
 					},
+					{
+						caption: 'Prioridad',
+						dataField: 'prioridad',
+						cellTemplate: function (container, options) {
+
+							$("<div>")
+							.append($(ColocarPrioridad(options.data.prioridad)))
+							.appendTo(container);
+						}
+					},
+					{
+						caption: "Solución",
+						dataField: "Solucion",						
+					},
 					 {
 					 	caption: "Mensaje",
 					 	visible: true,
@@ -445,4 +459,10 @@ var items_Tipo =
     ];
 
 
-
+var Maestro_Prioridades =
+    [
+        { ID: "0", Texto: '' },
+		{ ID: "1", Texto: 'BAJA' },
+		{ ID: "2", Texto: 'MEDIA' },
+		{ ID: "3", Texto: 'ALTA' },
+    ];

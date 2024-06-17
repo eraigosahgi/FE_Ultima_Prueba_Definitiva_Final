@@ -106,7 +106,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				//Almacena la petición
 				try
 				{
-					Task tarea = Peticion.GuardarPeticionAsync("ConsultaPorFechaElaboracion", DataKey, Identificacion, FechaInicial.ToString(), FechaFinal.ToString(), respuesta.Count.ToString());
+					Task tarea = Peticion.GuardarPeticionAsync("ConsultaPagoPorFechaElaboracion", DataKey, Identificacion, FechaInicial.ToString(), FechaFinal.ToString(), respuesta.Count.ToString());
 				}
 				catch (Exception)
 				{

@@ -1353,34 +1353,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				//Creamos variable para saber si la consulta en con pagos aprobados o no aprobados.
 				bool estado_pago = (Procesados == 1) ? true : false;
 
-				//context.Configuration.LazyLoadingEnabled = false;
+				context.Configuration.LazyLoadingEnabled = false;
 
-
-				//var paso_detalle = (from pagos in context.TblPagosElectronicos.Include("TblDocumentos")
-				//					join documento in context.TblDocumentos on pagos.StrIdRegistro2 equals documento.StrIdSeguridad
-				//					where documento.StrEmpresaFacturador.Equals(identificacion_obligado)
-				//							&& pagos.DatFechaRegistro >= FechaInicial
-				//							&& pagos.DatFechaRegistro <= FechaFinal
-				//							&& (pagos.IntProcesado == estado_pago || Procesados == 0)
-				//					select new PagoElectronicoRespuestaPorFecha
-				//					{
-				//						Documento = documento.IntNumero,
-				//						Cufe = documento.StrCufe,
-				//						Identificacion = documento.StrEmpresaAdquiriente,
-				//						IdDocumento = documento.StrIdSeguridad.ToString(),
-				//						IdRegistro = pagos.StrIdRegistro.ToString(),
-				//						DocumentoTipo = pagos.TblPagosDetalles.FirstOrDefault().TblDocumentos.IntDocTipo,
-				//						Fecha = pagos.DatFechaRegistro,
-				//						IdPago = pagos.StrIdSeguridadPago,
-				//						ReferenciaCUS = pagos.StrTransaccionCUS,
-				//						TicketID = pagos.StrTicketID,
-				//						PagoEstadoDescripcion = pagos.StrMensaje,
-				//						PagoEstado = pagos.IntEstadoPago,
-				//						Valor = pagos.IntValorPago,
-				//						FormaPago = pagos.IntFormaPago.ToString(),
-				//						Franquicia = pagos.StrCodigoFranquicia
-				//					}
-				//					).ToList();
 				var lista_pagos = (from pagos in context.TblPagosElectronicos
 									   //join documento in context.TblDocumentos on pagos.StrIdRegistro2 equals documento.StrIdSeguridad
 								   where pagos.StrEmpresaFacturador.Equals(identificacion_obligado)

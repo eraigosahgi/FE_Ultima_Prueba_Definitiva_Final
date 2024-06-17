@@ -240,7 +240,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-			consultarnew();
+			consultarPivot();
 		}
 	};
 
@@ -521,14 +521,195 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 			masterDetail: {
 				enabled: true,
 				template: function (container, options) {
-					let Respuesta_DIAN = options.data.StrUrlArchivoUbl.replace("FacturaEDian", "FacturaEConsultaDian");
+					let Respuesta_DIAN = "";
+
+					try {
+						options.data.StrUrlArchivoUbl.replace("FacturaEDian", "FacturaEConsultaDian");
+					} catch (e) {
+
+					}
+
 					container.append(ObtenerDetallle(options.data.StrUrlArchivoPdf, options.data.StrUrlArchivoUbl, options.data.IntAdquirienteRecibo, "options.data.RutaAcuse", options.data.StrUrlAcuseUbl, options.data.StrUrlAnexo, Respuesta_DIAN, options.data.StrIdSeguridad, options.data.IdFacturador, options.data.IntNumero, "Admin", options.data.IntIdEstado));
 				}
 			}
 		});
 	}
-	
 
+	function consultarPivot() {
+		$("#gridDocumentos").dxPivotGrid({
+			allowSorting: true,
+			allowSortingBySummary: true,
+			allowFiltering: true,
+			height: 620,
+			showBorders: true,
+			rowHeaderLayout: 'tree',
+			scrolling: {
+				mode: 'virtual',
+			},
+			dataSource: {
+				store: DevExpress.data.AspNet.createStore({
+					key: 'StrIdSeguridad',
+					loadUrl: '/Api/Documentos/Consultar',
+					onBeforeSend: function (method, ajaxOptions) {
+
+
+
+						ajaxOptions.data.Select = "['IntAdquirienteRecibo','StrCufe','StrIdSeguridad','DatFechaIngreso','StrEmpresaFacturador','StrNumResolucion','StrPrefijo','IntNumero','IdCategoriaEstado','IntIdEstado','DatFechaVencDocumento','IntVlrTotal','IntDocTipo','StrEmpresaAdquiriente','StrUrlArchivoPdf', 'StrUrlArchivoUbl', 'IntAdquirienteRecibo', 'StrUrlAcuseUbl', 'StrUrlAnexo']"
+
+						ajaxOptions.data.sort = "[{ 'selector': 'DatFechaIngreso', 'desc': true }]";
+
+						var fecha_desde = new Date($("#FechaInicial").dxDateBox("instance").option().value);
+						fecha_desde = fecha_desde.getFullYear() + '-' + (fecha_desde.getMonth() + 1) + '-' + fecha_desde.getDate() + 'T00:00:00.000'
+
+						var fecha_hasta = new Date($("#FechaFinal").dxDateBox("instance").option().value);
+						fecha_hasta = fecha_hasta.getFullYear() + '-' + (fecha_hasta.getMonth() + 1) + '-' + (fecha_hasta.getDate() + 1) + 'T00:00:00.000'
+
+
+						if (ajaxOptions.data.filter == undefined) {
+							ajaxOptions.data.filter = '[["DatFechaIngreso", ">=", "' + fecha_desde + '"], "and", ["DatFechaIngreso", "<", "' + fecha_hasta + '"]]';
+						} else {
+							ajaxOptions.data.filter = '[' + ajaxOptions.data.filter + ' , "and",  [["DatFechaIngreso", ">=", "' + fecha_desde + '"], "and", ["DatFechaIngreso", "<", "' + fecha_hasta + '"]]]';
+						}
+
+						let estado = $("#filtrosEstadoRecibo").dxDropDownBox("instance").option().value;
+
+						if (estado != null && estado != undefined && estado != '[]') {
+							ajaxOptions.data.filter = '[' + ajaxOptions.data.filter + ',"and", ["IdCategoriaEstado","=",' + estado + ']]'
+						}
+
+						let tipodoc = $("#TipoDocumento").dxSelectBox("instance").option().value;
+						if (tipodoc != null) {
+							if (tipodoc.ID != "0") {
+								ajaxOptions.data.filter = '[' + ajaxOptions.data.filter + ',"and", ["IntDocTipo","=",' + tipodoc.ID + ']]'
+							}
+
+						}
+
+
+						let tercero = $('#facturador').dxLookup("instance").option().value;
+
+						if (tercero != null && tercero != undefined) {
+							ajaxOptions.data.filter = '[' + ajaxOptions.data.filter + ',"and", ["StrEmpresaFacturador","contains",' + tercero + ']]'
+						}
+
+						if (numero_documento != "") {
+							ajaxOptions.data.filter = '[["IntNumero", "=", ' + numero_documento + ']]';
+						}
+
+						ajaxOptions.headers = {
+							//	'Authorization': 'Bearer ' + sessionStorage.getItem('Token')
+						};
+					},
+				}),
+
+
+				fields: [
+			{
+				caption: "StrIdSeguridad",
+				dataField: "StrIdSeguridad",
+				visible: false
+			},			
+			{
+				caption: "Fecha De Ingreso",
+				dataField: "DatFechaIngreso",
+				dataType: "date",
+				format: "yyyy-MM-dd HH:mm:ss",
+			},
+			{
+				caption: "Facturador",
+				dataField: "StrEmpresaFacturador",
+			},
+			{
+				caption: "Resolución",
+				dataField: "StrNumResolucion",
+			},
+			{
+				caption: "Prefijo",
+				dataField: "StrPrefijo",
+			},
+			{
+				caption: "Documento",
+				dataField: "IntNumero",
+			},
+			{
+				caption: "Fecha Vencimiento",
+				dataField: "DatFechaVencDocumento",
+				visible: false,
+				dataType: "date",
+				format: "yyyy-MM-dd",
+
+			},
+						{
+							caption: "Valor Total",
+							visible: true,
+							dataField: "IntVlrTotal",
+							format: 'currency',
+						},
+						 {
+						 	caption: "Tipo Documento",
+						 	dataField: "IntDocTipo",
+						 	lookup: {
+						 		dataSource: items_Tipo,
+						 		displayExpr: "Texto",
+						 		valueExpr: "ID"
+
+						 	},
+						 },
+						 {
+						 	caption: "Adquiriente",
+
+						 	dataField: "StrEmpresaAdquiriente"
+						 },
+			 {
+			 	dataField: "IdCategoriaEstado",
+			 	caption: "Estado",
+			 	cssClass: "hidden-xs col-md-1",
+			 	lookup: {
+			 		dataSource: CategoriaEstado,
+			 		displayExpr: "Name",
+			 		valueExpr: "ID"
+			 	},
+			 	cellTemplate: function (container, options) {
+
+			 		$("<div>")
+
+						.append($(ColocarEstado(options.data.IdCategoriaEstado, options.data.IdCategoriaEstado)))
+						.appendTo(container);
+			 	}
+			 },
+								  {
+								  	caption: "Proceso",
+								  	visible: true,
+								  	dataField: "IntIdEstado",
+								  	lookup: {
+								  		dataSource: ProcesoEstado,
+								  		displayExpr: "Name",
+								  		valueExpr: "ID"
+								  	},
+
+								  },
+
+			 					  {
+			 					  	caption: "Estado Acuse",
+			 					  	dataField: "IntAdquirienteRecibo",
+			 					  	cssClass: "hidden-xs col-md-1",
+			 					  	lookup: {
+			 					  		dataSource: AdquirienteRecibo,
+			 					  		displayExpr: "Name",
+			 					  		valueExpr: "ID"
+			 					  	},
+			 					  	cellTemplate: function (container, options) {
+
+			 					  		numero_documento_val = options.data.NumeroDocumento;
+			 					  		$("<div>")
+			 								.append($(ColocarEstadoAcuseAdmin(options.data.IntAdquirienteRecibo, options.data.TituloValor, options.data.StrIdSeguridad, options.data.NumeroDocumento, codigo_facturador)))
+			 					  			.appendTo(container);
+			 					  	}
+			 					  }
+				]
+			}
+		});
+	}
 
 	//consultar();
 	//function consultar() {
