@@ -243,6 +243,7 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 					res.tipodoc,
 					res.IdentificacionAdquiriente,
 					res.NombreAdquiriente,
+					res.Facturador,
 					//error = res.MensajeError.FirstOrDefault().ToString(),
 					prioridad = ObtenerPrioridadRechazo(MP, res.MensajeError),
 					Solucion = ObtenerDescripcionPrioridadRechazo(MP, res.MensajeError)
