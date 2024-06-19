@@ -231,6 +231,7 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 
 				object resultado = respuesta.Select(res => new
 				{
+					res.StrIdSeguridad,
 					res.Pdf,
 					res.Xml,
 					res.RutaServDian,

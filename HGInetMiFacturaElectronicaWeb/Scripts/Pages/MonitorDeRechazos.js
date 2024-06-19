@@ -85,6 +85,10 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 	function consultar() {
 
 		$("#gridDocumentos").dxDataGrid({
+			"export": {
+				enabled: true,
+				fileName: "DocumentosRechazados",
+			},
 			dataSource: {
 				store: AlmacenDocumentos,
 				reshapeOnPush: true
@@ -171,6 +175,11 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 				visible: true
 			}
 				, columns: [
+				{
+					caption: "Id",
+					dataField: "StrIdSeguridad",
+					visible: false,					
+				},
 					{
 						caption: "Archivos",
 						width: 100,

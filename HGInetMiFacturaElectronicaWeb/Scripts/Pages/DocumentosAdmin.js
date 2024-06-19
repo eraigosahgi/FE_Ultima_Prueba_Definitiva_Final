@@ -240,7 +240,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-			consultarPivot();
+			consultarnew();
 		}
 	};
 
@@ -536,15 +536,36 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 	}
 
 	function consultarPivot() {
-		$("#gridDocumentos").dxPivotGrid({
-			allowSorting: true,
+
+		const pivotGridChart = $('#pivotgrid-chart').dxChart({
+			commonSeriesSettings: {
+				type: 'bar',
+			},			
+			size: {
+				height: 200,
+			},
+			adaptiveLayout: {
+				width: 450,
+			},
+		}).dxChart('instance');
+
+
+
+
+
+
+
+		const pivotGrid = $("#gridDocumentos").dxPivotGrid({
 			allowSortingBySummary: true,
 			allowFiltering: true,
-			height: 620,
 			showBorders: true,
-			rowHeaderLayout: 'tree',
-			scrolling: {
-				mode: 'virtual',
+			showColumnGrandTotals: false,
+			showRowGrandTotals: false,
+			showRowTotals: false,
+			showColumnTotals: false,
+			fieldChooser: {
+				enabled: true,
+				height: 400,
 			},
 			dataSource: {
 				store: DevExpress.data.AspNet.createStore({
@@ -554,7 +575,8 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 
 
-						ajaxOptions.data.Select = "['IntAdquirienteRecibo','StrCufe','StrIdSeguridad','DatFechaIngreso','StrEmpresaFacturador','StrNumResolucion','StrPrefijo','IntNumero','IdCategoriaEstado','IntIdEstado','DatFechaVencDocumento','IntVlrTotal','IntDocTipo','StrEmpresaAdquiriente','StrUrlArchivoPdf', 'StrUrlArchivoUbl', 'IntAdquirienteRecibo', 'StrUrlAcuseUbl', 'StrUrlAnexo']"
+						//ajaxOptions.data.Select = "['IntAdquirienteRecibo','StrCufe','StrIdSeguridad','DatFechaIngreso','StrEmpresaFacturador','StrNumResolucion','StrPrefijo','IntNumero','IdCategoriaEstado','IntIdEstado','DatFechaVencDocumento','IntVlrTotal','IntDocTipo','StrEmpresaAdquiriente','StrUrlArchivoPdf', 'StrUrlArchivoUbl', 'IntAdquirienteRecibo', 'StrUrlAcuseUbl', 'StrUrlAnexo']"
+						ajaxOptions.data.Select = "['DatFechaIngreso','StrEmpresaFacturador','IntNumero']"
 
 						ajaxOptions.data.sort = "[{ 'selector': 'DatFechaIngreso', 'desc': true }]";
 
@@ -604,111 +626,131 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 
 				fields: [
-			{
-				caption: "StrIdSeguridad",
-				dataField: "StrIdSeguridad",
-				visible: false
-			},			
+			//{
+			//	caption: "StrIdSeguridad",
+			//	dataField: "StrIdSeguridad",
+			//	visible: false
+			//},			
 			{
 				caption: "Fecha De Ingreso",
 				dataField: "DatFechaIngreso",
-				dataType: "date",
-				format: "yyyy-MM-dd HH:mm:ss",
+				dataType: "date",				
+				area: 'column',
+			},
+			{
+				caption: "Mes",
+				dataField: "DatFechaIngreso",
+				dataType: "month",				
+				area: 'column',
 			},
 			{
 				caption: "Facturador",
 				dataField: "StrEmpresaFacturador",
+				area: 'row',
 			},
-			{
-				caption: "Resolución",
-				dataField: "StrNumResolucion",
-			},
-			{
-				caption: "Prefijo",
-				dataField: "StrPrefijo",
-			},
+			//{
+			//	caption: "Resolución",
+			//	dataField: "StrNumResolucion",
+			//},
+			//{
+			//	caption: "Prefijo",
+			//	dataField: "StrPrefijo",
+			//},
 			{
 				caption: "Documento",
 				dataField: "IntNumero",
+				summaryType: 'count',
+				sortOrder: 'desc',
+				area: 'data',
 			},
-			{
-				caption: "Fecha Vencimiento",
-				dataField: "DatFechaVencDocumento",
-				visible: false,
-				dataType: "date",
-				format: "yyyy-MM-dd",
+			//{
+			//	caption: "Fecha Vencimiento",
+			//	dataField: "DatFechaVencDocumento",
+			//	visible: false,
+			//	dataType: "date",
+			//	format: "yyyy-MM-dd",
 
-			},
-						{
-							caption: "Valor Total",
-							visible: true,
-							dataField: "IntVlrTotal",
-							format: 'currency',
-						},
-						 {
-						 	caption: "Tipo Documento",
-						 	dataField: "IntDocTipo",
-						 	lookup: {
-						 		dataSource: items_Tipo,
-						 		displayExpr: "Texto",
-						 		valueExpr: "ID"
+			//},
+			//			{
+			//				caption: "Valor Total",
+			//				visible: true,
+			//				dataField: "IntVlrTotal",
+			//				format: 'currency',
+			//			},
+			//			 {
+			//			 	caption: "Tipo Documento",
+			//			 	dataField: "IntDocTipo",
+			//			 	lookup: {
+			//			 		dataSource: items_Tipo,
+			//			 		displayExpr: "Texto",
+			//			 		valueExpr: "ID"
 
-						 	},
-						 },
-						 {
-						 	caption: "Adquiriente",
+			//			 	},
+			//			 },
+			//			 {
+			//			 	caption: "Adquiriente",
 
-						 	dataField: "StrEmpresaAdquiriente"
-						 },
-			 {
-			 	dataField: "IdCategoriaEstado",
-			 	caption: "Estado",
-			 	cssClass: "hidden-xs col-md-1",
-			 	lookup: {
-			 		dataSource: CategoriaEstado,
-			 		displayExpr: "Name",
-			 		valueExpr: "ID"
-			 	},
-			 	cellTemplate: function (container, options) {
+			//			 	dataField: "StrEmpresaAdquiriente"
+			//			 },
+			// {
+			// 	dataField: "IdCategoriaEstado",
+			// 	caption: "Estado",
+			// 	cssClass: "hidden-xs col-md-1",
+			// 	lookup: {
+			// 		dataSource: CategoriaEstado,
+			// 		displayExpr: "Name",
+			// 		valueExpr: "ID"
+			// 	},
+			// 	cellTemplate: function (container, options) {
 
-			 		$("<div>")
+			// 		$("<div>")
 
-						.append($(ColocarEstado(options.data.IdCategoriaEstado, options.data.IdCategoriaEstado)))
-						.appendTo(container);
-			 	}
-			 },
-								  {
-								  	caption: "Proceso",
-								  	visible: true,
-								  	dataField: "IntIdEstado",
-								  	lookup: {
-								  		dataSource: ProcesoEstado,
-								  		displayExpr: "Name",
-								  		valueExpr: "ID"
-								  	},
+			//			.append($(ColocarEstado(options.data.IdCategoriaEstado, options.data.IdCategoriaEstado)))
+			//			.appendTo(container);
+			// 	}
+			// },
+			//					  {
+			//					  	caption: "Proceso",
+			//					  	visible: true,
+			//					  	dataField: "IntIdEstado",
+			//					  	lookup: {
+			//					  		dataSource: ProcesoEstado,
+			//					  		displayExpr: "Name",
+			//					  		valueExpr: "ID"
+			//					  	},
 
-								  },
+			//					  },
 
-			 					  {
-			 					  	caption: "Estado Acuse",
-			 					  	dataField: "IntAdquirienteRecibo",
-			 					  	cssClass: "hidden-xs col-md-1",
-			 					  	lookup: {
-			 					  		dataSource: AdquirienteRecibo,
-			 					  		displayExpr: "Name",
-			 					  		valueExpr: "ID"
-			 					  	},
-			 					  	cellTemplate: function (container, options) {
+			// 					  {
+			// 					  	caption: "Estado Acuse",
+			// 					  	dataField: "IntAdquirienteRecibo",
+			// 					  	cssClass: "hidden-xs col-md-1",
+			// 					  	lookup: {
+			// 					  		dataSource: AdquirienteRecibo,
+			// 					  		displayExpr: "Name",
+			// 					  		valueExpr: "ID"
+			// 					  	},
+			// 					  	cellTemplate: function (container, options) {
 
-			 					  		numero_documento_val = options.data.NumeroDocumento;
-			 					  		$("<div>")
-			 								.append($(ColocarEstadoAcuseAdmin(options.data.IntAdquirienteRecibo, options.data.TituloValor, options.data.StrIdSeguridad, options.data.NumeroDocumento, codigo_facturador)))
-			 					  			.appendTo(container);
-			 					  	}
-			 					  }
+			// 					  		numero_documento_val = options.data.NumeroDocumento;
+			// 					  		$("<div>")
+			// 								.append($(ColocarEstadoAcuseAdmin(options.data.IntAdquirienteRecibo, options.data.TituloValor, options.data.StrIdSeguridad, options.data.NumeroDocumento, codigo_facturador)))
+			// 					  			.appendTo(container);
+			// 					  	}
+			// 					  }
 				]
 			}
-		});
+		}).dxPivotGrid('instance');
+
+
+
+		function expand() {
+			const dataSource = pivotGrid.getDataSource();
+			dataSource.expandHeaderItem('row', ['StrEmpresaFacturador']);
+			dataSource.expandHeaderItem('column', [2024]);
+		}
+
+		setTimeout(expand, 0);
 	}
 
 	//consultar();

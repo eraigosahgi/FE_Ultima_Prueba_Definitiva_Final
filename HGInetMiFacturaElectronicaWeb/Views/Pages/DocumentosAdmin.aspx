@@ -128,10 +128,13 @@
 					</div>
 
 					<div class="panel-body">
+					<div id="pivotgrid-chart"></div>					
+					<br />
+
 						<div class="demo-container">
 							<div id="gridDocumentos"></div>
 						</div>
-						<div data-ng-include="'Partials/LoadingRegistros.Html'"></div>
+						<%--<div data-ng-include="'Partials/LoadingRegistros.Html'"></div>--%>
 					</div>
 
 				</div>
