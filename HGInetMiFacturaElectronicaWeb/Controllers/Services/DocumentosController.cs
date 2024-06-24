@@ -13,6 +13,7 @@ using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectonicaData.Objetos;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using HGInetMiFacturaElectronicaWeb.Seguridad.Plugins;
+using HGInetUtilidadAzure.Almacenamiento;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
@@ -657,7 +658,37 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 string ruta_archivos = string.Format(@"{0}\{1}\{2}\{3}\{4}.zip", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica,datos.FirstOrDefault().TblEmpresasFacturador.StrIdSeguridad,LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian,nombreArchivo);
                 string ruta_destino = string.Format(@"{0}\{1}\{2}\{3}\{4}.xml", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica,datos.FirstOrDefault().TblEmpresasFacturador.StrIdSeguridad,LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian,nombreArchivo);
 
-                
+                if (!Archivo.ValidarExistencia(ruta_archivos) && datos.FirstOrDefault().StrUrlArchivoUbl.Contains("hgidocs.blob"))
+				{
+					AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
+
+					string nombre_contenedor = string.Format("files-hgidocs-{0}", datos.FirstOrDefault().DatFechaIngreso.Year);
+
+					BlobController contenedor = new BlobController(conexion.connectionString, nombre_contenedor);
+					byte[] bytes_applications_b = contenedor.LecturaBlobBase64(".zip", nombreArchivo);
+
+					string zip_blob = Convert.ToBase64String(bytes_applications_b);
+
+					if (bytes_applications_b.Length > 25)
+					{
+						if (!string.IsNullOrEmpty(zip_blob))
+						{
+							//convierte el array de byte en archivo
+							try
+							{
+								File.WriteAllBytes(ruta_archivos, Convert.FromBase64String(zip_blob));
+							}
+							catch (Exception e)
+							{
+
+								if (e.Message.Contains("Longitud no válida"))
+									throw new ApplicationException("El tamaño del archivo zip supera el máximo permitido");
+
+							}
+						}
+					}
+
+				}
 
 
                 using (ZipArchive file = ZipFile.OpenRead(ruta_archivos))

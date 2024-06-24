@@ -3697,6 +3697,10 @@
       <Project>{E571F23F-B598-4DB1-893B-D94EC0354775}</Project>
       <Name>HGInetUBL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HGInetUtilidadAzure\HGInetUtilidadAzure.csproj">
+      <Project>{F112EDD7-AAE3-46CE-9A87-0BFAF3EDAF3E}</Project>
+      <Name>HGInetUtilidadAzure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
       <Project>{A966A394-F6CC-482F-87A4-56EC1AF05E5E}</Project>
       <Name>LibreriaGlobalHGInet</Name>
