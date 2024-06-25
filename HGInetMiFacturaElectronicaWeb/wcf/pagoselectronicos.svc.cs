@@ -38,7 +38,7 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 				//Se agrega esta a linea a solicitud de don Jorge ya que el servicio de HGIDocs se esta viendo afectado porque estan haciendo muchas consultas por este servicio
 				//al parecer una especie de consulta programada o robot
-				//throw new ApplicationException(string.Format("Error Transaction (Process ID 61) was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction {0}", Identificacion));
+				throw new ApplicationException(string.Format("Error Transaction (Process ID 61) was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction {0}", Identificacion));
 
 				List<PagoElectronicoRespuesta> respuesta = new List<PagoElectronicoRespuesta>();
 
