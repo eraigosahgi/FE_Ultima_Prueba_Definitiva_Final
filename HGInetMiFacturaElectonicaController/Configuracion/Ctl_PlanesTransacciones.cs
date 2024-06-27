@@ -895,31 +895,36 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						{
 							try
 							{
-								int sucursal_plan = 0;
-								if (CerrarplanesPostpago(item.StrIdentificacion,ref sucursal_plan))
-								{
-									plan = new TblPlanesTransacciones();
-									//Se suma un mes al primer dia del mes
-									DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(1);
+								//int sucursal_plan = 0;
 
-									//Se resta un dia para que nos de el ultimo dia del mes
-									DateTime FechaVenc = Fecha1.AddDays(-1);
-									//Se coloca la ultima hora y minuto del dia para que pueda seguir enviando documentos el ultimo dias del plan.
-									FechaVenc = new DateTime(FechaVenc.Year, FechaVenc.Month, FechaVenc.Day, 23, 59, 00, 000);
-									plan.DatFecha = Fecha.GetFecha();
-									plan.DatFechaVencimiento = FechaVenc;
-									plan.IntEstado = EstadoPlan.Habilitado.GetHashCode();
-									plan.IntTipoProceso = Convert.ToByte(TipoCompra.PostPago.GetHashCode());
-									plan.StrEmpresaFacturador = item.StrIdentificacion;
-									plan.StrIdSeguridad = Guid.NewGuid();
-									plan.StrEmpresaUsuario = EmpresaCrea;
-									plan.StrUsuario = UsuarioCrea;
-									string fecha_creacion = plan.DatFecha.ToString(Fecha.formato_fecha_hora);
-									string fecha_vencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
-									plan.StrObservaciones = string.Format(Constantes.RecargaAutomaticaPostPago, fecha_creacion, fecha_vencimiento);
-									plan.IntSucursal = sucursal_plan;
-									Crear(plan, Notifica);
-								}
+								GestionPlanesPostpago(item.StrIdentificacion, EmpresaCrea, UsuarioCrea, Notifica);
+
+
+								//if ()
+								//{
+								//	plan = new TblPlanesTransacciones();
+								//	//Se suma un mes al primer dia del mes
+								//	DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(1);
+
+								//	//Se resta un dia para que nos de el ultimo dia del mes
+								//	DateTime FechaVenc = Fecha1.AddDays(-1);
+								//	//Se coloca la ultima hora y minuto del dia para que pueda seguir enviando documentos el ultimo dias del plan.
+								//	FechaVenc = new DateTime(FechaVenc.Year, FechaVenc.Month, FechaVenc.Day, 23, 59, 00, 000);
+								//	plan.DatFecha = Fecha.GetFecha();
+								//	plan.DatFechaVencimiento = FechaVenc;
+								//	plan.IntEstado = EstadoPlan.Habilitado.GetHashCode();
+								//	plan.IntTipoProceso = Convert.ToByte(TipoCompra.PostPago.GetHashCode());
+								//	plan.StrEmpresaFacturador = item.StrIdentificacion;
+								//	plan.StrIdSeguridad = Guid.NewGuid();
+								//	plan.StrEmpresaUsuario = EmpresaCrea;
+								//	plan.StrUsuario = UsuarioCrea;
+								//	string fecha_creacion = plan.DatFecha.ToString(Fecha.formato_fecha_hora);
+								//	string fecha_vencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
+								//	plan.StrObservaciones = string.Format(Constantes.RecargaAutomaticaPostPago, fecha_creacion, fecha_vencimiento);
+								//	plan.IntSucursal = sucursal_plan;
+								//	Crear(plan, Notifica);
+									
+								//}
 							}
 							catch (Exception excepcion)
 							{
@@ -937,9 +942,8 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Cierra los planes postpago de un facturador en especifico
 		/// </summary>
 		/// <param name="Facturador">Documento del Facturador</param>
-		public bool CerrarplanesPostpago(string Facturador, ref int sucursal)
+		public void GestionPlanesPostpago(string Facturador, string EmpresaCrea, string UsuarioCrea, bool Notifica)
 		{
-			bool CrearPlan = true;
 			try
 			{
 				List<TblPlanesTransacciones> planes = new List<TblPlanesTransacciones>();
@@ -957,7 +961,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					// Si tiene un plan activo el mismo año y mismo mes, no crea nuevo plan
 					if (item.DatFecha.Year == Fecha.GetFecha().Year && item.DatFecha.Month == Fecha.GetFecha().Month)
 					{
-						CrearPlan = false;
+					
 					}
 					else
 					{
@@ -967,20 +971,59 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						item.IntEstado = EstadoPlan.Procesado.GetHashCode();
 						item.StrObservaciones = string.Format("{0}{1}{2}{3}", item.StrObservaciones, Environment.NewLine, Environment.NewLine, string.Format(Constantes.CierreAutomaticoPostPago, fecha_creacion, item.IntNumTransaccProcesadas, fecha_vencimiento));
 						this.Edit(item);
-						sucursal = item.IntSucursal;
+						//sucursal = item.IntSucursal;
+						CrearplanPostpago(Facturador, item.IntSucursal, EmpresaCrea, UsuarioCrea, Notifica);
 					}
 				}
-				return CrearPlan;
 			}
 			catch (Exception excepcion)
 			{
 				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
-				return true;
 			}
 		}
 		#endregion
 
+		/// <summary>
+		/// Crea plan Postpago segun el cierre y la sucursal
+		/// </summary>
+		/// <param name="Facturador"></param>
+		/// <param name="sucursal"></param>
+		/// <param name="EmpresaCrea"></param>
+		/// <param name="UsuarioCrea"></param>
+		/// <param name="Notifica"></param>
+		public void CrearplanPostpago(string Facturador, int sucursal, string EmpresaCrea, string UsuarioCrea, bool Notifica)
+		{
 
+			try
+			{
+				TblPlanesTransacciones plan = new TblPlanesTransacciones();
+				//Se suma un mes al primer dia del mes
+				DateTime Fecha1 = new DateTime(Fecha.GetFecha().Year, Fecha.GetFecha().Month, 1).AddMonths(1);
+
+				//Se resta un dia para que nos de el ultimo dia del mes
+				DateTime FechaVenc = Fecha1.AddDays(-1);
+				//Se coloca la ultima hora y minuto del dia para que pueda seguir enviando documentos el ultimo dias del plan.
+				FechaVenc = new DateTime(FechaVenc.Year, FechaVenc.Month, FechaVenc.Day, 23, 59, 00, 000);
+				plan.DatFecha = Fecha.GetFecha();
+				plan.DatFechaVencimiento = FechaVenc;
+				plan.IntEstado = EstadoPlan.Habilitado.GetHashCode();
+				plan.IntTipoProceso = Convert.ToByte(TipoCompra.PostPago.GetHashCode());
+				plan.StrEmpresaFacturador = Facturador;
+				plan.StrIdSeguridad = Guid.NewGuid();
+				plan.StrEmpresaUsuario = EmpresaCrea;
+				plan.StrUsuario = UsuarioCrea;
+				string fecha_creacion = plan.DatFecha.ToString(Fecha.formato_fecha_hora);
+				string fecha_vencimiento = plan.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet);
+				plan.StrObservaciones = string.Format(Constantes.RecargaAutomaticaPostPago, fecha_creacion, fecha_vencimiento);
+				plan.IntSucursal = sucursal;
+				Crear(plan, Notifica);
+			}
+			catch (Exception excepcion)
+			{
+				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
+			}
+
+		}
 
 
 
@@ -989,10 +1032,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		#region Sonda: conciliacion de planes
 
 
-		/// <summary>
-		/// Sonda para procesar documentos
-		/// </summary>
-		/// <returns></returns>
+			/// <summary>
+			/// Sonda para procesar documentos
+			/// </summary>
+			/// <returns></returns>
 		public async Task TareaSondaConciliarPlanes()
 		{
 			try
