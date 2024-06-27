@@ -658,6 +658,8 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 string ruta_archivos = string.Format(@"{0}\{1}\{2}\{3}\{4}.zip", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica,datos.FirstOrDefault().TblEmpresasFacturador.StrIdSeguridad,LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian,nombreArchivo);
                 string ruta_destino = string.Format(@"{0}\{1}\{2}\{3}\{4}.xml", plataforma.RutaDmsFisica, Constantes.CarpetaFacturaElectronica,datos.FirstOrDefault().TblEmpresasFacturador.StrIdSeguridad,LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian,nombreArchivo);
 
+				bool ruta_blob = false; 
+
                 if (!Archivo.ValidarExistencia(ruta_archivos) && datos.FirstOrDefault().StrUrlArchivoUbl.Contains("hgidocs.blob"))
 				{
 					AzureStorage conexion = HgiConfiguracion.GetConfiguration().AzureStorage;
@@ -677,6 +679,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 							try
 							{
 								File.WriteAllBytes(ruta_archivos, Convert.FromBase64String(zip_blob));
+								ruta_blob = true;
 							}
 							catch (Exception e)
 							{
@@ -688,6 +691,10 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						}
 					}
 
+				}
+				else if (datos.FirstOrDefault().StrUrlArchivoUbl.Contains("hgidocs.blob"))
+				{
+					ruta_blob = true;
 				}
 
 
@@ -724,7 +731,15 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
                 }
 
                 string nombreActual = System.IO.Path.GetFileNameWithoutExtension(datos.FirstOrDefault().StrUrlArchivoUbl);
-                string ruta_publica_destino = datos.FirstOrDefault().StrUrlArchivoUbl.Replace(nombreActual,nombreArchivo);
+				string ruta_publica_destino = string.Empty;
+				if (ruta_blob == true)
+				{
+					ruta_publica_destino = string.Format(@"{0}\{1}\{2}\{3}\{4}.xml", plataforma.RutaDmsPublica, Constantes.CarpetaFacturaElectronica, datos.FirstOrDefault().TblEmpresasFacturador.StrIdSeguridad, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian, nombreArchivo);
+				}
+				else
+				{
+					ruta_publica_destino = datos.FirstOrDefault().StrUrlArchivoUbl.Replace(nombreActual, nombreArchivo);
+				}                
 
                 return Ok(ruta_publica_destino);
 			}
