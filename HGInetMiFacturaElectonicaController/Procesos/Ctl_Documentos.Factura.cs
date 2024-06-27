@@ -646,6 +646,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					throw new ApplicationException("Nos permitimos informar que el 09 de marzo de 2024, a partir de las 06:00 am y hasta las 6:00 pm, se realizará una ventana de mantenimiento en el Sistema de Facturación Electrónica DIAN, por lo que durante este tiempo no estará disponible este servicio informático, Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma unas horas despues pasada la contingencia de la DIAN");
 				}
 
+				//Se da una pausa en proceso por si estan enviando el mismo documento por diferente peticion
+				if (id_radicado_doc != Guid.Empty)
+				{
+					Random rnd = new Random();
+					int miliseg = rnd.Next(500, 1000);   // creates a number between 1 and 99
+					System.Threading.Thread.Sleep(miliseg);
+				}
+
 				//valida si el Documento ya existe en Base de Datos
 				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
 
@@ -679,6 +687,20 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//numero_documento = num_doc.Actualizar(numero_documento);
 						}
 
+						//Se agrega validacion por si el documento queda en ese estado y hace poco se envío
+						if (numero_documento.IntIdEstado == ProcesoEstado.Validacion.GetHashCode() && numero_documento.DatFechaIngreso < Fecha.GetFecha().AddMinutes(-1))
+						{
+							//guardo algunas de las propiedades que estan en Bd para hacer la actualizacion con lo que llega
+							documento_bd = numero_documento;
+
+							//Se actualiza el estado para evitar que lo envien de nuevo mientras se termina este proceso
+							numero_documento.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+							numero_documento = num_doc.Actualizar(numero_documento);
+							//item_respuesta.Cufe = string.Empty;
+							//item_respuesta.UrlXmlUbl = string.Empty;
+							//item_respuesta.UrlPdf = string.Empty;
+						}
+
 						if (numero_documento.IntIdEstado == ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.PrevalidacionErrorDian.GetHashCode())
 						{
 							//guardo algunas de las propiedades que estan en Bd para hacer la actualizacion con lo que llega
@@ -691,7 +713,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							//item_respuesta.UrlXmlUbl = string.Empty;
 							//item_respuesta.UrlPdf = string.Empty;
 						}
-						else if ((numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.EnvioZip.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.ConsultaDian.GetHashCode()) && numero_documento.DatFechaIngreso < Fecha.GetFecha().AddMinutes(-1))
+						else if ((numero_documento.IntIdEstado == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.EnvioZip.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.ConsultaDian.GetHashCode()) && numero_documento.DatFechaIngreso < Fecha.GetFecha().AddMinutes(-1) || (numero_documento.IdCategoriaEstado == CategoriaEstado.ValidadoDian.GetHashCode() && numero_documento.IntIdEstado == ProcesoEstado.CompresionXml.GetHashCode()))
 						{
 							//Contingencia DIAN
 							if (Fecha.GetFecha() >= fecha_ini_cont && Fecha.GetFecha() < fecha_fin_cont)
@@ -748,6 +770,72 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_actual, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
 				}
 				catch (Exception) { }
+
+				
+				//***Se agrega este proceso para que pueda crearse el documento
+				//Validacion de Adquiriente
+				if (numero_documento == null && id_radicado_doc != Guid.Empty)
+				{
+					Ctl_Empresa empresa_config = new Ctl_Empresa();
+
+					TblEmpresas adquirienteBd = null;
+					try
+					{
+
+						adquirienteBd = empresa_config.Obtener(item.DatosAdquiriente.Identificacion);
+						
+							
+						try
+						{
+
+							//Si no existe Adquiriente se crea en BD y se crea Usuario
+							if (adquirienteBd == null)
+							{
+								empresa_config = new Ctl_Empresa();
+								//Creacion del Adquiriente
+								adquirienteBd = empresa_config.Crear(item.DatosAdquiriente);
+								
+							}
+							
+						}
+						catch (Exception excepcion)
+						{
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
+							string msg_excepcion = Excepcion.Mensaje(excepcion);
+
+							if (msg_excepcion.ToLowerInvariant().Contains("insert duplicate key") && msg_excepcion.ToLowerInvariant().Contains("insertar una clave duplicada"))
+								adquirienteBd = empresa_config.Obtener(item.DatosAdquiriente.Identificacion);
+						}
+					}
+					catch (Exception excepcion)
+					{
+						//respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error al obtener el Adquiriente Detalle. Detalle: ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.ERROR_LICENCIA, excepcion.InnerException);
+						Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion, "Error al obtener el Adquiriente");
+						//throw excepcion;
+					}
+
+					try
+					{
+						Ctl_Documento documento_tmp = new Ctl_Documento();
+
+						var documento_obj = (dynamic)null;
+						documento_obj = item;
+
+						item_respuesta.IdProceso = ProcesoEstado.Validacion.GetHashCode();
+						item_respuesta.IdDocumento = id_radicado.ToString();
+						item_respuesta.FechaRecepcion = fecha_actual;
+
+						//convierte documento para BD
+						documento_bd = Ctl_Documento.Convertir(item_respuesta, documento_obj, resolucion, facturador_electronico, TipoDocumento.Factura);
+
+						documento_bd.StrProveedorReceptor = Constantes.NitResolucionsinPrefijo;
+						documento_tmp.Crear(documento_bd);
+					}
+					catch (Exception exc)
+					{
+						Ctl_Log.Guardar(exc, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion, string.Format("3 - Creando el documento en base de datos. Nit:{0} - Prefijo:{1} - Documento {2} - Objeto: {3}", documento_bd.StrEmpresaFacturador, documento_bd.StrPrefijo, documento_bd.IntNumero, JsonConvert.SerializeObject(item)));
+					}
+				}
 
 				if (facturador_electronico.IntVersionDian == 1)
 				{
@@ -834,9 +922,17 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (numero_documento.IntIdEstado == (short)ProcesoEstado.Recepcion.GetHashCode())
 							item_respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 
-						//Se actualiza el estado del documento en BD para que lo envien de nuevo
-						numero_documento.IntIdEstado = (short)item_respuesta.IdProceso;
-						numero_documento = num_doc.Actualizar(numero_documento);
+						if (numero_documento.DatFechaIngreso < Fecha.GetFecha().AddMinutes(-1))
+						{
+							//Se actualiza el estado del documento en BD para que lo envien de nuevo
+							if (numero_documento.IntIdEstado < ProcesoEstado.EnvioZip.GetHashCode() || numero_documento.IntIdEstado == ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode())
+							{
+								numero_documento.IntIdEstado = (short)item_respuesta.IdProceso;
+								numero_documento = num_doc.Actualizar(numero_documento);
+							}
+							
+						}
+						
 					}
 				}
 
@@ -850,7 +946,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Se actualiza el estado del documento en BD para que lo envien de nuevo
 				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
 
-				if ((numero_documento != null) && (item_respuesta.IdProceso > (short)ProcesoEstado.Recepcion.GetHashCode() && item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode()))
+				if ((numero_documento != null) && (item_respuesta.IdProceso > (short)ProcesoEstado.Recepcion.GetHashCode() && item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode()) && numero_documento.DatFechaIngreso < Fecha.GetFecha().AddMinutes(-1) && (numero_documento.IdCategoriaEstado != CategoriaEstado.ValidadoDian.GetHashCode() && numero_documento.IntIdEstado != ProcesoEstado.CompresionXml.GetHashCode()))
 				{
 					numero_documento.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
 					numero_documento = num_doc.Actualizar(numero_documento);

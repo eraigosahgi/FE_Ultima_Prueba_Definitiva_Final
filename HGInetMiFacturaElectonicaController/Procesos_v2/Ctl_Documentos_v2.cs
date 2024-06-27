@@ -42,6 +42,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			string prefijo = string.Empty;
 
 			bool documento_existente = false;
+			bool factura_creada_previamente = false;
 
 			if (documento_ex.StrIdPlanTransaccion != null)
 				documento_existente = true;
@@ -92,14 +93,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				try
 				{
-
-					//Si el documento es nomina no se hace validaciones por parte de la plataforma y se ajustan segun validaciones que reporta la DIAN.
-					//if (tipo_doc < TipoDocumento.AcuseRecibo)
-					//{
-
-					//}
-
-					// valida la información del documento
+				 	// valida la información del documento
 					respuesta = Procesos.Ctl_Documentos.Validar(documento_obj, tipo_doc, resolucion, ref respuesta, empresa);
 					if (respuesta.Error != null && documento_existente == true)
 					{
@@ -167,6 +161,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							documentoBd.StrIdSeguridad = documento_ex.StrIdSeguridad;
 							documentoBd.StrIdPlanTransaccion = documento_ex.StrIdPlanTransaccion;
+						}
+
+						//Se agrega Validacion solo para Facturas evitando que sean el mismo documento en diferentes peticiones 
+						if (documento_ex.StrIdPlanTransaccion == null && tipo_doc == TipoDocumento.Factura && documento_ex.StrIdSeguridad == id_radicado)
+						{
+							//documento_ex.StrIdPlanTransaccion = documento_obj.IdPlan;
+							//documentoBd = documento_ex;
+							documento_existente = true;
+							factura_creada_previamente = true;
 						}
 
 						if (documento_obj.DocumentoFormato != null && (documento_obj.DocumentoFormato.Codigo == -1 || documento_obj.DocumentoFormato.Codigo == 99) && (string.IsNullOrEmpty(documento_obj.Cufe)))
@@ -474,7 +477,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 								if (numero_documento == null)
 								{
-									documentoBd = documento_tmp.Crear(documentoBd);
+									try
+									{
+										documentoBd = documento_tmp.Crear(documentoBd);
+									}
+									catch (Exception excepcion)
+									{
+										Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion, string.Format("1 - Creando el documento en base de datos. Nit:{0} - Prefijo:{1} - Documento {2}",documentoBd.StrEmpresaFacturador,documentoBd.StrPrefijo,documentoBd.IntNumero));
+										throw excepcion;
+									}
 									respuesta.DescuentaSaldo = true;
 								}
 								else
@@ -498,7 +509,35 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							}
 							else
 							{
-								documentoBd = documento_tmp.Actualizar(documentoBd);
+								try
+								{
+									documentoBd = documento_tmp.Actualizar(documentoBd);
+									
+								}
+								catch (Exception excepcion)
+								{
+									
+									if (factura_creada_previamente == false)
+									{
+										Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion, string.Format("2 - Actualizando el documento que existe. Nit:{0} - Prefijo:{1} - Documento {2} - IdSeg:{3}", documentoBd.StrEmpresaFacturador, documentoBd.StrPrefijo, documentoBd.IntNumero, documentoBd.StrIdSeguridad));
+										throw excepcion;
+									}
+									else
+									{
+										try
+										{
+											documentoBd = documento_tmp.Crear(documentoBd);
+										}
+										catch (Exception exc)
+										{
+											Ctl_Log.Guardar(exc, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion, string.Format("3 - Creando el documento en base de datos. Nit:{0} - Prefijo:{1} - Documento {2}", documentoBd.StrEmpresaFacturador, documentoBd.StrPrefijo, documentoBd.IntNumero));
+											throw exc;
+										}
+										Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.actualizacion, string.Format("2 - Actualizando el documento que existe. Nit:{0} - Prefijo:{1} - Documento {2} - IdSegBD:{3} - IdSegDoc:{4}", documentoBd.StrEmpresaFacturador, documentoBd.StrPrefijo, documentoBd.IntNumero, documentoBd.StrIdSeguridad, documento_ex.StrIdSeguridad));
+									}
+									
+									
+								}
 							}
 
 							documentoBd.TblEmpresasResoluciones = resolucion;

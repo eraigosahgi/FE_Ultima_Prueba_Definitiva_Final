@@ -58,6 +58,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.EnvioZip);
 					respuesta.FechaUltimoProceso = Fecha.GetFecha();
 					respuesta.IdProceso = ProcesoEstado.EnvioZip.GetHashCode();
+					//respuesta.Cufe = string.Empty;
+					//respuesta.UrlXmlUbl = string.Empty;
+					//respuesta.UrlPdf = string.Empty;
 				}
 				else if (acuse.Response.Equals(100))
 				{
@@ -425,8 +428,24 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						estado = Ctl_Documento.ObtenerCategoria(documentoBd.IntIdEstado);
 					}
+
+					//Se agrega validacion por si se esta quedando con este estado no presente inconsistencias
+					if (documentoBd.IntIdEstado == ProcesoEstado.CompresionXml.GetHashCode() && estado == CategoriaEstado.ValidadoDian.GetHashCode())
+					{
+						try
+						{
+							documentoBd.IntIdEstado = (short)ProcesoEstado.EnvioZip.GetHashCode();
+							Ctl_Documento ct_doc = new Ctl_Documento();
+							ct_doc.Actualizar(documentoBd);
+						}
+						catch (Exception excepcion)
+						{
+							Ctl_Log.Guardar(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.actualizacion, string.Format("No se puedo actualizar estado"));
+						}
+					}
+
 					Ctl_DocumentosAudit clase_auditoria = new Ctl_DocumentosAudit();
-					clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, ProcesoEstado.ConsultaDian, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, Enumeracion.GetDescription(ProcesoEstado.ConsultaDian), respuestadian, respuesta.Prefijo, Convert.ToString(respuesta.Documento), estado);
+					clase_auditoria.Crear(new Guid(respuesta.IdDocumento), respuesta.IdPeticion, respuesta.IdentificacionObligado, Enumeracion.GetEnumObjectByValue<ProcesoEstado>(documentoBd.IntIdEstado) , TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, Enumeracion.GetDescription(ProcesoEstado.ConsultaDian), respuestadian, respuesta.Prefijo, Convert.ToString(respuesta.Documento), estado);
 				}
 				catch (Exception e) { }
 
