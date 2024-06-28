@@ -776,6 +776,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//Validacion de Adquiriente
 				if (numero_documento == null && id_radicado_doc != Guid.Empty)
 				{
+
+					//Valida que no este vacio y este bien formado 
+					ValidarTercero(item.DatosAdquiriente, "Adquiriente", facturador_electronico);
+
 					Ctl_Empresa empresa_config = new Ctl_Empresa();
 
 					TblEmpresas adquirienteBd = null;
