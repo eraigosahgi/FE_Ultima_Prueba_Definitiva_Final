@@ -446,6 +446,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TblEmpresas_IntValidacionVe
 		Documentacion\Liberaciones\TblEmpresas_IntValidacionVersion\script.txt = Documentacion\Liberaciones\TblEmpresas_IntValidacionVersion\script.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetConvertirXMLUBL", "HGInetConvertirXMLUBL\HGInetConvertirXMLUBL.csproj", "{F04B402B-5BD7-4632-AF83-61AA0EB06639}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -602,6 +604,14 @@ Global
 		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|x86.ActiveCfg = Release|Any CPU
 		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|x86.Build.0 = Release|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Debug|x86.Build.0 = Debug|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Release|x86.ActiveCfg = Release|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
