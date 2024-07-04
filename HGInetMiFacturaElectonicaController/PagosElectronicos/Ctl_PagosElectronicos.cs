@@ -1351,9 +1351,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				List<PagoElectronicoRespuestaPorFecha> lista_respuesta = new List<PagoElectronicoRespuestaPorFecha>();
 
 				//Creamos variable para saber si la consulta en con pagos aprobados o no aprobados.
-				bool estado_pago = (Procesados == 1) ? true : false;
-
-				context.Configuration.LazyLoadingEnabled = false;
+				bool estado_pago = (Procesados == 1) ? true : false;			
 
 				var lista_pagos = (from pagos in context.TblPagosElectronicos
 									   //join documento in context.TblDocumentos on pagos.StrIdRegistro2 equals documento.StrIdSeguridad
