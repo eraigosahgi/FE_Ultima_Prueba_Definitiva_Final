@@ -415,50 +415,71 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						try
 						{
 
-							//Obtiene la informacion del Adquiriente que se tiene en BD
-							if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
-								adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
-							else
-								adquirienteBd = empresa_config.Obtener(documento_obj.DatosTrabajador.Identificacion);
 							try
 							{
-
-								//Si no existe Adquiriente se crea en BD y se crea Usuario
-								if (adquirienteBd == null)
-								{
-									empresa_config = new Ctl_Empresa();
-									//Creacion del Adquiriente
-									if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
-										adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
-									else
-									{
-										Tercero trabajador = empresa_config.ConvertirTrabajador(documento_obj.DatosTrabajador);
-										adquirienteBd = empresa_config.Crear(trabajador);
-									}
-								}
+								empresa_config = new Ctl_Empresa();
+								//Creacion del Adquiriente
+								if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
+									adquirienteBd = empresa_config.Crear(documento_obj.DatosAdquiriente);
 								else
 								{
-									if (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste)
-									{
-										if (!adquirienteBd.StrMailAdmin.Equals(documento_obj.DatosTrabajador.Email))
-										{
-											empresa_config = new Ctl_Empresa();
-											adquirienteBd.StrMailAdmin = documento_obj.DatosTrabajador.Email;
-											adquirienteBd = empresa_config.Actualizar(adquirienteBd);
-										}
-									}
+									Tercero trabajador = empresa_config.ConvertirTrabajador(documento_obj.DatosTrabajador);
+									adquirienteBd = empresa_config.Crear(trabajador);
 								}
 							}
 							catch (Exception excepcion)
 							{
-								Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
+								
 								string msg_excepcion = Excepcion.Mensaje(excepcion);
 
 								if (!msg_excepcion.ToLowerInvariant().Contains("insert duplicate key") && !msg_excepcion.ToLowerInvariant().Contains("insertar una clave duplicada"))
+								{
+									Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
 									throw excepcion;
+								}
 								else
-									adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+									try
+									{
+										//Obtiene la informacion del Adquiriente que se tiene en BD
+										if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
+											adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+										else
+											adquirienteBd = empresa_config.Obtener(documento_obj.DatosTrabajador.Identificacion);
+									}
+									catch (Exception)
+									{
+
+										//Obtiene la informacion del Adquiriente que se tiene en BD
+										if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
+											adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+										else
+											adquirienteBd = empresa_config.Obtener(documento_obj.DatosTrabajador.Identificacion);
+									}
 							}
+
+							//Si no existe Adquiriente se crea en BD y se crea Usuario
+							if (adquirienteBd == null)
+							{
+								//Obtiene la informacion del Adquiriente que se tiene en BD
+								if (tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste)
+									adquirienteBd = empresa_config.Obtener(documento_obj.DatosAdquiriente.Identificacion);
+								else
+									adquirienteBd = empresa_config.Obtener(documento_obj.DatosTrabajador.Identificacion);
+							}
+							else
+							{
+								if (tipo_doc == TipoDocumento.Nomina || tipo_doc == TipoDocumento.NominaAjuste)
+								{
+									if (!adquirienteBd.StrMailAdmin.Equals(documento_obj.DatosTrabajador.Email))
+									{
+										empresa_config = new Ctl_Empresa();
+										adquirienteBd.StrMailAdmin = documento_obj.DatosTrabajador.Email;
+										adquirienteBd = empresa_config.Actualizar(adquirienteBd);
+									}
+								}
+							}
+
+							
 						}
 						catch (Exception excepcion)
 						{

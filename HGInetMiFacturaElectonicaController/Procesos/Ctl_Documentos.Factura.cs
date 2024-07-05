@@ -188,13 +188,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//				Tercero_EDS_PostP = true;
 					//			}
 
-						//		}
-						//	}
-						//}
-						//catch (Exception exep)
-						//{
-						//	Ctl_Log.Guardar(exep, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.seleccion, "Error haciendo cambio en el Plan de EDS para POS");
-						//}
+					//		}
+					//	}
+					//}
+					//catch (Exception exep)
+					//{
+					//	Ctl_Log.Guardar(exep, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.seleccion, "Error haciendo cambio en el Plan de EDS para POS");
+					//}
 
 				}
 
@@ -378,7 +378,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					}
 
 
-				} 
+				}
 				#endregion
 
 				//Valida que si tiene certificado digital este vigente
@@ -547,10 +547,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			//radicado del documento
 			Guid id_radicado = new Guid();
-			
+
 			if (id_radicado_doc == Guid.Empty)
 			{
-			   id_radicado = Guid.NewGuid();
+				id_radicado = Guid.NewGuid();
 			}
 			else
 			{
@@ -559,7 +559,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 			string prefijo = item.Prefijo;
 			string numero = item.Documento.ToString();
-			item.IdentificacionIntegrador = string.IsNullOrEmpty(item.IdentificacionIntegrador) ? Integrador_Peticion : item.IdentificacionIntegrador ;
+			item.IdentificacionIntegrador = string.IsNullOrEmpty(item.IdentificacionIntegrador) ? Integrador_Peticion : item.IdentificacionIntegrador;
 
 			ProcesoEstado proceso_actual = ProcesoEstado.Recepcion;
 			string proceso_txt = Enumeracion.GetDescription(proceso_actual);
@@ -771,7 +771,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				catch (Exception) { }
 
-				
+
 				//***Se agrega este proceso para que pueda crearse el documento
 				//Validacion de Adquiriente
 				if (numero_documento == null && id_radicado_doc != Guid.Empty)
@@ -785,31 +785,42 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					TblEmpresas adquirienteBd = null;
 					try
 					{
-
-						adquirienteBd = empresa_config.Obtener(item.DatosAdquiriente.Identificacion);
-						
-							
 						try
 						{
 
 							//Si no existe Adquiriente se crea en BD y se crea Usuario
-							if (adquirienteBd == null)
-							{
-								empresa_config = new Ctl_Empresa();
-								//Creacion del Adquiriente
-								adquirienteBd = empresa_config.Crear(item.DatosAdquiriente);
-								
-							}
-							
+
+							empresa_config = new Ctl_Empresa();
+							//Creacion del Adquiriente
+							adquirienteBd = empresa_config.Crear(item.DatosAdquiriente);
+
 						}
 						catch (Exception excepcion)
 						{
-							Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
+
 							string msg_excepcion = Excepcion.Mensaje(excepcion);
 
 							if (msg_excepcion.ToLowerInvariant().Contains("insert duplicate key") && msg_excepcion.ToLowerInvariant().Contains("insertar una clave duplicada"))
-								adquirienteBd = empresa_config.Obtener(item.DatosAdquiriente.Identificacion);
+							{
+								try
+								{
+									adquirienteBd = empresa_config.Obtener(item.DatosAdquiriente.Identificacion);
+								}
+								catch (Exception)
+								{
+									adquirienteBd = empresa_config.Obtener(item.DatosAdquiriente.Identificacion);
+								}
+							}
+							else
+								Ctl_Log.Guardar(excepcion, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion);
 						}
+
+						if (adquirienteBd == null)
+						{
+							adquirienteBd = empresa_config.Obtener(item.DatosAdquiriente.Identificacion);
+
+						}
+
 					}
 					catch (Exception excepcion)
 					{
@@ -934,9 +945,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								numero_documento.IntIdEstado = (short)item_respuesta.IdProceso;
 								numero_documento = num_doc.Actualizar(numero_documento);
 							}
-							
+
 						}
-						
+
 					}
 				}
 
