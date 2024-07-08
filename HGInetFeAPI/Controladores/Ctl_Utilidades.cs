@@ -272,7 +272,7 @@ namespace HGInetFeAPI
 					}
 					catch (Exception)
 					{
-						throw new ApplicationException(ex.Message, ex.InnerException);
+						//throw new ApplicationException(ex.Message, ex.InnerException);
 					}
 				}
 
@@ -281,7 +281,7 @@ namespace HGInetFeAPI
 			}
 
 			if (string.IsNullOrWhiteSpace(url_retorno))
-				throw new ApplicationException("Ruta principal de licencia vacía.");
+				throw new ApplicationException("Ruta principal de licencia cloudservices está vacía.");
 
 			return url_retorno;
 		}
