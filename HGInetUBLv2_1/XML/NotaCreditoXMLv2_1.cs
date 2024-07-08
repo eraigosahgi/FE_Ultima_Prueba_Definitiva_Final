@@ -278,6 +278,21 @@ namespace HGInetUBLv2_1
 					DocumentReference.UUID.schemeName = "CUFE-SHA384";
 					if (documento.TipoOperacion == 3)
 						DocumentReference.UUID.schemeName = "CUDS-SHA384";
+					if (documento.TipoOperacion == 5 || documento.TipoOperacion == 6)
+					{
+						DocumentReference.UUID.schemeName = "CUDE-SHA384";
+						DocumentReference.DocumentTypeCode = new DocumentTypeCodeType();
+						if (documento.TipoOperacion == 5)
+						{
+							DocumentReference.DocumentTypeCode.Value = "20";
+						}
+						else
+						{
+							DocumentReference.DocumentTypeCode.Value = "35";
+						}
+						
+					}
+						
 					DocumentReference.IssueDate = new IssueDateType();
 					DocumentReference.IssueDate.Value = documento.FechaFactura;
 					DocReference.InvoiceDocumentReference = DocumentReference;
@@ -379,7 +394,7 @@ namespace HGInetUBLv2_1
 					//---Valor debe ser 1.00 si es pesos colombianos
 					//*cbc: SourceCurrencyBaseRate[0..1] En el caso de una moneda de origen con denominaciones de pequeño valor, la unidad base.
 					PaymentExchangeRate.SourceCurrencyBaseRate = new SourceCurrencyBaseRateType();
-					PaymentExchangeRate.SourceCurrencyBaseRate.Value = 1.00M;
+					PaymentExchangeRate.SourceCurrencyBaseRate.Value = (documento.Trm != null ? documento.Trm.Valor + 0.00M : 1.00M);//1.00M;
 					//* cbc: TargetCurrencyCode [1..1] La moneda de destino para este tipo de cambio; La moneda a la que se realiza el cambio.
 					PaymentExchangeRate.TargetCurrencyCode = new TargetCurrencyCodeType();
 					PaymentExchangeRate.TargetCurrencyCode.Value = (documento.Trm != null ? documento.Trm.Moneda : documento.Moneda);//documento.Moneda;

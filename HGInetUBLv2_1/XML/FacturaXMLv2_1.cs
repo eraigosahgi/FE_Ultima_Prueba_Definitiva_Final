@@ -741,8 +741,8 @@ namespace HGInetUBLv2_1
 				//---Validar Se llena con informacion del ejemplo Factura Genericas
 				#region PaymentExchangeRate - Conversión de divisas: cac:PaymentExchangeRate 
 
-				/*
-				if (documento.TipoOperacion == 2 && documento.Trm != null)
+				
+				if (documento.TipoOperacion == TipoOperacion.FacturaExportacion.GetHashCode() && documento.Trm != null)
 				{
 					ExchangeRateType PaymentExchangeRate = new ExchangeRateType();
 					//---5.3.3. Moneda (ISO 4217):
@@ -750,10 +750,11 @@ namespace HGInetUBLv2_1
 					PaymentExchangeRate.SourceCurrencyCode = new SourceCurrencyCodeType();
 					PaymentExchangeRate.SourceCurrencyCode.Value = documento.Moneda;
 					//---Valor debe ser 1.00 si es pesos colombianos
-					//*cbc: SourceCurrencyBaseRate[0..1] En el caso de una moneda de origen con denominaciones de pequeño valor, la unidad base.
+					//*cbc: SourceCurrencyBaseRate[0..1] Base monetaria de la divisa COP que se deberá convertir a moneda extranjera, 
+					//ejemplo: si es USDel valor a informar es el valor	equivalente de un dólar en pesos.
 					PaymentExchangeRate.SourceCurrencyBaseRate = new SourceCurrencyBaseRateType();
-					PaymentExchangeRate.SourceCurrencyBaseRate.Value = 1.00M;
-					//* cbc: TargetCurrencyCode [1..1] La moneda de destino para este tipo de cambio; La moneda a la que se realiza el cambio.
+					PaymentExchangeRate.SourceCurrencyBaseRate.Value = (documento.Trm != null ? documento.Trm.Valor + 0.00M : 1.00M);//1.00M;
+																																	 //* cbc: TargetCurrencyCode [1..1] La moneda de destino para este tipo de cambio; La moneda a la que se realiza el cambio.
 					PaymentExchangeRate.TargetCurrencyCode = new TargetCurrencyCodeType();
 					PaymentExchangeRate.TargetCurrencyCode.Value = (documento.Trm != null ? documento.Trm.Moneda : documento.Moneda);//documento.Moneda;
 																																	 //* cbc: TargetCurrencyBaseRate [0..1] En el caso de una moneda de destino con denominaciones de valor pequeño, la base de la unidad.
@@ -767,7 +768,7 @@ namespace HGInetUBLv2_1
 					PaymentExchangeRate.Date.Value = ((documento.Trm != null) ? Convert.ToDateTime(documento.Trm.FechaTrm.ToString(Fecha.formato_fecha_hginet)) : Convert.ToDateTime(documento.Fecha.ToString(Fecha.formato_fecha_hginet)));
 					facturaXML.PaymentExchangeRate = PaymentExchangeRate;
 				}
-				*/
+				
 				#endregion
 
 				#region facturaXML.InvoiceLine - Línea de facturaXML
