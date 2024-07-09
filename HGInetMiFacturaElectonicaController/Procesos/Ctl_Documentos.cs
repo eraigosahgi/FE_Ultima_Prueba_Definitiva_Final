@@ -427,6 +427,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				{
 					tercero.Email = Facturador.StrMailAdmin;
 				}
+				else if (tipo.Equals("Adquiriente"))
+				{
+					tercero.Email = string.Empty;
+				}
 			}
 
 			//Regex isweb = new Regex("([\\w-]+\\.)+(/[\\w- ./?%&=]*)?");

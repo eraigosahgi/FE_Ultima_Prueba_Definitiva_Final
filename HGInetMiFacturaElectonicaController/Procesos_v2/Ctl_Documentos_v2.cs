@@ -352,6 +352,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						{
 							documento_obj.DocumentoFormato.Titulo = "Documento equivalente electrónico tiquete de máquina registradora con sistema P.O. S.";//Enumeracion.GetDescription(tipo_doc);
 						}
+						else if (tipo_doc == TipoDocumento.Factura && documento_obj.TipoOperacion == 1)
+						{
+							documento_obj.DocumentoFormato.Titulo = "factura de venta de talonario o de papel";//Enumeracion.GetDescription(tipo_doc);
+						}
 
 						//Guarda o genera el Formato
 						if (documento_obj.DocumentoFormato != null)
