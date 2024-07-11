@@ -207,15 +207,15 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 								bool enviar_sincronico = true;
 
 								//Si es proceso por la sonda no se valida 
-								if (proceso_sonda == false && documento.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode())
-								{
-									//Esta empresa se usa solo para determinar si envia normal o por sonda posteriormente
-									//*****Se debe cambiar por una tabla de configuracion y es provisional esta forma.
-									Ctl_Empresa empresa_indicador = new Ctl_Empresa();
-									TblEmpresas indicador_envio = empresa_indicador.Obtener("888989");
-									if (indicador_envio.IntManejaAnexos == true)
-										enviar_sincronico = false;
-								}
+								//if (proceso_sonda == false && documento.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode())
+								//{
+								//	//Esta empresa se usa solo para determinar si envia normal o por sonda posteriormente
+								//	//*****Se debe cambiar por una tabla de configuracion y es provisional esta forma.
+								//	Ctl_Empresa empresa_indicador = new Ctl_Empresa();
+								//	TblEmpresas indicador_envio = empresa_indicador.Obtener("888989");
+								//	if (indicador_envio.IntManejaAnexos == true)
+								//		enviar_sincronico = false;
+								//}
 
 								if (enviar_sincronico == true)
 								{
