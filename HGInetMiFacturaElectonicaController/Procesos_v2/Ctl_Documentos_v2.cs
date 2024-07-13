@@ -800,6 +800,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 								//Actualiza la categoria con el nuevo estado
 								respuesta.IdEstado = documentoBd.IdCategoriaEstado;
 								respuesta.DescripcionEstado = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CategoriaEstado>(documentoBd.IdCategoriaEstado));
+								respuesta.UrlXmlUbl = string.Empty;
+								respuesta.Cufe = string.Empty;
+								respuesta.UrlPdf = string.Empty;
 
 							}
 

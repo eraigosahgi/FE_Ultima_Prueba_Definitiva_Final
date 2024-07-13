@@ -655,7 +655,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 
 				//valida si el Documento ya existe en Base de Datos
-				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
+				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, TipoDocumento.Factura.GetHashCode());
 
 				TblDocumentos documento_bd = new TblDocumentos();
 

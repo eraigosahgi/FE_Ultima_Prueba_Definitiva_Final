@@ -453,19 +453,19 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				if (tipo_doc.Equals(0))
 				{
-					documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
+					documento = (from documentos in context.TblDocumentos
 								 where (documentos.IntNumero == numero_documeto)
-									   && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
-										   && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
+									   && (documentos.StrEmpresaFacturador.Equals(identificacion_obligado)
+										   && documentos.StrPrefijo.Equals(prefijo))
 								 select documentos).FirstOrDefault();
 				}
 				else
 				{
 
-					documento = (from documentos in context.TblDocumentos.Include("TblEmpresasAdquiriente").Include("TblEmpresasFacturador").Include("TblEmpresasResoluciones")
+					documento = (from documentos in context.TblDocumentos
 								 where (documentos.IntNumero == numero_documeto)
-									   && (documentos.TblEmpresasFacturador.StrIdentificacion.Equals(identificacion_obligado)
-										   && documentos.TblEmpresasResoluciones.StrPrefijo.Equals(prefijo))
+									   && (documentos.StrEmpresaFacturador.Equals(identificacion_obligado)
+										   && documentos.StrPrefijo.Equals(prefijo))
 									   && (documentos.IntDocTipo == tipo_doc)
 								 select documentos).FirstOrDefault();
 				}
@@ -4844,7 +4844,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				obj_documento.Aceptacion = (respuesta.IntAdquirienteRecibo > CodigoResponseV2.Inscripcion.GetHashCode()) ? CodigoResponseV2.Inscripcion.GetHashCode() : respuesta.IntAdquirienteRecibo;
 				obj_documento.DescripcionAceptacion = (respuesta.IntAdquirienteRecibo > CodigoResponseV2.Inscripcion.GetHashCode()) ? "Titulo Valor" : Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<CodigoResponseV2>(respuesta.IntAdquirienteRecibo));
 				obj_documento.CodigoRegistro = respuesta.StrObligadoIdRegistro;
-				obj_documento.Cufe = respuesta.StrCufe; //(respuesta.IntIdEstado == 92 || respuesta.IntIdEstado == 93 || respuesta.IntIdEstado == 94) ? string.Empty : respuesta.StrCufe;
+				obj_documento.Cufe = (respuesta.IntIdEstado == 92 || respuesta.IntIdEstado == 93 || respuesta.IntIdEstado == 94) ? string.Empty : respuesta.StrCufe; //	respuesta.StrCufe; //
 				obj_documento.DocumentoTipo = respuesta.IntDocTipo;
 				obj_documento.Documento = respuesta.IntNumero;
 				obj_documento.FechaRecepcion = respuesta.DatFechaIngreso;
@@ -4867,9 +4867,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				{
 					obj_documento.ProcesoFinalizado = 0;
 				}
-				obj_documento.UrlPdf = respuesta.StrUrlArchivoPdf; //(respuesta.IntIdEstado == 92 || respuesta.IntIdEstado == 93 || respuesta.IntIdEstado == 94) ? string.Empty : respuesta.StrUrlArchivoPdf;
-				obj_documento.UrlXmlUbl = respuesta.StrUrlArchivoUbl; //(respuesta.IntIdEstado == 92 || respuesta.IntIdEstado == 93 || respuesta.IntIdEstado == 94) ? string.Empty : respuesta.StrUrlArchivoUbl;
-				obj_documento.UrlAnexo = respuesta.StrUrlAnexo;
+				obj_documento.UrlPdf = (respuesta.IntIdEstado == 92 || respuesta.IntIdEstado == 93 || respuesta.IntIdEstado == 94) ? string.Empty : respuesta.StrUrlArchivoPdf; // respuesta.StrUrlArchivoPdf; //
+				obj_documento.UrlXmlUbl = (respuesta.IntIdEstado == 92 || respuesta.IntIdEstado == 93 || respuesta.IntIdEstado == 94) ? string.Empty : respuesta.StrUrlArchivoUbl; //respuesta.StrUrlArchivoUbl; //
+				obj_documento.UrlAnexo = (respuesta.IntIdEstado == 92 || respuesta.IntIdEstado == 93 || respuesta.IntIdEstado == 94) ? string.Empty : respuesta.StrUrlAnexo; //respuesta.StrUrlAnexo;//
 
 				//Ctl_DocumentosAudit clase_audit = new Ctl_DocumentosAudit();
 				//List<TblAuditDocumentos> datos_auditoria = clase_audit.Obtener(respuesta.StrIdSeguridad.ToString(), respuesta.TblEmpresasFacturador.StrIdentificacion);
@@ -6536,6 +6536,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					nombre_archivo = Path.GetFileNameWithoutExtension(doc.StrUrlAcuseUbl);
 					Ctl_Empresa emp = new Ctl_Empresa();
 					obligado_empleador = Ctl_Empresa.Convertir(facturador);
+
+					if (doc.TblEmpresasAdquiriente == null)
+					{
+						Ctl_Empresa Ctl_adquiriente = new Ctl_Empresa();
+						TblEmpresas empresa_adquiriente = Ctl_adquiriente.Obtener(doc.StrEmpresaAdquiriente);
+						doc.TblEmpresasAdquiriente = empresa_adquiriente;
+					}
+
 					adquiriente_tratrajador = Ctl_Empresa.Convertir(doc.TblEmpresasAdquiriente);
 
 					resultado = HGInetUBLv2_1.AttachedDocument.CrearDocumento(string.Format("{0}{1}", doc.IntNumero, evento_radian), obligado_empleador, adquiriente_tratrajador, ambiente_dian, doc, evento_radian, doc.StrUrlAcuseUbl, cude_evento);

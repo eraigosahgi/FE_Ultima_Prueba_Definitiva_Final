@@ -162,9 +162,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			documentoBd.StrUrlArchivoZip = url_ppal_zip;
 			documentoBd.DatFechaActualizaEstado = respuesta.FechaUltimoProceso;
 			documentoBd.IntIdEstado = Convert.ToInt16(respuesta.IdProceso);
+			if (documentoBd.IntIdEstado != ProcesoEstado.PrevalidacionErrorDian.GetHashCode() && documentoBd.IntIdEstado != ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode())
+			{
+				documentoBd.StrCufe = respuesta.Cufe;
+			}
 
 			if (empresa.IntVersionDian == 2 && !string.IsNullOrEmpty(IdSetDian) && !string.IsNullOrEmpty(acuse.KeyV2))
-				documentoBd.StrIdRadicadoDian = Guid.Parse(acuse.KeyV2);
+			documentoBd.StrIdRadicadoDian = Guid.Parse(acuse.KeyV2);
 
 			documento_tmp.Actualizar(documentoBd);
 
@@ -473,9 +477,10 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.PrevalidacionErrorDian);
 						respuesta.IdProceso = ProcesoEstado.PrevalidacionErrorDian.GetHashCode();
 						respuesta.Error.Mensaje = string.Format("Documento rechazado DIAN: {0} - Validar las siguientes inconsistencias de la DIAN: {1} ", resultado_doc.EstadoDianDescripcion, resultado_doc.Mensaje);
-						//respuesta.Cufe = string.Empty;
-						//respuesta.UrlXmlUbl = string.Empty;
-						//respuesta.UrlPdf = string.Empty;
+						//***se quita informacion para la respuesta
+						respuesta.Cufe = string.Empty;
+						respuesta.UrlXmlUbl = string.Empty;
+						respuesta.UrlPdf = string.Empty;
 					}
 
 

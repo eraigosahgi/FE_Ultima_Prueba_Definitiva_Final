@@ -71,11 +71,11 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				if (!string.IsNullOrWhiteSpace(respuesta.Error.Mensaje))
 				{
-					if (respuesta.IdProceso > ProcesoEstado.UBL.GetHashCode() && respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode())
+					if (respuesta.IdProceso > ProcesoEstado.UBL.GetHashCode() && respuesta.IdProceso < ProcesoEstado.EnvioZip.GetHashCode() || (respuesta.IdProceso == ProcesoEstado.PrevalidacionErrorDian.GetHashCode() || respuesta.IdProceso == ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode() || respuesta.IdProceso == ProcesoEstado.ProcesoPausadoPlataformaDian.GetHashCode()))
 					{
-						respuesta.UrlXmlUbl = null;
-						//respuesta.Cufe = string.Empty;
-						//respuesta.UrlPdf = string.Empty;
+						respuesta.UrlXmlUbl = string.Empty;
+						respuesta.Cufe = string.Empty;
+						respuesta.UrlPdf = string.Empty;
 					}
 
 					try
