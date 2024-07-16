@@ -187,11 +187,10 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 
 		[HttpGet]
 		[Route("Api/ObtenerDocumentosRechazado")]
-		public HttpResponseMessage ObtenerDocumentosRechazado(DateTime FechaInicial, DateTime FechaFinal)
+		public HttpResponseMessage ObtenerDocumentosRechazado(DateTime FechaInicial, DateTime FechaFinal, int tipo = 0)
 		{
 			try
 			{
-
 				if (FechaInicial == null)
 					throw new ApplicationException("Fecha inicial inválida.");
 				if (FechaFinal == null)
@@ -209,7 +208,7 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 
 				//Obtiene los datos
-				List<ObjDocumentos> respuesta = ctl_documento.ObtenerDocumentosRechazado(FechaInicial, FechaFinal);
+				List<ObjDocumentos> respuesta = ctl_documento.ObtenerDocumentosRechazado(FechaInicial, FechaFinal, tipo);
 
 				List<Maestro_Prioridades> MP = new List<Maestro_Prioridades>();
 				if (respuesta.Count > 0)

@@ -58,17 +58,18 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 
 		});
 
-
-
-
-
-
-
-
-
 		$("#FechaFinal").dxDateBox({ min: now });
 		$("#FechaInicial").dxDateBox({ max: now });
 
+		$("#TipoRechazo").dxSelectBox({
+			placeholder: "TODOS",
+			displayExpr: "Texto",
+			value: 0,
+			dataSource: Tipo_Rechazo,
+			onValueChanged: function (data) {
+				Datos_Tipo = data.value.ID;
+			}
+		});
 
 	}
 
@@ -178,7 +179,7 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 				{
 					caption: "Id",
 					dataField: "StrIdSeguridad",
-					visible: false,					
+					visible: false,
 				},
 					{
 						caption: "Archivos",
@@ -224,7 +225,7 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 					},
 					{
 						caption: "Solución",
-						dataField: "Solucion",						
+						dataField: "Solucion",
 					},
 					 {
 					 	caption: "Mensaje",
@@ -399,7 +400,7 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 			fecha_fin = now.toISOString();
 		$('#waitRegistros').show();
 		$('#wait').show();
-		SrvDocumento.ObtenerDocumentosRechazado(fecha_inicio, fecha_fin).then(function (data) {
+		SrvDocumento.ObtenerDocumentosRechazado(fecha_inicio, fecha_fin, $("#TipoRechazo").dxSelectBox("instance").option().value).then(function (data) {
 
 			Documentos = [];
 			AlmacenDocumentos = new DevExpress.data.ArrayStore({
@@ -468,10 +469,9 @@ var items_Tipo =
     ];
 
 
-var Maestro_Prioridades =
+var Tipo_Rechazo =
     [
-        { ID: "0", Texto: '' },
-		{ ID: "1", Texto: 'BAJA' },
-		{ ID: "2", Texto: 'MEDIA' },
-		{ ID: "3", Texto: 'ALTA' },
+        { ID: 0, Texto: 'TODOS' },
+		{ ID: 1, Texto: 'DIAN' },
+		{ ID: 2, Texto: 'HGIDocs' }
     ];

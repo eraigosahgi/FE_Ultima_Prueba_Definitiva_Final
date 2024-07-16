@@ -83,6 +83,23 @@ namespace HGInetMiFacturaElectronicaAudit.Controladores
 			}
 		}
 
+		public List<TblAuditDocumentos> ObtenerAudit(string id_seguridad_doc)
+		{
+			try
+			{
+
+				Guid Id = Guid.Parse(id_seguridad_doc);
+				List<TblAuditDocumentos> registros_audit = db.TblAuditDocumentos.Where(x => (x.StrIdSeguridad == Id) && (x.IntIdProceso == 93 || x.IntIdProceso == 2)).OrderBy(x => x.DatFecha).ToList();
+
+				return registros_audit;
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Auditoria, MensajeTipo.Error, MensajeAccion.consulta);
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 
 		/// <summary>
 		/// Obtiene los registros por rangos de fecha.
@@ -236,7 +253,7 @@ namespace HGInetMiFacturaElectronicaAudit.Controladores
 
 			try
 			{
-				List<TblAuditDocumentos> ListaEmail = db.TblAuditDocumentos.Where(x => (x.StrIdSeguridad== IdSeguridad) && (x.IntIdProceso.Equals(8))).OrderBy(x => x.DatFecha).ToList();
+				List<TblAuditDocumentos> ListaEmail = db.TblAuditDocumentos.Where(x => (x.StrIdSeguridad == IdSeguridad) && (x.IntIdProceso.Equals(8))).OrderBy(x => x.DatFecha).ToList();
 
 				return ListaEmail;
 			}

@@ -723,7 +723,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				context.Configuration.LazyLoadingEnabled = false;
 
 				var respuesta = from documento in context.TblDocumentos
-								//join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
+									//join empresa in context.TblEmpresas on documento.StrEmpresaFacturador equals empresa.StrIdentificacion
 								where documento.StrEmpresaFacturador.Equals(identificacion_obligado)
 								 && documento.IntDocTipo == tipo_documento
 								 && (documento.DatFechaIngreso >= FechaInicial && documento.DatFechaIngreso <= FechaFinal)
@@ -1298,7 +1298,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<ObjDocumentos> ObtenerDocumentosRechazado(DateTime fecha_inicio, DateTime fecha_fin)
+		public List<ObjDocumentos> ObtenerDocumentosRechazado(DateTime fecha_inicio, DateTime fecha_fin, int tipo)
 		{
 
 			fecha_inicio = fecha_inicio.Date;
@@ -1310,41 +1310,144 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 			context.Configuration.LazyLoadingEnabled = false;
 
-			documentos = (from datos in context.TblDocumentos.AsNoTracking()
-						  where (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
-						   && (datos.IntIdEstado == 92)
-						  orderby datos.DatFechaIngreso descending
-						  select new ObjDocumentos
-						  {
-							  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
-							  Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
-							  Prefijo = datos.StrPrefijo,
-							  NumeroDocumento = datos.IntNumero.ToString(),
-							  DatFechaIngreso = datos.DatFechaIngreso,
-							  DatFechaDocumento = datos.DatFechaDocumento,
-							  DatFechaVencDocumento = datos.DatFechaVencDocumento,
-							  EstadoFactura = datos.IntIdEstado,
-							  EstadoCategoria = (Int16)datos.IdCategoriaEstado,
-							  IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
-							  NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
-							  Xml = datos.StrUrlArchivoUbl,
-							  Pdf = datos.StrUrlArchivoPdf,
-							  StrIdSeguridad = datos.StrIdSeguridad,
-							  tipodoc = datos.IntDocTipo,
-							  RutaServDian = datos.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian),//datos.StrUrlArchivoUbl,
-							  Estado = datos.IdCategoriaEstado,
-							  IdSeguridadFacturador = datos.TblEmpresasFacturador.StrIdSeguridad.ToString()
-						  }).ToList();
+			if (tipo == 0)
+			{
+				documentos = (from datos in context.TblDocumentos.AsNoTracking()
+							  where (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
+							   && (datos.IntIdEstado == 92 || datos.IntIdEstado == 93)
+							   && datos.StrEmpresaFacturador != "8888"
+							  orderby datos.DatFechaIngreso descending
+							  select new ObjDocumentos
+							  {
+								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+								  Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+								  Prefijo = datos.StrPrefijo,
+								  NumeroDocumento = datos.IntNumero.ToString(),
+								  DatFechaIngreso = datos.DatFechaIngreso,
+								  DatFechaDocumento = datos.DatFechaDocumento,
+								  DatFechaVencDocumento = datos.DatFechaVencDocumento,
+								  EstadoFactura = datos.IntIdEstado,
+								  EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+								  IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+								  NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+								  Xml = datos.StrUrlArchivoUbl,
+								  Pdf = datos.StrUrlArchivoPdf,
+								  StrIdSeguridad = datos.StrIdSeguridad,
+								  tipodoc = datos.IntDocTipo,
+								  RutaServDian = datos.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian),//datos.StrUrlArchivoUbl,
+								  Estado = datos.IdCategoriaEstado,
+								  IdSeguridadFacturador = datos.TblEmpresasFacturador.StrIdSeguridad.ToString()
+							  }).ToList();
+
+
+			}
+
+			if (tipo == 1)
+			{
+				documentos = (from datos in context.TblDocumentos.AsNoTracking()
+							  where (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
+							   && (datos.IntIdEstado == 92)
+							   && datos.StrEmpresaFacturador != "8888"
+							  orderby datos.DatFechaIngreso descending
+							  select new ObjDocumentos
+							  {
+								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+								  Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+								  Prefijo = datos.StrPrefijo,
+								  NumeroDocumento = datos.IntNumero.ToString(),
+								  DatFechaIngreso = datos.DatFechaIngreso,
+								  DatFechaDocumento = datos.DatFechaDocumento,
+								  DatFechaVencDocumento = datos.DatFechaVencDocumento,
+								  EstadoFactura = datos.IntIdEstado,
+								  EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+								  IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+								  NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+								  Xml = datos.StrUrlArchivoUbl,
+								  Pdf = datos.StrUrlArchivoPdf,
+								  StrIdSeguridad = datos.StrIdSeguridad,
+								  tipodoc = datos.IntDocTipo,
+								  RutaServDian = datos.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian),//datos.StrUrlArchivoUbl,
+								  Estado = datos.IdCategoriaEstado,
+								  IdSeguridadFacturador = datos.TblEmpresasFacturador.StrIdSeguridad.ToString()
+							  }).ToList();
+
+
+			}
+
+			if (tipo == 2)
+			{
+				documentos = (from datos in context.TblDocumentos.AsNoTracking()
+							  where (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
+							   && (datos.IntIdEstado == 93)
+							   && datos.StrEmpresaFacturador != "8888"
+							  orderby datos.DatFechaIngreso descending
+							  select new ObjDocumentos
+							  {
+								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
+								  Facturador = datos.TblEmpresasFacturador.StrRazonSocial,
+								  Prefijo = datos.StrPrefijo,
+								  NumeroDocumento = datos.IntNumero.ToString(),
+								  DatFechaIngreso = datos.DatFechaIngreso,
+								  DatFechaDocumento = datos.DatFechaDocumento,
+								  DatFechaVencDocumento = datos.DatFechaVencDocumento,
+								  EstadoFactura = datos.IntIdEstado,
+								  EstadoCategoria = (Int16)datos.IdCategoriaEstado,
+								  IdentificacionAdquiriente = datos.TblEmpresasAdquiriente.StrIdentificacion,
+								  NombreAdquiriente = datos.TblEmpresasAdquiriente.StrRazonSocial,
+								  Xml = datos.StrUrlArchivoUbl,
+								  Pdf = datos.StrUrlArchivoPdf,
+								  StrIdSeguridad = datos.StrIdSeguridad,
+								  tipodoc = datos.IntDocTipo,
+								  RutaServDian = datos.StrUrlArchivoUbl.Replace("FacturaEDian", LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEConsultaDian),//datos.StrUrlArchivoUbl,
+								  Estado = datos.IdCategoriaEstado,
+								  IdSeguridadFacturador = datos.TblEmpresasFacturador.StrIdSeguridad.ToString()
+							  }).ToList();
+
+
+			}
 
 			foreach (ObjDocumentos item in documentos)
 			{
-				item.MensajeError = ObtenerMensajeRechazo(item.IdSeguridadFacturador, item.IdFacturador, item.Xml, item.NumeroDocumento, item.Prefijo, item.tipodoc);
+				if (item.EstadoFactura == 92)
+				{
+					item.MensajeError = ObtenerMensajeRechazo(item.IdSeguridadFacturador, item.IdFacturador, item.Xml, item.NumeroDocumento, item.Prefijo, item.tipodoc);
+				}
+				else
+				{
+					item.MensajeError = ObtenerMensajeAuditoria(item.StrIdSeguridad.ToString());
+				}
+
 				item.NumeroDocumento = item.Prefijo + item.NumeroDocumento.ToString();
 			}
 
 
 			return documentos;
 		}
+
+		public List<string> ObtenerMensajeAuditoria(string id_seguridad_doc)
+		{
+			List<string> respuesta = new List<string>();
+
+			try
+			{
+				HGInetMiFacturaElectronicaAudit.Controladores.Srv_DocumentosAudit Srv = new HGInetMiFacturaElectronicaAudit.Controladores.Srv_DocumentosAudit();
+				List<HGInetMiFacturaElectronicaAudit.Modelo.TblAuditDocumentos> registros_audit = new List<HGInetMiFacturaElectronicaAudit.Modelo.TblAuditDocumentos>();
+				registros_audit = Srv.ObtenerAudit(id_seguridad_doc);
+
+				foreach (var item in registros_audit)
+				{
+					respuesta.Add(item.StrResultadoProceso);
+				}
+			}
+			catch (Exception)
+			{
+				string mensaje = "No se pudo obtener los mensajes de error de la auditoria, por favor validar la respuesta del documento";
+				respuesta.Add(mensaje);
+			}
+
+			return respuesta;
+		}
+
 
 		public List<string> ObtenerMensajeRechazo(string StrIdSeguridad_Obligado, string identificacion_oligado, string ruta_xml, string Documento, string prefijo, int tipo_doc)
 		{
@@ -2492,7 +2595,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									  MotivoRechazo = datos.StrAdquirienteMvoRechazo,
 									  StrAdquirienteMvoRechazo = datos.StrAdquirienteMvoRechazo,
 									  IdentificacionAdquiriente = datos.StrEmpresaAdquiriente,
-									  NombreAdquiriente ="",// datos.TblEmpresasFacturador.StrRazonSocial,
+									  NombreAdquiriente = "",// datos.TblEmpresasFacturador.StrRazonSocial,
 									  MailAdquiriente = "",// datos.TblEmpresasFacturador.StrMailAdmin,
 									  Xml = datos.StrUrlArchivoUbl,
 									  Pdf = datos.StrUrlArchivoPdf,
@@ -2540,7 +2643,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								  MotivoRechazo = datos.StrAdquirienteMvoRechazo,
 								  StrAdquirienteMvoRechazo = datos.StrAdquirienteMvoRechazo,
 								  IdentificacionAdquiriente = datos.StrEmpresaAdquiriente,
-								  NombreAdquiriente ="",// datos.TblEmpresasAdquiriente.StrRazonSocial,
+								  NombreAdquiriente = "",// datos.TblEmpresasAdquiriente.StrRazonSocial,
 								  MailAdquiriente = "",//datos.TblEmpresasAdquiriente.StrMailAdmin,
 								  Xml = datos.StrUrlArchivoUbl,
 								  Pdf = datos.StrUrlArchivoPdf,
@@ -5676,7 +5779,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								//RegistroLog.EscribirLog(new ApplicationException("Obtiene Cufe de la respuesta"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, cufe_respuesta);
 
 								//Se cambia la informacion en los XML sin firmar y firmado
-								for (int i = 0; i <=1; i++)
+								for (int i = 0; i <= 1; i++)
 								{
 									XmlDocument doc = new XmlDocument();
 
@@ -5699,7 +5802,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 									//if (root != null)
 									//	RegistroLog.EscribirLog(new ApplicationException("Obtiene Datos"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, root.Name.ToString());
-									
+
 
 									XmlNamespaceManager nms = new XmlNamespaceManager(doc.NameTable);
 									nms.AddNamespace("cbc", "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2");

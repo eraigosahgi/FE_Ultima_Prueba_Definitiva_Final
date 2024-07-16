@@ -15,7 +15,7 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
 		});
 	}
 	this.ObtenerAttachedDocument = function (Id) {
-	    return $http.get('/api/ObtenerAttachedDocument?id='+Id).then(function (response) {
+		return $http.get('/api/ObtenerAttachedDocument?id=' + Id).then(function (response) {
 			return response.data;
 		}, function (response) {
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);
@@ -50,8 +50,8 @@ var AppSrvDocumento = angular.module('AppSrvDocumento', ['dx'])
 		});
 	}
 
-	this.ObtenerDocumentosRechazado = function (Desde, Hasta) {
-		return $http.get('/api/ObtenerDocumentosRechazado?FechaInicial=' + Desde + '&FechaFinal=' + Hasta).then(function (response) {
+	this.ObtenerDocumentosRechazado = function (Desde, Hasta, tipo) {
+		return $http.get('/api/ObtenerDocumentosRechazado?FechaInicial=' + Desde + '&FechaFinal=' + Hasta + '&tipo=' + tipo).then(function (response) {
 			return response.data;
 		}, function (response) {
 			DevExpress.ui.notify(response.data.ExceptionMessage, 'error', 3000);

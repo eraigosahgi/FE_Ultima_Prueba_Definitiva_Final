@@ -38,21 +38,27 @@
 
 								<div class="dx-fieldset">
 
-									<div class="col-md-4" style="margin-top: 1%">
+									<div class="col-md-3" style="margin-top: 1%">
 										<i class=" icon-calendar"></i>
 										<label>Fecha Inicial:</label>
 										<div id="FechaInicial"></div>
 									</div>
 
 
-									<div class="col-md-4" style="margin-top: 1%">
+									<div class="col-md-3" style="margin-top: 1%">
 										<i class=" icon-calendar"></i>
 										<label>Fecha Final:</label>
 										<div id="FechaFinal"></div>
 									</div>
 
+									<div class="col-md-3" style="margin-top: 1%">
+										<i class=" icon-calendar"></i>
+										<label>Tipo de Rechazo:</label>
+										<div id="TipoRechazo"></div>
+									</div>
 
-									<div class="col-md-4 text-right">
+
+									<div class="col-md-3 text-right">
 										<br />
 										<br />
 										<div data-dx-button="ButtonOptionsConsultar" style="margin-right: 20px"></div>
