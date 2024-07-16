@@ -400,7 +400,7 @@ App.controller('MonitorDeRechazosController', function MonitorDeRechazosControll
 			fecha_fin = now.toISOString();
 		$('#waitRegistros').show();
 		$('#wait').show();
-		SrvDocumento.ObtenerDocumentosRechazado(fecha_inicio, fecha_fin, $("#TipoRechazo").dxSelectBox("instance").option().value).then(function (data) {
+		SrvDocumento.ObtenerDocumentosRechazado(fecha_inicio, fecha_fin, $("#TipoRechazo").dxSelectBox("instance").option().value.ID).then(function (data) {
 
 			Documentos = [];
 			AlmacenDocumentos = new DevExpress.data.ArrayStore({
