@@ -553,7 +553,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 
 				//valida si el Documento ya existe en Base de Datos
-				numero_documento = num_doc.Obtener(item.DatosObligado.Identificacion, item.Documento, item.Prefijo);
+				numero_documento = num_doc.Obtener(item.DatosObligado.Identificacion, item.Documento, item.Prefijo, TipoDocumento.NotaCredito.GetHashCode());
 
 				TblDocumentos documento_bd = new TblDocumentos();
 
@@ -874,7 +874,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				&& (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
 			{
 				//Se actualiza el estado del documento en BD para que lo envien de nuevo
-				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
+				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, TipoDocumento.NotaCredito.GetHashCode());
 
 				if ((numero_documento != null) && (item_respuesta.IdProceso > (short)ProcesoEstado.Recepcion.GetHashCode() || item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode()))
 				{
