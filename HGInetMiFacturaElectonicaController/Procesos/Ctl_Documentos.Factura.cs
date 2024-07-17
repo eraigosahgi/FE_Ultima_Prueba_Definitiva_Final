@@ -440,11 +440,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else
 				{
-					Parallel.ForEach<Factura>(documentos, item =>
-					{
-						DocumentoRespuesta item_respuesta = Procesar(item, facturador_electronico, id_peticion, fecha_actual, lista_resolucion, integrador_peticion, id_peticion_doc);
-						respuesta.Add(item_respuesta);
-					});
+					
+					DocumentoRespuesta item_respuesta = Procesar(documentos.FirstOrDefault(), facturador_electronico, id_peticion, fecha_actual, lista_resolucion, integrador_peticion, id_peticion_doc);
+					respuesta.Add(item_respuesta);
+
+					//**Se quita el paralelismo para peticiones de un solo documento
+					//Parallel.ForEach<Factura>(documentos, item =>
+					//{
+						
+					//});
 				}
 
 				if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
@@ -787,9 +791,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					{
 						try
 						{
-
 							//Si no existe Adquiriente se crea en BD y se crea Usuario
-
 							empresa_config = new Ctl_Empresa();
 							//Creacion del Adquiriente
 							adquirienteBd = empresa_config.Crear(item.DatosAdquiriente);
@@ -800,7 +802,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 							string msg_excepcion = Excepcion.Mensaje(excepcion);
 
-							if (msg_excepcion.ToLowerInvariant().Contains("insert duplicate key") && msg_excepcion.ToLowerInvariant().Contains("insertar una clave duplicada"))
+							if (msg_excepcion.Contains("insert duplicate key") || msg_excepcion.Contains("insertar una clave duplicada"))
 							{
 								try
 								{
@@ -829,10 +831,9 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						//throw excepcion;
 					}
 
+					Ctl_Documento documento_tmp = new Ctl_Documento();
 					try
 					{
-						Ctl_Documento documento_tmp = new Ctl_Documento();
-
 						var documento_obj = (dynamic)null;
 						documento_obj = item;
 
@@ -844,11 +845,38 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						documento_bd = Ctl_Documento.Convertir(item_respuesta, documento_obj, resolucion, facturador_electronico, TipoDocumento.Factura);
 
 						documento_bd.StrProveedorReceptor = Constantes.NitResolucionsinPrefijo;
-						documento_tmp.Crear(documento_bd);
 					}
 					catch (Exception exc)
 					{
 						Ctl_Log.Guardar(exc, MensajeCategoria.BaseDatos, MensajeTipo.Error, MensajeAccion.creacion, string.Format("3 - Creando el documento en base de datos. Nit:{0} - Prefijo:{1} - Documento {2} - Objeto: {3}", documento_bd.StrEmpresaFacturador, documento_bd.StrPrefijo, documento_bd.IntNumero, JsonConvert.SerializeObject(item)));
+						documento_bd = null;
+					}
+
+					try
+					{
+						if (documento_bd != null)
+						{
+							documento_tmp.Crear(documento_bd);
+						}
+						else
+						{
+							mensaje = string.Format("El documento '{0}' con prefijo '{1}' del Facturador Electrónico '{2}' no pudo ingresar al sistema.", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
+							throw new ApplicationException(mensaje);
+						}
+					}
+					catch (Exception except)
+					{
+						string msg_excepcion = Excepcion.Mensaje(except);
+						if (msg_excepcion.Contains("Ya existe un registro con los mismos datos"))
+						{
+							mensaje = string.Format("El documento '{0}' con prefijo '{1}' ya existe para el Facturador Electrónico '{2}'", item.Documento, prefijo, facturador_electronico.StrIdentificacion);
+							throw new ApplicationException(mensaje);
+						}
+						else
+						{
+							mensaje = string.Format("El documento '{0}' con prefijo '{1}' del Facturador Electrónico '{2}' no pudo ingresar al sistema. Detalle: {3}", item.Documento, prefijo, facturador_electronico.StrIdentificacion, msg_excepcion);
+							throw new ApplicationException(mensaje);
+						}
 					}
 				}
 
@@ -959,7 +987,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				&& (item_respuesta.IdEstado >= (short)CategoriaEstado.NoRecibido.GetHashCode() || item_respuesta.IdEstado < (short)CategoriaEstado.EnvioDian.GetHashCode()))
 			{
 				//Se actualiza el estado del documento en BD para que lo envien de nuevo
-				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo);
+				numero_documento = num_doc.Obtener(facturador_electronico.StrIdentificacion, item.Documento, item.Prefijo, TipoDocumento.Factura.GetHashCode());
 
 				if ((numero_documento != null) && (item_respuesta.IdProceso > (short)ProcesoEstado.Recepcion.GetHashCode() && item_respuesta.IdProceso < (short)ProcesoEstado.EnvioZip.GetHashCode()) && numero_documento.DatFechaIngreso < Fecha.GetFecha().AddMinutes(-1) && (numero_documento.IdCategoriaEstado != CategoriaEstado.ValidadoDian.GetHashCode() && numero_documento.IntIdEstado != ProcesoEstado.CompresionXml.GetHashCode()))
 				{
