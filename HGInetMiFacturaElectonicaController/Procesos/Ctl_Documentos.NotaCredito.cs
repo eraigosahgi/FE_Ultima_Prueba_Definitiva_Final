@@ -79,7 +79,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Agrupamos la lista
 					int result = documentos.GroupBy(x => new { x.Documento, x.Prefijo }).Count();
 
-					if (result > 0)
+					if (documentos.Count != result)
 						throw new ApplicationException("Se encontraron documentos repetidos en la peticion, corrijan esta información y emitan de nuevo los documentos");
 				}
 
