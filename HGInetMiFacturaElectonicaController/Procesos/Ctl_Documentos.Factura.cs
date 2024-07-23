@@ -207,7 +207,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//**Se agrega validacion y asignacion del aplicativo emisor del documento.
 
 				#region Informacion del Integrador del Documento
-				DateTime fecha_control = new DateTime(2024, 07, 24, 0, 0, 0);
+				DateTime fecha_control = new DateTime(2024, 08, 14, 10, 0, 0);
 				Ctl_EmpresaIntegradores Emp_int = new Ctl_EmpresaIntegradores();
 				List<TblEmpresaIntegradores> integradores = Emp_int.Obtener(facturador_electronico.StrIdentificacion);
 				//string integrador_peticion = string.Empty;
@@ -241,7 +241,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else if (!string.IsNullOrWhiteSpace(integrador_peticion))
 				{
-					if (integradores != null && integradores.Count > 0 && !integradores.Select(x => x.StrIdentificacionInt == integrador_peticion && x.StrIdentificacionEmp == facturador_electronico.StrIdentificacion).FirstOrDefault())
+					TblEmpresaIntegradores empInt = integradores.Where(x => x.StrIdentificacionInt == integrador_peticion && x.StrIdentificacionEmp == facturador_electronico.StrIdentificacion).FirstOrDefault();
+					if (integradores != null && integradores.Count > 0 && empInt == null)
 					{
 						if (Fecha.GetFecha() < fecha_control)
 						{
@@ -552,6 +553,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			//radicado del documento
 			Guid id_radicado = new Guid();
 
+			string peticion_un_doc = string.Empty;
+
 			if (id_radicado_doc == Guid.Empty)
 			{
 				id_radicado = Guid.NewGuid();
@@ -559,6 +562,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			else
 			{
 				id_radicado = id_radicado_doc;
+				peticion_un_doc = " - Petición Unica";
 			}
 
 			string prefijo = item.Prefijo;
@@ -857,6 +861,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (documento_bd != null)
 						{
 							documento_tmp.Crear(documento_bd);
+
+							try
+							{
+								mensaje = string.Format("Creación documento en BD {0}",peticion_un_doc);
+								_auditoria.Crear(id_radicado, id_peticion, facturador_electronico.StrIdentificacion, proceso_actual, TipoRegistro.Proceso, Procedencia.Plataforma, string.Empty, proceso_txt, mensaje, prefijo, numero);
+							}
+							catch (Exception) { }
 						}
 						else
 						{

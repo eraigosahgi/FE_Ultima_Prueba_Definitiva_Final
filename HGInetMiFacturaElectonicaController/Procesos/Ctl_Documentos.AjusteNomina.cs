@@ -137,7 +137,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				}
 				else if (!string.IsNullOrWhiteSpace(integrador_peticion))
 				{
-					if (integradores != null && integradores.Count > 0 && !integradores.Select(x => x.StrIdentificacionInt == integrador_peticion && x.StrIdentificacionEmp == facturador_electronico.StrIdentificacion).FirstOrDefault())
+					TblEmpresaIntegradores empInt = integradores.Where(x => x.StrIdentificacionInt == integrador_peticion && x.StrIdentificacionEmp == facturador_electronico.StrIdentificacion).FirstOrDefault();
+					if (integradores != null && integradores.Count > 0 && empInt == null)
 					{
 						if (Fecha.GetFecha() < fecha_control)
 						{
