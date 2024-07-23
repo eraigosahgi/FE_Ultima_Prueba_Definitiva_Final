@@ -306,7 +306,7 @@ namespace HGInetMiFacturaElectonicaController.ServiciosDian
 									{
 										foreach (Acuse item_acuse in objeto_acuse)
 										{
-											if (item_acuse.CodigoRespuesta.Equals("02"))
+											if (item_acuse.CodigoRespuesta.Equals("02") && item_acuse.CufeDocumento.Equals(documento.CUFE))
 											{
 												respuesta.Cufe = item_acuse.CufeDocumento;
 												respuesta_dian.FirstOrDefault().StatusCode = "00";
