@@ -300,6 +300,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio
 		/// </summary>
 		public string IdentificacionIntegrador { get; set; }
 
+		/// <summary>
+		/// Campo donde la plataforma llenera la informacion correspondiente a la firma digital solo para la generacion del PDF
+		/// </summary>
+		public string FirmaDoc { get; set; }
+
 		#endregion
 	}
 }

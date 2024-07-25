@@ -130,6 +130,43 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 
 						documento_obj.DocumentoDetalles = detalles_formato;
+
+						//Se valida si ya tiene asignada la firma digital si no para obteneral o asignarla
+						if (string.IsNullOrWhiteSpace(documento_obj.FirmaDoc))
+						{
+							try
+							{
+								var documento_firm = (dynamic)null;
+								documento_firm = documento_result.Documento;
+
+								if (!string.IsNullOrWhiteSpace(documento_firm.FirmaDoc))
+								{
+									documento_obj.FirmaDoc = documento_firm.FirmaDoc;
+								}
+								else
+								{
+									XmlDocument doc = new XmlDocument();
+									string ruta_doc_firmado = string.Format(@"{0}\{1}.xml", documento_result.RutaArchivosEnvio, documento_result.NombreXml);
+									doc.Load(ruta);
+									XmlNode root = doc.DocumentElement;
+									XmlNamespaceManager nms_ext = new XmlNamespaceManager(doc.NameTable);
+									nms_ext.AddNamespace("ext", "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2");
+									XmlNode NodeExtension = root.SelectSingleNode("descendant::ext:UBLExtensions[ext:UBLExtension]", nms_ext);
+									XmlNamespaceManager nms_dian = new XmlNamespaceManager(doc.NameTable);
+									nms_dian.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
+
+									//Se obtiene el campo donde esta la firma digital
+									XmlNode NodeQR = NodeExtension.ChildNodes[3].ChildNodes[1].SelectSingleNode("descendant::ds:SignatureValue", nms_dian);
+
+									documento_obj.FirmaDoc = NodeQR.FirstChild.Value;
+								}
+							}
+							catch (Exception excepcion)
+							{
+								//Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion, "Error Generando el proceso de lectura de la respuesta, obtencion del cufe y actualizacion de los XML");
+								LibreriaGlobalHGInet.RegistroLog.RegistroLog.EscribirLog(excepcion, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Archivos, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Error, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.actualizacion, string.Format("Error obteniendo la Firma digital del XML para el Documento:{0}, con Prefijo:{1}, del Facturador:{2}", documentoBd.IntNumero, documentoBd.StrPrefijo, documentoBd.StrEmpresaFacturador));
+							}
+						}	
 					}
 
 					//Se llena propiedad del medio de pago para poder mostrarla en la representacion grafica

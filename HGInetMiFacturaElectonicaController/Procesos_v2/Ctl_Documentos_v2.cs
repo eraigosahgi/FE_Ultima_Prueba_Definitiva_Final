@@ -357,64 +357,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							documento_obj.DocumentoFormato.Titulo = "factura de venta de talonario o de papel";//Enumeracion.GetDescription(tipo_doc);
 						}
 
-						//Guarda o genera el Formato
-						if (documento_obj.DocumentoFormato != null)
-						{
-							respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result, empresa);
-							if (respuesta.Error != null && documento_existente == true)
-							{
-								//Se actualiza el estado del documento en BD para que lo envien de nuevo
-								documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
-								Ctl_Documento num_doc = new Ctl_Documento();
-								documentoBd = num_doc.Actualizar(documentoBd);
-								respuesta.IdProceso = documentoBd.IntIdEstado;
-								respuesta.IdEstado = documentoBd.IdCategoriaEstado;
-							}
-							Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlPdf);
-						}
-
-
-						// almacena Anexos enviados
-						if ((tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste) && documento_obj.ArchivoAnexos != null)
-						{
-							if (empresa.IntManejaAnexos)
-							{
-								respuesta = GuardarAnexo(documento_obj.ArchivoAnexos, documentoBd, ref respuesta, ref documento_result);
-								if (respuesta.Error != null && documento_existente == true)
-								{
-									//Se actualiza el estado del documento en BD para que lo envien de nuevo
-									documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
-									Ctl_Documento num_doc = new Ctl_Documento();
-									documentoBd = num_doc.Actualizar(documentoBd);
-									respuesta.IdProceso = documentoBd.IntIdEstado;
-									respuesta.IdEstado = documentoBd.IdCategoriaEstado;
-								}
-								Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlAnexo);
-							}
-							else
-							{
-								respuesta.IdEstado = CategoriaEstado.NoRecibido.GetHashCode();
-								respuesta.DescripcionEstado = Enumeracion.GetDescription(CategoriaEstado.NoRecibido);
-								respuesta.IdProceso = ProcesoEstado.Validacion.GetHashCode();
-								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.Validacion);
-								respuesta.IdDocumento = null;
-								respuesta.UrlPdf = null;
-								respuesta.UrlXmlUbl = null;
-								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("El Facturador Electrónico {0} no se encuentra habilitado para el procesamiento de anexos", documentoBd.StrEmpresaFacturador), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
-								if (documento_existente == true)
-								{
-									//Se actualiza el estado del documento en BD para que lo envien de nuevo
-									documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
-									Ctl_Documento num_doc = new Ctl_Documento();
-									documentoBd = num_doc.Actualizar(documentoBd);
-									respuesta.IdProceso = documentoBd.IntIdEstado;
-									respuesta.IdEstado = documentoBd.IdCategoriaEstado;
-								}
-								Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "El Facturador Electrónico no se encuentra habilitado para el procesamiento de anexos");
-							}
-						}
-
-
+						
 						Ctl_Empresa empresa_config = new Ctl_Empresa();
 
 						TblEmpresas adquirienteBd = null;
@@ -593,6 +536,62 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						}
 						Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlXmlUbl);
 
+						//Guarda o genera el Formato
+						if (documento_obj.DocumentoFormato != null)
+						{
+							respuesta = GuardarFormato(documento_obj, documentoBd, ref respuesta, ref documento_result, empresa);
+							if (respuesta.Error != null && documento_existente == true)
+							{
+								//Se actualiza el estado del documento en BD para que lo envien de nuevo
+								documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+								Ctl_Documento num_doc = new Ctl_Documento();
+								documentoBd = num_doc.Actualizar(documentoBd);
+								respuesta.IdProceso = documentoBd.IntIdEstado;
+								respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+							}
+							Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlPdf);
+						}
+
+
+						// almacena Anexos enviados
+						if ((tipo_doc != TipoDocumento.Nomina && tipo_doc != TipoDocumento.NominaAjuste) && documento_obj.ArchivoAnexos != null)
+						{
+							if (empresa.IntManejaAnexos)
+							{
+								respuesta = GuardarAnexo(documento_obj.ArchivoAnexos, documentoBd, ref respuesta, ref documento_result);
+								if (respuesta.Error != null && documento_existente == true)
+								{
+									//Se actualiza el estado del documento en BD para que lo envien de nuevo
+									documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+									Ctl_Documento num_doc = new Ctl_Documento();
+									documentoBd = num_doc.Actualizar(documentoBd);
+									respuesta.IdProceso = documentoBd.IntIdEstado;
+									respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+								}
+								Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, respuesta.UrlAnexo);
+							}
+							else
+							{
+								respuesta.IdEstado = CategoriaEstado.NoRecibido.GetHashCode();
+								respuesta.DescripcionEstado = Enumeracion.GetDescription(CategoriaEstado.NoRecibido);
+								respuesta.IdProceso = ProcesoEstado.Validacion.GetHashCode();
+								respuesta.DescripcionProceso = Enumeracion.GetDescription(ProcesoEstado.Validacion);
+								respuesta.IdDocumento = null;
+								respuesta.UrlPdf = null;
+								respuesta.UrlXmlUbl = null;
+								respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("El Facturador Electrónico {0} no se encuentra habilitado para el procesamiento de anexos", documentoBd.StrEmpresaFacturador), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION);
+								if (documento_existente == true)
+								{
+									//Se actualiza el estado del documento en BD para que lo envien de nuevo
+									documentoBd.IntIdEstado = (short)ProcesoEstado.PrevalidacionErrorPlataforma.GetHashCode();
+									Ctl_Documento num_doc = new Ctl_Documento();
+									documentoBd = num_doc.Actualizar(documentoBd);
+									respuesta.IdProceso = documentoBd.IntIdEstado;
+									respuesta.IdEstado = documentoBd.IdCategoriaEstado;
+								}
+								Procesos.Ctl_Documentos.ValidarRespuesta(respuesta, "El Facturador Electrónico no se encuentra habilitado para el procesamiento de anexos");
+							}
+						}
 
 						// comprime el archivo xml firmado                        
 						respuesta = UblComprimir(documentoBd, ref respuesta, ref documento_result);

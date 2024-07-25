@@ -595,6 +595,36 @@ namespace HGInetFirmaDigital
 
 							parametros.Signer.Dispose();
 						}
+
+						//Guardo la Firma para poder ponerla en la representacion grafica siempre y cuando sea documentos Factura,nota credito o debito
+						try
+						{
+							if (archivo.DocumentoTipo.GetHashCode() < TipoDocumento.AcuseRecibo.GetHashCode())
+							{
+								XmlNode root = documentoXml.DocumentElement;
+
+								XmlNamespaceManager nms_ext = new XmlNamespaceManager(documentoXml.NameTable);
+								nms_ext.AddNamespace("ext", "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2");
+
+								XmlNode NodeExtension = root.SelectSingleNode("descendant::ext:UBLExtensions[ext:UBLExtension]", nms_ext);
+
+
+								XmlNamespaceManager nms_dian = new XmlNamespaceManager(documentoXml.NameTable);
+								nms_dian.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
+
+								//Se obtiene el campo donde esta la ruta de la DIAN para cambiar el CUFE por el obtenido
+								XmlNode NodeQR = NodeExtension.ChildNodes[3].ChildNodes[1].SelectSingleNode("descendant::ds:SignatureValue", nms_dian);
+								var documento_obj = (dynamic)null;
+								documento_obj = archivo.Documento;
+								documento_obj.FirmaDoc = NodeQR.FirstChild.Value;
+								archivo.Documento = documento_obj;
+							}
+						}
+						catch (Exception)
+						{
+						 
+						}
+
 						fs.Close();
 					}
 				}

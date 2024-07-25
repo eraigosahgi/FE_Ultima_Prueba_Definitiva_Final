@@ -844,11 +844,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						item_respuesta.IdProceso = ProcesoEstado.Validacion.GetHashCode();
 						item_respuesta.IdDocumento = id_radicado.ToString();
 						item_respuesta.FechaRecepcion = fecha_actual;
+						item_respuesta.IdPlan = item.IdPlan;
 
 						//convierte documento para BD
 						documento_bd = Ctl_Documento.Convertir(item_respuesta, documento_obj, resolucion, facturador_electronico, TipoDocumento.Factura);
 
 						documento_bd.StrProveedorReceptor = Constantes.NitResolucionsinPrefijo;
+						documento_bd.StrIdPlanTransaccion = item.IdPlan;
 					}
 					catch (Exception exc)
 					{
@@ -861,6 +863,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (documento_bd != null)
 						{
 							documento_tmp.Crear(documento_bd);
+							item_respuesta.DescuentaSaldo = true;
 
 							try
 							{
@@ -908,6 +911,12 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 					item_respuesta = Procesar_v2(id_peticion, id_radicado, item, TipoDocumento.Factura, resolucion,
 						facturador_electronico, documento_bd);
+
+					if (doc_existe == false && item_respuesta.DescuentaSaldo == false && documento_bd.StrIdPlanTransaccion.Equals(item.IdPlan))
+					{
+						item_respuesta.DescuentaSaldo = true;
+						item_respuesta.IdPlan = item.IdPlan;
+					}
 
 					if (facturador_electronico.StrIdentificacion.Equals(Constantes.NitResolucionconPrefijo))
 					{
