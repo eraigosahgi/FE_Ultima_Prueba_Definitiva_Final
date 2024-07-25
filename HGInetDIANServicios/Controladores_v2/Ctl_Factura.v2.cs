@@ -264,8 +264,6 @@ namespace HGInetDIANServicios
 								{
 									if (respuesta.ErrorMessage.FirstOrDefault().Contains("Regla: 90, Rechazo: Documento"))
 									{
-										respuesta.StatusCode = "94";
-
 										webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
 										webServiceHab.Endpoint.Address =
 											new System.ServiceModel.EndpointAddress(ruta_servicio_web);
@@ -276,15 +274,20 @@ namespace HGInetDIANServicios
 										acuse_recibo.ResponseDateTime = Fecha.GetFecha();
 										DianWSValidacionPrevia.DianResponse respuesta_consulta = webServiceHab.GetStatus(key);
 
-										if (respuesta_consulta.XmlBase64Bytes == null && respuesta.XmlBase64Bytes != null)
-											respuesta_consulta.XmlBase64Bytes = respuesta.XmlBase64Bytes;
+										if (respuesta_consulta.IsValid == true)
+										{
+											if (respuesta_consulta.XmlBase64Bytes == null && respuesta.XmlBase64Bytes != null)
+												respuesta_consulta.XmlBase64Bytes = respuesta.XmlBase64Bytes;
 
-										respuesta = respuesta_consulta;
+											//respuesta.StatusCode = "94";
+											respuesta = respuesta_consulta;
 
-										string nom_archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
+											string nom_archivo = Path.GetFileNameWithoutExtension(ruta_zip) + ".xml";
 
-										// almacena el mensaje de respuesta de la consulta del servicio web
-										archivo = Xml.GuardarObjeto(respuesta, carpeta, nom_archivo);
+											// almacena el mensaje de respuesta de la consulta del servicio web
+											archivo = Xml.GuardarObjeto(respuesta, carpeta, nom_archivo);
+
+										}
 									}
 								}
 							}
