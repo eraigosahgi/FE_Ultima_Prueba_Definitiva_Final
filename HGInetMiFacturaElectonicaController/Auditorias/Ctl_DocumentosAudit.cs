@@ -196,6 +196,22 @@ namespace HGInetMiFacturaElectonicaController.Auditorias
 			}
 		}
 
+		public List<TblAuditDocumentos> Obtener(string id_seguridad_doc)
+		{
+			try
+			{
+				Srv_DocumentosAudit Srv = new Srv_DocumentosAudit();
+				List<TblAuditDocumentos> registros_audit = new List<TblAuditDocumentos>();
+				registros_audit = Srv.ObtenerAudit(id_seguridad_doc);
+
+				return registros_audit;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 		public List<TblAuditDocumentos> ObtenerdeMongo(string id_seguridad_doc, string identificacion_obligado)
 		{
 			try

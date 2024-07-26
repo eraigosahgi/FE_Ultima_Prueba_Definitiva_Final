@@ -38,7 +38,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_DocumentosAudit clase_audit_doc = new Ctl_DocumentosAudit();
 
 				//Realiza la consulta de los datos en la base de datos.
-				List<TblAuditDocumentos> datos_audit = clase_audit_doc.Obtener(id_seguridad_doc, "*").OrderByDescending(x => x.DatFecha).ToList();
+				List<TblAuditDocumentos> datos_audit = clase_audit_doc.Obtener(id_seguridad_doc).OrderByDescending(x => x.DatFecha).ToList();
 
 				if (datos_audit == null)
 				{

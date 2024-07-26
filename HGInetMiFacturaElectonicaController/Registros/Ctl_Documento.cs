@@ -1316,7 +1316,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							  where (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
 							   && (datos.IntIdEstado == 92 || datos.IntIdEstado == 93)
 							   && datos.StrEmpresaFacturador != "8888"
-							  orderby datos.DatFechaIngreso descending
+							  //orderby datos.DatFechaIngreso descending
 							  select new ObjDocumentos
 							  {
 								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
@@ -1348,7 +1348,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							  where (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
 							   && (datos.IntIdEstado == 92)
 							   && datos.StrEmpresaFacturador != "8888"
-							  orderby datos.DatFechaIngreso descending
+							  //orderby datos.DatFechaIngreso descending
 							  select new ObjDocumentos
 							  {
 								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
@@ -1380,7 +1380,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 							  where (datos.DatFechaIngreso >= fecha_inicio && datos.DatFechaIngreso <= fecha_fin)
 							   && (datos.IntIdEstado == 93)
 							   && datos.StrEmpresaFacturador != "8888"
-							  orderby datos.DatFechaIngreso descending
+							  //orderby datos.DatFechaIngreso descending
 							  select new ObjDocumentos
 							  {
 								  IdFacturador = datos.TblEmpresasFacturador.StrIdentificacion,
@@ -1421,13 +1421,13 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 
 
-			return documentos;
+			return documentos.OrderByDescending(x=>x.DatFechaIngreso).ToList();
 		}
 
 		public List<string> ObtenerMensajeAuditoria(string id_seguridad_doc)
 		{
 			List<string> respuesta = new List<string>();
-
+			int i = 1;
 			try
 			{
 				HGInetMiFacturaElectronicaAudit.Controladores.Srv_DocumentosAudit Srv = new HGInetMiFacturaElectronicaAudit.Controladores.Srv_DocumentosAudit();
@@ -1436,7 +1436,16 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 				foreach (var item in registros_audit)
 				{
-					respuesta.Add(item.StrResultadoProceso);
+					try
+					{
+						item.StrResultadoProceso = item.StrResultadoProceso.Replace("Error en la validación del documento. Detalle:", "Error:");
+						respuesta.Add(string.Format("{0}: {1}   -   {2}", i, item.DatFecha.ToString("yyyy-MM-dd hh:mm:ss"), item.StrResultadoProceso));
+						i++;
+					}
+					catch (Exception)
+					{
+						
+					}
 				}
 			}
 			catch (Exception)

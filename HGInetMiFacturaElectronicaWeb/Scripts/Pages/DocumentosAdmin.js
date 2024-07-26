@@ -254,8 +254,6 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 				loadUrl: '/Api/Documentos/Consultar',
 				onBeforeSend: function (method, ajaxOptions) {
 
-
-
 					ajaxOptions.data.Select = "['IntAdquirienteRecibo','StrCufe','StrIdSeguridad','DatFechaIngreso','StrEmpresaFacturador','StrNumResolucion','StrPrefijo','IntNumero','IdCategoriaEstado','IntIdEstado','DatFechaVencDocumento','IntVlrTotal','IntDocTipo','StrEmpresaAdquiriente','StrUrlArchivoPdf', 'StrUrlArchivoUbl', 'IntAdquirienteRecibo', 'StrUrlAcuseUbl', 'StrUrlAnexo']"
 
 					ajaxOptions.data.sort = "[{ 'selector': 'DatFechaIngreso', 'desc': true }]";
@@ -265,7 +263,6 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 
 					var fecha_hasta = new Date($("#FechaFinal").dxDateBox("instance").option().value);
 					fecha_hasta = fecha_hasta.getFullYear() + '-' + (fecha_hasta.getMonth() + 1) + '-' + (fecha_hasta.getDate() + 1) + 'T00:00:00.000'
-
 
 					if (ajaxOptions.data.filter == undefined) {
 						ajaxOptions.data.filter = '[["DatFechaIngreso", ">=", "' + fecha_desde + '"], "and", ["DatFechaIngreso", "<", "' + fecha_hasta + '"]]';
@@ -284,9 +281,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 						if (tipodoc.ID != "0") {
 							ajaxOptions.data.filter = '[' + ajaxOptions.data.filter + ',"and", ["IntDocTipo","=",' + tipodoc.ID + ']]'
 						}
-
 					}
-
 
 					let tercero = $('#facturador').dxLookup("instance").option().value;
 
@@ -298,8 +293,7 @@ App.controller('DocObligadoController', function DocObligadoController($scope, $
 						ajaxOptions.data.filter = '[["IntNumero", "=", ' + numero_documento + ']]';
 					}
 
-					ajaxOptions.headers = {
-						//	'Authorization': 'Bearer ' + sessionStorage.getItem('Token')
+					ajaxOptions.headers = {						
 					};
 				}
 			}),

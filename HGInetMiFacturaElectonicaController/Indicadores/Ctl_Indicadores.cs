@@ -35,13 +35,15 @@ namespace HGInetMiFacturaElectonicaController.Indicadores
 				List<PorcentajesResumen> documentos_estado = (from documento in context.TblDocumentos
 															  where ((tipo_empresa == 2) ? documento.StrEmpresaFacturador.Equals(identificacion_empresa) : (tipo_empresa == 3) ? documento.StrEmpresaAdquiriente.Equals(identificacion_empresa) : documento.StrEmpresaFacturador != null)
 															  && (documento.DatFechaIngreso >= fecha_inicio.Date && documento.DatFechaIngreso <= fecha_fin.Date)
-															  orderby documento.IntIdEstado ascending
+															  //orderby documento.IntIdEstado ascending
 															  group documento by new { documento.IntIdEstado } into documento_estado
 															  select new PorcentajesResumen
 															  {
 																  Cantidad = documento_estado.Count(),
 																  Estado = documento_estado.FirstOrDefault().IntIdEstado,
 															  }).ToList().ToList();
+
+				documentos_estado = documentos_estado.OrderBy(x => x.Estado).ToList();
 
 				decimal cantidad_total = documentos_estado.Sum(x => x.Cantidad);
 

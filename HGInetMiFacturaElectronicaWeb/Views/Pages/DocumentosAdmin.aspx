@@ -43,12 +43,7 @@
 
 								<div class="dx-fieldset">
 
-									<%--<div class="col-md-3" style="margin-top: 1%">
-										<i class="icon-file-text"></i>
-										<label>Filtro Fecha:</label>
-										<div data-dx-select-box="filtros.TipoFiltroFecha"></div>
-									</div>--%>
-
+									
 									<div class="col-md-4" style="margin-top: 1%">
 										<i class=" icon-calendar"></i>
 										<label>Fecha Inicial:</label>
@@ -86,11 +81,7 @@
 										<div id="facturador"></div>
 									</div>
 
-									<%--<div class="col-md-3" style="margin-top: 1%">
-										<i class="icon-user-tie"></i>
-										<label>Código Adquiriente:</label>
-										<div data-dx-autocomplete="filtros.Adquiriente"></div>
-									</div>--%>
+									
 									<div class="col-md-3" style="margin-top: 1%; display: none">
 										<div data-hgi-filtro="Adquiriente"></div>
 									</div>
