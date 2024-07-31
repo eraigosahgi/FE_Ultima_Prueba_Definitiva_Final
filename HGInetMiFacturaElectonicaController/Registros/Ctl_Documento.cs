@@ -4008,6 +4008,14 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoOperacion>(doc.IntTipoOperacion));
 			}
+			if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode() && doc.IntTipoOperacion == TipoOperacion.DocumentoPOS.GetHashCode())
+			{
+				doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoOperacion>(doc.IntTipoOperacion));
+			}
+			if (doc.IntDocTipo == TipoDocumento.Factura.GetHashCode() && doc.IntTipoOperacion == TipoOperacion.DocumentoPOSPas.GetHashCode())
+			{
+				doc_acuse.TipoDocumento = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<TipoOperacion>(doc.IntTipoOperacion));
+			}
 
 			doc_acuse.DatosAdquiriente = Ctl_Empresa.Convertir(adquiriente);
 			if (doc_acuse.DatosAdquiriente.TipoIdentificacion != 31)

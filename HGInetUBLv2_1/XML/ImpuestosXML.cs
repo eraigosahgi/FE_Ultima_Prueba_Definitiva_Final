@@ -257,9 +257,18 @@ namespace HGInetUBLv2_1
 							{
 								ListaTarifaImpuestoINC lista_inc = new ListaTarifaImpuestoINC();
 								ListaItem inc = lista_inc.Items.Where(d => d.Codigo.Equals(item.ImpoConsumo2Porcentaje.ToString().Replace(",", "."))).FirstOrDefault();
-								imp_doc.Nombre = inc.Nombre;
-								imp_doc.TipoImpuesto = "35";//item.Consumo;
-															//Ultraprocesados
+								if (inc != null)
+								{
+									imp_doc.Nombre = inc.Nombre;
+									imp_doc.TipoImpuesto = "35";
+								}
+								else
+								{
+									imp_doc.Nombre = "No aplica";
+									imp_doc.TipoImpuesto = "ZZ";
+								}
+								//item.Consumo;
+								//Ultraprocesados
 								//if (item.ImpoConsumoPorcentaje == 10)
 								//{
 								//	//imp_doc.Nombre = "ICUI";

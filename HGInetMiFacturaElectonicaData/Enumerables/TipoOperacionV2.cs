@@ -43,6 +43,14 @@ namespace HGInetMiFacturaElectonicaData
 		FacturaContingenciaDian = 3,
 
 		[Description("20")]
+		[AmbientValue("documento soporte equivalente POS")]
+		DocumentoPOS = 5,
+
+		[Description("35")]
+		[AmbientValue("documento soporte equivalente POS Pasajeros")]
+		DocumentoPOSPas = 6,
+
+		[Description("20")]
 		[AmbientValue("Nota Crédito que referencia una factura electrónica.")]
 		NCV2 = 20,
 

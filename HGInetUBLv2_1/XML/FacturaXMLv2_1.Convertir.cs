@@ -83,14 +83,36 @@ namespace HGInetUBLv2_1
 							i = factura_ubl.UBLExtensions.Count();
 						}
 
-
-					}
-
-					
+					}	
 
 				}
 
-				
+				factura_obj.TipoOperacion = 0;
+
+				if (factura_ubl.InvoiceTypeCode.Value == "03")
+				{
+					factura_obj.TipoOperacion = 1;
+				}
+
+				if (factura_ubl.InvoiceTypeCode.Value == "02")
+				{
+					factura_obj.TipoOperacion = 2;
+				}
+
+				if (factura_ubl.InvoiceTypeCode.Value == "05")
+				{
+					factura_obj.TipoOperacion = 3;
+				}
+
+				if (factura_ubl.InvoiceTypeCode.Value == "20")
+				{
+					factura_obj.TipoOperacion = 5;
+				}
+
+				if (factura_ubl.InvoiceTypeCode.Value == "35")
+				{
+					factura_obj.TipoOperacion = 6;
+				}
 
 				//Si tiene prefijo lo substrae para dejar el numero del documento como entero
 				if (!string.IsNullOrEmpty(factura_obj.Prefijo))

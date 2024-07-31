@@ -23,6 +23,9 @@ namespace HGInetUBLv2_1.DianListas
 			new ListaItem("02", "Factura de Exportación ", "Factura de Exportación "),
 			new ListaItem("03", "Factura por Contingencia Facturador", "Factura por Contingencia Facturador"),
 			new ListaItem("04", "Factura por Contingencia DIAN", "Factura por Contingencia DIAN"),
+			new ListaItem("05", "documento soporte en adquisiciones efectuadas a sujetos no obligados(equivalente)", "documento soporte en adquisiciones efectuadas a sujetos no obligados(equivalente)"),
+			new ListaItem("20", "documento soporte equivalente POS", "documento soporte equivalente POS"),
+			new ListaItem("35", "documento soporte equivalente POS Pasajeros", "documento soporte equivalente POS Pasajeros"),
 			new ListaItem("91", "Nota Crédito", "Nota Crédito"),
 			new ListaItem("92", "Nota Débito", "Nota Débito"),
 

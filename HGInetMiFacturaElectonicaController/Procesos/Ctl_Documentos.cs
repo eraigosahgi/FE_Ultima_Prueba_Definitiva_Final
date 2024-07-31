@@ -1488,8 +1488,8 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 							{
 								ListaTarifaImpuestoINC list_consumo = new ListaTarifaImpuestoINC();
 								ListaItem consumo = list_consumo.Items.Where(d => d.Codigo.Equals(Docdet.ImpoConsumo2Porcentaje.ToString().Replace(",", "."))).FirstOrDefault();
-								if (consumo == null)
-									throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ImpoConsumo2Porcentaje", Docdet.ImpoConsumo2Porcentaje));
+								//if (consumo == null)
+								//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del detalle no corresponde al estandar de la DIAN", "ImpoConsumo2Porcentaje", Docdet.ImpoConsumo2Porcentaje));
 							}
 							else
 							{

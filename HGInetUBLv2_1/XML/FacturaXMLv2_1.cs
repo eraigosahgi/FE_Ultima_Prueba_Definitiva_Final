@@ -2197,6 +2197,16 @@ namespace HGInetUBLv2_1
 							if (DocDet.ImpoConsumo2Porcentaje == 10 || DocDet.ImpoConsumo2Porcentaje == 15)
 								codigo_impuesto = "35";
 
+							//Si no envian un porcenatje que se tenga en la lista se envia esta y es responsabilidad del Facturador que envie el porcentaje correcto
+							//13.2.8.10 Tablas de tarifas por Impuesto Anexo V1.9
+							ListaTarifaImpuestoINC lista_inc = new ListaTarifaImpuestoINC();
+							ListaItem inc = lista_inc.Items.Where(d => d.Codigo.Equals(DocDet.ImpoConsumo2Porcentaje.ToString().Replace(",", "."))).FirstOrDefault();
+							if (inc == null)
+							{
+								codigo_impuesto = "ZZ";
+							}
+
+
 							//
 							if (DocDet.ValorImpuestoConsumo2 > 0 && DocDet.ImpoConsumo2Porcentaje == 0 && DocDet.Aiu == 5)
 							{
