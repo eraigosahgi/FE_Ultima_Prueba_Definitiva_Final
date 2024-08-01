@@ -325,11 +325,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				if (excepcion.Message.Contains("El proceso no puede obtener acceso al archivo"))
 				{
 					mensaje_error = "No fue posible generar la representación grafica del documento, por favor no modifique la información del documento y envíelo de nuevo.";
+					excepcion = new ApplicationException();
 				}
 				//Caso 775721
-				if (excepcion.Message.Contains("No se puede convertir un objeto de tipo DevExpress.XtraReports.UI.XRPictureBox"))
+				if (excepcion.Message.Contains("No se puede convertir un objeto de tipo 'DevExpress.XtraReports.UI.XRPictureBox'"))
 				{
 					mensaje_error = "No fue posible generar la representación grafica del documento porque el software emisor no esta enviando un logo correcto, por favor valide con su proveedor de software para que haga el respectivo ajuste y envíe de nuevo el documento.";
+					excepcion = new ApplicationException();
 				}
 
 				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento PDF. Detalle: {0} ", mensaje_error), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
