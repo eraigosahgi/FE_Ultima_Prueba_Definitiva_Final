@@ -227,7 +227,6 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 					}
 				}
 
-
 				object resultado = respuesta.Select(res => new
 				{
 					res.StrIdSeguridad,
@@ -249,8 +248,6 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 					Solucion = ObtenerDescripcionPrioridadRechazo(MP, res.MensajeError)
 				});
 
-
-
 				return Request.CreateResponse(HttpStatusCode.OK, resultado);
 			}
 			catch (Exception exec)
@@ -268,7 +265,7 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 				var d = rechazo.FirstOrDefault().ToString().Split(',');
 				var datos = d[0].Replace("Regla:", "").Trim();
 
-				var result = MP.Where(x => x.Regla.Equals(datos)).FirstOrDefault().DescripcionHGI;
+				var result = MP.Where(x => x.Regla.Equals(datos)).FirstOrDefault().Solucion;
 				return result;
 
 			}
