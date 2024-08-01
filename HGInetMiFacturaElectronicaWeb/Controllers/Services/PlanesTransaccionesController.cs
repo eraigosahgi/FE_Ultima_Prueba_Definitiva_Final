@@ -584,7 +584,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		[HttpPost]
 		[Route("api/ComprarPlan")]
-		public IHttpActionResult ComprarPlan(int cantidad, decimal valor_unit, decimal valor_total, int tipo_doc, int codigo_plan, int codigo_sucursal = 0)
+		public IHttpActionResult ComprarPlan(int cantidad, decimal valor_unit, decimal valor_total, int tipo_doc, int codigo_plan, int codigo_sucursal)
 		{
 			try
 			{

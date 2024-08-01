@@ -68,13 +68,6 @@ GestionCompraPlanesApp.controller('GestionCompraPlanesController', function Gest
 
 						} catch (e) { }
 					},
-				}).dxValidator({
-					//validationGroup: ValidarGestionDocumento,
-					validationRules: [{
-						type: "required",
-						message: "Debe seleccionar la sucursal"
-					}]
-
 				});
 
 			} catch (err) {
