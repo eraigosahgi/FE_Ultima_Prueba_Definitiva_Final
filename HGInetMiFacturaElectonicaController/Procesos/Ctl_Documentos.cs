@@ -892,8 +892,13 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 					//Validacion Del valor bruto con respecto al detalle
 					List<DocumentoDetalle> detalle = new List<DocumentoDetalle>();
 					detalle = documento.DocumentoDetalles;
-					if (detalle.Sum(v => (v.ValorSubtotal)) != documento.ValorSubtotal)
+
+					//775643 - Se agrega tolerancia de 2 pesos como lo indica el anexo tecnico v1.9 
+					if (!Numero.Tolerancia(documento.ValorSubtotal, detalle.Sum(v => (v.ValorSubtotal)), 2))
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria del detalle con valor {2}", "Subtotal", documento.ValorSubtotal, detalle.Sum(v => (v.ValorSubtotal))));
+
+					//if (detalle.Sum(v => (v.ValorSubtotal)) != documento.ValorSubtotal)
+					//	throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria del detalle con valor {2}", "Subtotal", documento.ValorSubtotal, detalle.Sum(v => (v.ValorSubtotal))));
 
 					if (!Numero.Tolerancia(documento.ValorIva, detalle.Sum(v => (v.IvaValor)), 10))
 						throw new ApplicationException(string.Format("El campo {0} con valor {1} del encabezado no está bien formado, según sumatoria del detalle con valor {2}", "IVA", documento.ValorIva, detalle.Sum(v => (v.IvaValor))));
