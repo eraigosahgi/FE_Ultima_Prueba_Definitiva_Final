@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
 using System.Text;
 
@@ -33,7 +36,10 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			//Url Api
+			UrlWs = string.Format("{0}Api/DocumentosApi/ConsultaPorNumeros", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -43,56 +49,118 @@ namespace HGInetFeAPI
 			if (string.IsNullOrEmpty(Identificacion))
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
+			// valida el parámetro Identificacion
+			if (string.IsNullOrEmpty(NumerosDocumentos))
+				throw new ApplicationException("Parámetro CodigosDocumentos de tipo string inválido.");
+
 			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
 
-			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
+			// Construir la URL de la API con los parámetros
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&Numeros={NumerosDocumentos}&TipoDocumento={DocumentoTipo}";
+
+			// Crear una solicitud HTTP utilizando la URL de la API
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+			request.Method = "GET";
+
+			// Enviar la solicitud y obtener la respuesta
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+				{
+					// Verificar el código de estado de la respuesta
+					if (response.StatusCode == HttpStatusCode.OK)
+					{
+						// Leer la respuesta
+						using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+						{
+							string responseData = reader.ReadToEnd();
 
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
-
-				// datos para la petición
-				ServicioDocumento.ConsultaPorNumerosRequest peticion = new ServicioDocumento.ConsultaPorNumerosRequest()
-				{	DataKey = dataKey,
-					Identificacion = Identificacion,
-					Numeros = NumerosDocumentos,
-					TipoDocumento = DocumentoTipo
-				};
-
-				// ejecución del servicio web
-				ServicioDocumento.ConsultaPorNumerosResponse respuesta = cliente_ws.ConsultaPorNumeros(peticion);
-
-				// resultado del servicio web
-				List<ServicioDocumento.DocumentoRespuesta> result = respuesta.ConsultaPorNumerosResult;
-
-				if (respuesta != null)
-					return result;
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							datos = JsonConvert.DeserializeObject<List<ServicioDocumento.DocumentoRespuesta>>(responseData);
+							return datos;
+						}
+					}
+					else
+					{
+						//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+						throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+					}
+				}
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
+
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			//ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+				
+
+			//	// datos para la petición
+			//	ServicioDocumento.ConsultaPorNumerosRequest peticion = new ServicioDocumento.ConsultaPorNumerosRequest()
+			//	{	DataKey = dataKey,
+			//		Identificacion = Identificacion,
+			//		Numeros = NumerosDocumentos,
+			//		TipoDocumento = DocumentoTipo
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioDocumento.ConsultaPorNumerosResponse respuesta = cliente_ws.ConsultaPorNumeros(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioDocumento.DocumentoRespuesta> result = respuesta.ConsultaPorNumerosResult;
+
+			//	if (respuesta != null)
+			//		return result;
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 		}
 
 		/// <summary>
@@ -115,7 +183,9 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			UrlWs = string.Format("{0}Api/DocumentosApi/ConsultaPorCodigoRegistro", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -125,58 +195,121 @@ namespace HGInetFeAPI
 			if (string.IsNullOrEmpty(Identificacion))
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
-			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
-			
-			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
+			// valida el parámetro Identificacion
+			if (string.IsNullOrEmpty(CodigosDocumentos))
+				throw new ApplicationException("Parámetro CodigosDocumentos de tipo string inválido.");
 
+			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
+
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			// Construir la URL de la API con los parámetros
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&CodigosRegistros={CodigosDocumentos}&TipoDocumento={DocumentoTipo}";
+
+			// Crear una solicitud HTTP utilizando la URL de la API
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+			request.Method = "GET";
+
+			// Enviar la solicitud y obtener la respuesta
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
-
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
-
-				// datos para la petición
-				ServicioDocumento.ConsultaPorCodigoRegistroRequest peticion = new ServicioDocumento.ConsultaPorCodigoRegistroRequest()
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 				{
-					DataKey = dataKey,
-					Identificacion = Identificacion,
-					CodigosRegistros = CodigosDocumentos,
-					TipoDocumento = DocumentoTipo
-				};
+					// Verificar el código de estado de la respuesta
+					if (response.StatusCode == HttpStatusCode.OK)
+					{
+						// Leer la respuesta
+						using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+						{
+							string responseData = reader.ReadToEnd();
 
-				// ejecución del servicio web
-				ServicioDocumento.ConsultaPorCodigoRegistroResponse respuesta = cliente_ws.ConsultaPorCodigoRegistro(peticion);
-
-				// resultado del servicio web
-				List<ServicioDocumento.DocumentoRespuesta> result = respuesta.ConsultaPorCodigoRegistroResult;
-
-				if (respuesta != null)
-					return result;
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							datos = JsonConvert.DeserializeObject<List<ServicioDocumento.DocumentoRespuesta>>(responseData);
+							return datos;
+						}
+					}
+					else
+					{
+						//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+						throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+					}
+				}
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			//ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			//	// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			//	string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			//	// datos para la petición
+			//	ServicioDocumento.ConsultaPorCodigoRegistroRequest peticion = new ServicioDocumento.ConsultaPorCodigoRegistroRequest()
+			//	{
+			//		DataKey = dataKey,
+			//		Identificacion = Identificacion,
+			//		CodigosRegistros = CodigosDocumentos,
+			//		TipoDocumento = DocumentoTipo
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioDocumento.ConsultaPorCodigoRegistroResponse respuesta = cliente_ws.ConsultaPorCodigoRegistro(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioDocumento.DocumentoRespuesta> result = respuesta.ConsultaPorCodigoRegistroResult;
+
+			//	if (respuesta != null)
+			//		return result;
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 		}
 
 		/// <summary>
@@ -200,7 +333,9 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			UrlWs = string.Format("{0}Api/DocumentosApi/ConsultaPorFechaElaboracion", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -210,59 +345,127 @@ namespace HGInetFeAPI
 			if (string.IsNullOrEmpty(Identificacion))
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
-			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
-			
-			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
+			if (FechaInicio == null)
+				throw new ApplicationException("Fecha inicial inválida.");
 
+			if (FechaFin == null)
+				throw new ApplicationException("Fecha final inválida.");
+
+			if (FechaFin < FechaInicio)
+				throw new ApplicationException("Fecha final debe ser mayor o igual que la fecha inicial.");
+
+			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
+
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			// Construir la URL de la API con los parámetros
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&FechaInicio={FechaInicio}&FechaFinal={FechaFin}&TipoDocumento={DocumentoTipo}";
+
+			// Crear una solicitud HTTP utilizando la URL de la API
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+			request.Method = "GET";
+
+			// Enviar la solicitud y obtener la respuesta
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
-
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
-
-				// datos para la petición
-				ServicioDocumento.ConsultaPorFechaElaboracionRequest peticion = new ServicioDocumento.ConsultaPorFechaElaboracionRequest()
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 				{
-					DataKey = dataKey,
-					Identificacion = Identificacion,
-					FechaInicial = FechaInicio,
-					FechaFinal = FechaFin,
-					TipoDocumento = DocumentoTipo
-				};
+					// Verificar el código de estado de la respuesta
+					if (response.StatusCode == HttpStatusCode.OK)
+					{
+						// Leer la respuesta
+						using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+						{
+							string responseData = reader.ReadToEnd();
 
-				// ejecución del servicio web
-				ServicioDocumento.ConsultaPorFechaElaboracionResponse respuesta = cliente_ws.ConsultaPorFechaElaboracion(peticion);
-
-				// resultado del servicio web
-				List<ServicioDocumento.DocumentoRespuesta> result = respuesta.ConsultaPorFechaElaboracionResult;
-
-				if (respuesta != null)
-					return result;
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							datos = JsonConvert.DeserializeObject<List<ServicioDocumento.DocumentoRespuesta>>(responseData);
+							return datos;
+						}
+					}
+					else
+					{
+						//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+						throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+					}
+				}
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			//ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			//	// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			//	string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			//	// datos para la petición
+			//	ServicioDocumento.ConsultaPorFechaElaboracionRequest peticion = new ServicioDocumento.ConsultaPorFechaElaboracionRequest()
+			//	{
+			//		DataKey = dataKey,
+			//		Identificacion = Identificacion,
+			//		FechaInicial = FechaInicio,
+			//		FechaFinal = FechaFin,
+			//		TipoDocumento = DocumentoTipo
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioDocumento.ConsultaPorFechaElaboracionResponse respuesta = cliente_ws.ConsultaPorFechaElaboracion(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioDocumento.DocumentoRespuesta> result = respuesta.ConsultaPorFechaElaboracionResult;
+
+			//	if (respuesta != null)
+			//		return result;
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 		}
 
 		/// <summary>
@@ -369,7 +572,9 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			UrlWs = string.Format("{0}/Api/Notadebito/ObtenerPorFechasAdquiriente", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -379,60 +584,128 @@ namespace HGInetFeAPI
 			if (string.IsNullOrEmpty(Identificacion))
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
-			List<ServicioDocumento.DocumentoRespuesta> datos = new List<ServicioDocumento.DocumentoRespuesta>();
+			// valida el parámetro Identificacion
+			if (documentos_cufe == null)
+				throw new ApplicationException("Parámetro documentos_cufe no puede estar vacío.");
 
-			ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			foreach (ServicioDocumento.DocumentoCufe item in documentos_cufe)
+			{
+				item.DataKey = dataKey;
+			}
+
+			string vcData = JsonConvert.SerializeObject(documentos_cufe);
+			byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
+
+			List<ServicioDocumento.DocumentoCufe> respuesta = new List<ServicioDocumento.DocumentoCufe>();
 
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+				HttpWebRequest vtRequest = (HttpWebRequest)WebRequest.Create(UrlWs);
 
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+				vtRequest.Method = "POST";
+				vtRequest.ContentType = "application/json";
+				vtRequest.Accept = "application/json";
+				vtRequest.ContentLength = vtDataStream.Length;
 
-				foreach (ServicioDocumento.DocumentoCufe item in documentos_cufe)
-				{
-					item.DataKey = dataKey;
-				}
+				//Se agrega instruccion para habilitar la seguridad en el envio
+				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
-				// datos para la petición
-				ServicioDocumento.ObtenerCufeRequest peticion = new ServicioDocumento.ObtenerCufeRequest()
-				{
-					documentos_cufe = documentos_cufe
-				};
+				Stream newStream = vtRequest.GetRequestStream();
+
+				// Enviamos los datos
+				newStream.Write(vtDataStream, 0, vtDataStream.Length);
+				newStream.Close();
 
 				// ejecución del servicio web
-				ServicioDocumento.ObtenerCufeResponse respuesta = cliente_ws.ObtenerCufe(peticion);
+				HttpWebResponse vtHttpResponse = (HttpWebResponse)vtRequest.GetResponse();
 
-				// resultado del servicio web
-				List<ServicioDocumento.DocumentoCufe> result = respuesta.ObtenerCufeResult;
+				if (vtHttpResponse.StatusCode == HttpStatusCode.OK)
+				{
+					using (StreamReader vtStreamReader = new StreamReader(vtHttpResponse.GetResponseStream()))
+					{
+						// Leer el contenido de la respuesta como una cadena JSON
+						string jsonResponse = vtStreamReader.ReadToEnd();
 
-				if (respuesta != null)
-					return result.ToList();
+						// Deserializar la respuesta JSON en un objeto MiObjeto
+						respuesta = JsonConvert.DeserializeObject<List<ServicioDocumento.DocumentoCufe>>(jsonResponse);
+					}
+
+				}
+				vtHttpResponse.Close();
+
+				return respuesta;
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			//ServicioDocumento.ServicioDocumentosClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioDocumento.ServicioDocumentosClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			//	// datos para la petición
+			//	ServicioDocumento.ObtenerCufeRequest peticion = new ServicioDocumento.ObtenerCufeRequest()
+			//	{
+			//		documentos_cufe = documentos_cufe
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioDocumento.ObtenerCufeResponse respuesta = cliente_ws.ObtenerCufe(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioDocumento.DocumentoCufe> result = respuesta.ObtenerCufeResult;
+
+			//	if (respuesta != null)
+			//		return result.ToList();
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 		}
 
 

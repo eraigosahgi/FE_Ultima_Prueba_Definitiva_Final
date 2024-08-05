@@ -1,7 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
+using System.Text;
 
 namespace HGInetFeAPI
 {
@@ -24,7 +28,6 @@ namespace HGInetFeAPI
 		/// <returns>respuesta del proceso de los documentos</returns>
 		public static List<ServicioFactura.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioFactura.Factura> documentos_envio, bool Obtener_ruta= true)
 		{
-
 			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
 			if (!UrlWs.Contains("hgi") && Obtener_ruta)
 			{
@@ -32,7 +35,10 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			//Url Api
+			UrlWs = string.Format("{0}Api/Factura/Recepcion", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -42,77 +48,145 @@ namespace HGInetFeAPI
 			if (string.IsNullOrEmpty(Identificacion))
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
-			List<ServicioFactura.Factura> datos = new List<ServicioFactura.Factura>();
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
-			ServicioFactura.ServicioFacturaClient cliente_ws = null;
+			foreach (ServicioFactura.Factura item in documentos_envio)
+			{
+				if (item == null)
+					throw new ApplicationException("No se encontró informacion en el ServicioFactura.Factura");
+				//throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioFactura.Factura"));
+
+				if (item.DocumentoDetalles == null || !item.DocumentoDetalles.Any())
+					throw new Exception("El detalle del documento es inválido.");
+
+				if (item.DocumentoFormato != null)
+				{
+					if (!string.IsNullOrEmpty(item.DocumentoFormato.ArchivoPdf))
+					{
+						byte[] pdf = Convert.FromBase64String(item.DocumentoFormato.ArchivoPdf);
+						//valida el peso del formato
+						if (pdf.Length < 5120)
+							throw new Exception("El Formato de impresion es inválido.");
+					}
+				}
+				item.DataKey = dataKey;
+			}
+
+			string vcData = JsonConvert.SerializeObject(documentos_envio);
+			byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
+
+			List<ServicioFactura.DocumentoRespuesta> respuesta = new List<ServicioFactura.DocumentoRespuesta>();
 
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs, Obtener_ruta), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+				HttpWebRequest vtRequest = (HttpWebRequest)WebRequest.Create(UrlWs);
 
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+				vtRequest.Method = "POST";
+				vtRequest.ContentType = "application/json";
+				vtRequest.Accept = "application/json";
+				vtRequest.ContentLength = vtDataStream.Length;
 
-				foreach (ServicioFactura.Factura item in documentos_envio)
-				{
-					if (item == null)
-						throw new ApplicationException("No se encontró informacion en el ServicioFactura.Factura");
-					//throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioFactura.Factura"));
+				//Se agrega instruccion para habilitar la seguridad en el envio
+				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
-					if (item.DocumentoDetalles == null || !item.DocumentoDetalles.Any())
-						throw new Exception("El detalle del documento es inválido.");
+				Stream newStream = vtRequest.GetRequestStream();
 
-					if (item.DocumentoFormato != null)
-					{
-						if (!string.IsNullOrEmpty(item.DocumentoFormato.ArchivoPdf))
-						{
-							byte[] pdf = Convert.FromBase64String(item.DocumentoFormato.ArchivoPdf);
-							//valida el peso del formato
-							if (pdf.Length < 5120)
-								throw new Exception("El Formato de impresion es inválido.");
-						}
-					}
-					item.DataKey = dataKey;
-				}
-
-				// datos para la petición
-				ServicioFactura.RecepcionRequest peticion = new ServicioFactura.RecepcionRequest()
-				{
-					documentos = documentos_envio
-				};
+				// Enviamos los datos
+				newStream.Write(vtDataStream, 0, vtDataStream.Length);
+				newStream.Close();
 
 				// ejecución del servicio web
-				ServicioFactura.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
+				HttpWebResponse vtHttpResponse = (HttpWebResponse)vtRequest.GetResponse();
 
-				// resultado del servicio web
-				List<ServicioFactura.DocumentoRespuesta> result = respuesta.RecepcionResult;
+				if (vtHttpResponse.StatusCode == HttpStatusCode.OK)
+				{
+					using (StreamReader vtStreamReader = new StreamReader(vtHttpResponse.GetResponseStream()))
+					{
+						// Leer el contenido de la respuesta como una cadena JSON
+						string jsonResponse = vtStreamReader.ReadToEnd();
 
-				if (respuesta != null)
-					return result.ToList();
+						// Deserializar la respuesta JSON en un objeto MiObjeto
+						respuesta = JsonConvert.DeserializeObject<List<ServicioFactura.DocumentoRespuesta>>(jsonResponse);
+					}
+
+				}
+				vtHttpResponse.Close();
+
+				return respuesta;
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			//List<ServicioFactura.Factura> datos = new List<ServicioFactura.Factura>();
+
+			//ServicioFactura.ServicioFacturaClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs, Obtener_ruta), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+
+
+			//	// datos para la petición
+			//	ServicioFactura.RecepcionRequest peticion = new ServicioFactura.RecepcionRequest()
+			//	{
+			//		documentos = documentos_envio
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioFactura.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioFactura.DocumentoRespuesta> result = respuesta.RecepcionResult;
+
+			//	if (respuesta != null)
+			//		return result.ToList();
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 		}
 
 		/// <summary>
@@ -135,7 +209,9 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			UrlWs = string.Format("{0}/Api/Factura/ObtenerPorFechasAdquiriente", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -154,58 +230,114 @@ namespace HGInetFeAPI
 				throw new ApplicationException("Fecha final debe ser mayor o igual que la fecha inicial.");
 
 			List<ServicioFactura.FacturaConsulta> datos = new List<ServicioFactura.FacturaConsulta>();
-			
-			ServicioFactura.ServicioFacturaClient cliente_ws = null;
 
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			// Construir la URL de la API con los parámetros
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&FechaInicio={FechaInicio}&FechaFinal={FechaFin}&Procesados_ERP={ProcesadosERP}";
+
+			// Crear una solicitud HTTP utilizando la URL de la API
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+			request.Method = "GET";
+
+			// Enviar la solicitud y obtener la respuesta
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
-
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
-
-				// datos para la petición
-				ServicioFactura.ObtenerPorFechasAdquirienteRequest peticion = new ServicioFactura.ObtenerPorFechasAdquirienteRequest()
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 				{
-					DataKey = dataKey,
-					Identificacion = Identificacion,
-					FechaInicio = FechaInicio,
-					FechaFinal = FechaFin,
-					Procesados_ERP = ProcesadosERP
-				};
+					// Verificar el código de estado de la respuesta
+					if (response.StatusCode == HttpStatusCode.OK)
+					{
+						// Leer la respuesta
+						using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+						{
+							string responseData = reader.ReadToEnd();
 
-				// ejecución del servicio web
-				ServicioFactura.ObtenerPorFechasAdquirienteResponse respuesta = cliente_ws.ObtenerPorFechasAdquiriente(peticion);
-
-				// resultado del servicio web
-				List<ServicioFactura.FacturaConsulta> result = respuesta.ObtenerPorFechasAdquirienteResult;
-
-				if (respuesta != null)
-					return result;
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							datos = JsonConvert.DeserializeObject<List<ServicioFactura.FacturaConsulta>>(responseData);
+							return datos;
+						}
+					}
+					else
+					{
+						//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+						throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+					}
+				}
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message,("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			//ServicioFactura.ServicioFacturaClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			//	// datos para la petición
+			//	ServicioFactura.ObtenerPorFechasAdquirienteRequest peticion = new ServicioFactura.ObtenerPorFechasAdquirienteRequest()
+			//	{
+			//		DataKey = dataKey,
+			//		Identificacion = Identificacion,
+			//		FechaInicio = FechaInicio,
+			//		FechaFinal = FechaFin,
+			//		Procesados_ERP = ProcesadosERP
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioFactura.ObtenerPorFechasAdquirienteResponse respuesta = cliente_ws.ObtenerPorFechasAdquiriente(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioFactura.FacturaConsulta> result = respuesta.ObtenerPorFechasAdquirienteResult;
+
+			//	if (respuesta != null)
+			//		return result;
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 		}
 
 
@@ -239,7 +371,7 @@ namespace HGInetFeAPI
 
 			List<ServicioFactura.FacturaConsulta> datos = new List<ServicioFactura.FacturaConsulta>();
 
-			
+
 			ServicioFactura.ServicioFacturaClient cliente_ws = null;
 
 			try
@@ -312,7 +444,9 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			UrlWs = string.Format("{0}Api/Factura/ObtenerPorIdSeguridadAdquiriente", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -322,62 +456,131 @@ namespace HGInetFeAPI
 			if (string.IsNullOrEmpty(Identificacion))
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
-			// valida el parámetro Identificacion
-			if (string.IsNullOrEmpty(CodigosDocumentos))
-				throw new ApplicationException("Parámetro CodigosDocumentos de tipo string inválido.");
-
 			List<ServicioFactura.FacturaConsulta> datos = new List<ServicioFactura.FacturaConsulta>();
-			
-			ServicioFactura.ServicioFacturaClient cliente_ws = null;
 
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			// Construir la URL de la API con los parámetros
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&CodigosRegistros={CodigosDocumentos}&Facturador={Facturador}";
+
+			// Crear una solicitud HTTP utilizando la URL de la API
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+			request.Method = "GET";
+
+			// Enviar la solicitud y obtener la respuesta
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
-
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
-
-				// datos para la petición
-				ServicioFactura.ObtenerPorIdSeguridadAdquirienteRequest peticion = new ServicioFactura.ObtenerPorIdSeguridadAdquirienteRequest()
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 				{
-					DataKey = dataKey,
-					Identificacion = Identificacion,
-					CodigosRegistros = CodigosDocumentos,
-					Facturador = Facturador,
-				};
+					// Verificar el código de estado de la respuesta
+					if (response.StatusCode == HttpStatusCode.OK)
+					{
+						// Leer la respuesta
+						using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+						{
+							string responseData = reader.ReadToEnd();
 
-				// ejecución del servicio web
-				ServicioFactura.ObtenerPorIdSeguridadAdquirienteResponse respuesta = cliente_ws.ObtenerPorIdSeguridadAdquiriente(peticion);
-
-				// resultado del servicio web
-				List<ServicioFactura.FacturaConsulta> result = respuesta.ObtenerPorIdSeguridadAdquirienteResult;
-
-				if (respuesta != null)
-					return result;
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							datos = JsonConvert.DeserializeObject<List<ServicioFactura.FacturaConsulta>>(responseData);
+							return datos;
+						}
+					}
+					else
+					{
+						//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+						throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+					}
+				}
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			// valida el parámetro Serial
+			//if (string.IsNullOrEmpty(Serial))
+			//	throw new ApplicationException("Parámetro Serial de tipo string inválido.");
+
+			//// valida el parámetro Identificacion
+			//if (string.IsNullOrEmpty(Identificacion))
+			//	throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+
+			//// valida el parámetro Identificacion
+			//if (string.IsNullOrEmpty(CodigosDocumentos))
+			//	throw new ApplicationException("Parámetro CodigosDocumentos de tipo string inválido.");
+
+			//List<ServicioFactura.FacturaConsulta> datos = new List<ServicioFactura.FacturaConsulta>();
+			
+			//ServicioFactura.ServicioFacturaClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			//	// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			//	string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			//	// datos para la petición
+			//	ServicioFactura.ObtenerPorIdSeguridadAdquirienteRequest peticion = new ServicioFactura.ObtenerPorIdSeguridadAdquirienteRequest()
+			//	{
+			//		DataKey = dataKey,
+			//		Identificacion = Identificacion,
+			//		CodigosRegistros = CodigosDocumentos,
+			//		Facturador = Facturador,
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioFactura.ObtenerPorIdSeguridadAdquirienteResponse respuesta = cliente_ws.ObtenerPorIdSeguridadAdquiriente(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioFactura.FacturaConsulta> result = respuesta.ObtenerPorIdSeguridadAdquirienteResult;
+
+			//	if (respuesta != null)
+			//		return result;
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 		}
 
 

@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Xml;
 using HGInetFeAPI.ServicioRutasPlataforma;
+using System.Net;
 
 namespace HGInetFeAPI
 {
@@ -184,7 +185,10 @@ namespace HGInetFeAPI
 			try
 			{
 
-				string url_plataforma = "http://cloudservices.hginet.co/Wcf/facturae.svc";
+				//string url_plataforma = "http://cloudservices.hginet.co/Wcf/facturae.svc";
+
+				// URL de la API que quieres consumir
+				string url_plataforma = "https://cloudservices.hginet.co/api/facturae/ObtenerServidorFE";
 
 
 				//si la ruta contiene esta informacion cambio al ambiente de pruebas
@@ -199,75 +203,144 @@ namespace HGInetFeAPI
 					version = 3;
 				}
 
-				//Se consulta la ruta disponible para el integrador
-				//ServicioFacturaEClient cliente_ws = null;
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(url_plataforma);
-				ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient(ObtenerBinding(url_plataforma), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(url_plataforma);
+				// Construir la URL de la API con los parámetros
+				url_plataforma += $"?ambiente={ambiente}&version={version}&identificacion_empresa={identificacion}";
 
-				// datos para la petición
-				ObtenerServidorFERequest peticion = new ObtenerServidorFERequest()
+				// Crear una solicitud HTTP utilizando la URL de la API
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url_plataforma);
+				request.Method = "GET";
+
+				// Obtener la respuesta de la API
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 				{
-					ambiente = ambiente,
-					identificacion_empresa = identificacion,
-					version = version
-				};
+					// Leer el contenido de la respuesta como un string
+					using (System.IO.StreamReader reader = new System.IO.StreamReader(response.GetResponseStream()))
+					{
+						url_retorno = reader.ReadToEnd().Replace("\"", "");
+					}
+				}
 
-				// ejecución del servicio web
-				ServicioRutasPlataforma.ObtenerServidorFEResponse respuesta = cliente_ws.ObtenerServidorFE(peticion);
-				url_retorno = respuesta.ObtenerServidorFEResult;
+
+				////Se consulta la ruta disponible para el integrador
+				////ServicioFacturaEClient cliente_ws = null;
+				//EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(url_plataforma);
+				//ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient(ObtenerBinding(url_plataforma), endpoint_address);
+				//cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(url_plataforma);
+
+				//// datos para la petición
+				//ObtenerServidorFERequest peticion = new ObtenerServidorFERequest()
+				//{
+				//	ambiente = ambiente,
+				//	identificacion_empresa = identificacion,
+				//	version = version
+				//};
+
+				//// ejecución del servicio web
+				//ServicioRutasPlataforma.ObtenerServidorFEResponse respuesta = cliente_ws.ObtenerServidorFE(peticion);
+				//url_retorno = respuesta.ObtenerServidorFEResult;
 
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				//Se prueba consultando a otra ruta
-				string url_plataforma2 = "http://cloudservices2.hginet.co/Wcf/facturae.svc";
+				//string url_plataforma2 = "http://cloudservices2.hginet.co/Wcf/facturae.svc";
+
+				//Se prueba consultando a otra ruta
+				string url_plataforma2 = "https://cloudservices2.hginet.co/api/facturae/ObtenerServidorFE";
+
+				// Construir la URL de la API con los parámetros
+				url_plataforma2 += $"?ambiente={ambiente}&version={version}&identificacion_empresa={identificacion}";
 
 				//Se consulta la ruta disponible para el integrador
 				//ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient();
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(url_plataforma2);
-				ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient(ObtenerBinding(url_plataforma2), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(url_plataforma2);
+				//EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(url_plataforma2);
+				//ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient(ObtenerBinding(url_plataforma2), endpoint_address);
+				//cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(url_plataforma2);
 
 				try
 				{
-					// datos para la petición
-					ObtenerServidorFERequest peticion = new ObtenerServidorFERequest()
-					{
-						ambiente = ambiente,
-						identificacion_empresa = identificacion,
-						version = version
-					};
+					// Crear una solicitud HTTP utilizando la URL de la API
+					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url_plataforma2);
+					request.Method = "GET";
 
-					// ejecución del servicio web
-					ServicioRutasPlataforma.ObtenerServidorFEResponse respuesta = cliente_ws.ObtenerServidorFE(peticion);
-					url_retorno = respuesta.ObtenerServidorFEResult;
+					// Obtener la respuesta de la API
+					using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+					{
+						// Leer el contenido de la respuesta como un string
+						using (System.IO.StreamReader reader = new System.IO.StreamReader(response.GetResponseStream()))
+						{
+							url_retorno = reader.ReadToEnd();
+						}
+					}
+
+					// datos para la petición
+					//ObtenerServidorFERequest peticion = new ObtenerServidorFERequest()
+					//{
+					//	ambiente = ambiente,
+					//	identificacion_empresa = identificacion,
+					//	version = version
+					//};
+
+					//// ejecución del servicio web
+					//ServicioRutasPlataforma.ObtenerServidorFEResponse respuesta = cliente_ws.ObtenerServidorFE(peticion);
+					//url_retorno = respuesta.ObtenerServidorFEResult;
+
+					// Crear una solicitud HTTP utilizando la URL de la API
+					//HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url_plataforma2);
+					//request.Method = "GET";
+
+					//// Obtener la respuesta de la API
+					//using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+					//{
+					//	// Leer el contenido de la respuesta como un string
+					//	using (System.IO.StreamReader reader = new System.IO.StreamReader(response.GetResponseStream()))
+					//	{
+					//		url_retorno = reader.ReadToEnd();
+					//	}
+					//}
 
 				}
 				catch (Exception)
 				{
 					//Se prueba consultando a otra ruta
-					string url_plataforma3 = "https://cloudservices.hgisas.com/Wcf/facturae.svc";
+					//string url_plataforma3 = "https://cloudservices.hgisas.com/Wcf/facturae.svc";
+
+					//Se prueba consultando a otra ruta
+					string url_plataforma3 = "https://cloudservices.hgisas.com/api/facturae/ObtenerServidorFE";
 
 					//Se consulta la ruta disponible para el integrador
 					//ServicioFacturaEClient cliente_ws = new ServicioFacturaEClient();
-					EndpointAddress endpoint_address3 = new System.ServiceModel.EndpointAddress(url_plataforma3);
-					ServicioFacturaEClient cliente_ws3 = new ServicioFacturaEClient(ObtenerBinding(url_plataforma3), endpoint_address3);
-					cliente_ws3.Endpoint.Address = new System.ServiceModel.EndpointAddress(url_plataforma3);
+					//EndpointAddress endpoint_address3 = new System.ServiceModel.EndpointAddress(url_plataforma3);
+					//ServicioFacturaEClient cliente_ws3 = new ServicioFacturaEClient(ObtenerBinding(url_plataforma3), endpoint_address3);
+					//cliente_ws3.Endpoint.Address = new System.ServiceModel.EndpointAddress(url_plataforma3);
 
 					try
 					{
-						// datos para la petición
-						ObtenerServidorFERequest peticion = new ObtenerServidorFERequest()
-						{
-							ambiente = ambiente,
-							identificacion_empresa = identificacion,
-							version = version
-						};
+						// Crear una solicitud HTTP utilizando la URL de la API
+						HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url_plataforma3);
+						request.Method = "GET";
 
-						// ejecución del servicio web
-						ServicioRutasPlataforma.ObtenerServidorFEResponse respuesta = cliente_ws3.ObtenerServidorFE(peticion);
-						url_retorno = respuesta.ObtenerServidorFEResult;
+						// Obtener la respuesta de la API
+						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+						{
+							// Leer el contenido de la respuesta como un string
+							using (System.IO.StreamReader reader = new System.IO.StreamReader(response.GetResponseStream()))
+							{
+								url_retorno = reader.ReadToEnd();
+							}
+						}
+
+						// datos para la petición
+						//ObtenerServidorFERequest peticion = new ObtenerServidorFERequest()
+						//{
+						//	ambiente = ambiente,
+						//	identificacion_empresa = identificacion,
+						//	version = version
+						//};
+
+						//// ejecución del servicio web
+						//ServicioRutasPlataforma.ObtenerServidorFEResponse respuesta = cliente_ws3.ObtenerServidorFE(peticion);
+						//url_retorno = respuesta.ObtenerServidorFEResult;
 
 					}
 					catch (Exception)

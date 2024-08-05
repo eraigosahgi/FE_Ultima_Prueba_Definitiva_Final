@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -34,7 +37,10 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			//Url Api
+			UrlWs = string.Format("{0}Api/Notadebito/Recepcion", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -44,67 +50,148 @@ namespace HGInetFeAPI
 			if (string.IsNullOrEmpty(Identificacion))
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			foreach (ServicioNotaDebito.NotaDebito item in documentos_envio)
+			{
+				if (item == null)
+					throw new ApplicationException("No se encontró informacion en el ServicioNotaDebito.NotaDebito");
+				//throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioNotaDebito.NotaDebito"));
+
+				if (item.DocumentoDetalles == null || !item.DocumentoDetalles.Any())
+					throw new Exception("El detalle del documento es inválido.");
+
+				item.DataKey = dataKey;
+			}
+
 			List<ServicioNotaDebito.NotaDebito> datos = new List<ServicioNotaDebito.NotaDebito>();
-			
-			ServicioNotaDebito.ServicioNotaDebitoClient cliente_ws = null;
+
+			string vcData = JsonConvert.SerializeObject(documentos_envio);
+			byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
+
+			List<ServicioNotaDebito.DocumentoRespuesta> respuesta = new List<ServicioNotaDebito.DocumentoRespuesta>();
 
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioNotaDebito.ServicioNotaDebitoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+				HttpWebRequest vtRequest = (HttpWebRequest)WebRequest.Create(UrlWs);
 
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+				vtRequest.Method = "POST";
+				vtRequest.ContentType = "application/json";
+				vtRequest.Accept = "application/json";
+				vtRequest.ContentLength = vtDataStream.Length;
 
-				foreach (ServicioNotaDebito.NotaDebito item in documentos_envio)
-				{
-					if (item == null)
-						throw new ApplicationException("No se encontró informacion en el ServicioNotaDebito.NotaDebito");
-					//throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioNotaDebito.NotaDebito"));
+				//Se agrega instruccion para habilitar la seguridad en el envio
+				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
-					if (item.DocumentoDetalles == null || !item.DocumentoDetalles.Any())
-						throw new Exception("El detalle del documento es inválido.");
+				Stream newStream = vtRequest.GetRequestStream();
 
-					item.DataKey = dataKey;
-				}
-
-				// datos para la petición
-				ServicioNotaDebito.RecepcionRequest peticion = new ServicioNotaDebito.RecepcionRequest()
-				{
-					documentos = documentos_envio
-				};
+				// Enviamos los datos
+				newStream.Write(vtDataStream, 0, vtDataStream.Length);
+				newStream.Close();
 
 				// ejecución del servicio web
-				ServicioNotaDebito.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
+				HttpWebResponse vtHttpResponse = (HttpWebResponse)vtRequest.GetResponse();
 
-				// resultado del servicio web
-				List<ServicioNotaDebito.DocumentoRespuesta> result = respuesta.RecepcionResult;
+				if (vtHttpResponse.StatusCode == HttpStatusCode.OK)
+				{
+					using (StreamReader vtStreamReader = new StreamReader(vtHttpResponse.GetResponseStream()))
+					{
+						// Leer el contenido de la respuesta como una cadena JSON
+						string jsonResponse = vtStreamReader.ReadToEnd();
 
-				if (respuesta != null)
-					return result.ToList();
+						// Deserializar la respuesta JSON en un objeto MiObjeto
+						respuesta = JsonConvert.DeserializeObject<List<ServicioNotaDebito.DocumentoRespuesta>>(jsonResponse);
+					}
+
+				}
+				vtHttpResponse.Close();
+
+				return respuesta;
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			//ServicioNotaDebito.ServicioNotaDebitoClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioNotaDebito.ServicioNotaDebitoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			//	// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			//	string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			//	foreach (ServicioNotaDebito.NotaDebito item in documentos_envio)
+			//	{
+			//		if (item == null)
+			//			throw new ApplicationException("No se encontró informacion en el ServicioNotaDebito.NotaDebito");
+			//		//throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioNotaDebito.NotaDebito"));
+
+			//		if (item.DocumentoDetalles == null || !item.DocumentoDetalles.Any())
+			//			throw new Exception("El detalle del documento es inválido.");
+
+			//		item.DataKey = dataKey;
+			//	}
+
+			//	// datos para la petición
+			//	ServicioNotaDebito.RecepcionRequest peticion = new ServicioNotaDebito.RecepcionRequest()
+			//	{
+			//		documentos = documentos_envio
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioNotaDebito.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioNotaDebito.DocumentoRespuesta> result = respuesta.RecepcionResult;
+
+			//	if (respuesta != null)
+			//		return result.ToList();
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 
 		}
 
@@ -126,72 +213,133 @@ namespace HGInetFeAPI
 	        }
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
-            // valida el parámetro Serial
-            if (string.IsNullOrEmpty(Serial))
-                throw new ApplicationException("Parámetro Serial de tipo string inválido.");
+			UrlWs = string.Format("{0}Api/Notadebito/ObtenerPorIdSeguridadAdquiriente", Ctl_Utilidades.ValidarUrl(UrlWs));
 
-            // valida el parámetro Identificacion
-            if (string.IsNullOrEmpty(Identificacion))
-                throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
+			// valida el parámetro Serial
+			if (string.IsNullOrEmpty(Serial))
+				throw new ApplicationException("Parámetro Serial de tipo string inválido.");
 
-            // valida el parámetro Identificacion
-            if (string.IsNullOrEmpty(CodigosDocumentos))
-                throw new ApplicationException("Parámetro CodigosDocumentos de tipo string inválido.");
+			// valida el parámetro Identificacion
+			if (string.IsNullOrEmpty(Identificacion))
+				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
-            List<ServicioNotaDebito.NotaDebitoConsulta> datos = new List<ServicioNotaDebito.NotaDebitoConsulta>();
+			// valida el parámetro Identificacion
+			if (string.IsNullOrEmpty(CodigosDocumentos))
+				throw new ApplicationException("Parámetro CodigosDocumentos de tipo string inválido.");
 
-			ServicioNotaDebito.ServicioNotaDebitoClient cliente_ws = null;
+			List<ServicioNotaDebito.NotaDebitoConsulta> datos = new List<ServicioNotaDebito.NotaDebitoConsulta>();
 
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			// Construir la URL de la API con los parámetros
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&CodigosRegistros={CodigosDocumentos}&Facturador={Facturador}";
+
+			// Crear una solicitud HTTP utilizando la URL de la API
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+			request.Method = "GET";
+
+			// Enviar la solicitud y obtener la respuesta
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioNotaDebito.ServicioNotaDebitoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+				{
+					// Verificar el código de estado de la respuesta
+					if (response.StatusCode == HttpStatusCode.OK)
+					{
+						// Leer la respuesta
+						using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+						{
+							string responseData = reader.ReadToEnd();
 
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							datos = JsonConvert.DeserializeObject<List<ServicioNotaDebito.NotaDebitoConsulta>>(responseData);
+							return datos;
+						}
+					}
+					else
+					{
+						//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+						throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+					}
+				}
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
+				else
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
-                // datos para la petición
-                ServicioNotaDebito.ObtenerPorIdSeguridadAdquirienteRequest peticion = new ServicioNotaDebito.ObtenerPorIdSeguridadAdquirienteRequest()
-                {
-                    DataKey = dataKey,
-                    Identificacion = Identificacion,
-                    CodigosRegistros = CodigosDocumentos,
-					Facturador = Facturador,
-                };
+				throw new Exception(ex_message, ex);
+			}
 
-                // ejecución del servicio web
-                ServicioNotaDebito.ObtenerPorIdSeguridadAdquirienteResponse respuesta = cliente_ws.ObtenerPorIdSeguridadAdquiriente(peticion);
+			//ServicioNotaDebito.ServicioNotaDebitoClient cliente_ws = null;
 
-                // resultado del servicio web
-                List<ServicioNotaDebito.NotaDebitoConsulta> result = respuesta.ObtenerPorIdSeguridadAdquirienteResult;
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioNotaDebito.ServicioNotaDebitoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
 
-                if (respuesta != null)
-                    return result;
-                else
-                    throw new Exception("Error al obtener los datos con los parámetros indicados.");
+			//	// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			//	string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
-            }
-            catch (FaultException excepcion)
-            {
-                throw new ApplicationException(excepcion.Message, excepcion);
-            }
-            catch (CommunicationException excepcion)
-            {
-                throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-            }
-            catch (Exception excepcion)
-            {
-                throw excepcion;
-            }
-            finally
-            {
-                if (cliente_ws != null)
-                    cliente_ws.Abort();
-            }
+   //             // datos para la petición
+   //             ServicioNotaDebito.ObtenerPorIdSeguridadAdquirienteRequest peticion = new ServicioNotaDebito.ObtenerPorIdSeguridadAdquirienteRequest()
+   //             {
+   //                 DataKey = dataKey,
+   //                 Identificacion = Identificacion,
+   //                 CodigosRegistros = CodigosDocumentos,
+			//		Facturador = Facturador,
+   //             };
+
+   //             // ejecución del servicio web
+   //             ServicioNotaDebito.ObtenerPorIdSeguridadAdquirienteResponse respuesta = cliente_ws.ObtenerPorIdSeguridadAdquiriente(peticion);
+
+   //             // resultado del servicio web
+   //             List<ServicioNotaDebito.NotaDebitoConsulta> result = respuesta.ObtenerPorIdSeguridadAdquirienteResult;
+
+   //             if (respuesta != null)
+   //                 return result;
+   //             else
+   //                 throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+   //         }
+   //         catch (FaultException excepcion)
+   //         {
+   //             throw new ApplicationException(excepcion.Message, excepcion);
+   //         }
+   //         catch (CommunicationException excepcion)
+   //         {
+   //             throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+   //         }
+   //         catch (Exception excepcion)
+   //         {
+   //             throw excepcion;
+   //         }
+   //         finally
+   //         {
+   //             if (cliente_ws != null)
+   //                 cliente_ws.Abort();
+   //         }
         }
 
 
@@ -213,7 +361,9 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			UrlWs = string.Format("{0}/Api/Notadebito/ObtenerPorFechasAdquiriente", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -233,56 +383,115 @@ namespace HGInetFeAPI
 
 			List<ServicioNotaDebito.NotaDebitoConsulta> datos = new List<ServicioNotaDebito.NotaDebitoConsulta>();
 
-			ServicioNotaDebito.ServicioNotaDebitoClient cliente_ws = null;
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
+			// Construir la URL de la API con los parámetros
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&FechaInicio={FechaInicio}&FechaFinal={FechaFin}";
+
+			// Crear una solicitud HTTP utilizando la URL de la API
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+			request.Method = "GET";
+
+			// Enviar la solicitud y obtener la respuesta
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioNotaDebito.ServicioNotaDebitoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
-
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
-
-				// datos para la petición
-				ServicioNotaDebito.ObtenerPorFechasAdquirienteRequest peticion = new ServicioNotaDebito.ObtenerPorFechasAdquirienteRequest()
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 				{
-					DataKey = dataKey,
-					Identificacion = Identificacion,
-					FechaInicio = FechaInicio,
-					FechaFinal = FechaFin,
-				};
+					// Verificar el código de estado de la respuesta
+					if (response.StatusCode == HttpStatusCode.OK)
+					{
+						// Leer la respuesta
+						using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+						{
+							string responseData = reader.ReadToEnd();
 
-				// ejecución del servicio web
-				ServicioNotaDebito.ObtenerPorFechasAdquirienteResponse respuesta = cliente_ws.ObtenerPorFechasAdquiriente(peticion);
-
-				// resultado del servicio web
-				List<ServicioNotaDebito.NotaDebitoConsulta> result = respuesta.ObtenerPorFechasAdquirienteResult;
-
-				if (respuesta != null)
-					return result;
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							datos = JsonConvert.DeserializeObject<List<ServicioNotaDebito.NotaDebitoConsulta>>(responseData);
+							return datos;
+						}
+					}
+					else
+					{
+						//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+						throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+					}
+				}
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			//ServicioNotaDebito.ServicioNotaDebitoClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioNotaDebito.ServicioNotaDebitoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			//	// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			//	string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			//	// datos para la petición
+			//	ServicioNotaDebito.ObtenerPorFechasAdquirienteRequest peticion = new ServicioNotaDebito.ObtenerPorFechasAdquirienteRequest()
+			//	{
+			//		DataKey = dataKey,
+			//		Identificacion = Identificacion,
+			//		FechaInicio = FechaInicio,
+			//		FechaFinal = FechaFin,
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioNotaDebito.ObtenerPorFechasAdquirienteResponse respuesta = cliente_ws.ObtenerPorFechasAdquiriente(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioNotaDebito.NotaDebitoConsulta> result = respuesta.ObtenerPorFechasAdquirienteResult;
+
+			//	if (respuesta != null)
+			//		return result;
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 		}
 
 		/// <summary>

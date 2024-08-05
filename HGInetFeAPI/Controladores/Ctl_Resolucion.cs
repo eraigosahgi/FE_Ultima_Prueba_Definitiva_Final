@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
 using System.Text;
 
@@ -31,7 +34,9 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			UrlWs = string.Format("{0}Api/Resolucion/Consultar", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -42,55 +47,114 @@ namespace HGInetFeAPI
 				throw new ApplicationException("Parámetro Identificacion de tipo string inválido.");
 
 			List<ServicioResolucion.Resolucion> datos = new List<ServicioResolucion.Resolucion>();
-			
-			ServicioResolucion.ServicioResolucionClient cliente_ws = null;
 
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			// Construir la URL de la API con los parámetros
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}";
+
+			// Crear una solicitud HTTP utilizando la URL de la API
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+			request.Method = "GET";
+
+			// Enviar la solicitud y obtener la respuesta
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioResolucion.ServicioResolucionClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
-
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
-
-				// datos para la petición
-				ServicioResolucion.ConsultarRequest peticion = new ServicioResolucion.ConsultarRequest()
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 				{
-					DataKey = dataKey,
-					Identificacion = Identificacion
-				};
+					// Verificar el código de estado de la respuesta
+					if (response.StatusCode == HttpStatusCode.OK)
+					{
+						// Leer la respuesta
+						using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+						{
+							string responseData = reader.ReadToEnd();
 
-				// ejecución del servicio web
-				ServicioResolucion.ConsultarResponse respuesta = cliente_ws.Consultar(peticion);
-
-				// resultado del servicio web
-				List<ServicioResolucion.Resolucion> result = respuesta.ConsultarResult;
-
-				if (respuesta != null)
-					return result;
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							datos = JsonConvert.DeserializeObject<List<ServicioResolucion.Resolucion>>(responseData);
+							return datos;
+						}
+					}
+					else
+					{
+						//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+						throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+					}
+				}
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			//ServicioResolucion.ServicioResolucionClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioResolucion.ServicioResolucionClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			//	// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			//	string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			//	// datos para la petición
+			//	ServicioResolucion.ConsultarRequest peticion = new ServicioResolucion.ConsultarRequest()
+			//	{
+			//		DataKey = dataKey,
+			//		Identificacion = Identificacion
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioResolucion.ConsultarResponse respuesta = cliente_ws.Consultar(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioResolucion.Resolucion> result = respuesta.ConsultarResult;
+
+			//	if (respuesta != null)
+			//		return result;
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 		}
 
 		/// <summary>
@@ -111,7 +175,9 @@ namespace HGInetFeAPI
 			}
 
 			// valida la URL del servicio web
-			UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+			UrlWs = string.Format("{0}Api/Resolucion/ConsultarResolucion", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
@@ -127,58 +193,121 @@ namespace HGInetFeAPI
 			if (string.IsNullOrEmpty(Resolucion.SetIdDian))
 				throw new ApplicationException("Parámetro SetIdDian de tipo string inválido.");
 
-			List<ServicioResolucion.Resolucion> datos = new List<ServicioResolucion.Resolucion>();
+			string vcData = JsonConvert.SerializeObject(Resolucion);
+			byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
 
-
-			ServicioResolucion.ServicioResolucionClient cliente_ws = null;
+			List<ServicioResolucion.Resolucion> respuesta = new List<ServicioResolucion.Resolucion>();
 
 			try
 			{
-				// conexión cliente para el servicio web
-				EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-				cliente_ws = new ServicioResolucion.ServicioResolucionClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-				cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+				HttpWebRequest vtRequest = (HttpWebRequest)WebRequest.Create(UrlWs);
 
-				// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-				string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+				vtRequest.Method = "POST";
+				vtRequest.ContentType = "application/json";
+				vtRequest.Accept = "application/json";
+				vtRequest.ContentLength = vtDataStream.Length;
 
-				Resolucion.DataKey = dataKey;
+				//Se agrega instruccion para habilitar la seguridad en el envio
+				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
-				// datos para la petición
-				ServicioResolucion.ConsultarResolucionRequest peticion = new ServicioResolucion.ConsultarResolucionRequest()
-				{
-					Resolucion = Resolucion
-				};
+				Stream newStream = vtRequest.GetRequestStream();
+
+				// Enviamos los datos
+				newStream.Write(vtDataStream, 0, vtDataStream.Length);
+				newStream.Close();
 
 				// ejecución del servicio web
-				ServicioResolucion.ConsultarResolucionResponse respuesta = cliente_ws.ConsultarResolucion(peticion);
+				HttpWebResponse vtHttpResponse = (HttpWebResponse)vtRequest.GetResponse();
 
-				// resultado del servicio web
-				List<ServicioResolucion.Resolucion> result = respuesta.ConsultarResolucionResult;
+				if (vtHttpResponse.StatusCode == HttpStatusCode.OK)
+				{
+					using (StreamReader vtStreamReader = new StreamReader(vtHttpResponse.GetResponseStream()))
+					{
+						// Leer el contenido de la respuesta como una cadena JSON
+						string jsonResponse = vtStreamReader.ReadToEnd();
 
-				if (respuesta != null)
-					return result;
+						// Deserializar la respuesta JSON en un objeto MiObjeto
+						respuesta = JsonConvert.DeserializeObject<List<ServicioResolucion.Resolucion>>(jsonResponse);
+					}
+
+				}
+				vtHttpResponse.Close();
+
+				return respuesta;
+			}
+			catch (WebException ex)
+			{
+				string ex_message = string.Empty;
+				// Manejar excepciones de WebException
+				if (ex.Response != null)
+				{
+					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					{
+						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						{
+							string errorText = reader.ReadToEnd();
+							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						}
+					}
+				}
 				else
-					throw new Exception("Error al obtener los datos con los parámetros indicados.");
+				{
+					ex_message = ("Error: " + ex.Message);
+				}
 
+				throw new Exception(ex_message, ex);
 			}
-			catch (FaultException excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion);
-			}
-			catch (CommunicationException excepcion)
-			{
-				throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			}
-			catch (Exception excepcion)
-			{
-				throw excepcion;
-			}
-			finally
-			{
-				if (cliente_ws != null)
-					cliente_ws.Abort();
-			}
+
+			//ServicioResolucion.ServicioResolucionClient cliente_ws = null;
+
+			//try
+			//{
+			//	// conexión cliente para el servicio web
+			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+			//	cliente_ws = new ServicioResolucion.ServicioResolucionClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+			//	// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			//	string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			//	Resolucion.DataKey = dataKey;
+
+			//	// datos para la petición
+			//	ServicioResolucion.ConsultarResolucionRequest peticion = new ServicioResolucion.ConsultarResolucionRequest()
+			//	{
+			//		Resolucion = Resolucion
+			//	};
+
+			//	// ejecución del servicio web
+			//	ServicioResolucion.ConsultarResolucionResponse respuesta = cliente_ws.ConsultarResolucion(peticion);
+
+			//	// resultado del servicio web
+			//	List<ServicioResolucion.Resolucion> result = respuesta.ConsultarResolucionResult;
+
+			//	if (respuesta != null)
+			//		return result;
+			//	else
+			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+			//}
+			//catch (FaultException excepcion)
+			//{
+			//	throw new ApplicationException(excepcion.Message, excepcion);
+			//}
+			//catch (CommunicationException excepcion)
+			//{
+			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+			//}
+			//catch (Exception excepcion)
+			//{
+			//	throw excepcion;
+			//}
+			//finally
+			//{
+			//	if (cliente_ws != null)
+			//		cliente_ws.Abort();
+			//}
 		}
 
 
