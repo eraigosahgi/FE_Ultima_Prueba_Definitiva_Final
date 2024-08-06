@@ -179,7 +179,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 						if (documento_obj.TipoOperacion != 3)
 						{
 							Ctl_EmpresaResolucion empresa_resolucion = new Ctl_EmpresaResolucion();
-							TblEmpresasResoluciones resoluciones_bd = empresa_resolucion.ObtenerResoluciones(facturador_formato, documentoBd.StrNumResolucion, false).FirstOrDefault();
+							TblEmpresasResoluciones resoluciones_bd = empresa_resolucion.ObtenerResoluciones(facturador_formato, documentoBd.StrNumResolucion, false).FirstOrDefault(x => x.StrPrefijo == documentoBd.StrPrefijo);
 
 							int meses_vigencia = Math.Abs((resoluciones_bd.DatFechaVigenciaDesde.Month - resoluciones_bd.DatFechaVigenciaHasta.Month) + 12 * (resoluciones_bd.DatFechaVigenciaDesde.Year - resoluciones_bd.DatFechaVigenciaHasta.Year));
 							documento_obj.ResolucionCompleta = string.Format("Resolución No {0}, Fecha: {1}, del No.{2} {3} al {4} {5}, vigencia: {6} meses", resoluciones_bd.StrNumResolucion, resoluciones_bd.DatFechaVigenciaDesde.ToString("yyyy-MM-dd"), resoluciones_bd.StrPrefijo, resoluciones_bd.IntRangoInicial, resoluciones_bd.StrPrefijo, resoluciones_bd.IntRangoFinal, meses_vigencia);
