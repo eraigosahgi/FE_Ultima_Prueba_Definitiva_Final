@@ -574,7 +574,7 @@ namespace HGInetFeAPI
 			// valida la URL del servicio web
 			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
-			UrlWs = string.Format("{0}/Api/Notadebito/ObtenerPorFechasAdquiriente", Ctl_Utilidades.ValidarUrl(UrlWs));
+			UrlWs = string.Format("{0}/Api/DocumentosApi/ObtenerCufe", Ctl_Utilidades.ValidarUrl(UrlWs));
 
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
