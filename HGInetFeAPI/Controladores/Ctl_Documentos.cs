@@ -59,7 +59,7 @@ namespace HGInetFeAPI
 			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
 			// Construir la URL de la API con los parámetros
-			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&Numeros={NumerosDocumentos}&TipoDocumento={DocumentoTipo}";
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&TipoDocumento={DocumentoTipo}&Numeros={NumerosDocumentos}";
 
 			// Crear una solicitud HTTP utilizando la URL de la API
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
@@ -205,7 +205,7 @@ namespace HGInetFeAPI
 			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
 			// Construir la URL de la API con los parámetros
-			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&CodigosRegistros={CodigosDocumentos}&TipoDocumento={DocumentoTipo}";
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&TipoDocumento={DocumentoTipo}&CodigosRegistros={CodigosDocumentos}";
 
 			// Crear una solicitud HTTP utilizando la URL de la API
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
@@ -360,7 +360,7 @@ namespace HGInetFeAPI
 			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
 
 			// Construir la URL de la API con los parámetros
-			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&FechaInicio={FechaInicio}&FechaFinal={FechaFin}&TipoDocumento={DocumentoTipo}";
+			UrlWs += $"?DataKey={dataKey}&Identificacion={Identificacion}&TipoDocumento={DocumentoTipo}&FechaInicial={FechaInicio}&FechaFinal={FechaFin}";
 
 			// Crear una solicitud HTTP utilizando la URL de la API
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
