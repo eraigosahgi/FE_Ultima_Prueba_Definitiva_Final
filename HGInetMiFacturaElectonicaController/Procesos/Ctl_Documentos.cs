@@ -2133,6 +2133,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			{
 				valor_devengado += devengado.PagoCesantias.Pago + devengado.PagoCesantias.PagoIntereses;
 
+				//777596 - 777452 
+				try
+				{
+					if (devengado.PagoCesantias.Porcentaje.Equals(12.0M))
+						devengado.PagoCesantias.Porcentaje = 0.12M;
+				}
+				catch (Exception)
+				{
+				}
 			}
 
 			if (devengado.Incapacidades != null && devengado.Incapacidades.Count > 0)
