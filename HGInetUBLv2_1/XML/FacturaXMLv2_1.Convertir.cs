@@ -189,6 +189,8 @@ namespace HGInetUBLv2_1
 					factura_obj.FechaVence = factura_ubl.DueDate.Value;
 				else if (factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate != null)
 					factura_obj.FechaVence = factura_ubl.PaymentMeans.FirstOrDefault().PaymentDueDate.Value;
+					if (factura_obj.FechaVence == DateTime.MinValue)
+						factura_obj.FechaVence = fecha_hora;
 				else
 					factura_obj.FechaVence = fecha_hora;
 
