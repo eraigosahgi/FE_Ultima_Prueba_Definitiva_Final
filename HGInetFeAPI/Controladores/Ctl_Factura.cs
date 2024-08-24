@@ -26,20 +26,8 @@ namespace HGInetFeAPI
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <param name="documentos_envio">documentos de tipo Factura</param>
 		/// <returns>respuesta del proceso de los documentos</returns>
-		public static List<ServicioFactura.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioFactura.Factura> documentos_envio, bool Obtener_ruta= true)
+		public static List<ServicioFactura.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioFactura.Factura> documentos_envio, bool Obtener_ruta= true, bool Wcf = false)
 		{
-			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
-			if (!UrlWs.Contains("hgi") && Obtener_ruta)
-			{
-				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
-			}
-
-			// valida la URL del servicio web
-			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
-
-			//Url Api
-			UrlWs = string.Format("{0}Api/Factura/Recepcion", Ctl_Utilidades.ValidarUrl(UrlWs));
-
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
 				throw new ApplicationException("Parámetro Serial de tipo string inválido.");
@@ -73,120 +61,139 @@ namespace HGInetFeAPI
 				item.DataKey = dataKey;
 			}
 
-			string vcData = JsonConvert.SerializeObject(documentos_envio);
-			byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
 
-			List<ServicioFactura.DocumentoRespuesta> respuesta = new List<ServicioFactura.DocumentoRespuesta>();
-
-			try
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi") && Obtener_ruta)
 			{
-				HttpWebRequest vtRequest = (HttpWebRequest)WebRequest.Create(UrlWs);
-
-				vtRequest.Method = "POST";
-				vtRequest.ContentType = "application/json";
-				vtRequest.Accept = "application/json";
-				vtRequest.ContentLength = vtDataStream.Length;
-
-				//Se agrega instruccion para habilitar la seguridad en el envio
-				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-
-				Stream newStream = vtRequest.GetRequestStream();
-
-				// Enviamos los datos
-				newStream.Write(vtDataStream, 0, vtDataStream.Length);
-				newStream.Close();
-
-				// ejecución del servicio web
-				HttpWebResponse vtHttpResponse = (HttpWebResponse)vtRequest.GetResponse();
-
-				if (vtHttpResponse.StatusCode == HttpStatusCode.OK)
-				{
-					using (StreamReader vtStreamReader = new StreamReader(vtHttpResponse.GetResponseStream()))
-					{
-						// Leer el contenido de la respuesta como una cadena JSON
-						string jsonResponse = vtStreamReader.ReadToEnd();
-
-						// Deserializar la respuesta JSON en un objeto MiObjeto
-						respuesta = JsonConvert.DeserializeObject<List<ServicioFactura.DocumentoRespuesta>>(jsonResponse);
-					}
-
-				}
-				vtHttpResponse.Close();
-
-				return respuesta;
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
 			}
-			catch (WebException ex)
+
+			if (Wcf == false)
 			{
-				string ex_message = string.Empty;
-				// Manejar excepciones de WebException
-				if (ex.Response != null)
+				//Url Api
+				UrlWs = string.Format("{0}Api/Factura/Recepcion", Ctl_Utilidades.ValidarUrl(UrlWs));
+
+				string vcData = JsonConvert.SerializeObject(documentos_envio);
+				byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
+
+				List<ServicioFactura.DocumentoRespuesta> respuesta = new List<ServicioFactura.DocumentoRespuesta>();
+
+				try
 				{
-					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					HttpWebRequest vtRequest = (HttpWebRequest)WebRequest.Create(UrlWs);
+
+					vtRequest.Method = "POST";
+					vtRequest.ContentType = "application/json";
+					vtRequest.Accept = "application/json";
+					vtRequest.ContentLength = vtDataStream.Length;
+
+					//Se agrega instruccion para habilitar la seguridad en el envio
+					System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+					Stream newStream = vtRequest.GetRequestStream();
+
+					// Enviamos los datos
+					newStream.Write(vtDataStream, 0, vtDataStream.Length);
+					newStream.Close();
+
+					// ejecución del servicio web
+					HttpWebResponse vtHttpResponse = (HttpWebResponse)vtRequest.GetResponse();
+
+					if (vtHttpResponse.StatusCode == HttpStatusCode.OK)
 					{
-						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
-						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						using (StreamReader vtStreamReader = new StreamReader(vtHttpResponse.GetResponseStream()))
 						{
-							string errorText = reader.ReadToEnd();
-							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+							// Leer el contenido de la respuesta como una cadena JSON
+							string jsonResponse = vtStreamReader.ReadToEnd();
+
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							respuesta = JsonConvert.DeserializeObject<List<ServicioFactura.DocumentoRespuesta>>(jsonResponse);
+						}
+
+					}
+					vtHttpResponse.Close();
+
+					return respuesta;
+				}
+				catch (WebException ex)
+				{
+					string ex_message = string.Empty;
+					// Manejar excepciones de WebException
+					if (ex.Response != null)
+					{
+						using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						{
+							ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+							using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+							{
+								string errorText = reader.ReadToEnd();
+								ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+							}
 						}
 					}
-				}
-				else
-				{
-					ex_message = ("Error: " + ex.Message);
-				}
+					else
+					{
+						ex_message = ("Error: " + ex.Message);
+					}
 
-				throw new Exception(ex_message, ex);
+					throw new Exception(ex_message, ex);
+				}
+			}
+			else
+			{
+				// valida la URL del servicio web
+				UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
+
+				List<ServicioFactura.Factura> datos = new List<ServicioFactura.Factura>();
+
+				ServicioFactura.ServicioFacturaClient cliente_ws = null;
+
+				try
+				{
+					// conexión cliente para el servicio web
+					EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+					cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs, Obtener_ruta), endpoint_address);
+					cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+
+
+
+					// datos para la petición
+					ServicioFactura.RecepcionRequest peticion = new ServicioFactura.RecepcionRequest()
+					{
+						documentos = documentos_envio
+					};
+
+					// ejecución del servicio web
+					ServicioFactura.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
+
+					// resultado del servicio web
+					List<ServicioFactura.DocumentoRespuesta> result = respuesta.RecepcionResult;
+
+					if (respuesta != null)
+						return result.ToList();
+					else
+						throw new Exception("Error al obtener los datos con los parámetros indicados.");
+
+				}
+				catch (FaultException excepcion)
+				{
+					throw new ApplicationException(excepcion.Message, excepcion);
+				}
+				catch (CommunicationException excepcion)
+				{
+					throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+				}
+				catch (Exception excepcion)
+				{
+					throw excepcion;
+				}
+				finally
+				{
+					if (cliente_ws != null)
+						cliente_ws.Abort();
+				}
 			}
 
-			//List<ServicioFactura.Factura> datos = new List<ServicioFactura.Factura>();
-
-			//ServicioFactura.ServicioFacturaClient cliente_ws = null;
-
-			//try
-			//{
-			//	// conexión cliente para el servicio web
-			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-			//	cliente_ws = new ServicioFactura.ServicioFacturaClient(Ctl_Utilidades.ObtenerBinding(UrlWs, Obtener_ruta), endpoint_address);
-			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
-
-
-
-			//	// datos para la petición
-			//	ServicioFactura.RecepcionRequest peticion = new ServicioFactura.RecepcionRequest()
-			//	{
-			//		documentos = documentos_envio
-			//	};
-
-			//	// ejecución del servicio web
-			//	ServicioFactura.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
-
-			//	// resultado del servicio web
-			//	List<ServicioFactura.DocumentoRespuesta> result = respuesta.RecepcionResult;
-
-			//	if (respuesta != null)
-			//		return result.ToList();
-			//	else
-			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
-
-			//}
-			//catch (FaultException excepcion)
-			//{
-			//	throw new ApplicationException(excepcion.Message, excepcion);
-			//}
-			//catch (CommunicationException excepcion)
-			//{
-			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			//}
-			//catch (Exception excepcion)
-			//{
-			//	throw excepcion;
-			//}
-			//finally
-			//{
-			//	if (cliente_ws != null)
-			//		cliente_ws.Abort();
-			//}
 		}
 
 		/// <summary>
