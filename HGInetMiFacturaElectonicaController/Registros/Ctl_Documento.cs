@@ -1439,7 +1439,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					try
 					{
 						item.StrResultadoProceso = item.StrResultadoProceso.Replace("Error en la validación del documento. Detalle:", "Error:");
-						respuesta.Add(string.Format("{0}: {1}   -   {2}", i, item.DatFecha.ToString("yyyy-MM-dd hh:mm:ss"), item.StrResultadoProceso));
+						respuesta.Add(string.Format("{0}: {1}   -   {2}", i, item.DatFecha.ToString("yyyy-MM-dd HH:mm:ss"), item.StrResultadoProceso));
 						i++;
 					}
 					catch (Exception)
