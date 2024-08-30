@@ -586,10 +586,25 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		{
 			try
 			{
-				var respuesta = (from usuario in context.TblUsuarios
+
+				List<TblUsuarios> respuesta = new List<TblUsuarios>();
+
+				if (codigo_usuario == "*" || codigo_empresa == "*")
+				{
+					respuesta = (from usuario in context.TblUsuarios
 								 where (usuario.StrUsuario.Equals(codigo_usuario) || codigo_usuario.Equals("*"))
 								 && (usuario.StrEmpresa.Equals(codigo_empresa) || codigo_empresa.Equals("*"))
 								 select usuario).ToList();
+				}
+				else
+				{
+					respuesta = (from usuario in context.TblUsuarios
+								 where (usuario.StrUsuario.Equals(codigo_usuario))
+								 && (usuario.StrEmpresa.Equals(codigo_empresa))
+								 select usuario).ToList();
+				}
+
+
 
 				return respuesta;
 			}
