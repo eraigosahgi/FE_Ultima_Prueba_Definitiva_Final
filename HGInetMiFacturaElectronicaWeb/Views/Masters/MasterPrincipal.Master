@@ -189,7 +189,7 @@
 
 
 		function popup(ruta_archivo) {
-			window.open(ruta_archivo, "ventana1", "width=700,height=850,scrollbars=NO")
+			window.open(ruta_archivo, "ventana1")
 		}
 
 
@@ -637,30 +637,37 @@
 										<div class="modal-body">
 											<img class="img-responsive" src="../../Scripts/Images/LogoPlataforma.png" width="300" style="margin-top: 2%; margin-left: 10%" />
 
-											<div style="margin-top: 5%; margin-left: 26%">
+											<div style="margin-top: 5%; margin-left: 34%">
 
-												<!-- Manual Facturador -->
-												<div class="media-left media-middle">
-													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://portal.hgidocs.co/ManualUsuarioFacturador.pdf');"><i class="icon-user-tie"></i>Manual Facturador</label>
+											<div class="media-left media-middle">
+													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://documentacion.hgidocs.co');"><i class="icon-user-tie"></i>Manuales</label>
 												</div>
 												<div class="media-left">
 													<label id="Label7" class="text-default text-semibold" style="font-size: medium"></label>
 												</div>
 												<br />
+												<!-- Manual Facturador -->
+												<%--<div class="media-left media-middle">
+													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://portal.hgidocs.co/ManualUsuarioFacturador.pdf');"><i class="icon-user-tie"></i>Manual Facturador</label>
+												</div>
+												<div class="media-left">
+													<label id="Label7" class="text-default text-semibold" style="font-size: medium"></label>
+												</div>
+												<br />--%>
 												<!-- / Manual Facturador -->
 
 												<!-- Manual Adquiriente -->
-												<div class="media-left media-middle">
+												<%--<div class="media-left media-middle">
 													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://portal.hgidocs.co/ManualUsuarioAdquiriente.pdf');"><i class="icon-reading"></i>Manual Adquiriente</label>
 												</div>
-												<br />
+												<br />--%>
 												<!-- / Manual Adquiriente -->
 
 												<!-- Manual Integradores -->
-												<div class="media-left media-middle">
+												<%--<div class="media-left media-middle">
 													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;" onclick="popup('https://portal.hgidocs.co/GuíaIntegradorPlataformaHgiDocs.pdf');"><i class="icon-user-tie"></i>Manual Integradores</label>
 												</div>
-												<br />
+												<br />--%>
 
 											</div>
 
