@@ -14,6 +14,7 @@ using HGInetMiFacturaElectonicaData.Objetos;
 using HGInetMiFacturaElectronicaWeb.Seguridad;
 using HGInetMiFacturaElectronicaWeb.Seguridad.Plugins;
 using HGInetUtilidadAzure.Almacenamiento;
+using LibreriaGlobalHGInet.Formato;
 using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
@@ -2876,6 +2877,54 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				RegistroLog.EscribirLog(ex, MensajeCategoria.Servicio, MensajeTipo.Error, MensajeAccion.actualizacion);
 				return Conflict();
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/EventoMultiple")]
+		public IHttpActionResult EventoMultiple(string lista_documentos, short estado)
+		{
+			try
+			{
+				string usuario = Sesion.DatosUsuario.StrUsuario;
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				List<TblDocumentos> datos = new List<TblDocumentos>();
+
+				string respuesta_error_dian = string.Empty;
+
+				List<string> lista_doc = Coleccion.ConvertirLista(lista_documentos, ',');
+
+				foreach (var item in lista_doc)
+				{
+					TblDocumentos documento = ctl_documento.ActualizarRespuestaAcuse(Guid.Parse(item), estado, "", ref respuesta_error_dian, (!string.IsNullOrEmpty(usuario)) ? usuario : "");
+
+					bool Actualizar_doc = false;
+
+					if (!string.IsNullOrEmpty(respuesta_error_dian))
+					{
+						documento.StrAdquirienteMvoRechazo = respuesta_error_dian;
+						Actualizar_doc = true;
+					}
+					else if (!string.IsNullOrEmpty(documento.StrAdquirienteMvoRechazo) && !documento.IntAdquirienteRecibo.Equals(AdquirienteRecibo.Rechazado.GetHashCode()))
+					{
+						documento.StrAdquirienteMvoRechazo = string.Empty;
+						Actualizar_doc = true;
+					}
+
+					if (Actualizar_doc == true)
+					{
+						ctl_documento.Actualizar(documento);
+					}
+					
+				}
+				
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return InternalServerError(ex);
 			}
 		}
 
