@@ -43,8 +43,14 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			// información del procesamiento del archivo
 			FacturaE_Documento documento_result = new FacturaE_Documento();
 
+			if (documento.TblEmpresasFacturador == null)
+			{
+				Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+				documento.TblEmpresasFacturador = ctl_empresa.Obtener(documento.StrEmpresaFacturador);
+			}
+
 			// valida que la empresa se encuentre como facturador electrónico
-			if (documento.TblEmpresasFacturador.IntHabilitacion == 0)
+			if (documento.TblEmpresasFacturador != null && documento.TblEmpresasFacturador.IntHabilitacion == 0)
 				throw new ArgumentException(string.Format("No se encuentra habilitado como Facturador Electrónico - {0} {1}", documento.StrEmpresaFacturador, documento.TblEmpresasFacturador.StrRazonSocial));
 
 			// obtiene el proceso actual del documento
