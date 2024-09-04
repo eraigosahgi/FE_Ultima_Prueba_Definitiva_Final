@@ -25,7 +25,9 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 			{
 				//List<Factura> datos = new List<Factura>();
 				//datos.Add(documentos);
-				
+
+				//return Request.CreateResponse(HttpStatusCode.NotFound, new FaultReason("Sitio no habilitado para peticiones de recepción"));
+
 				List<DocumentoRespuesta> lista_registros = Ctl_Documentos.Procesar(documentos);
 
 				return Request.CreateResponse(HttpStatusCode.OK, lista_registros);
