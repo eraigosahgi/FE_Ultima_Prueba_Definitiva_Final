@@ -2892,12 +2892,12 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				List<TblDocumentos> datos = new List<TblDocumentos>();
 
-				string respuesta_error_dian = string.Empty;
-
 				List<string> lista_doc = Coleccion.ConvertirLista(lista_documentos, ',');
 
 				foreach (var item in lista_doc)
 				{
+					string respuesta_error_dian = string.Empty;
+
 					TblDocumentos documento = ctl_documento.ActualizarRespuestaAcuse(Guid.Parse(item), estado, "", ref respuesta_error_dian, (!string.IsNullOrEmpty(usuario)) ? usuario : "");
 
 					bool Actualizar_doc = false;
