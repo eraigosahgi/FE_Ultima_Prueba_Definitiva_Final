@@ -277,6 +277,15 @@ namespace HGInetMiFacturaElectronicaWeb.Properties {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a 1324.
+        /// </summary>
+        internal static string EventosMasivos {
+            get {
+                return ResourceManager.GetString("EventosMasivos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a 13.
         /// </summary>
         internal static string FacturacionElectronicaPrincipal {

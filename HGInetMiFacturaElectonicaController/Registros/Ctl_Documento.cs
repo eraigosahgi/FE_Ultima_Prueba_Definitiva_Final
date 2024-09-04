@@ -786,7 +786,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			int Categoria = CategoriaEstado.ValidadoDian.GetHashCode();
 
 			//Se actualiza el estado de acuse antes de mostrar en plataforma
-			ActualizarAcuseAdquiriente(identificacion_facturador, identificacion_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date, tipo_filtro_fecha);
+			//ActualizarAcuseAdquiriente(identificacion_facturador, identificacion_adquiente, numero_documento, estado_recibo, fecha_inicio.Date, fecha_fin.Date, tipo_filtro_fecha);
 
 			List<ObjDocumentos> respuesta = new List<ObjDocumentos>();
 

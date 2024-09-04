@@ -5,10 +5,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContenidoPagina" runat="server">
 
 	<!-- JS DocumentosAdquiriente-->
-	<script src="../../Scripts/Services/FiltroGenerico.js?vjs20220928"></script>
-	<script src="../../Scripts/Services/MaestrosEnum.js?vjs20220928"></script>
+	<%--<script src="../../Scripts/Services/FiltroGenerico.js?vjs20220928"></script>--%>
+	<%--<script src="../../Scripts/Services/MaestrosEnum.js?vjs20220928"></script>--%>
 	<script src="../../Scripts/Pages/DocumentosAdquiriente.js?vjs20220928"></script>
-	<script src="../../Scripts/Pages/ModalPagos.js?vjs20220928"></script>
+	<%--<script src="../../Scripts/Pages/ModalPagos.js?vjs20220928"></script>--%>
 	<!-- CONTENEDOR PRINCIPAL -->
 	<div data-ng-app="App">
 
@@ -60,9 +60,9 @@
 
 									
 
-									<div class="col-md-4" style="margin-top: 1%">
+									<%--<div class="col-md-4" style="margin-top: 1%">
 										<div data-hgi-filtro="Facturador"></div>
-									</div>
+									</div>--%>
 
 									<div class="col-md-4"  style="margin-top: 1%">
 										<i class="icon-files-empty"></i>
@@ -95,11 +95,14 @@
 			<div class="col-md-12">
 				<div class="panel panel-white">
 					<div class="panel-heading">
-						<h6 class="panel-title">Datos</h6>
-						<div style="float: right; margin-right: 2%; margin-top: -20px;">
+						<h6 class="panel-title" style="max-width: 20%;">Datos</h6>
+						<div style="float: right;  margin-top: -20px;">
 							<%--<label id="Total" class="text-semibold text-right" style="font-size: medium;"></label>--%>
-							<label id="Total_a_Pagar" class="text-semibold text-right" style="font-size: medium; margin-right: 20px;"></label>
-							<div id="multipagos"></div>
+							<%--<label id="Total_a_Pagar" class="text-semibold text-right" style="font-size: medium; margin-right: 20px;"></label>
+							<div id="multipagos"></div>--%>
+								<div id="BtnAprobado"></div>
+							<div id="BtnEntregado"></div>
+							<div id="BtnLeido"></div>
 						</div>
 					</div>
 
@@ -115,9 +118,9 @@
 			<!--/DATOS -->
 		</div>
 		<!--Aplicacion de Pagos-->
-		<div data-ng-include="'ModalPagos.aspx'"></div>
+		<%--<div data-ng-include="'ModalPagos.aspx'"></div>
 		<div data-ng-include="'Partials/ModalFormasDePago.html'"></div>
-		<div data-ng-include="'Partials/ModalPagosEmbebida.html'"></div>
+		<div data-ng-include="'Partials/ModalPagosEmbebida.html'"></div>--%>
 		<!--Aplicacion de Pagos-->
 	</div>
 </asp:Content>

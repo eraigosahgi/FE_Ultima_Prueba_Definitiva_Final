@@ -7,9 +7,9 @@
 
 var Estado;
 var UsuarioSession = "";
-var App = angular.module('App', ['dx', 'AppMaestrosEnum', 'AppSrvFiltro']);
+var App = angular.module('App', ['dx']);
 //Controlador para la consulta de documentos Adquiriente
-App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, $location, SrvMaestrosEnum, SrvFiltro) {
+App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, $location) {
 
 	var ValidarGestionPagos = "ValidarGestionPagos";
 	$("#summary_Pagos").dxValidationSummary(
@@ -17,9 +17,50 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		validationGroup: ValidarGestionPagos
 	});
 
-	SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/ObtenerMisFacturadores', 'Identificacion', 'RazonSocial', false, 7).then(function (Datos) {
-		$scope.Facturador = Datos;
+	$("#BtnAprobado").dxButton({
+		text: "Acuse de Recibo",
+		type: "info",
+		visible: false,
+		onClick: function (e) {
+			eventos(1);
+		}
 	});
+
+	$("#BtnEntregado").dxButton({
+		text: "Recibo de Mercancia",
+		type: "default",
+		visible: false,
+		onClick: function (e) {
+			eventos(4);
+		}
+	});
+
+	$("#BtnLeido").dxButton({
+		text: "Aceptación Expresa",
+		type: "success",
+		visible: false,
+		onClick: function (e) {
+			eventos(5);
+		}
+	});
+
+
+	function eventos(estado) {
+		$('#wait').show();
+		$http.get('/Api/EventoMultiple?lista_documentos=' + $scope.documentos + '&estado=' + estado).then(function (response) {
+			$('#wait').hide();
+			consultar();
+		}, function (error) {
+			$('#wait').hide();
+			if (error != undefined) {
+				DevExpress.ui.notify(error.data.ExceptionMessage, 'error', 6000);
+			}
+		});
+	}
+
+	//SrvFiltro.ObtenerFiltro('Documento Facturador', 'Facturador', 'icon-user-tie', 115, '/api/ObtenerMisFacturadores', 'Identificacion', 'RazonSocial', false, 7).then(function (Datos) {
+	//	$scope.Facturador = Datos;
+	//});
 
 	$("#multipagos").dxButton({
 		text: "Pagar",
@@ -88,17 +129,17 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
            fecha_fin = "",
            tipo_filtro_fecha = 1;
 
-	SrvMaestrosEnum.ObtenerEnum(5).then(function (data) {
-		Estado = data;
-		cargarFiltros();
-	});
+	//SrvMaestrosEnum.ObtenerEnum(5).then(function (data) {
+	//	Estado = data;
 
+	//});
+	cargarFiltros();
 
-	SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
-		codigo_adquiente = data[0].IdentificacionEmpresa;
-		UsuarioSession = data[0].IdSeguridad;
-		//consultar();
-	});
+	//SrvMaestrosEnum.ObtenerSesionUsuario().then(function (data) {
+	//	codigo_adquiente = data[0].IdentificacionEmpresa;
+	//	UsuarioSession = data[0].IdSeguridad;
+	//	//consultar();
+	//});
 
 
 	function cargarFiltros() {
@@ -161,7 +202,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		text: 'Consultar',
 		type: 'default',
 		onClick: function (e) {
-			consultar2();
+			consultar();
 		}
 	};
 
@@ -178,7 +219,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		var codigo_facturador = (txt_hgi_Facturador != undefined) ? txt_hgi_Facturador : '';
 
 		$('#wait').show();
-		$http.get('/api/ObtenerDocumentosAdquirientes?codigo_facturador=' + codigo_facturador + '&codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
+		$http.get('/api/ObtenerDocumentosRecibidos?codigo_facturador=' + codigo_facturador + '&codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
 			$('#wait').hide();
 			$("#gridDocumentos").dxDataGrid({
 				dataSource: response.data,
@@ -208,7 +249,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 		//ControladorApi: /Api/Documentos/
 		//Datos GET: codigo_adquiente - numero_documento - estado_recibo - fecha_inicio - fecha_fin
 		$('#wait').show();
-		$http.get('/api/ObtenerDocumentosAdquirientes?codigo_facturador=' + codigo_facturador + '&codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
+		$http.get('/api/ObtenerDocumentosRecibidos?codigo_facturador=' + codigo_facturador + '&codigo_adquiente=' + codigo_adquiente + '&numero_documento=' + numero_documento + '&estado_recibo=' + estado_recibo + '&fecha_inicio=' + fecha_inicio + '&fecha_fin=' + fecha_fin + '&tipo_filtro_fecha=' + tipo_filtro_fecha).then(function (response) {
 			$('#wait').hide();
 			$("#gridDocumentos").dxDataGrid({
 				onToolbarPreparing: function (e) {
@@ -221,7 +262,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 							icon: "clear", elementAttr: { title: "Reordenar Columnas" },
 							onClick: function () {
 								localStorage.removeItem('storageConsultarDocumentosAdquirientes');
-								consultar();
+								consultar2();
 							}
 						}
 					})
@@ -291,23 +332,43 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 					allowColumnDragging: true,
 					visible: true
 				}
-
-                , columns: [
-				{
-					caption: "Seleccionar",
-					width: "auto",
-					cellTemplate: function (container, options) {
-						if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo > 0) {
-							$('<div id="chkSaldo_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
-								name: "chkSaldo_" + options.data.StrIdSeguridad,
-								onValueChanged: function (data) {
-									validarSeleccion();
-								}
-							})
-							.appendTo(container);
+				, selection: {
+					mode: 'multiple',
+				}
+				, onSelectionChanged: function (selectedEstado) {
+					var lista = '';
+					var data = selectedEstado.selectedRowsData;
+					if (data.length > 0) {
+						for (var i = 0; i < data.length; i++) {
+							lista += (lista) ? ',' : '';
+							lista += data[i].StrIdSeguridad;
 						}
-					},
-				},
+						$("#BtnAprobado").dxButton({ visible: true });
+						$("#BtnEntregado").dxButton({ visible: true });
+						$("#BtnLeido").dxButton({ visible: true });
+					} else {
+						$("#BtnAprobado").dxButton({ visible: false });
+						$("#BtnEntregado").dxButton({ visible: false });
+						$("#BtnLeido").dxButton({ visible: false });
+					}
+					$scope.documentos = lista ;
+				}
+                , columns: [
+				//{
+				//	caption: "Seleccionar",
+				//	width: "auto",
+				//	cellTemplate: function (container, options) {
+				//		if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo > 0) {
+				//			$('<div id="chkSaldo_' + options.data.StrIdSeguridad + '"></div>').dxCheckBox({
+				//				name: "chkSaldo_" + options.data.StrIdSeguridad,
+				//				onValueChanged: function (data) {
+				//					validarSeleccion();
+				//				}
+				//			})
+				//			.appendTo(container);
+				//		}
+				//	},
+				//},
                     {
                     	caption: "Archivos",
                     	width: "auto",
@@ -431,9 +492,9 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
                       	dataField: "MotivoRechazo",
                       },
 						{
-				 		caption: "Forma Pago",
-				 		visible: false,
-				 		dataField: "FormaPago",
+							caption: "Forma Pago",
+							visible: false,
+							dataField: "FormaPago",
 						},
 
                       //{
@@ -453,59 +514,56 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 					  //  		.appendTo(container);
                       //	}
                       //},
-					   {
-					   	caption: "Saldo",
-					   	dataField: "Saldo",
-					   	//visible: false,
-					   	//cssClass: "col-md-1 col-xs-3",
-					   	//disabled: !data.habilitar_documento,
-					   	cellTemplate: function (container, options) {
+					   //{
+					   //	caption: "Saldo",
+					   //	dataField: "Saldo",
+					   //	//visible: false,
+					   //	//cssClass: "col-md-1 col-xs-3",
+					   //	//disabled: !data.habilitar_documento,
+					   //	cellTemplate: function (container, options) {
 
-					   		if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo > 0) {
-					   			$('<div id="txtSaldo_' + options.data.StrIdSeguridad + '"></div>').dxNumberBox({
-					   				value: options.data.Saldo,
-					   				name: "txtSaldo_" + options.data.StrIdSeguridad,
-					   				disabled: (options.data.PagosParciales == 1) ? false : true,
-					   				inputAttr: {
-					   					id: "txtSaldo_cursor_" + options.data.StrIdSeguridad,
-					   					style: "width: 100%; text-align:right;",
-					   				},
+					   //		if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo > 0) {
+					   //			$('<div id="txtSaldo_' + options.data.StrIdSeguridad + '"></div>').dxNumberBox({
+					   //				value: options.data.Saldo,
+					   //				name: "txtSaldo_" + options.data.StrIdSeguridad,
+					   //				disabled: (options.data.PagosParciales == 1) ? false : true,
+					   //				inputAttr: {
+					   //					id: "txtSaldo_cursor_" + options.data.StrIdSeguridad,
+					   //					style: "width: 100%; text-align:right;",
+					   //				},
 
-					   				//tabIndex: Documento_Indice,
-					   				format: {
-					   					type: "fixedPoint",
-					   					precision: 2
-					   				},
-					   				onValueChanged: function (data) {
-					   					validarSeleccion();
-					   				},
-					   			})
-					    		.dxValidator({
-					    			validationGroup: ValidarGestionPagos,
-					    			validationRules: [{
-					    				type: "numeric",
-					    				message: "El campo debe ser numerico"
-					    			}, {
-					    				type: "range",
-					    				//min: 0,
-					    				max: options.data.Saldo,
-					    				message: "Monto incorrecto"
-					    			}]
-					    		})
-					    		.appendTo(container);
-					   		}
-					   	},
-
-
-
-					   },
-					     {
-					     	caption: "Valor Total",
-					     	dataField: "IntVlrTotal",
-					     	//cssClass: "col-md-1 col-xs-1",
-					     	//width: '12%',
-					     	Type: Number,
-					     }
+					   //				//tabIndex: Documento_Indice,
+					   //				format: {
+					   //					type: "fixedPoint",
+					   //					precision: 2
+					   //				},
+					   //				onValueChanged: function (data) {
+					   //					validarSeleccion();
+					   //				},
+					   //			})
+					   // 		.dxValidator({
+					   // 			validationGroup: ValidarGestionPagos,
+					   // 			validationRules: [{
+					   // 				type: "numeric",
+					   // 				message: "El campo debe ser numerico"
+					   // 			}, {
+					   // 				type: "range",
+					   // 				//min: 0,
+					   // 				max: options.data.Saldo,
+					   // 				message: "Monto incorrecto"
+					   // 			}]
+					   // 		})
+					   // 		.appendTo(container);
+					   //		}
+					   //	},
+					   //},
+					{
+						caption: "Valor Total",
+						dataField: "IntVlrTotal",
+						//cssClass: "col-md-1 col-xs-1",
+						//width: '12%',
+						Type: Number,
+					}
                     ,
 					{
 						caption: "SubTotal",
@@ -525,41 +583,41 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 						visible: false
 					}
                     ,
-                {
-                	///Opción de pago
-                	//cssClass: "col-md-1 ",
-                	caption: "Pago",
-                	width: "120px",
-                	alignment: "center",
+                //{
+                //	///Opción de pago
+                //	//cssClass: "col-md-1 ",
+                //	caption: "Pago",
+                //	width: "120px",
+                //	alignment: "center",
 
-                	cellTemplate: function (container, options) {
-                		if (options.data.Estado != 400) {
-                			var RazonSocial = options.data.Facturador.replace(" ", "_%%_");
-                			var click = " onClick=ConsultarPago1('" + options.data.StrIdSeguridad + "','" + options.data.IntVlrTotal + "','" + options.data.PagosParciales + "'," + options.data.poseeIdComercioPSE + "," + options.data.poseeIdComercioTC + ")";
-
-
-                			var boton_pagar = '<div  ' + click + ' target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" class="dx-button dx-button-success dx-button-mode-contained dx-widget dx-button-has-icon dx-button-has-text" role="button" aria-label="Pagar" tabindex="10012"><div class="dx-button-content"><i class="dx-icon dx-icon-money"></i><span class="dx-button-text">Pagar</span></div></div>'
+                //	cellTemplate: function (container, options) {
+                //		if (options.data.Estado != 400) {
+                //			var RazonSocial = options.data.Facturador.replace(" ", "_%%_");
+                //			var click = " onClick=ConsultarPago1('" + options.data.StrIdSeguridad + "','" + options.data.IntVlrTotal + "','" + options.data.PagosParciales + "'," + options.data.poseeIdComercioPSE + "," + options.data.poseeIdComercioTC + ")";
 
 
-                			var imagen = "";
-                			if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1) {
-                				imagen = boton_pagar;//  "<a " + click + " style='font-size: 20px !important; color: #4caf50;' class='icon dx-icon-money' title='Pagar' target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' ></a><a " + click + " style='font-size: 16px !important; color: black;' title='Pagar' target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Pagar</a>";
-                			} else {
-                				imagen = "";
+                //			var boton_pagar = '<div  ' + click + ' target="_blank" data-toggle="modal" data-target="#modal_Pagos_Electronicos" class="dx-button dx-button-success dx-button-mode-contained dx-widget dx-button-has-icon dx-button-has-text" role="button" aria-label="Pagar" tabindex="10012"><div class="dx-button-content"><i class="dx-icon dx-icon-money"></i><span class="dx-button-text">Pagar</span></div></div>'
 
-                			}
 
-                			if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo <= 0) {//aqui se debe colocar el status que indica el pago de la factura                            
-                				imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' class='btn btn-default' >Ver</a>"
-                			}
+                //			var imagen = "";
+                //			if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1) {
+                //				imagen = boton_pagar;//  "<a " + click + " style='font-size: 20px !important; color: #4caf50;' class='icon dx-icon-money' title='Pagar' target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' ></a><a " + click + " style='font-size: 16px !important; color: black;' title='Pagar' target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' >Pagar</a>";
+                //			} else {
+                //				imagen = "";
 
-                			$("<div>")
-							.append($(imagen))
+                //			}
 
-							 .appendTo(container);
-                		}
-                	}
-                }
+                //			if (options.data.tipodoc != 'Nota Crédito' && options.data.poseeIdComercio == 1 && options.data.Saldo <= 0) {//aqui se debe colocar el status que indica el pago de la factura                            
+                //				imagen = "<a " + click + " target='_blank' data-toggle='modal' data-target='#modal_Pagos_Electronicos' class='btn btn-default' >Ver</a>"
+                //			}
+
+                //			$("<div>")
+				//			.append($(imagen))
+
+				//			 .appendTo(container);
+                //		}
+                //	}
+                //}
 
 
                 ],
@@ -797,7 +855,7 @@ App.controller('DocAdquirienteController', function ($scope, $rootScope, $http, 
 	};
 
 	txt_hgi_Facturador = "";
-	consultar();
+	//consultar();
 });
 
 
