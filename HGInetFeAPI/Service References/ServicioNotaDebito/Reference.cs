@@ -87,6 +87,9 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private System.DateTime FechaFacturaField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string FirmaDocField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Guid IdPlanField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -455,6 +458,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((this.FechaFacturaField.Equals(value) != true)) {
                     this.FechaFacturaField = value;
                     this.RaisePropertyChanged("FechaFactura");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string FirmaDoc {
+            get {
+                return this.FirmaDocField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.FirmaDocField, value) != true)) {
+                    this.FirmaDocField = value;
+                    this.RaisePropertyChanged("FirmaDoc");
                 }
             }
         }
@@ -2173,6 +2189,9 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private string CodigoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime FechaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private decimal ValorField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
@@ -2194,6 +2213,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((object.ReferenceEquals(this.CodigoField, value) != true)) {
                     this.CodigoField = value;
                     this.RaisePropertyChanged("Codigo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Fecha {
+            get {
+                return this.FechaField;
+            }
+            set {
+                if ((this.FechaField.Equals(value) != true)) {
+                    this.FechaField = value;
+                    this.RaisePropertyChanged("Fecha");
                 }
             }
         }
@@ -3460,6 +3492,9 @@ namespace HGInetFeAPI.ServicioNotaDebito {
         private System.DateTime FechaUltimoProcesoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdAmbienteField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string IdDocumentoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -3701,6 +3736,19 @@ namespace HGInetFeAPI.ServicioNotaDebito {
                 if ((this.FechaUltimoProcesoField.Equals(value) != true)) {
                     this.FechaUltimoProcesoField = value;
                     this.RaisePropertyChanged("FechaUltimoProceso");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdAmbiente {
+            get {
+                return this.IdAmbienteField;
+            }
+            set {
+                if ((this.IdAmbienteField.Equals(value) != true)) {
+                    this.IdAmbienteField = value;
+                    this.RaisePropertyChanged("IdAmbiente");
                 }
             }
         }

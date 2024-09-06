@@ -33,6 +33,7 @@
       <xs:element minOccurs="0" name="EnvioSms" type="xs:int" />
       <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FechaFactura" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FirmaDoc" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdPlan" type="ser:guid" />
       <xs:element minOccurs="0" name="IdentificacionIntegrador" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdentificacionProveedor" nillable="true" type="xs:string" />
@@ -297,6 +298,7 @@
       <xs:element minOccurs="0" name="EstadoDian" nillable="true" type="tns:RespuestaDian" />
       <xs:element minOccurs="0" name="FechaRecepcion" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FechaUltimoProceso" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="IdAmbiente" type="xs:int" />
       <xs:element minOccurs="0" name="IdDocumento" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="IdEstado" type="xs:int" />
       <xs:element minOccurs="0" name="IdEstadoEnvioMail" type="xs:int" />

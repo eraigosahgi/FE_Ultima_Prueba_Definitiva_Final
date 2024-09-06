@@ -25,21 +25,8 @@ namespace HGInetFeAPI
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <param name="documentos_envio">documentos de tipo Nomina</param>
 		/// <returns>respuesta del proceso de los documentos</returns>
-		public static List<ServicioAjusteNomina.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioAjusteNomina.NominaAjuste> documentos_envio, bool Obtener_ruta = true)
+		public static List<ServicioAjusteNomina.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioAjusteNomina.NominaAjuste> documentos_envio, bool Obtener_ruta = true, bool Api = false)
 		{
-
-			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
-			if (!UrlWs.Contains("hgi") && Obtener_ruta)
-			{
-				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
-			}
-
-			// valida la URL del servicio web
-			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
-
-			//Url Api
-			UrlWs = string.Format("{0}Api/Ajustenomina/Recepcion", Ctl_Utilidades.ValidarUrl(UrlWs));
-
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
 				throw new ApplicationException("Parámetro Serial de tipo string inválido.");
@@ -77,120 +64,139 @@ namespace HGInetFeAPI
 				}
 				item.DataKey = dataKey;
 			}
-			string vcData = JsonConvert.SerializeObject(documentos_envio);
-			byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
 
-			List<ServicioAjusteNomina.DocumentoRespuesta> respuesta = new List<ServicioAjusteNomina.DocumentoRespuesta>();
 
-			try
+
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi") && Obtener_ruta)
 			{
-				HttpWebRequest vtRequest = (HttpWebRequest)WebRequest.Create(UrlWs);
-
-				vtRequest.Method = "POST";
-				vtRequest.ContentType = "application/json";
-				vtRequest.Accept = "application/json";
-				vtRequest.ContentLength = vtDataStream.Length;
-
-				//Se agrega instruccion para habilitar la seguridad en el envio
-				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-
-				Stream newStream = vtRequest.GetRequestStream();
-
-				// Enviamos los datos
-				newStream.Write(vtDataStream, 0, vtDataStream.Length);
-				newStream.Close();
-
-				// ejecución del servicio web
-				HttpWebResponse vtHttpResponse = (HttpWebResponse)vtRequest.GetResponse();
-
-				if (vtHttpResponse.StatusCode == HttpStatusCode.OK)
-				{
-					using (StreamReader vtStreamReader = new StreamReader(vtHttpResponse.GetResponseStream()))
-					{
-						// Leer el contenido de la respuesta como una cadena JSON
-						string jsonResponse = vtStreamReader.ReadToEnd();
-
-						// Deserializar la respuesta JSON en un objeto MiObjeto
-						respuesta = JsonConvert.DeserializeObject<List<ServicioAjusteNomina.DocumentoRespuesta>>(jsonResponse);
-					}
-
-				}
-				vtHttpResponse.Close();
-
-				return respuesta;
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
 			}
-			catch (WebException ex)
+
+			if (Api == true)
 			{
-				string ex_message = string.Empty;
-				// Manejar excepciones de WebException
-				if (ex.Response != null)
+				//Url Api
+				UrlWs = string.Format("{0}Api/Ajustenomina/Recepcion", Ctl_Utilidades.ValidarUrl(UrlWs));
+
+				string vcData = JsonConvert.SerializeObject(documentos_envio);
+				byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
+
+				List<ServicioAjusteNomina.DocumentoRespuesta> respuesta = new List<ServicioAjusteNomina.DocumentoRespuesta>();
+
+				try
 				{
-					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					HttpWebRequest vtRequest = (HttpWebRequest)WebRequest.Create(UrlWs);
+
+					vtRequest.Method = "POST";
+					vtRequest.ContentType = "application/json";
+					vtRequest.Accept = "application/json";
+					vtRequest.ContentLength = vtDataStream.Length;
+
+					//Se agrega instruccion para habilitar la seguridad en el envio
+					System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+					Stream newStream = vtRequest.GetRequestStream();
+
+					// Enviamos los datos
+					newStream.Write(vtDataStream, 0, vtDataStream.Length);
+					newStream.Close();
+
+					// ejecución del servicio web
+					HttpWebResponse vtHttpResponse = (HttpWebResponse)vtRequest.GetResponse();
+
+					if (vtHttpResponse.StatusCode == HttpStatusCode.OK)
 					{
-						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
-						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						using (StreamReader vtStreamReader = new StreamReader(vtHttpResponse.GetResponseStream()))
 						{
-							string errorText = reader.ReadToEnd();
-							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+							// Leer el contenido de la respuesta como una cadena JSON
+							string jsonResponse = vtStreamReader.ReadToEnd();
+
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							respuesta = JsonConvert.DeserializeObject<List<ServicioAjusteNomina.DocumentoRespuesta>>(jsonResponse);
+						}
+
+					}
+					vtHttpResponse.Close();
+
+					return respuesta;
+				}
+				catch (WebException ex)
+				{
+					string ex_message = string.Empty;
+					// Manejar excepciones de WebException
+					if (ex.Response != null)
+					{
+						using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						{
+							ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+							using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+							{
+								string errorText = reader.ReadToEnd();
+								ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+							}
 						}
 					}
-				}
-				else
-				{
-					ex_message = ("Error: " + ex.Message);
-				}
+					else
+					{
+						ex_message = ("Error: " + ex.Message);
+					}
 
-				throw new Exception(ex_message, ex);
+					throw new Exception(ex_message, ex);
+				}
 			}
+			else
+			{
+				// valida la URL del servicio web
+				UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
-			//List<ServicioAjusteNomina.NominaAjuste> datos = new List<ServicioAjusteNomina.NominaAjuste>();
+				ServicioAjusteNomina.ServicioAjusteNominaClient cliente_ws = null;
 
-			//ServicioAjusteNomina.ServicioAjusteNominaClient cliente_ws = null;
+				try
+				{
+					// conexión cliente para el servicio web
+					EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+					cliente_ws = new ServicioAjusteNomina.ServicioAjusteNominaClient(Ctl_Utilidades.ObtenerBinding(UrlWs, Obtener_ruta), endpoint_address);
+					cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
 
-			//try
-			//{
-			//	// conexión cliente para el servicio web
-			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-			//	cliente_ws = new ServicioAjusteNomina.ServicioAjusteNominaClient(Ctl_Utilidades.ObtenerBinding(UrlWs, Obtener_ruta), endpoint_address);
-			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
 
-				
 
-			//	// datos para la petición
-			//	ServicioAjusteNomina.RecepcionRequest peticion = new ServicioAjusteNomina.RecepcionRequest()
-			//	{
-			//		documentos = documentos_envio
-			//	};
+					// datos para la petición
+					ServicioAjusteNomina.RecepcionRequest peticion = new ServicioAjusteNomina.RecepcionRequest()
+					{
+						documentos = documentos_envio
+					};
 
-			//	// ejecución del servicio web
-			//	ServicioAjusteNomina.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
+					// ejecución del servicio web
+					ServicioAjusteNomina.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
 
-			//	// resultado del servicio web
-			//	List<ServicioAjusteNomina.DocumentoRespuesta> result = respuesta.RecepcionResult;
+					// resultado del servicio web
+					List<ServicioAjusteNomina.DocumentoRespuesta> result = respuesta.RecepcionResult;
 
-			//	if (respuesta != null)
-			//		return result.ToList();
-			//	else
-			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
+					if (respuesta != null)
+						return result.ToList();
+					else
+						throw new Exception("Error al obtener los datos con los parámetros indicados.");
 
-			//}
-			//catch (FaultException excepcion)
-			//{
-			//	throw new ApplicationException(excepcion.Message, excepcion);
-			//}
-			//catch (CommunicationException excepcion)
-			//{
-			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			//}
-			//catch (Exception excepcion)
-			//{
-			//	throw excepcion;
-			//}
-			//finally
-			//{
-			//	if (cliente_ws != null)
-			//		cliente_ws.Abort();
-			//}
+				}
+				catch (FaultException excepcion)
+				{
+					throw new ApplicationException(excepcion.Message, excepcion);
+				}
+				catch (CommunicationException excepcion)
+				{
+					throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+				}
+				catch (Exception excepcion)
+				{
+					throw excepcion;
+				}
+				finally
+				{
+					if (cliente_ws != null)
+						cliente_ws.Abort();
+				}
+
+			}
 		}
 
 	}
