@@ -726,6 +726,21 @@ namespace HGInetUBLv2_1
 						{
 							anticipo.ID.Value = consecutivo.ToString();
 							anticipo.ID.schemeID = item.Codigo;
+							try
+							{
+								anticipo.ReceivedDate = new ReceivedDateType();
+								if (item.Fecha == DateTime.MinValue)
+								{
+									anticipo.ReceivedDate.Value = documento.Fecha;
+								}
+								else
+								{
+									anticipo.ReceivedDate.Value = item.Fecha;
+								}
+							}
+							catch (Exception ex)
+							{
+							}
 							consecutivo++;
 						}
 						list_anticipos.Add(anticipo);

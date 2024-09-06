@@ -21,6 +21,11 @@ namespace HGInetMiFacturaElectonicaData.ModeloServicio.Documentos
 		/// </summary>
 		public decimal Valor { get; set; }
 
+		/// <summary>
+		/// Fecha en la cual el pago fue recibido.(*) Requerido para el sector Salud
+		/// </summary>
+		public DateTime Fecha { get; set; }
+
 
 	}
 }
