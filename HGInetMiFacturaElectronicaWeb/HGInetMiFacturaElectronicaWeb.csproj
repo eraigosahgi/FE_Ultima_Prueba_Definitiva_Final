@@ -1974,6 +1974,7 @@
     <Content Include="Scripts\Pages\DocumentosAdmin.js" />
     <Content Include="Scripts\Pages\DocumentosAdquirientePagos.js" />
     <Content Include="Scripts\Pages\DocumentosEmisor.js" />
+    <Content Include="Scripts\Pages\DocumentosRecepcionPagos.js" />
     <Content Include="Scripts\Pages\EventosRadian.js" />
     <Content Include="Scripts\Pages\HGIpayConsultaDocumentos.js" />
     <Content Include="Scripts\Pages\ImportacionDocumentosRecibidos.js" />
@@ -2854,6 +2855,7 @@
     <Content Include="Views\Pages\ConsultaRecepcionDocumentos.aspx" />
     <Content Include="Views\Pages\ConsultaResoluciones.aspx" />
     <Content Include="Views\Pages\DocumentosEmisor.aspx" />
+    <Content Include="Views\Pages\DocumentosRecepcionPagos.aspx" />
     <Content Include="Views\Pages\GestionAlertas.aspx" />
     <Content Include="Views\Pages\ConfigurarPlanes.aspx" />
     <Content Include="Views\Pages\AuditoriaDocumento.aspx" />
@@ -3162,6 +3164,13 @@
     </Compile>
     <Compile Include="Views\Pages\DocumentosEmisor.aspx.designer.cs">
       <DependentUpon>DocumentosEmisor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\DocumentosRecepcionPagos.aspx.cs">
+      <DependentUpon>DocumentosRecepcionPagos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Pages\DocumentosRecepcionPagos.aspx.designer.cs">
+      <DependentUpon>DocumentosRecepcionPagos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\GestionAlertas.aspx.cs">
       <DependentUpon>GestionAlertas.aspx</DependentUpon>

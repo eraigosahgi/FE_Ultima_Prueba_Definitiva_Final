@@ -223,4 +223,8 @@
   <data name="MonitorDeRechazos" xml:space="preserve">
     <value>1374</value>
   </data>
+  <data name="DocumentosRecepcionPagos" xml:space="preserve">
+    <value>1325</value>
+    <comment>Consulta de documentos a pagar en el area de recepción</comment>
+  </data>
 </root>

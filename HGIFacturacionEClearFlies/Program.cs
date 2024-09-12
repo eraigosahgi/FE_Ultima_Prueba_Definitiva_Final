@@ -73,7 +73,7 @@ namespace HGIFacturacionEClearFlies
 
                         //// Fechas de consulta de archivos a borrar
                         DateTime inicial = GetFecha().AddYears(-5);
-                        DateTime final = GetFecha().AddDays(-90);
+                        DateTime final = GetFecha().AddDays(-100);
 
                         string directorio_xml_sin_firmar = string.Format(@"{0}\{1}", item, carpeta_xml_sin_firmar);
 
