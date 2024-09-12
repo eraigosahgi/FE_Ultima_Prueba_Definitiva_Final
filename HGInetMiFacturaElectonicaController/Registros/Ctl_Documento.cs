@@ -393,6 +393,12 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		}
 
+		public void Eliminar(TblDocumentos documento)
+		{
+			this.Delete(documento);
+			
+		}
+
 
 		/// <summary>
 		/// Obtiene la Categoria segun el estado en que este el documento
@@ -505,6 +511,27 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										   select documentos).OrderByDescending(x => x.DatFechaDocumento).FirstOrDefault();
 
 				return documento;
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		public List<TblDocumentos> ObtenerListaDocumento(string identificacion_obligado, long numero_documento, string prefijo, int tipo_doc)
+		{
+			try
+			{
+
+				context.Configuration.LazyLoadingEnabled = false;
+				var documentos = (from documento in context.TblDocumentos
+										   where (documento.IntNumero == numero_documento)
+										   && (documento.StrEmpresaFacturador.Equals(identificacion_obligado)
+										   && documento.StrPrefijo.Equals(prefijo)
+										   && documento.IntDocTipo.Equals(tipo_doc))
+										   select documento).OrderBy(x => x.DatFechaIngreso);
+
+				return documentos.ToList();
 			}
 			catch (Exception excepcion)
 			{
@@ -7610,7 +7637,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 										context.Configuration.LazyLoadingEnabled = false;
 
 										datos = (from doc in context.TblDocumentos
-												 where ((doc.StrUrlArchivoUbl.Contains("files") || doc.StrUrlArchivoUbl.Contains("archivos")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+												 where ((doc.StrUrlArchivoUbl.Contains("files.") || doc.StrUrlArchivoUbl.Contains("filesrecuperacion.")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
 												 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
 
 										if ((datos == null || datos.Count == 0) && fecha_fin_consulta.Hour == 23)
@@ -7618,7 +7645,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 											fecha_fin_consulta.AddHours(3);
 
 											datos = (from doc in context.TblDocumentos
-													 where ((doc.StrUrlArchivoUbl.Contains("files") || doc.StrUrlArchivoUbl.Contains("archivos")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+													 where ((doc.StrUrlArchivoUbl.Contains("files.") || doc.StrUrlArchivoUbl.Contains("filesrecuperacion.")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
 													 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
 										}
 
@@ -7643,29 +7670,45 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									{
 										foreach (TblDocumentos item in datos)
 										{
-											if (item.StrUrlArchivoUbl.Contains("mifactura"))
+											if (item.StrUrlArchivoUbl.Contains("files."))
 											{
-												item.StrUrlArchivoUbl = item.StrUrlArchivoUbl.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+												item.StrUrlArchivoUbl = item.StrUrlArchivoUbl.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
 											}
 
-											if (item.StrUrlArchivoPdf.Contains("mifactura"))
+											if (item.StrUrlArchivoPdf.Contains("files."))
 											{
-												item.StrUrlArchivoPdf = item.StrUrlArchivoPdf.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+												item.StrUrlArchivoPdf = item.StrUrlArchivoPdf.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+											}
+											else if (item.StrUrlArchivoPdf.Contains("archivos."))
+											{
+												item.StrUrlArchivoPdf = item.StrUrlArchivoPdf.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
 											}
 
-											if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoZip) && item.StrUrlArchivoZip.Contains("mifactura"))
+											if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoZip) && item.StrUrlArchivoZip.Contains("files."))
 											{
-												item.StrUrlArchivoZip = item.StrUrlArchivoZip.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+												item.StrUrlArchivoZip = item.StrUrlArchivoZip.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+											}
+											else if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoZip) && item.StrUrlArchivoZip.Contains("archivos."))
+											{
+												item.StrUrlArchivoZip = item.StrUrlArchivoZip.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
 											}
 
-											if (!string.IsNullOrWhiteSpace(item.StrUrlAcuseUbl) && item.StrUrlAcuseUbl.Contains("mifactura"))
+											if (!string.IsNullOrWhiteSpace(item.StrUrlAcuseUbl) && item.StrUrlAcuseUbl.Contains("files."))
 											{
-												item.StrUrlAcuseUbl = item.StrUrlAcuseUbl.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+												item.StrUrlAcuseUbl = item.StrUrlAcuseUbl.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+											}
+											else if (!string.IsNullOrWhiteSpace(item.StrUrlAcuseUbl) && item.StrUrlAcuseUbl.Contains("archivos."))
+											{
+												item.StrUrlAcuseUbl = item.StrUrlAcuseUbl.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
 											}
 
-											if (!string.IsNullOrWhiteSpace(item.StrUrlAnexo) && item.StrUrlAnexo.Contains("mifactura"))
+											if (!string.IsNullOrWhiteSpace(item.StrUrlAnexo) && item.StrUrlAnexo.Contains("files."))
 											{
-												item.StrUrlAnexo = item.StrUrlAnexo.Replace("https://files.mifacturaenlinea.com.co", "http://archivos.hgidocs.co");
+												item.StrUrlAnexo = item.StrUrlAnexo.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+											}
+											else if (!string.IsNullOrWhiteSpace(item.StrUrlAnexo) && item.StrUrlAnexo.Contains("archivos."))
+											{
+												item.StrUrlAnexo = item.StrUrlArchivoPdf.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
 											}
 
 
@@ -8430,6 +8473,362 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			if (MontCertificat.NotAfter < Fecha.GetFecha())
 				throw new ApplicationException(string.Format("Certificado digital {0} con fecha de vigencia {1}, se encuentra vencido", Path.GetFileNameWithoutExtension(ruta_certificado).Substring(0, 8), MontCertificat.NotAfter));
 
+		}
+
+		public async Task EliminarDocumentosRepetidos()
+		{
+			await Task.Factory.StartNew(() =>
+			{
+
+				try
+				{
+					//try
+					//{
+					//	RegistroLog.EscribirLog(new ApplicationException("Ingresa a obtener los documentos repetidos"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion);
+
+					//}
+					//catch (Exception)
+					//{
+
+					//}
+
+					List<DocumentoResumen> list_doc = ObtenerListaRepetidos();
+
+					//try
+					//{
+					//	RegistroLog.EscribirLog(new ApplicationException("Otiene los documentos repetidos"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Registros : {0} ", list_doc.Count.ToString()));
+
+					//}
+					//catch (Exception)
+					//{
+
+					//}
+
+					foreach (DocumentoResumen item in list_doc)
+					{
+						//Se obtiene los documentos que estan repetidos
+						List<TblDocumentos> Doc_repetidos = ObtenerListaDocumento(item.StrEmpresaFacturador, item.IntNumero, item.StrPrefijo, item.IntDocTipo);
+
+						//try
+						//{
+						//	RegistroLog.EscribirLog(new ApplicationException("Obtuvo los documentos repetidos"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Registros : {0}; Facturador: {1}; NumeroDoc: {2}; Prefijo: {3}; TipoDoc: {4}", Doc_repetidos.Count.ToString(), item.StrEmpresaFacturador, item.IntNumero, item.StrPrefijo, item.IntDocTipo));
+
+						//}
+						//catch (Exception)
+						//{
+
+						//}
+
+						string Cufe_correcto = string.Empty;
+
+						bool proceso_consulta_dian = true;
+
+						bool proceso_actualizado = false;
+
+						List<TblDocumentos> documentos_eliminar = new List<TblDocumentos>();
+
+						Ctl_Empresa ctl_empresa = new Ctl_Empresa();
+
+						TblEmpresas Facturador = ctl_empresa.Obtener(item.StrEmpresaFacturador, false);
+
+						foreach (TblDocumentos item_doc in Doc_repetidos)
+						{
+
+							bool continuar_proceso = true;
+							DocumentoRespuesta consulta_dian = new DocumentoRespuesta();
+
+							if (string.IsNullOrEmpty(item_doc.StrCufe))
+							{
+								proceso_consulta_dian = false;
+								continuar_proceso = false;
+							}
+
+							if (!string.IsNullOrEmpty(Cufe_correcto))
+							{
+								proceso_consulta_dian = false;
+
+								if (proceso_actualizado == true)
+									continuar_proceso = false;
+							}
+
+							//Siempre se consulta en la DIAN siempre y cuando tenga CUFE el resgitro en la BD e independiente si tiene estado validado o no
+							if (proceso_consulta_dian == true)
+							{
+								string id_validacion_previa = String.Empty;
+
+								if (item_doc.StrIdRadicadoDian != null)
+									id_validacion_previa = item_doc.StrIdRadicadoDian.ToString();
+
+								if (item_doc.TblEmpresasFacturador == null)
+								{
+									item_doc.TblEmpresasFacturador = Facturador;
+								}
+
+								//RegistroLog.EscribirLog(new ApplicationException("Ingresa a Consultar el documento"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.consulta, string.Format("Consulta"));
+
+								try
+								{
+									if (!item_doc.StrProveedorEmisor.Equals(Constantes.NitResolucionsinPrefijo))
+									{
+										item_doc.TblEmpresasFacturador.IntVersionDian = 2;
+										consulta_dian.EstadoDian = new RespuestaDian();
+										consulta_dian.EstadoDian.EstadoDocumento = EstadoDocumentoDian.Aceptado.GetHashCode();
+									}
+									else
+									{
+										consulta_dian = Ctl_Documentos.Consultar(item_doc, item_doc.TblEmpresasFacturador, ref consulta_dian, id_validacion_previa, 0, false);
+									}
+								}
+								catch (Exception ex)
+								{
+
+									RegistroLog.EscribirLog(ex, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Consulta"));
+
+									try
+									{
+										consulta_dian = Ctl_Documentos.Consultar(item_doc, item_doc.TblEmpresasFacturador, ref consulta_dian, id_validacion_previa, 0, false);
+									}
+									catch (Exception)
+									{
+									}
+								}
+
+								if (consulta_dian.EstadoDian != null && consulta_dian.EstadoDian.EstadoDocumento == EstadoDocumentoDian.Aceptado.GetHashCode())
+								{
+									Cufe_correcto = item_doc.StrCufe;
+
+									//RegistroLog.EscribirLog(new ApplicationException("CUFE Correcto"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.consulta, string.Format("CUFE: {0}", Cufe_correcto));
+
+									if ((item_doc.IntIdEstado != ProcesoEstado.Finalizacion.GetHashCode() && item_doc.IntIdEstado != ProcesoEstado.EnvioEmailAcuse.GetHashCode()))
+									{
+										continuar_proceso = false;
+									}
+
+								}
+								else
+								{
+									continuar_proceso = false;
+								}
+							}
+
+							if (continuar_proceso == true)
+							{
+								if ((item_doc.IntIdEstado == ProcesoEstado.Finalizacion.GetHashCode() || item_doc.IntIdEstado == ProcesoEstado.EnvioEmailAcuse.GetHashCode()))
+								{
+									//RegistroLog.EscribirLog(new ApplicationException("Ingresa a actualizar la informacion"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.consulta, string.Format("CUFE: {0}", Cufe_correcto));
+
+									if (item_doc.StrCufe != Cufe_correcto)
+									{
+										item_doc.StrCufe = Cufe_correcto;
+										try
+										{
+											Ctl_Documento ctl_doc = new Ctl_Documento();
+											ctl_doc.Actualizar(item_doc);
+										}
+										catch (Exception exc)
+										{
+											RegistroLog.EscribirLog(exc, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("1 Actualizacion"));
+
+											try
+											{
+												Ctl_Documento ctl_doc = new Ctl_Documento();
+												ctl_doc.Actualizar(item_doc);
+											}
+											catch (Exception ex)
+											{
+												RegistroLog.EscribirLog(ex, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("2 Actualizacion"));
+											}
+										}
+									}
+
+									if (item_doc.StrProveedorEmisor.Equals(Constantes.NitResolucionsinPrefijo))
+									{
+										//Se genera este proceso que actualiza CUFE en el PDF siempre y cuando sea generado por Plataforma y en XML si por algun motivo es diferente
+										var Tarea = TareaGenerarPDF(item_doc.StrIdSeguridad.ToString(), true);
+									}
+									
+									proceso_actualizado = true;
+
+									//RegistroLog.EscribirLog(new ApplicationException("Sale de la Tarea de actualizar XML y PDF"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.consulta, string.Format("CUFE: {0}", Cufe_correcto));
+
+								}
+								else
+								{
+									documentos_eliminar.Add(item_doc);
+								}
+
+							}
+							else
+							{
+								documentos_eliminar.Add(item_doc);
+							}
+
+						}
+
+						//Si por algun motivo se en cuentra el CUFE correcto en el ultimo registro y este no esta validado correctamente en la DIAN se busca uno que tenga este estado y se actualiza la informacion y se quita de la lista que se va a eliminar
+						if (documentos_eliminar.Count() == Doc_repetidos.Count())
+						{
+							if (!string.IsNullOrEmpty(Cufe_correcto))
+							{
+								TblDocumentos doc_validado_dian = Doc_repetidos.FirstOrDefault(x => (x.IntIdEstado == ProcesoEstado.Finalizacion.GetHashCode() || x.IntIdEstado == ProcesoEstado.EnvioEmailAcuse.GetHashCode() || x.IntIdEstado == ProcesoEstado.RecepcionAcuse.GetHashCode()));
+
+								if (doc_validado_dian != null)
+								{
+									documentos_eliminar.Remove(doc_validado_dian);
+
+									if (doc_validado_dian.StrCufe != Cufe_correcto)
+									{
+										doc_validado_dian.StrCufe = Cufe_correcto;
+										try
+										{
+											Ctl_Documento ctl_doc = new Ctl_Documento();
+											ctl_doc.Actualizar(doc_validado_dian);
+										}
+										catch (Exception)
+										{
+
+											try
+											{
+												Ctl_Documento ctl_doc = new Ctl_Documento();
+												ctl_doc.Actualizar(doc_validado_dian);
+											}
+											catch (Exception)
+											{
+
+											}
+										}
+									}
+									var Tarea = TareaGenerarPDF(doc_validado_dian.StrIdSeguridad.ToString(), true);
+								}
+								else
+								{
+									documentos_eliminar = new List<TblDocumentos>();
+
+									//RegistroLog.EscribirLog(new ApplicationException("1 Resetea la lista de documentos a Eliminar"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.consulta, string.Format("CUFE: {0}", Cufe_correcto));
+
+								}
+							}
+							else
+							{
+								documentos_eliminar = new List<TblDocumentos>();
+
+								//RegistroLog.EscribirLog(new ApplicationException("2 Resetea la lista de documentos a Eliminar"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.consulta, string.Format("CUFE: {0}", Cufe_correcto));
+
+							}
+						}
+
+						foreach (var Doc_elim in documentos_eliminar)
+						{
+							//RegistroLog.EscribirLog(new ApplicationException("Ingresa a Eliminar documentos"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.consulta, string.Format("ID : {0}; Facturador: {1}; NumeroDoc: {2}; Prefijo: {3}; TipoDoc: {4}", Doc_elim.StrIdSeguridad, Doc_elim.StrEmpresaFacturador, Doc_elim.IntNumero, Doc_elim.StrPrefijo, Doc_elim.IntDocTipo));
+
+							try
+							{
+								//Si tiene Eventos los documentos repetidos se elimina los eventos para que pueda eliminar el documento
+								if ((Doc_elim.IntIdEstado == ProcesoEstado.EnvioEmailAcuse.GetHashCode() || Doc_elim.IntIdEstado == ProcesoEstado.RecepcionAcuse.GetHashCode()))
+								{
+									Ctl_EventosRadian ctl_even = new Ctl_EventosRadian();
+									List<TblEventosRadian> List_Even = ctl_even.Obtener(Doc_elim.StrIdSeguridad);
+									if (List_Even != null && List_Even.Count > 0)
+									{
+										foreach (TblEventosRadian evento in List_Even)
+										{
+											try
+											{
+												ctl_even = new Ctl_EventosRadian();
+												ctl_even.Eliminar(evento);
+											}
+											catch (Exception exc)
+											{
+												RegistroLog.EscribirLog(exc, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Eliminando Eventos"));
+
+											}
+										}
+									}
+								}
+
+								Ctl_Documento ctl_doc = new Ctl_Documento();
+								ctl_doc.Eliminar(Doc_elim);
+
+								//RegistroLog.EscribirLog(new ApplicationException("Documento Eliminado"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.consulta, string.Format("ID : {0}; Facturador: {1}; NumeroDoc: {2}; Prefijo: {3}; TipoDoc: {4}", Doc_elim.StrIdSeguridad, Doc_elim.StrEmpresaFacturador, Doc_elim.IntNumero, Doc_elim.StrPrefijo, Doc_elim.IntDocTipo));
+
+
+							}
+							catch (Exception ex)
+							{
+								RegistroLog.EscribirLog(ex, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("1 Eliminando documento"));
+
+								try
+								{
+									Ctl_Documento ctl_doc = new Ctl_Documento();
+									ctl_doc.Eliminar(Doc_elim);
+									//RegistroLog.EscribirLog(new ApplicationException("2 - Documento Eliminado"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.consulta, string.Format("ID : {0}; Facturador: {1}; NumeroDoc: {2}; Prefijo: {3}; TipoDoc: {4}", Doc_elim.StrIdSeguridad, Doc_elim.StrEmpresaFacturador, Doc_elim.IntNumero, Doc_elim.StrPrefijo, Doc_elim.IntDocTipo));
+
+								}
+								catch (Exception exc)
+								{
+									RegistroLog.EscribirLog(exc, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("2 Eliminando Documentos"));
+
+								}
+							}
+
+						}
+
+					}
+				}
+				catch (Exception exc)
+				{
+					RegistroLog.EscribirLog(exc, LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Auditoria, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.eliminacion, string.Format("Finaliza con Error"));
+
+				}
+
+			});
+		}
+
+		public class DocumentoResumen
+		{
+			public string StrEmpresaFacturador { get; set; }
+			public string StrPrefijo { get; set; }
+			public long IntNumero { get; set; }
+			public int IntDocTipo { get; set; }
+			public int CountNumero { get; set; }
+		}
+
+		public List<DocumentoResumen> ObtenerListaRepetidos()
+		{
+			try
+			{
+				context.Configuration.LazyLoadingEnabled = false;
+
+				//var respuesta = (from datos in context.TblDocumentos
+				//				 where datos.StrEmpresaFacturador.Equals(identificacion_empresa)
+				//				 && datos.DatFechaIngreso.Month.Equals(mes)
+				//				 && datos.StrEmpresaAdquiriente.Equals(identificacion_adquiriente)
+				//				 select datos
+				//				 ).OrderBy(y => y.IntNumero);
+
+				var result = from doc in context.TblDocumentos
+							 where doc.DatFechaIngreso > new DateTime(2024, 08, 01)
+							 group doc by new { doc.StrEmpresaFacturador, doc.StrPrefijo, doc.IntNumero, doc.IntDocTipo } into g
+							 let countNumero = g.Count()
+							 where countNumero > 1
+							 orderby countNumero descending, g.Key.StrEmpresaFacturador, g.Key.StrPrefijo, g.Key.IntNumero
+							 select new DocumentoResumen
+							 {
+								 StrEmpresaFacturador = g.Key.StrEmpresaFacturador,
+								 StrPrefijo = g.Key.StrPrefijo,
+								 IntNumero = g.Key.IntNumero,
+								 IntDocTipo = g.Key.IntDocTipo,
+								 CountNumero = countNumero
+							 };
+
+				return result.ToList();
+
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
 		}
 
 

@@ -351,6 +351,27 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 		}
 
 
+		[HttpGet]
+		[Route("Api/SondaEliminarDocRepetidos")]
+		public HttpResponseMessage SondaEliminarDocRepetidos()
+		{
+			try
+			{
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				var tarea = ctl_documento.EliminarDocumentosRepetidos();
+
+				return Request.CreateResponse(HttpStatusCode.OK);
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
+
+
 
 	}
 }

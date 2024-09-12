@@ -70,6 +70,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			return evento;
 		}
 
+		public void Eliminar(TblEventosRadian evento)
+		{
+			this.Delete(evento);
+		}
+
 
 		public async Task ProcesoCrearAcuseRecibo(string StrIdMensaje, Guid StrIdSeguridadDoc)
 		{
