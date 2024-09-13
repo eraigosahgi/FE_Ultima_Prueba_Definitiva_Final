@@ -7840,17 +7840,29 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 										context.Configuration.LazyLoadingEnabled = false;
 
-										datos = (from doc in context.TblDocumentos
-												 where ((doc.StrUrlArchivoUbl.Contains("files.") || doc.StrUrlArchivoUbl.Contains("filesrecuperacion.")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
-												 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+										using (var transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
+										{
+											datos = (from doc in context.TblDocumentos
+													 where ((doc.StrUrlArchivoUbl.Contains("files.")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+													 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+
+											transaction.Commit();
+										}
+
+										
 
 										if ((datos == null || datos.Count == 0) && fecha_fin_consulta.Hour == 23)
 										{
 											fecha_fin_consulta.AddHours(3);
 
-											datos = (from doc in context.TblDocumentos
-													 where ((doc.StrUrlArchivoUbl.Contains("files.") || doc.StrUrlArchivoUbl.Contains("filesrecuperacion.")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
-													 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+											using (var transaction = context.Database.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
+											{
+												datos = (from doc in context.TblDocumentos
+														 where ((doc.StrUrlArchivoUbl.Contains("files.")) && doc.DatFechaIngreso >= fecha_proceso && doc.DatFechaIngreso <= fecha_fin_consulta)
+														 select doc).OrderBy(x => x.DatFechaIngreso).ToList();
+
+												transaction.Commit();
+											}
 										}
 
 
@@ -7872,52 +7884,52 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									}
 									if (datos != null && datos.Count > 0)
 									{
-										foreach (TblDocumentos item in datos)
-										{
-											if (item.StrUrlArchivoUbl.Contains("files."))
-											{
-												item.StrUrlArchivoUbl = item.StrUrlArchivoUbl.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
-											}
+										//foreach (TblDocumentos item in datos)
+										//{
+										//	if (item.StrUrlArchivoUbl.Contains("files."))
+										//	{
+										//		item.StrUrlArchivoUbl = item.StrUrlArchivoUbl.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+										//	}
 
-											if (item.StrUrlArchivoPdf.Contains("files."))
-											{
-												item.StrUrlArchivoPdf = item.StrUrlArchivoPdf.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
-											}
-											else if (item.StrUrlArchivoPdf.Contains("archivos."))
-											{
-												item.StrUrlArchivoPdf = item.StrUrlArchivoPdf.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
-											}
+										//	if (item.StrUrlArchivoPdf.Contains("files."))
+										//	{
+										//		item.StrUrlArchivoPdf = item.StrUrlArchivoPdf.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+										//	}
+										//	else if (item.StrUrlArchivoPdf.Contains("archivos."))
+										//	{
+										//		item.StrUrlArchivoPdf = item.StrUrlArchivoPdf.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+										//	}
 
-											if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoZip) && item.StrUrlArchivoZip.Contains("files."))
-											{
-												item.StrUrlArchivoZip = item.StrUrlArchivoZip.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
-											}
-											else if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoZip) && item.StrUrlArchivoZip.Contains("archivos."))
-											{
-												item.StrUrlArchivoZip = item.StrUrlArchivoZip.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
-											}
+										//	if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoZip) && item.StrUrlArchivoZip.Contains("files."))
+										//	{
+										//		item.StrUrlArchivoZip = item.StrUrlArchivoZip.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+										//	}
+										//	else if (!string.IsNullOrWhiteSpace(item.StrUrlArchivoZip) && item.StrUrlArchivoZip.Contains("archivos."))
+										//	{
+										//		item.StrUrlArchivoZip = item.StrUrlArchivoZip.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+										//	}
 
-											if (!string.IsNullOrWhiteSpace(item.StrUrlAcuseUbl) && item.StrUrlAcuseUbl.Contains("files."))
-											{
-												item.StrUrlAcuseUbl = item.StrUrlAcuseUbl.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
-											}
-											else if (!string.IsNullOrWhiteSpace(item.StrUrlAcuseUbl) && item.StrUrlAcuseUbl.Contains("archivos."))
-											{
-												item.StrUrlAcuseUbl = item.StrUrlAcuseUbl.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
-											}
+										//	if (!string.IsNullOrWhiteSpace(item.StrUrlAcuseUbl) && item.StrUrlAcuseUbl.Contains("files."))
+										//	{
+										//		item.StrUrlAcuseUbl = item.StrUrlAcuseUbl.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+										//	}
+										//	else if (!string.IsNullOrWhiteSpace(item.StrUrlAcuseUbl) && item.StrUrlAcuseUbl.Contains("archivos."))
+										//	{
+										//		item.StrUrlAcuseUbl = item.StrUrlAcuseUbl.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+										//	}
 
-											if (!string.IsNullOrWhiteSpace(item.StrUrlAnexo) && item.StrUrlAnexo.Contains("files."))
-											{
-												item.StrUrlAnexo = item.StrUrlAnexo.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
-											}
-											else if (!string.IsNullOrWhiteSpace(item.StrUrlAnexo) && item.StrUrlAnexo.Contains("archivos."))
-											{
-												item.StrUrlAnexo = item.StrUrlArchivoPdf.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
-											}
+										//	if (!string.IsNullOrWhiteSpace(item.StrUrlAnexo) && item.StrUrlAnexo.Contains("files."))
+										//	{
+										//		item.StrUrlAnexo = item.StrUrlAnexo.Replace("https://files.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+										//	}
+										//	else if (!string.IsNullOrWhiteSpace(item.StrUrlAnexo) && item.StrUrlAnexo.Contains("archivos."))
+										//	{
+										//		item.StrUrlAnexo = item.StrUrlArchivoPdf.Replace("http://archivos.hgidocs.co", "https://filesrecuperacion.hgidocs.co");
+										//	}
 
 
 
-										}
+										//}
 
 										GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
 
