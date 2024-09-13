@@ -284,11 +284,15 @@ namespace HGInetMiFacturaElectonicaController
 
 				TblDocumentos doc_bd = ctl_doc.ObtenerPorIdSeguridad(tbl_correo.StrIdSeguridadDoc, false).FirstOrDefault();
 
-				if (MensajeIdResultado.Entregado.GetHashCode().Equals(Correo.IdResultado))
+				bool Actualizar_doc = false;
+
+				if (MensajeIdResultado.Entregado.GetHashCode().Equals(Correo.IdResultado) && doc_bd.IntEstadoEnvio != (short)Correo.IdEstado)
 				{
 					doc_bd.IntEstadoEnvio = (short)Correo.IdEstado;
 					doc_bd.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(Correo.Estado);
 					doc_bd.DatFechaActualizaEstado = Fecha.GetFecha();
+
+					Actualizar_doc = true;
 
 				}
 				else if (MensajeIdResultado.NoEntregado.GetHashCode().Equals(Correo.IdResultado))
@@ -321,23 +325,30 @@ namespace HGInetMiFacturaElectonicaController
 							List<MensajeEnvio> notificacion = email.NotificacionCorreofacturador(doc_bd, doc_bd.TblEmpresasAdquiriente.StrTelefono, tbl_correo.StrMailEnviado, Correo.Estado, tbl_correo.StrIdSeguridadDoc.ToString());
 
 						}
+
+						Actualizar_doc = true;
 					}
 				}
-				else
+				else if (doc_bd.IntEstadoEnvio != (short)Correo.IdEstado)
 				{
 					doc_bd.IntEstadoEnvio = (short)Correo.IdEstado;
 					doc_bd.IntMensajeEnvio = (short)Enumeracion.GetValueFromDescription<MensajeEstado>(Correo.Estado);
 					doc_bd.DatFechaActualizaEstado = (string.IsNullOrEmpty(Correo.Estado)) ? Fecha.GetFecha() : Correo.Recibido;
+					Actualizar_doc = true;
 				}
 
-				tbl_correo.DatFechaValidado = doc_bd.DatFechaActualizaEstado;
-				tbl_correo.IntEventoResp = doc_bd.IntMensajeEnvio;
-				tbl_correo.IntValidadoMail = true;
-				doc_bd.IntEnvioMail = true;
+				if (Actualizar_doc == true)
+				{
+					tbl_correo.DatFechaValidado = doc_bd.DatFechaActualizaEstado;
+					tbl_correo.IntEventoResp = doc_bd.IntMensajeEnvio;
+					tbl_correo.IntValidadoMail = true;
 
-				ctl_doc.Actualizar(doc_bd);
+					doc_bd.IntEnvioMail = true;
 
-				Actualizar(tbl_correo);
+					ctl_doc.Actualizar(doc_bd);
+
+					Actualizar(tbl_correo);
+				}
 
 			}
 			catch (Exception excepcion)
