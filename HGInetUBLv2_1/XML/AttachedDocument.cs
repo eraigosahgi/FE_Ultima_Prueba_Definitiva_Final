@@ -237,16 +237,27 @@ namespace HGInetUBLv2_1
 
 								string carpeta_xml = string.Format("{0}{1}", plataforma.RutaDmsFisica, ruta_p.Replace("/", "\\"));
 								
-								FileStream fs = null;
+								//FileStream fs = null;
 								Directorio.CrearDirectorio(carpeta_xml);
-								using (fs = new FileStream(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_app),
-									FileMode.Create, FileAccess.ReadWrite))
+
+								// Uso de using para garantizar que los recursos se liberen automáticamente
+								using (FileStream fs = new FileStream(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_app), FileMode.Create, FileAccess.Write))
 								{
-									BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
-									bw.Write(appbase64);
-									bw.Close();
-									fs.Close();
+									using (BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode))
+									{
+										// Escribir los bytes del archivo Base64
+										bw.Write(appbase64);
+									}
 								}
+
+								//using (fs = new FileStream(string.Format(@"{0}\{1}.xml", carpeta_xml, nombre_app),
+								//	FileMode.Create, FileAccess.ReadWrite))
+								//{
+								//	BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
+								//	bw.Write(appbase64);
+								//	bw.Close();
+								//	fs.Close();
+								//}
 							}
 							catch (Exception)
 							{

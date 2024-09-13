@@ -329,29 +329,40 @@ namespace HGInetDIANServicios
 									nombre_archivo = string.Format("{0}-{1}", nombre_archivo, proceso_acuse);
 								}
 
-								FileStream fs = null;
+								//FileStream fs = null;
 
 								try
 								{
+
 									//Guardo el Base64 de la Respuesta
 									Directorio.CrearDirectorio(ruta_xml);
-									using (fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, nombre_archivo),
-										FileMode.Create, FileAccess.ReadWrite))
+									// Uso de using para garantizar que los recursos se liberen automáticamente
+									using (FileStream fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, nombre_archivo), FileMode.Create, FileAccess.Write))
 									{
-										BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
-										bw.Write(respuesta.XmlBase64Bytes);
-										bw.Close();
-										fs.Close();
+										using (BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode))
+										{
+											// Escribir los bytes del archivo Base64
+											bw.Write(respuesta.XmlBase64Bytes);
+										}
 									}
+
+									//using (fs = new FileStream(string.Format(@"{0}\{1}.xml", ruta_xml, nombre_archivo),
+									//	FileMode.Create, FileAccess.ReadWrite))
+									//{
+									//	BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
+									//	bw.Write(respuesta.XmlBase64Bytes);
+									//	bw.Close();
+									//	fs.Close();
+									//}
 
 									nombre_archivo = string.Format("{0}-WS-1", nombre_archivo);
 
 								}
 								catch (Exception excepcion)
 								{
-									respuesta.StatusCode = "94";
-									respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se guardo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
-									respuesta.IsValid = false;
+									//respuesta.StatusCode = "94";
+									//respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista("No se guardo respuesta de la DIAN enviando el documento. Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma.").ToArray();
+									//respuesta.IsValid = false;
 
 
 									string msg_custom = string.Format("Error FileB64 => Carpeta: {0} - Archivo: {1}", ruta_xml, nombre_archivo);
@@ -359,11 +370,11 @@ namespace HGInetDIANServicios
 									RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion, msg_custom);
 
 								}
-								finally
-								{
-									if (fs != null)
-										fs.Close();
-								}
+								//finally
+								//{
+								//	if (fs != null)
+								//		fs.Close();
+								//}
 								log_categoria = MensajeCategoria.ServicioDian;
 								log_accion = MensajeAccion.consulta;
 							}
