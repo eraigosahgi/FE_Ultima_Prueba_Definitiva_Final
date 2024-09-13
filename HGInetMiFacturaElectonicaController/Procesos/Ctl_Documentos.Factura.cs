@@ -207,7 +207,7 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 				//**Se agrega validacion y asignacion del aplicativo emisor del documento.
 
 				#region Informacion del Integrador del Documento
-				DateTime fecha_control = new DateTime(2024, 09, 25, 10, 0, 0);
+				DateTime fecha_control = new DateTime(2024, 10, 25, 10, 0, 0);
 				Ctl_EmpresaIntegradores Emp_int = new Ctl_EmpresaIntegradores();
 				List<TblEmpresaIntegradores> integradores = Emp_int.Obtener(facturador_electronico.StrIdentificacion);
 				//string integrador_peticion = string.Empty;
