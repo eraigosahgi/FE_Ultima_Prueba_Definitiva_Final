@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Data.Linq.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1066,6 +1067,19 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		}
 
+		public int CantidadDocumentosHis(Guid id_plan)
+		{
+			context.Configuration.LazyLoadingEnabled = false;
+
+			DateTime fecha_corte = new DateTime(2024, 01, 01);
+
+			return (from documento in context.TblDocumentos
+					where documento.StrIdPlanTransaccion == id_plan
+					&& documento.DatFechaIngreso < fecha_corte
+					select documento.IntNumero).Count();
+
+		}
+
 
 
 		/// <summary>
@@ -1094,7 +1108,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							  select datos).ToList();
 
 					//Itereamos la lista de planes activos validar diferencias
-					foreach (var item in planes)
+					foreach (TblPlanesTransacciones item in planes)
 					{
 
 						try
@@ -1103,6 +1117,55 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 							//Validamos que exista diferencia entre el campo numero de documentos procesados(tbltransacciones) y el numero de documentos procesados(tbldocumentos)
 
 							int total_documentos = CantidadDocumentos(item.StrIdSeguridad);
+
+							if (item.DatFechaInicio.Value.Year <= 2023)
+							{
+								string UrlWs = "https://historico.hgidocs.co";
+
+								UrlWs = string.Format("{0}/Api/ObtenerHistoricoPlanDoc", UrlWs);
+
+								// Construir la URL de la API con los parámetros
+								UrlWs += $"?Id_Plan={item.StrIdSeguridad}";
+
+								// Crear una solicitud HTTP utilizando la URL de la API
+								HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+								request.Method = "GET";
+
+								// Enviar la solicitud y obtener la respuesta
+								try
+								{
+									using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+									{
+										// Verificar el código de estado de la respuesta
+										if (response.StatusCode == HttpStatusCode.OK)
+										{
+											// Leer la respuesta
+											using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+											{
+												string responseData = reader.ReadToEnd();
+
+												// Deserializar la respuesta JSON en un objeto MiObjeto
+												int datosH = JsonConvert.DeserializeObject<int>(responseData);
+
+												if (datosH > 0)
+												{
+													total_documentos += datosH;
+												}
+											}
+										}
+										else
+										{
+											//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+											//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+										}
+									}
+								}
+								catch (WebException ex)
+								{
+
+								}
+							}
+
 							if (item.IntNumTransaccProcesadas != total_documentos)
 							{
 								//Asignamos la cantidad de documentos procesados a la cantidad de transacciones procesadas del plan			

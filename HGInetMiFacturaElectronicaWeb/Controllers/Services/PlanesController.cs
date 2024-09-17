@@ -264,6 +264,25 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 			}
 		}
+
+		[HttpGet]
+		[Route("Api/ObtenerHistoricoPlanDoc")]
+		public IHttpActionResult ObtenerHistoricoPlanDoc(Guid Id_Plan)
+		{
+			try
+			{
+				//Busco documentos disponibles
+				Ctl_PlanesTransacciones CtrPlanes = new Ctl_PlanesTransacciones();
+				int Planes = CtrPlanes.CantidadDocumentosHis(Id_Plan);
+
+				return Ok(Planes);
+			}
+			catch (Exception)
+			{
+				return Ok();
+			}
+		}
+
 	}
 
 
