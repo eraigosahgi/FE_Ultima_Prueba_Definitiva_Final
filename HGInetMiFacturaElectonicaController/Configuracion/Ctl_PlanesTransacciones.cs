@@ -470,7 +470,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			var Saldo = datos_plan.Sum(x => x.IntNumTransaccCompra - (x.IntNumTransaccProcesadas + x.IntNumTransaccProceso));
 
 			//Si el saldo es menor a la cantidad de documentos a procesar, entonces consultamos los planes del facturador y las del asociado
-			if (Saldo < cantidaddoc &&  sucursal == 0)
+			if (Saldo < cantidaddoc && sucursal == 0)
 			{
 				//Validamos si la empresa tiene algun asociado para ver si podemos usar el saldo de este
 				var empresa_descuenta = (from d in context.TblEmpresas
@@ -924,7 +924,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 								//	plan.StrObservaciones = string.Format(Constantes.RecargaAutomaticaPostPago, fecha_creacion, fecha_vencimiento);
 								//	plan.IntSucursal = sucursal_plan;
 								//	Crear(plan, Notifica);
-									
+
 								//}
 							}
 							catch (Exception excepcion)
@@ -962,7 +962,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					// Si tiene un plan activo el mismo año y mismo mes, no crea nuevo plan
 					if (item.DatFecha.Year == Fecha.GetFecha().Year && item.DatFecha.Month == Fecha.GetFecha().Month)
 					{
-					
+
 					}
 					else
 					{
@@ -1033,10 +1033,10 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		#region Sonda: conciliacion de planes
 
 
-			/// <summary>
-			/// Sonda para procesar documentos
-			/// </summary>
-			/// <returns></returns>
+		/// <summary>
+		/// Sonda para procesar documentos
+		/// </summary>
+		/// <returns></returns>
 		public async Task TareaSondaConciliarPlanes()
 		{
 			try
@@ -1102,10 +1102,14 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					List<TblPlanesTransacciones> planes = new List<TblPlanesTransacciones>();
 					byte habilitado = Convert.ToByte(EstadoPlan.Habilitado.GetHashCode());
 
+					Almacenar("inicio", "811021438");
 					context.Configuration.LazyLoadingEnabled = false;
 					planes = (from datos in context.TblPlanesTransacciones
 							  where datos.IntEstado == habilitado
 							  select datos).ToList();
+
+
+					Almacenar("Cantidad de planes " + planes.Count(), "811021438");
 
 					//Itereamos la lista de planes activos validar diferencias
 					foreach (TblPlanesTransacciones item in planes)
@@ -1113,99 +1117,86 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 						try
 						{
-
+							Almacenar("Plan: " + item.StrIdSeguridad.ToString(), "811021438");
 							//Validamos que exista diferencia entre el campo numero de documentos procesados(tbltransacciones) y el numero de documentos procesados(tbldocumentos)
 
-							int total_documentos = CantidadDocumentos(item.StrIdSeguridad);
+							int total_documentos = 0;
 
-							if (item.DatFechaInicio.Value.Year <= 2023)
+							try
 							{
-								string UrlWs = "https://historico.hgidocs.co";
+								total_documentos = CantidadDocumentos(item.StrIdSeguridad);
+							}
+							catch (Exception ex)
+							{
+								Almacenar("Error Cantidad de documentos " + ex.Message, "811021438");
+							}
 
-								UrlWs = string.Format("{0}/Api/ObtenerHistoricoPlanDoc", UrlWs);
+							Almacenar("Cantidad de documentos " + total_documentos, "811021438");
 
-								// Construir la URL de la API con los parámetros
-								UrlWs += $"?Id_Plan={item.StrIdSeguridad}";
-
-								// Crear una solicitud HTTP utilizando la URL de la API
-								HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
-								request.Method = "GET";
-
-								// Enviar la solicitud y obtener la respuesta
-								try
+							if (item.DatFechaInicio.Value != null)
+							{
+								if (item.DatFechaInicio.Value.Year <= 2023)
 								{
-									using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+									Almacenar("Plan: " + item.StrIdSeguridad.ToString() + " Ingreso a buscar en Historico ", "811021438");
+									string UrlWs = "https://historico.hgidocs.co";
+
+									UrlWs = string.Format("{0}/Api/ObtenerHistoricoPlanDoc", UrlWs);
+
+									// Construir la URL de la API con los parámetros
+									UrlWs += $"?Id_Plan={item.StrIdSeguridad}";
+
+									// Crear una solicitud HTTP utilizando la URL de la API
+									HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+									request.Method = "GET";
+
+									// Enviar la solicitud y obtener la respuesta
+									try
 									{
-										// Verificar el código de estado de la respuesta
-										if (response.StatusCode == HttpStatusCode.OK)
+										using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
 										{
-											// Leer la respuesta
-											using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+											// Verificar el código de estado de la respuesta
+											if (response.StatusCode == HttpStatusCode.OK)
 											{
-												string responseData = reader.ReadToEnd();
-
-												// Deserializar la respuesta JSON en un objeto MiObjeto
-												int datosH = JsonConvert.DeserializeObject<int>(responseData);
-
-												if (datosH > 0)
+												// Leer la respuesta
+												using (StreamReader reader = new StreamReader(response.GetResponseStream()))
 												{
-													total_documentos += datosH;
+													string responseData = reader.ReadToEnd();
+
+													// Deserializar la respuesta JSON en un objeto MiObjeto
+													int datosH = JsonConvert.DeserializeObject<int>(responseData);
+
+													Almacenar("Plan: " + item.StrIdSeguridad.ToString() + " Ingreso a buscar en Historico y encontro " + datosH.ToString(), "811021438");
+													if (datosH > 0)
+													{
+														total_documentos += datosH;
+													}
 												}
 											}
-										}
-										else
-										{
-											//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
-											//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+											else
+											{
+												Almacenar("Plan: " + item.StrIdSeguridad.ToString() + " Ingreso a buscar en Historico No encontro", "811021438");
+												//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+												//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+											}
 										}
 									}
+									catch (WebException ex)
+									{
+										Almacenar("Plan: " + item.StrIdSeguridad.ToString() + " Ingreso a buscar en Historico " + ex.Message, "811021438");
+									}
 								}
-								catch (WebException ex)
+								else
 								{
-
-								}
-							}
-
-							if (item.IntNumTransaccProcesadas != total_documentos)
-							{
-								//Asignamos la cantidad de documentos procesados a la cantidad de transacciones procesadas del plan			
-								item.IntNumTransaccProcesadas = total_documentos;
-								//Se deja en cero el numero de transacciones en proceso
-								item.IntNumTransaccProceso = 0;
-								//validamos el tipo de plan.
-								switch (item.IntTipoProceso)
-								{
-									case 1://Contersia
-									case 2://Compra
-										   //Si es compra o cortesia, se debe validar si supero el numero de documentos adquiridos
-										if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
-										{
-											//Si es asi, entonces cerramos el plan.
-											item.IntEstado = 2;
-										}
-										break;
-									case 3://PostPago
-										   //Si es post pago, entonces el numero de transacciones adquiridas, deben ser igual al numero de transacciones procesadas
-										item.IntNumTransaccCompra = item.IntNumTransaccProcesadas;
-										break;
-									default:
-										break;
+									Almacenar("No tiene documentos en el historico ", "811021438");
 								}
 
-								this.Edit(item);
-							}
-							else
-							{
-								// En el caso de que el numero de documentos procesados(tbltransacciones) sea igual, al numero de documentos(tbldocumentos), entonces preguntamos si tiene algun documento pendiente por procesar 
-								if (item.IntNumTransaccProceso > 0)
+								if (item.IntNumTransaccProcesadas != total_documentos)
 								{
-									//Si es asi, entonces lo colocamos en cero ya que estamos conciliando y no puede existir ningún proceso pendiente a esta hora.
+									//Asignamos la cantidad de documentos procesados a la cantidad de transacciones procesadas del plan			
+									item.IntNumTransaccProcesadas = total_documentos;
+									//Se deja en cero el numero de transacciones en proceso
 									item.IntNumTransaccProceso = 0;
-									this.Edit(item);
-								}
-
-								if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
-								{
+									//validamos el tipo de plan.
 									switch (item.IntTipoProceso)
 									{
 										case 1://Contersia
@@ -1215,28 +1206,70 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 											{
 												//Si es asi, entonces cerramos el plan.
 												item.IntEstado = 2;
-												this.Edit(item);
 											}
 											break;
 										case 3://PostPago
 											   //Si es post pago, entonces el numero de transacciones adquiridas, deben ser igual al numero de transacciones procesadas
-											if (item.IntNumTransaccCompra != item.IntNumTransaccProcesadas)
-											{
-												item.IntNumTransaccCompra = item.IntNumTransaccProcesadas;
-												this.Edit(item);
-											}
+											item.IntNumTransaccCompra = item.IntNumTransaccProcesadas;
 											break;
 										default:
 											break;
 									}
 
+									this.Edit(item);
+								}
+								else
+								{
+									// En el caso de que el numero de documentos procesados(tbltransacciones) sea igual, al numero de documentos(tbldocumentos), entonces preguntamos si tiene algun documento pendiente por procesar 
+									if (item.IntNumTransaccProceso > 0)
+									{
+										//Si es asi, entonces lo colocamos en cero ya que estamos conciliando y no puede existir ningún proceso pendiente a esta hora.
+										item.IntNumTransaccProceso = 0;
+										this.Edit(item);
+									}
+
+									if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
+									{
+										switch (item.IntTipoProceso)
+										{
+											case 1://Contersia
+											case 2://Compra
+												   //Si es compra o cortesia, se debe validar si supero el numero de documentos adquiridos
+												if (item.IntNumTransaccProcesadas >= item.IntNumTransaccCompra)
+												{
+													//Si es asi, entonces cerramos el plan.
+													item.IntEstado = 2;
+													this.Edit(item);
+												}
+												break;
+											case 3://PostPago
+												   //Si es post pago, entonces el numero de transacciones adquiridas, deben ser igual al numero de transacciones procesadas
+												if (item.IntNumTransaccCompra != item.IntNumTransaccProcesadas)
+												{
+													item.IntNumTransaccCompra = item.IntNumTransaccProcesadas;
+													this.Edit(item);
+												}
+												break;
+											default:
+												break;
+										}
+
+
+									}
 
 								}
-
 							}
+							else
+							{
+								Almacenar("Plan No ha iniciado: " + item.StrIdSeguridad.ToString(), "811021438");
+							}
+
+							Almacenar("Plan: " + item.StrIdSeguridad.ToString() + " IntNumTransaccProcesadas: " + item.IntNumTransaccProcesadas + ", total_documentos: " + total_documentos, "811021438");
+
 						}
 						catch (Exception excepcion)
 						{
+							Almacenar("Error Plan: " + item.StrIdSeguridad.ToString() + " error: " + excepcion.Message, "811021438");
 							Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 						}
 
@@ -1256,8 +1289,82 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			}
 			catch (Exception excepcion)
 			{
+				Almacenar("Error Plan: " + excepcion.Message, "811021438");
 				Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.actualizacion);
 			}
+		}
+
+		public static void Almacenar(string mensaje, string nit, string nombre = "conciliación")
+		{
+			StreamWriter sw = null;
+
+			try
+			{
+				// obtiene la ruta del archivo de auditoria
+				string ruta_log = string.Format(@"{0}\logs\{1}\", ObtenerDirectorioRaiz(), nombre);
+
+				// asegura la existencia del archivo
+				CrearDirectorio(ruta_log);
+
+				// ruta completa del archivo de auditoria
+				ruta_log = string.Format("{0}{1}_{2}.txt", ruta_log, nit, GetFecha().ToString(formato_fecha_hginet));
+
+				// asegura la creación del archivo de auditoría
+				Crear(ruta_log);
+
+				// valida la existencia del archivo
+				if (!ValidarExistencia(ruta_log))
+					throw new ApplicationException("Error al obtener la ruta del archivo de auditoria.");
+
+				sw = new StreamWriter(ruta_log, true);
+
+				sw.WriteLine(string.Format("{0}", mensaje));
+				// sw.Flush(); para borrar lo que ya esta escrito
+				sw.Close();
+
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+		public static bool ValidarExistencia(string ruta)
+		{
+			if (File.Exists(ruta))
+				return true;
+			else
+				return false;
+		}
+
+		public static string CrearDirectorio(string ruta)
+		{
+			if (!ruta.EndsWith(@"\"))
+				ruta = string.Format(@"{0}\", ruta);
+
+			if (!Directory.Exists(ruta))
+				Directory.CreateDirectory(ruta);
+
+			return ruta;
+		}
+		public static string ObtenerDirectorioRaiz()
+		{
+			return AppDomain.CurrentDomain.BaseDirectory;
+		}
+		public static readonly string formato_fecha_hginet = @"yyyy-MM-dd";
+		public static DateTime GetFecha()
+		{
+			TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
+			return TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
+		}
+
+		public static bool Crear(string ruta)
+		{
+			if (!File.Exists(ruta))
+			{
+				FileStream fs = File.Create(ruta);
+				fs.Close();
+			}
+			return true;
 		}
 
 		public async Task TareaPlanesVencidoshabilitados()
@@ -1321,3 +1428,4 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 	}
 }
+
