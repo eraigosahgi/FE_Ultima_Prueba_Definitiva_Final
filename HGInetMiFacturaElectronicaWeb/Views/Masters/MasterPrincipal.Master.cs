@@ -47,11 +47,11 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 						LblNombreUsuarioDet.InnerText = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
 						lblEmailUsuario.InnerText = datos_usuario.StrMail;
 						LblNombreUsuario.InnerText = string.Format("{0} {1}", datos_usuario.StrNombres, datos_usuario.StrApellidos);
-						
+
 						if (datos_empresa.IntTipoPlan == 1)
 						{
 							btnActivaPlan.Visible = false;
-						}	
+						}
 
 						//  if (PermisoActual != null)
 						//{
@@ -105,8 +105,10 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 							Hdf_Perfil.Value = (datos_empresa.IntAdquiriente && datos_empresa.IntObligado) ? "Facturador y Adquiriente" : datos_empresa.IntAdquiriente ? "Adquiriente" : datos_empresa.IntObligado ? "Facturador" : "";
 						}
 					}
-
-
+					else
+					{						
+						Response.Redirect("/Views/Login/Default.aspx");
+					}
 				}
 			}
 			catch (Exception ex)
@@ -232,7 +234,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 
 			//Se define cabecera del menú principal
 			//string Menu = @"<ul class='navigation navigation-main navigation-accordion' id='MenuPrincipal' runat='server'>
-   //                          <li class='navigation-header'><span style = 'margin: -10px'> Menú </span> <i class='icon-menu' title='Menú'></i></li>";
+			//                          <li class='navigation-header'><span style = 'margin: -10px'> Menú </span> <i class='icon-menu' title='Menú'></i></li>";
 
 			string Menu = @"<ul class='navigation navigation-main navigation-accordion' id='MenuPrincipal' runat='server'>";
 
@@ -266,7 +268,7 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Masters
 				//////////////////////////////////////////////////////////////////////////////////////////////
 
 			}
-			DivMenu.InnerHtml = Menu + "</ul> </li> </ul>";			
+			DivMenu.InnerHtml = Menu + "</ul> </li> </ul>";
 			//Guardo el Menu en un Cookies para no tener que crear nuevamente el Menu
 			string NuevoCokkies = Menu + "</ul> </li> </ul>";
 			NuevoCokkies = NuevoCokkies.Replace("<", "xxx").Replace(">", "zzz");
