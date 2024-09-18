@@ -15,8 +15,19 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 		{
 			try
 			{
-							
-				Procesar();
+				string _skip = Request.QueryString["skip"];
+				string _pageSize = Request.QueryString["pageSize"];
+
+				int skip = 1;
+				int pageSize = 10000;
+
+				if (Request.QueryString["skip"] != null)
+					Int32.TryParse(Request.QueryString["skip"], out skip);
+
+				if (Request.QueryString["pageSize"] != null)
+					Int32.TryParse(Request.QueryString["pageSize"], out pageSize);
+
+				Procesar(skip, pageSize);
 			}
 			catch (Exception ex)
 			{
@@ -25,11 +36,11 @@ namespace HGInetMiFacturaElectronicaWeb.Views.Pages
 			}
 		}
 
-		public void Procesar()
+		public void Procesar(int skip, int pageSize)
 		{
 			Ctl_PlanesTransacciones controlador = new Ctl_PlanesTransacciones();
 
-			var Tarea1 = controlador.TareaSondaConciliarPlanes();
+			var Tarea1 = controlador.TareaSondaConciliarPlanes(skip, pageSize);
 			lblResultado.Text = string.Format("Termino");
 		}
 	}

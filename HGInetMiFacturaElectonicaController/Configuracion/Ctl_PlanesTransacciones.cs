@@ -1037,11 +1037,11 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Sonda para procesar documentos
 		/// </summary>
 		/// <returns></returns>
-		public async Task TareaSondaConciliarPlanes()
+		public async Task TareaSondaConciliarPlanes(int skip, int pageSize)
 		{
 			try
 			{
-				var Tarea = SondaConciliarPlanes();
+				var Tarea = SondaConciliarPlanes(skip, pageSize);
 				await Task.WhenAny(Tarea);
 			}
 			catch (Exception excepcion)
@@ -1090,7 +1090,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// * Tambien se valida que no existan documentos por procesar, si existen algunos, los coloca en cero(0).
 		/// </summary>
 		/// <returns></returns>
-		public async Task SondaConciliarPlanes()
+		public async Task SondaConciliarPlanes(int skip, int pageSize)
 		{
 			bool CrearPlan = true;
 			try
@@ -1106,15 +1106,17 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 					context.Configuration.LazyLoadingEnabled = false;
 					planes = (from datos in context.TblPlanesTransacciones
 							  where datos.IntEstado == habilitado
-							  select datos).ToList();
-
+							  orderby datos.DatFecha
+							  select datos)
+							  .Skip(skip)
+							  .Take(pageSize)
+							  .ToList();
 
 					Almacenar("Cantidad de planes " + planes.Count(), "811021438");
 
 					//Itereamos la lista de planes activos validar diferencias
 					foreach (TblPlanesTransacciones item in planes)
 					{
-
 						try
 						{
 							Almacenar("Plan: " + item.StrIdSeguridad.ToString(), "811021438");
@@ -1275,6 +1277,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 					}
 
+					Almacenar("Fin Proceso", "811021438");
 					try
 					{
 						var Tarea = TareaPlanesVencidoshabilitados();
@@ -1369,6 +1372,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 
 		public async Task TareaPlanesVencidoshabilitados()
 		{
+			Almacenar("INICIO TareaPlanesVencidoshabilitados", "811021438");
 			try
 			{
 				var Tarea = SondaPlanesVencidoshabilitados();
