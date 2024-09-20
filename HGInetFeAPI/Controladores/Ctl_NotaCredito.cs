@@ -26,20 +26,8 @@ namespace HGInetFeAPI
 		/// <param name="Identificacion">número de identificación del Facturador Electrónico</param>
 		/// <param name="documentos_envio">documentos de tipo NotaCredito</param>
 		/// <returns>respuesta del proceso de los documentos</returns>
-		public static List<ServicioNotaCredito.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioNotaCredito.NotaCredito> documentos_envio)
+		public static List<ServicioNotaCredito.DocumentoRespuesta> Enviar(string UrlWs, string Serial, string Identificacion, List<ServicioNotaCredito.NotaCredito> documentos_envio, bool Wcf = false)
 		{
-			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
-			if (!UrlWs.Contains("hgi"))
-			{
-				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
-			}
-
-			// valida la URL del servicio web
-			//UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
-
-			//Url Api
-			UrlWs = string.Format("{0}Api/Notacredito/Recepcion", Ctl_Utilidades.ValidarUrl(UrlWs));
-
 			// valida el parámetro Serial
 			if (string.IsNullOrEmpty(Serial))
 				throw new ApplicationException("Parámetro Serial de tipo string inválido.");
@@ -63,134 +51,146 @@ namespace HGInetFeAPI
 				item.DataKey = dataKey;
 			}
 
-			List<ServicioNotaCredito.NotaCredito> datos = new List<ServicioNotaCredito.NotaCredito>();
-
-			string vcData = JsonConvert.SerializeObject(documentos_envio);
-			byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
-
-			List<ServicioNotaCredito.DocumentoRespuesta> respuesta = new List<ServicioNotaCredito.DocumentoRespuesta>();
-
-			try
+		
+			// valida si es un integrador o son pruebas para que obtenga la ruta que le corresponda
+			if (!UrlWs.Contains("hgi"))
 			{
-				HttpWebRequest vtRequest = (HttpWebRequest)WebRequest.Create(UrlWs);
-
-				vtRequest.Method = "POST";
-				vtRequest.ContentType = "application/json";
-				vtRequest.Accept = "application/json";
-				vtRequest.ContentLength = vtDataStream.Length;
-
-				//Se agrega instruccion para habilitar la seguridad en el envio
-				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-
-				Stream newStream = vtRequest.GetRequestStream();
-
-				// Enviamos los datos
-				newStream.Write(vtDataStream, 0, vtDataStream.Length);
-				newStream.Close();
-
-				// ejecución del servicio web
-				HttpWebResponse vtHttpResponse = (HttpWebResponse)vtRequest.GetResponse();
-
-				if (vtHttpResponse.StatusCode == HttpStatusCode.OK)
-				{
-					using (StreamReader vtStreamReader = new StreamReader(vtHttpResponse.GetResponseStream()))
-					{
-						// Leer el contenido de la respuesta como una cadena JSON
-						string jsonResponse = vtStreamReader.ReadToEnd();
-
-						// Deserializar la respuesta JSON en un objeto MiObjeto
-						respuesta = JsonConvert.DeserializeObject<List<ServicioNotaCredito.DocumentoRespuesta>>(jsonResponse);
-					}
-
-				}
-				vtHttpResponse.Close();
-
-				return respuesta;
+				UrlWs = Ctl_Utilidades.ObtenerUrl(UrlWs, Identificacion);
 			}
-			catch (WebException ex)
+
+			if (Wcf == false)
 			{
-				string ex_message = string.Empty;
-				// Manejar excepciones de WebException
-				if (ex.Response != null)
+				//Url Api
+				UrlWs = string.Format("{0}Api/Notacredito/Recepcion", Ctl_Utilidades.ValidarUrl(UrlWs));
+
+				string vcData = JsonConvert.SerializeObject(documentos_envio);
+				byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
+
+				List<ServicioNotaCredito.DocumentoRespuesta> respuesta = new List<ServicioNotaCredito.DocumentoRespuesta>();
+
+				try
 				{
-					using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					HttpWebRequest vtRequest = (HttpWebRequest)WebRequest.Create(UrlWs);
+
+					vtRequest.Method = "POST";
+					vtRequest.ContentType = "application/json";
+					vtRequest.Accept = "application/json";
+					vtRequest.ContentLength = vtDataStream.Length;
+
+					//Se agrega instruccion para habilitar la seguridad en el envio
+					System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+					Stream newStream = vtRequest.GetRequestStream();
+
+					// Enviamos los datos
+					newStream.Write(vtDataStream, 0, vtDataStream.Length);
+					newStream.Close();
+
+					// ejecución del servicio web
+					HttpWebResponse vtHttpResponse = (HttpWebResponse)vtRequest.GetResponse();
+
+					if (vtHttpResponse.StatusCode == HttpStatusCode.OK)
 					{
-						ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
-						using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						using (StreamReader vtStreamReader = new StreamReader(vtHttpResponse.GetResponseStream()))
 						{
-							string errorText = reader.ReadToEnd();
-							ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+							// Leer el contenido de la respuesta como una cadena JSON
+							string jsonResponse = vtStreamReader.ReadToEnd();
+
+							// Deserializar la respuesta JSON en un objeto MiObjeto
+							respuesta = JsonConvert.DeserializeObject<List<ServicioNotaCredito.DocumentoRespuesta>>(jsonResponse);
+						}
+
+					}
+					vtHttpResponse.Close();
+
+					return respuesta;
+				}
+				catch (WebException ex)
+				{
+					string ex_message = string.Empty;
+					// Manejar excepciones de WebException
+					if (ex.Response != null)
+					{
+						using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						{
+							ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+							using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+							{
+								string errorText = reader.ReadToEnd();
+								ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+							}
 						}
 					}
-				}
-				else
-				{
-					ex_message = ("Error: " + ex.Message);
-				}
+					else
+					{
+						ex_message = ("Error: " + ex.Message);
+					}
 
-				throw new Exception(ex_message, ex);
+					throw new Exception(ex_message, ex);
+				}
 			}
+			else
+			{
+				// valida la URL del servicio web
+				UrlWs = string.Format("{0}{1}", Ctl_Utilidades.ValidarUrl(UrlWs), UrlWcf);
 
+				ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = null;
 
-			//ServicioNotaCredito.ServicioNotaCreditoClient cliente_ws = null;
+				try
+				{
+					// conexión cliente para el servicio web
+					EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
+					cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
+					cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
 
-			//try
-			//{
-			//	// conexión cliente para el servicio web
-			//	EndpointAddress endpoint_address = new System.ServiceModel.EndpointAddress(UrlWs);
-			//	cliente_ws = new ServicioNotaCredito.ServicioNotaCreditoClient(Ctl_Utilidades.ObtenerBinding(UrlWs), endpoint_address);
-			//	cliente_ws.Endpoint.Address = new System.ServiceModel.EndpointAddress(UrlWs);
+					foreach (ServicioNotaCredito.NotaCredito item in documentos_envio)
+					{
+						if (item == null)
+							throw new ApplicationException("No se encontró informacion en el ServicioNotaCredito.NotaCredito");
+						//throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioNotaCredito.NotaCredito"));
 
-			//	// configura la cadena de autenticación para la ejecución del servicio web en SHA1
-			//	string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+						if (item.DocumentoDetalles == null || !item.DocumentoDetalles.Any())
+							throw new Exception("El detalle del documento es inválido.");
 
-			//	foreach (ServicioNotaCredito.NotaCredito item in documentos_envio)
-			//	{
-			//		if (item == null)
-			//			throw new ApplicationException("No se encontró informacion en el ServicioNotaCredito.NotaCredito");
-			//		//throw new ApplicationException(string.Format(RecursoMensajes.ArgumentNullError, documentos_envio, "ServicioNotaCredito.NotaCredito"));
+						item.DataKey = dataKey;
+					}
 
-			//		if (item.DocumentoDetalles == null || !item.DocumentoDetalles.Any())
-			//			throw new Exception("El detalle del documento es inválido.");
+					// datos para la petición
+					ServicioNotaCredito.RecepcionRequest peticion = new ServicioNotaCredito.RecepcionRequest()
+					{
+						documentos = documentos_envio
+					};
 
-			//		item.DataKey = dataKey;
-			//	}
+					// ejecución del servicio web
+					ServicioNotaCredito.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
 
-			//	// datos para la petición
-			//	ServicioNotaCredito.RecepcionRequest peticion = new ServicioNotaCredito.RecepcionRequest()
-			//	{
-			//		documentos = documentos_envio
-			//	};
+					// resultado del servicio web
+					List<ServicioNotaCredito.DocumentoRespuesta> result = respuesta.RecepcionResult;
 
-			//	// ejecución del servicio web
-			//	ServicioNotaCredito.RecepcionResponse respuesta = cliente_ws.Recepcion(peticion);
+					if (respuesta != null)
+						return result;
+					else
+						throw new Exception("Error al obtener los datos con los parámetros indicados.");
 
-			//	// resultado del servicio web
-			//	List<ServicioNotaCredito.DocumentoRespuesta> result = respuesta.RecepcionResult;
-
-			//	if (respuesta != null)
-			//		return result;
-			//	else
-			//		throw new Exception("Error al obtener los datos con los parámetros indicados.");
-
-			//}
-			//catch (FaultException excepcion)
-			//{
-			//	throw new ApplicationException(excepcion.Message, excepcion);
-			//}
-			//catch (CommunicationException excepcion)
-			//{
-			//	throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
-			//}
-			//catch (Exception excepcion)
-			//{
-			//	throw excepcion;
-			//}
-			//finally
-			//{
-			//	if (cliente_ws != null)
-			//		cliente_ws.Abort();
-			//}
+				}
+				catch (FaultException excepcion)
+				{
+					throw new ApplicationException(excepcion.Message, excepcion);
+				}
+				catch (CommunicationException excepcion)
+				{
+					throw new Exception(string.Format("Error de comunicación: {0}", excepcion.Message), excepcion);
+				}
+				catch (Exception excepcion)
+				{
+					throw excepcion;
+				}
+				finally
+				{
+					if (cliente_ws != null)
+						cliente_ws.Abort();
+				}
+			}
 
 		}
 
