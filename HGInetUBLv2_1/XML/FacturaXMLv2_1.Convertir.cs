@@ -192,7 +192,8 @@ namespace HGInetUBLv2_1
 					if (factura_obj.FechaVence == DateTime.MinValue)
 						factura_obj.FechaVence = fecha_hora;
 				else
-					factura_obj.FechaVence = fecha_hora;
+					if (factura_obj.FechaVence == DateTime.MinValue)
+						factura_obj.FechaVence = fecha_hora;
 
 				factura_obj.FormaPago = Convert.ToInt16(factura_ubl.PaymentMeans.FirstOrDefault().ID.Value);
 
