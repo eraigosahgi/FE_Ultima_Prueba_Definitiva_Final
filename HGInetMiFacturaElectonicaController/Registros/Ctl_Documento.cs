@@ -50,6 +50,7 @@ using System.Security.Cryptography.X509Certificates;
 using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
 using DevExtreme.AspNet.Data;
+using System.Globalization;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -7251,6 +7252,9 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				try
 				{
+					// Crear una instancia de CultureInfo para el idioma español (España)
+					CultureInfo culturaEspañola = new CultureInfo("es-ES");
+
 					DateTime FechaActual = Fecha.GetFecha();//new DateTime(2021, 09, 01);//
 					DateTime FechaInicial = FechaActual;
 					DateTime FechaFinal = FechaActual;
@@ -7272,7 +7276,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									TblEmpresas facturador = emp.Obtener(item.Id_Facturador);
 									Ctl_EnvioCorreos email = new Ctl_EnvioCorreos();
 									List<string> ListaNotificacion = new List<string>();
-									ListaNotificacion.Add(string.Format("validamos en nuestra plataforma y encontramos que en la semana del {0} hasta el {1}", FechaInicial.ToString("D"), FechaFinal.ToString("D")));
+									ListaNotificacion.Add(string.Format("validamos en nuestra plataforma y encontramos que en la semana del {0} hasta el {1}", FechaInicial.ToString("D", culturaEspañola), FechaFinal.ToString("D", culturaEspañola)));
 									ListaNotificacion.Add("nos registra documentos en estado No Recibido(Rechazados), a continuacion detallamos la informacion");
 									ListaNotificacion.Add(string.Format("Cantidad Rechazados: {0}", item.CantRechazo));
 									ListaNotificacion.Add("Por favor validar esta información en nuestra plataforma o puede comunicarse con nuestra area de soporte");
@@ -7312,11 +7316,11 @@ namespace HGInetMiFacturaElectonicaController.Registros
 									List<string> ListaNotificacion = new List<string>();
 									try
 									{
-										ListaNotificacion.Add(string.Format("aqui encuentras un resumen de tu actividad en el envío de documentos electrónicos a nuestra plataforma correspondiente al mes de {0} que comprende del {1} hasta el {2}.", FechaInicial.ToString("MMMM"), FechaInicial.ToString("D"), FechaFinal.ToString("D")));
+										ListaNotificacion.Add(string.Format("aqui encuentras un resumen de tu actividad en el envío de documentos electrónicos a nuestra plataforma correspondiente al mes de {0} que comprende del {1} hasta el {2}.", FechaInicial.ToString("MMMM", culturaEspañola), FechaInicial.ToString("D", culturaEspañola), FechaFinal.ToString("D", culturaEspañola)));
 									}
 									catch (Exception excepcion)
 									{
-										Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error encabezado lista de documentos - {0} - {1} - {2}", FechaInicial.ToString("MMMM"), FechaInicial.ToString("D"), FechaFinal.ToString("D")));
+										Ctl_Log.Guardar(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.envio, string.Format("Error encabezado lista de documentos - {0} - {1} - {2}", FechaInicial.ToString("MMMM", culturaEspañola), FechaInicial.ToString("D", culturaEspañola), FechaFinal.ToString("D", culturaEspañola)));
 										throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 									}
 									ListaNotificacion.Add("A continuación detallamos la información:");
