@@ -3,6 +3,7 @@ using FirmaXadesNet.Crypto;
 using FirmaXadesNet.Signature;
 using FirmaXadesNet.Signature.Parameters;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
+using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.RegistroLog;
 using System;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace HGInetUBLv2_1
 					doc_acuse.DatosObligado = obligado;
 
 					DateTime fecha = acuse_ubl.IssueDate.Value;
-					DateTime hora = Convert.ToDateTime(acuse_ubl.IssueTime.Value).AddHours(-5);
+					DateTime hora = Convert.ToDateTime(acuse_ubl.IssueTime.Value);
 
 					DateTime fecha_hora = new DateTime(fecha.Year, fecha.Month, fecha.Day, hora.Hour, hora.Minute, hora.Second);
 
