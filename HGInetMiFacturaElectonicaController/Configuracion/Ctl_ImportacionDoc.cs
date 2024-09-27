@@ -163,7 +163,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 			try
 			{
 
-				string StrConexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + rutaArchivo + ";Extended Properties='Excel 12.0;HDR=NO;IMEX=1;';";
+				string StrConexion = @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + rutaArchivo + ";Extended Properties='Excel 12.0 Xml;HDR=YES;'";
 
 				string nombreDt = "ImportacionDoc";
 
@@ -209,17 +209,22 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 				{
 					DataRow fila1 = tbl_temporal.Rows[0];
 
-					for (int i = 0; i < fila1.ItemArray.Count(); i++)
+					if (tbl_temporal.Columns.Contains("FOLIO"))
 					{
-						string campo_mayus = fila1.ItemArray[i].ToString().ToUpper();
-						if (campo_mayus.Equals("FOLIO"))
-						{
-							archivo_valido = true;
-							i = fila1.ItemArray.Count();
-						}
+						archivo_valido = true;
+					}
+
+					//for (int i = 0; i < fila1.ItemArray.Count(); i++)
+					//{
+					//	string campo_mayus = fila1.ItemArray[i].ToString().ToUpper();
+					//	if (campo_mayus.Equals("FOLIO"))
+					//	{
+					//		archivo_valido = true;
+					//		i = fila1.ItemArray.Count();
+					//	}
 							
 
-					}
+					//}
 				}
 
 				if (tbl_temporal.Rows.Count > 0 && archivo_valido == true)
