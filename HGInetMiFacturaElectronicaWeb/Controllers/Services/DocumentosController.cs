@@ -1374,6 +1374,106 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 				List<ObjDocumentos> datos = ctl_documento.ObtenerPorFechasEmisor(codigo_emisor, numero_documento, codigo_empleado, estado_dian, estado_recibo, fecha_inicio, fecha_fin, tipo_documento, tipo_filtro_fecha);
 
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (fecha_inicio >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					string UrlWs = "https://historico.hgidocs.co";
+
+					UrlWs = string.Format("{0}/Api/ObtenerHisDocumentosEmisor", UrlWs);
+
+					List<ObjDocumentos> datosH = new List<ObjDocumentos>();
+
+					
+					if (string.IsNullOrWhiteSpace(estado_dian))
+						estado_dian = "*";
+
+					if (string.IsNullOrWhiteSpace(numero_documento))
+						numero_documento = "*";
+
+					if (string.IsNullOrWhiteSpace(codigo_empleado))
+						codigo_empleado = "*";
+
+					if (string.IsNullOrWhiteSpace(estado_recibo))
+						estado_recibo = "*";
+
+					// Construir la URL de la API con los parámetros
+					//ObtenerHisDocumentosEmisor(string codigo_emisor, string numero_documento, string codigo_empleado, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_documento, int tipo_filtro_fecha)
+					UrlWs += $"?codigo_emisor={codigo_emisor}&numero_documento={numero_documento}&codigo_empleado={codigo_empleado}&estado_dian={estado_dian}&estado_recibo={estado_recibo}&fecha_inicio={fecha_inicio.ToString("yyyy-MM-dd")}&fecha_fin={fecha_fin.ToString("yyyy-MM-dd")}&tipo_documento={tipo_documento}&tipo_filtro_fecha={tipo_filtro_fecha}";
+
+					// Crear una solicitud HTTP utilizando la URL de la API
+					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+					request.Method = "GET";
+
+					// Enviar la solicitud y obtener la respuesta
+					try
+					{
+						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+						{
+							// Verificar el código de estado de la respuesta
+							if (response.StatusCode == HttpStatusCode.OK)
+							{
+								// Leer la respuesta
+								using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+								{
+									string responseData = reader.ReadToEnd();
+
+									// Deserializar la respuesta JSON en un objeto MiObjeto
+									datosH = JsonConvert.DeserializeObject<List<ObjDocumentos>>(responseData);
+
+									if (datosH != null && datosH.Count > 0)
+									{
+										if (datos != null && datos.Count > 0)
+										{
+											datos.AddRange(datosH);
+										}
+										else
+										{
+											datos = datosH;
+										}
+
+									}
+								}
+							}
+							else
+							{
+								//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+								//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+							}
+						}
+					}
+					catch (WebException ex)
+					{
+						//string ex_message = string.Empty;
+						//// Manejar excepciones de WebException
+						//if (ex.Response != null)
+						//{
+						//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						//	{
+						//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						//		{
+						//			string errorText = reader.ReadToEnd();
+						//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						//		}
+						//	}
+						//}
+						//else
+						//{
+						//	ex_message = ("Error: " + ex.Message);
+						//}
+
+						//throw new Exception(ex_message, ex);
+					}
+				}
+
 				if (datos == null)
 				{
 					return NotFound();
@@ -1421,6 +1521,32 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+		[HttpGet]
+		[Route("Api/ObtenerHisDocumentosEmisor")]
+		public IHttpActionResult ObtenerHisDocumentosEmisor(string codigo_emisor, string numero_documento, string codigo_empleado, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int tipo_documento, int tipo_filtro_fecha)
+		{
+			try
+			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
+
+				if (fecha_fin >= fecha_corte)
+					fecha_fin = fecha_corte;
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+				List<ObjDocumentos> datos = ctl_documento.ObtenerPorFechasEmisor(codigo_emisor, numero_documento, codigo_empleado, estado_dian, estado_recibo, fecha_inicio, fecha_fin, tipo_documento, tipo_filtro_fecha);
+
+				return Ok(datos);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+
 		/// <summary>
 		/// Retorna los documentos del plan solicitado
 		/// </summary>
