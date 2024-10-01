@@ -943,7 +943,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 		/// Cierra los planes postpago de un facturador en especifico
 		/// </summary>
 		/// <param name="Facturador">Documento del Facturador</param>
-		public void GestionPlanesPostpago(string Facturador, string EmpresaCrea, string UsuarioCrea, bool Notifica)
+		public void GestionPlanesPostpago(string Facturador, string EmpresaCrea, string UsuarioCrea, bool Notifica, bool Sonda = true, int Sucursal = 0)
 		{
 			try
 			{
@@ -957,24 +957,31 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						  && datos.IntTipoProceso == postapago
 						  select datos).ToList();
 
-				foreach (var item in planes)
+				if (planes != null && planes.Count > 0)
 				{
-					// Si tiene un plan activo el mismo año y mismo mes, no crea nuevo plan
-					if (item.DatFecha.Year == Fecha.GetFecha().Year && item.DatFecha.Month == Fecha.GetFecha().Month)
+					foreach (var item in planes)
 					{
+						// Si tiene un plan activo el mismo año y mismo mes, no crea nuevo plan
+						if (item.DatFecha.Year == Fecha.GetFecha().Year && item.DatFecha.Month == Fecha.GetFecha().Month)
+						{
 
+						}
+						else
+						{
+							// Cierra plan que no sea del presente año y mes
+							string fecha_vencimiento = (item.DatFechaVencimiento.HasValue) ? item.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet) : "";
+							string fecha_creacion = item.DatFecha.ToString(Fecha.formato_fecha_hora);
+							item.IntEstado = EstadoPlan.Procesado.GetHashCode();
+							item.StrObservaciones = string.Format("{0}{1}{2}{3}", item.StrObservaciones, Environment.NewLine, Environment.NewLine, string.Format(Constantes.CierreAutomaticoPostPago, fecha_creacion, item.IntNumTransaccProcesadas, fecha_vencimiento));
+							this.Edit(item);
+							//sucursal = item.IntSucursal;
+							CrearplanPostpago(Facturador, item.IntSucursal, EmpresaCrea, UsuarioCrea, Notifica);
+						}
 					}
-					else
-					{
-						// Cierra plan que no sea del presente año y mes
-						string fecha_vencimiento = (item.DatFechaVencimiento.HasValue) ? item.DatFechaVencimiento.Value.ToString(Fecha.formato_fecha_hginet) : "";
-						string fecha_creacion = item.DatFecha.ToString(Fecha.formato_fecha_hora);
-						item.IntEstado = EstadoPlan.Procesado.GetHashCode();
-						item.StrObservaciones = string.Format("{0}{1}{2}{3}", item.StrObservaciones, Environment.NewLine, Environment.NewLine, string.Format(Constantes.CierreAutomaticoPostPago, fecha_creacion, item.IntNumTransaccProcesadas, fecha_vencimiento));
-						this.Edit(item);
-						//sucursal = item.IntSucursal;
-						CrearplanPostpago(Facturador, item.IntSucursal, EmpresaCrea, UsuarioCrea, Notifica);
-					}
+				}
+				else if (Sonda == false)
+				{
+					CrearplanPostpago(Facturador, Sucursal, EmpresaCrea, UsuarioCrea, Notifica);
 				}
 			}
 			catch (Exception excepcion)
