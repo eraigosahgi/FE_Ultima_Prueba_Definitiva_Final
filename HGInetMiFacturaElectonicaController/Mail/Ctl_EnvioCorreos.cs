@@ -1521,7 +1521,7 @@ namespace HGInetMiFacturaElectonicaController
 								}
 
 								//Actualiza tabla de documentos con el estado
-								if (actualizar_doc == true)
+								if (actualizar_doc == true && documento.DatFechaIngreso.Year == 2024)
 								{
 									Ctl_Documento _doc = new Ctl_Documento();
 									_doc.Actualizar(documento);

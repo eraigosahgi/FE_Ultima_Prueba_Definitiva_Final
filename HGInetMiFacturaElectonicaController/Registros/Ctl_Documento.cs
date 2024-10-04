@@ -5562,40 +5562,32 @@ namespace HGInetMiFacturaElectonicaController.Registros
 		/// <param name="fecha_inicio"></param>
 		/// <param name="fecha_fin"></param>
 		/// <returns></returns>
-		public List<TblDocumentos> ObtenerDocumentoCliente(string codigo_facturador, int? numero_documento, string IdSeguridad = "*", string numero_resolucion = "*")
+		public List<TblDocumentos> ObtenerDocumentoCliente(string codigo_facturador, long numero_documento, string numero_resolucion, int tipo_doc, string prefijo)
 		{
 
 
 			if (codigo_facturador == "")
 				throw new ApplicationException("Debe Indicar el Facturador");
 
-			if (IdSeguridad == "*" && (numero_resolucion == "*" || numero_documento == 0 || numero_documento == null))
-				throw new ApplicationException("No se han especificado los criterios de búsqueda");
+			//if (IdSeguridad == "*" && (numero_resolucion == "*" || numero_documento == 0))
+			//	throw new ApplicationException("No se han especificado los criterios de búsqueda");
 
-			if ((IdSeguridad != "*" && IdSeguridad != null) && (numero_resolucion != "*" || numero_documento != null))
-				throw new ApplicationException("No se han especificado los criterios de búsqueda");
+			//if ((IdSeguridad != "*" && IdSeguridad != null) && (numero_resolucion != "*"))
+			//	throw new ApplicationException("No se han especificado los criterios de búsqueda");
 
-			if (IdSeguridad != "*" && IdSeguridad != null)
-				if ((IdSeguridad.Length != 8))
-					throw new ApplicationException("El codigo de plataforma debe ser de 8 digitos");
+			//if (IdSeguridad != "*" && IdSeguridad != null)
+			//	if ((IdSeguridad.Length != 8))
+			//		throw new ApplicationException("El codigo de plataforma debe ser de 8 digitos");
 
-
-			List<string> list_resolucion = Coleccion.ConvertirLista(numero_resolucion, '-');
-			int tipo_doc = Enumeracion.GetValueFromDescription<TipoDocumento>(list_resolucion[0]).GetHashCode();
-			string prefijo = list_resolucion[1];
-			if (numero_resolucion.Contains("S/PREFIJO"))
-				prefijo = string.Empty;
-			string resolucion = "*";
-			if (tipo_doc == TipoDocumento.Factura.GetHashCode())
-				resolucion = list_resolucion[2];
+			context.Configuration.LazyLoadingEnabled = false;
 
 			List<TblDocumentos> respuesta = (from datos in context.TblDocumentos
-											 join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
+											 //join empresa in context.TblEmpresas on datos.StrEmpresaAdquiriente equals empresa.StrIdentificacion
 											 where datos.StrEmpresaFacturador.Equals(codigo_facturador)
-												   && (datos.StrIdSeguridad.ToString().Contains(IdSeguridad) || IdSeguridad.Equals("*"))
-												   && (datos.StrNumResolucion.Equals(resolucion) || resolucion.Equals("*"))
+												   //&& (datos.StrIdSeguridad.ToString().Contains(IdSeguridad) || IdSeguridad.Equals("*"))
+												   && (datos.StrNumResolucion.Equals(numero_resolucion))
 												   && (datos.StrPrefijo.Equals(prefijo))
-												   && (datos.IntNumero == numero_documento || numero_documento == null)
+												   && (datos.IntNumero == numero_documento)
 												   && (datos.IntDocTipo == tipo_doc)
 											 orderby datos.DatFechaIngreso descending
 											 select datos).ToList();

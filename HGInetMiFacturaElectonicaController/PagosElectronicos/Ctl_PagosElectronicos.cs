@@ -324,10 +324,11 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 			}
 		}
 
-		public TblPagosElectronicos ObtenerPagoPorRegistroPrincipal(Guid registro_principal)
+		public TblPagosElectronicos ObtenerPagoPorRegistroPrincipal(Guid registro_principal , bool lazyloading = true)
 		{
 			try
 			{
+				context.Configuration.LazyLoadingEnabled = lazyloading;
 
 				TblPagosElectronicos datos_pago = (from pago in context.TblPagosElectronicos
 												   where pago.StrIdRegistro == registro_principal
@@ -657,7 +658,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 		}
 
 
-		public List<TblPagosDetalles> ObtenerPagosDetalle(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string Resolucion, int tipo_fecha)
+		public List<TblPagosDetalles> ObtenerPagosDetalle(string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string Resolucion, int tipo_fecha, bool lazyloading = true)
 		{
 
 			fecha_inicio = fecha_inicio.Date;
@@ -736,6 +737,8 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 			}
 			else
 			{
+				context.Configuration.LazyLoadingEnabled = lazyloading;
+
 				documentos = (from Pagos in context.TblPagosDetalles
 							  join enc_pago in context.TblPagosElectronicos on Pagos.StrIdPagoPrincipal equals enc_pago.StrIdRegistro
 							  where (enc_pago.StrEmpresaFacturador.Equals(codigo_facturador) || codigo_facturador.Equals("*"))
@@ -744,6 +747,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 							  && (enc_pago.StrEmpresaAdquiriente.Equals(codigo_adquiriente) || codigo_adquiriente.Equals("*"))
 							  orderby enc_pago.DatFechaRegistro descending
 							  select Pagos).ToList();
+			
 			}
 
 

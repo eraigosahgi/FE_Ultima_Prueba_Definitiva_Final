@@ -1707,6 +1707,76 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 				List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
 
+				if (datos == null || datos.Count() == 0)
+				{
+					string UrlWs = "https://historico.hgidocs.co";
+
+					UrlWs = string.Format("{0}/Api/ObtenerHisDocumentosIdseguridad", UrlWs);
+
+					TblDocumentos datosH = new TblDocumentos();
+
+					// Construir la URL de la API con los parámetros
+					//ObtenerHisDocumentosIdseguridad(System.Guid id_seguridad)
+					UrlWs += $"?id_seguridad={id_seguridad}";
+
+					// Crear una solicitud HTTP utilizando la URL de la API
+					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+					request.Method = "GET";
+
+					// Enviar la solicitud y obtener la respuesta
+					try
+					{
+						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+						{
+							// Verificar el código de estado de la respuesta
+							if (response.StatusCode == HttpStatusCode.OK)
+							{
+								// Leer la respuesta
+								using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+								{
+									string responseData = reader.ReadToEnd();
+
+									// Deserializar la respuesta JSON en un objeto MiObjeto
+									datosH = JsonConvert.DeserializeObject<TblDocumentos>(responseData);
+
+									if (datosH != null)
+									{
+										datos.Add(datosH);
+									}
+								}
+							}
+							else
+							{
+								//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+								//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+							}
+						}
+					}
+					catch (WebException ex)
+					{
+						//string ex_message = string.Empty;
+						//// Manejar excepciones de WebException
+						//if (ex.Response != null)
+						//{
+						//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						//	{
+						//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						//		{
+						//			string errorText = reader.ReadToEnd();
+						//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						//		}
+						//	}
+						//}
+						//else
+						//{
+						//	ex_message = ("Error: " + ex.Message);
+						//}
+
+						//throw new Exception(ex_message, ex);
+					}
+				}
+
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 				if (datos == null)
 				{
@@ -1767,6 +1837,88 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 				List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad, false);
+
+				if (datos == null || datos.Count() == 0)
+				{
+					string UrlWs = "https://historico.hgidocs.co";
+
+					UrlWs = string.Format("{0}/Api/ObtenerHisDocumentosIdseguridad", UrlWs);
+
+					TblDocumentos datosH = new TblDocumentos();
+
+					// Construir la URL de la API con los parámetros
+					//ObtenerHisDocumentosIdseguridad(System.Guid id_seguridad)
+					UrlWs += $"?id_seguridad={id_seguridad}";
+
+					// Crear una solicitud HTTP utilizando la URL de la API
+					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+					request.Method = "GET";
+
+					// Enviar la solicitud y obtener la respuesta
+					try
+					{
+						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+						{
+							// Verificar el código de estado de la respuesta
+							if (response.StatusCode == HttpStatusCode.OK)
+							{
+								// Leer la respuesta
+								using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+								{
+									string responseData = reader.ReadToEnd();
+
+									// Deserializar la respuesta JSON en un objeto MiObjeto
+									datosH = JsonConvert.DeserializeObject<TblDocumentos>(responseData);
+
+									if (datosH != null)
+									{
+										datos.Add(datosH);
+									}
+								}
+							}
+							else
+							{
+								//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+								//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+							}
+						}
+					}
+					catch (WebException ex)
+					{
+						//string ex_message = string.Empty;
+						//// Manejar excepciones de WebException
+						//if (ex.Response != null)
+						//{
+						//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						//	{
+						//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						//		{
+						//			string errorText = reader.ReadToEnd();
+						//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						//		}
+						//	}
+						//}
+						//else
+						//{
+						//	ex_message = ("Error: " + ex.Message);
+						//}
+
+						//throw new Exception(ex_message, ex);
+					}
+				}
+
+				if (datos != null && datos.Count > 0)
+				{
+					Ctl_Empresa ctlempre = new Ctl_Empresa();
+					Ctl_EmpresaResolucion ctlempRes = new Ctl_EmpresaResolucion();
+					if (datos.FirstOrDefault().TblEmpresasFacturador == null)
+						datos.FirstOrDefault().TblEmpresasFacturador = ctlempre.Obtener(datos.FirstOrDefault().StrEmpresaFacturador, false);
+					if (datos.FirstOrDefault().TblEmpresasAdquiriente == null)
+						datos.FirstOrDefault().TblEmpresasAdquiriente = ctlempre.Obtener(datos.FirstOrDefault().StrEmpresaAdquiriente, false);
+					if (datos.FirstOrDefault().TblEmpresasResoluciones == null)
+						datos.FirstOrDefault().TblEmpresasResoluciones = ctlempRes.Obtener(datos.FirstOrDefault().StrEmpresaFacturador, datos.FirstOrDefault().StrNumResolucion, datos.FirstOrDefault().StrPrefijo, false);
+				}
 
 				//Actualiza el estado del Acuse como leido
 				ctl_documento = new Ctl_Documento();
@@ -1906,9 +2058,90 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 				List<TblDocumentos> datos = ctl_documento.ObtenerPorIdSeguridad(id_seguridad);
 
+				if (datos == null || datos.Count() == 0)
+				{
+					string UrlWs = "https://historico.hgidocs.co";
+
+					UrlWs = string.Format("{0}/Api/ObtenerHisDocumentosIdseguridad", UrlWs);
+
+					TblDocumentos datosH = new TblDocumentos();
+
+					// Construir la URL de la API con los parámetros
+					//ObtenerHisDocumentosIdseguridad(System.Guid id_seguridad)
+					UrlWs += $"?id_seguridad={id_seguridad}";
+
+					// Crear una solicitud HTTP utilizando la URL de la API
+					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+					request.Method = "GET";
+
+					// Enviar la solicitud y obtener la respuesta
+					try
+					{
+						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+						{
+							// Verificar el código de estado de la respuesta
+							if (response.StatusCode == HttpStatusCode.OK)
+							{
+								// Leer la respuesta
+								using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+								{
+									string responseData = reader.ReadToEnd();
+
+									// Deserializar la respuesta JSON en un objeto MiObjeto
+									datosH = JsonConvert.DeserializeObject<TblDocumentos>(responseData);
+
+									if (datosH != null)
+									{
+										datos.Add(datosH);
+									}
+								}
+							}
+							else
+							{
+								//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+								//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+							}
+						}
+					}
+					catch (WebException ex)
+					{
+						//string ex_message = string.Empty;
+						//// Manejar excepciones de WebException
+						//if (ex.Response != null)
+						//{
+						//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						//	{
+						//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						//		{
+						//			string errorText = reader.ReadToEnd();
+						//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						//		}
+						//	}
+						//}
+						//else
+						//{
+						//	ex_message = ("Error: " + ex.Message);
+						//}
+
+						//throw new Exception(ex_message, ex);
+					}
+				}
+
 				if (datos == null)
 				{
 					return NotFound();
+				}
+				else
+				{
+					Ctl_Empresa ctlempre = new Ctl_Empresa();
+					Ctl_EmpresaResolucion ctlempRes = new Ctl_EmpresaResolucion();
+					if (datos.FirstOrDefault().TblEmpresasFacturador == null)
+						datos.FirstOrDefault().TblEmpresasFacturador = ctlempre.Obtener(datos.FirstOrDefault().StrEmpresaFacturador, false);
+					if (datos.FirstOrDefault().TblEmpresasAdquiriente == null)
+						datos.FirstOrDefault().TblEmpresasAdquiriente = ctlempre.Obtener(datos.FirstOrDefault().StrEmpresaAdquiriente, false);
+					if (datos.FirstOrDefault().TblEmpresasResoluciones == null)
+						datos.FirstOrDefault().TblEmpresasResoluciones = ctlempRes.Obtener(datos.FirstOrDefault().StrEmpresaFacturador, datos.FirstOrDefault().StrNumResolucion, datos.FirstOrDefault().StrPrefijo, false);
 				}
 
 				if (datos.FirstOrDefault().IdCategoriaEstado < 200)
@@ -1921,13 +2154,32 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 				respuesta = clase_email.NotificacionDocumento(datos.FirstOrDefault(), "", email, "", Procedencia.Usuario, (!string.IsNullOrEmpty(Usuario)) ? Usuario : "", ProcesoEstado.EnvioEmailAcuse, "", true);
 
-				if (datos.FirstOrDefault().IntEstadoEnvio == (short)EstadoEnvio.NoEntregado.GetHashCode() || datos.FirstOrDefault().IntEstadoEnvio == (short)EstadoEnvio.Desconocido.GetHashCode())
+				if ((datos.FirstOrDefault().IntEstadoEnvio == (short)EstadoEnvio.NoEntregado.GetHashCode() || datos.FirstOrDefault().IntEstadoEnvio == (short)EstadoEnvio.Desconocido.GetHashCode()) && datos.FirstOrDefault().DatFechaIngreso.Year == 2024)
 				{
 					ctl_documento = new Ctl_Documento();
 					datos.FirstOrDefault().IntEstadoEnvio = (short)EstadoEnvio.Enviado.GetHashCode();
 					ctl_documento.Actualizar(datos.FirstOrDefault());
 				}
 				return Ok(respuesta);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/ObtenerHisDocumentosIdseguridad")]
+		public IHttpActionResult ObtenerHisDocumentosIdseguridad(System.Guid id_seguridad)
+		{
+			try
+			{
+
+				Ctl_Documento Controlador = new Ctl_Documento();
+				///Consultamos los documentos
+				TblDocumentos resultado = Controlador.ObtenerDocumento(id_seguridad);
+				return Ok(resultado);
+
 			}
 			catch (Exception excepcion)
 			{
@@ -2718,7 +2970,96 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					if ((IdSeguridad.Length != 8))
 						throw new ApplicationException("El codigo de plataforma debe ser de 8 digitos");
 
-				var datos = ctl_documento.ObtenerDocumentoCliente(codigo_facturador, numero_documento, (!string.IsNullOrEmpty(IdSeguridad)) ? IdSeguridad : "*", (numero_resolucion != null) ? numero_resolucion : "*");
+				List<string> list_resolucion = Coleccion.ConvertirLista(numero_resolucion, '-');
+				int tipo_doc = Enumeracion.GetValueFromDescription<TipoDocumento>(list_resolucion[0]).GetHashCode();
+				string prefijo = list_resolucion[1];
+				if (numero_resolucion.Contains("S/PREFIJO"))
+					prefijo = string.Empty;
+				string resolucion = "*";
+				if (tipo_doc == TipoDocumento.Factura.GetHashCode())
+					resolucion = list_resolucion[2];
+
+				List<TblDocumentos> datos = ctl_documento.ObtenerDocumentoCliente(codigo_facturador, numero_documento.Value, numero_resolucion,tipo_doc, prefijo);
+
+				if (datos == null || datos.Count() == 0)
+				{
+					string UrlWs = "https://historico.hgidocs.co";
+
+					UrlWs = string.Format("{0}/Api/ObtenerHisDocumentosClientesSop", UrlWs);
+
+					List<TblDocumentos> datosH = new List<TblDocumentos>();
+
+					// Construir la URL de la API con los parámetros
+					//ObtenerHisDocumentosClientesSop(string codigo_facturador, long numero_documento, string numero_resolucion, int tipo_doc, string prefijo, string IdSeguridad = "*")
+					UrlWs += $"?codigo_facturador={codigo_facturador}&numero_documento={numero_documento}&numero_resolucion={resolucion}&tipo_doc={tipo_doc}&prefijo={prefijo}";
+
+					// Crear una solicitud HTTP utilizando la URL de la API
+					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+					request.Method = "GET";
+
+					// Enviar la solicitud y obtener la respuesta
+					try
+					{
+						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+						{
+							// Verificar el código de estado de la respuesta
+							if (response.StatusCode == HttpStatusCode.OK)
+							{
+								// Leer la respuesta
+								using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+								{
+									string responseData = reader.ReadToEnd();
+
+									// Deserializar la respuesta JSON en un objeto MiObjeto
+									datosH = JsonConvert.DeserializeObject<List<TblDocumentos>>(responseData);
+
+									if (datosH != null && datosH.Count > 0)
+									{
+										if (datos != null && datos.Count > 0)
+										{
+											datos.AddRange(datosH);
+										}
+										else
+										{
+											datos = datosH;
+										}
+
+									}
+								}
+							}
+							else
+							{
+								//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+								//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+							}
+						}
+					}
+					catch (WebException ex)
+					{
+						//string ex_message = string.Empty;
+						//// Manejar excepciones de WebException
+						//if (ex.Response != null)
+						//{
+						//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						//	{
+						//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						//		{
+						//			string errorText = reader.ReadToEnd();
+						//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						//		}
+						//	}
+						//}
+						//else
+						//{
+						//	ex_message = ("Error: " + ex.Message);
+						//}
+
+						//throw new Exception(ex_message, ex);
+					}
+				}
+
+				Ctl_Empresa ctlemp = new Ctl_Empresa();
 
 				var retorno = datos.Select(d => new
 				{
@@ -2732,9 +3073,9 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
 					MotivoRechazo = d.StrAdquirienteMvoRechazo,
 					d.StrAdquirienteMvoRechazo,
-					IdentificacionAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
-					NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
-					MailAdquiriente = d.TblEmpresasAdquiriente.StrMailAdmin,
+					IdentificacionAdquiriente = d.StrEmpresaAdquiriente,
+					NombreAdquiriente = ctlemp.Obtener(d.StrEmpresaAdquiriente, false).StrRazonSocial, // d.TblEmpresasAdquiriente.StrRazonSocial,
+					MailAdquiriente = ctlemp.Obtener(d.StrEmpresaAdquiriente, false).StrMailAdmin,
 					Xml = d.StrUrlArchivoUbl,
 					Pdf = d.StrUrlArchivoPdf,
 					d.StrIdSeguridad,
@@ -2759,6 +3100,27 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
+
+		[HttpGet]
+		[Route("Api/ObtenerHisDocumentosClientesSop")]
+		//ObtenerHisDocumentosClientesSop?codigo_facturador=900084476&numero_documento=33469&numero_resolucion=18764029978070&tipo_doc=1&prefijo=CFEE
+		public IHttpActionResult ObtenerHisDocumentosClientesSop(string codigo_facturador, long numero_documento, string numero_resolucion, int tipo_doc, string prefijo)
+		{
+			try
+			{
+
+				Ctl_Documento Controlador = new Ctl_Documento();
+				///Consultamos los documentos
+				List<TblDocumentos> resultado = Controlador.ObtenerDocumentoCliente(codigo_facturador, numero_documento, numero_resolucion, tipo_doc, prefijo);
+				return Ok(resultado);
+
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 		#endregion
 
 		#region Docuemntos Admin
@@ -2859,6 +3221,104 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				Ctl_Documento ctl_documento = new Ctl_Documento();
 				List<ObjDocumentos> datos = ctl_documento.ObtenerAdministradorNew(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento, tipo_fecha, Desde, Hasta);
 
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (fecha_inicio >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					string UrlWs = "https://historico.hgidocs.co";
+
+					UrlWs = string.Format("{0}/Api/ObtenerHisDocumentosRecibidos", UrlWs);
+
+					List<ObjDocumentos> datosH = new List<ObjDocumentos>();
+
+					if (string.IsNullOrEmpty(codigo_facturador))
+					{
+						codigo_facturador = "*";
+					}
+
+					if (string.IsNullOrEmpty(numero_documento))
+						numero_documento = "*";
+
+					if (string.IsNullOrWhiteSpace(estado_recibo))
+						estado_recibo = "*";
+
+					// Construir la URL de la API con los parámetros
+					//ObtenerHisDocumentosAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento, int tipo_fecha, int Desde, int Hasta)
+					UrlWs += $"?codigo_facturador={codigo_facturador}&numero_documento={numero_documento}&codigo_adquiente={codigo_adquiriente}&estado_dian={estado_dian}&estado_recibo={estado_recibo}&fecha_inicio={fecha_inicio.ToString("yyyy-MM-dd")}&fecha_fin={fecha_fin.ToString("yyyy-MM-dd")}&TipoDocumento={TipoDocumento}&tipo_fecha={tipo_fecha}&Desde={Desde}&Hasta={Hasta}";
+
+					// Crear una solicitud HTTP utilizando la URL de la API
+					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+					request.Method = "GET";
+
+					// Enviar la solicitud y obtener la respuesta
+					try
+					{
+						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+						{
+							// Verificar el código de estado de la respuesta
+							if (response.StatusCode == HttpStatusCode.OK)
+							{
+								// Leer la respuesta
+								using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+								{
+									string responseData = reader.ReadToEnd();
+
+									// Deserializar la respuesta JSON en un objeto MiObjeto
+									datosH = JsonConvert.DeserializeObject<List<ObjDocumentos>>(responseData);
+
+									if (datosH != null && datosH.Count > 0)
+									{
+										if (datos != null && datos.Count > 0)
+										{
+											datos.AddRange(datosH);
+										}
+										else
+										{
+											datos = datosH;
+										}
+
+									}
+								}
+							}
+							else
+							{
+								//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+								//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+							}
+						}
+					}
+					catch (WebException ex)
+					{
+						//string ex_message = string.Empty;
+						//// Manejar excepciones de WebException
+						//if (ex.Response != null)
+						//{
+						//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						//	{
+						//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						//		{
+						//			string errorText = reader.ReadToEnd();
+						//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						//		}
+						//	}
+						//}
+						//else
+						//{
+						//	ex_message = ("Error: " + ex.Message);
+						//}
+
+						//throw new Exception(ex_message, ex);
+					}
+				}
+
 				if (datos == null)
 				{
 					return NotFound();
@@ -2910,6 +3370,30 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		}
 
+		[HttpGet]
+		[Route("Api/ObtenerHisDocumentosRecibidos")]
+		public IHttpActionResult ObtenerHisDocumentosAdmin(string codigo_facturador, string numero_documento, string codigo_adquiriente, string estado_dian, string estado_recibo, DateTime fecha_inicio, DateTime fecha_fin, int TipoDocumento, int tipo_fecha, int Desde, int Hasta)
+		{
+			try
+			{
+				PlataformaData plataforma = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
+
+				if (fecha_fin >= fecha_corte)
+					fecha_fin = fecha_corte;
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+				List<ObjDocumentos> datos = ctl_documento.ObtenerAdministradorNew(codigo_facturador, numero_documento, codigo_adquiriente, estado_dian, estado_recibo, fecha_inicio, fecha_fin, TipoDocumento, tipo_fecha, Desde, Hasta);
+
+				return Ok(datos);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 		#endregion
 
 		/// <summary>
@@ -2926,6 +3410,92 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				string correo = string.Empty;
 				Ctl_Documento Controlador = new Ctl_Documento();
 				TblDocumentos datos = Controlador.ObtenerPorIdSeguridad(IdSeguridad).FirstOrDefault();
+
+				if (datos == null)
+				{
+					string UrlWs = "https://historico.hgidocs.co";
+
+					UrlWs = string.Format("{0}/Api/ObtenerHisDocumentosIdseguridad", UrlWs);
+
+					TblDocumentos datosH = new TblDocumentos();
+
+					// Construir la URL de la API con los parámetros
+					//ObtenerHisDocumentosIdseguridad(System.Guid id_seguridad)
+					UrlWs += $"?id_seguridad={IdSeguridad}";
+
+					// Crear una solicitud HTTP utilizando la URL de la API
+					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+					request.Method = "GET";
+
+					// Enviar la solicitud y obtener la respuesta
+					try
+					{
+						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+						{
+							// Verificar el código de estado de la respuesta
+							if (response.StatusCode == HttpStatusCode.OK)
+							{
+								// Leer la respuesta
+								using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+								{
+									string responseData = reader.ReadToEnd();
+
+									// Deserializar la respuesta JSON en un objeto MiObjeto
+									datosH = JsonConvert.DeserializeObject<TblDocumentos>(responseData);
+
+									if (datosH != null)
+									{
+										datos = datosH;
+									}
+								}
+							}
+							else
+							{
+								//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+								//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+							}
+						}
+					}
+					catch (WebException ex)
+					{
+						//string ex_message = string.Empty;
+						//// Manejar excepciones de WebException
+						//if (ex.Response != null)
+						//{
+						//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						//	{
+						//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						//		{
+						//			string errorText = reader.ReadToEnd();
+						//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						//		}
+						//	}
+						//}
+						//else
+						//{
+						//	ex_message = ("Error: " + ex.Message);
+						//}
+
+						//throw new Exception(ex_message, ex);
+					}
+				}
+
+				if (datos != null)
+				{
+					Ctl_Empresa ctlempre = new Ctl_Empresa();
+					Ctl_EmpresaResolucion ctlempRes = new Ctl_EmpresaResolucion();
+					if (datos.TblEmpresasFacturador == null)
+						datos.TblEmpresasFacturador = ctlempre.Obtener(datos.StrEmpresaFacturador, false);
+					if (datos.TblEmpresasAdquiriente == null)
+						datos.TblEmpresasAdquiriente = ctlempre.Obtener(datos.StrEmpresaAdquiriente, false);
+					if (datos.TblEmpresasResoluciones == null)
+						datos.TblEmpresasResoluciones = ctlempRes.Obtener(datos.StrEmpresaFacturador, datos.StrNumResolucion,datos.StrPrefijo, false);
+				}
+				else
+				{
+					return Request.CreateResponse(HttpStatusCode.OK, correo);
+				}
 
 				if (datos.IntDocTipo < TipoDocumento.AcuseRecibo.GetHashCode())
 				{
@@ -3134,7 +3704,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						return NotFound();
 					}
 
-					List<ResultadoPago> resultado = ConvertirPagos(datos);
+					var resultado = ConvertirPagos(datos);
 
 					DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
 
@@ -3145,93 +3715,93 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						obtener_historico = false;
 					}
 
-					if (obtener_historico == true)
-					{
-						string UrlWs = "https://historico.hgidocs.co";
+					//if (obtener_historico == true)
+					//{
+					//	string UrlWs = "https://historico.hgidocs.co";
 
-						UrlWs = string.Format("{0}/Api/ObtenerHisPagosAdministracion", UrlWs);
+					//	UrlWs = string.Format("{0}/Api/ObtenerHisPagosAdministracion", UrlWs);
 
-						List<ResultadoPago> datosH = new List<ResultadoPago>();
+					//	List<ResultadoPago> datosH = new List<ResultadoPago>();
 
-						if (string.IsNullOrWhiteSpace(numero_documento))
-							numero_documento = "*";
+					//	if (string.IsNullOrWhiteSpace(numero_documento))
+					//		numero_documento = "*";
 
-						if (string.IsNullOrWhiteSpace(estado_recibo))
-							estado_recibo = "*";
+					//	if (string.IsNullOrWhiteSpace(estado_recibo))
+					//		estado_recibo = "*";
 
-						if (string.IsNullOrEmpty(codigo_facturador))
-							codigo_facturador = "*";
+					//	if (string.IsNullOrEmpty(codigo_facturador))
+					//		codigo_facturador = "*";
 
-						// Construir la URL de la API con los parámetros
-						//ObtenerHisPagosAdministracion(string codigo_facturador, string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha)
-						UrlWs += $"?codigo_facturador={codigo_facturador}&numero_documento={numero_documento}&fecha_inicio={fecha_inicio.ToString("yyyy-MM-dd")}&fecha_fin={fecha_fin.ToString("yyyy-MM-dd")}&estado_recibo={estado_recibo}&resolucion={resolucion}&tipo_fecha={tipo_fecha}";
+					//	// Construir la URL de la API con los parámetros
+					//	//ObtenerHisPagosAdministracion(string codigo_facturador, string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha)
+					//	UrlWs += $"?codigo_facturador={codigo_facturador}&numero_documento={numero_documento}&fecha_inicio={fecha_inicio.ToString("yyyy-MM-dd")}&fecha_fin={fecha_fin.ToString("yyyy-MM-dd")}&estado_recibo={estado_recibo}&resolucion={resolucion}&tipo_fecha={tipo_fecha}";
 
-						// Crear una solicitud HTTP utilizando la URL de la API
-						HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
-						request.Method = "GET";
+					//	// Crear una solicitud HTTP utilizando la URL de la API
+					//	HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+					//	request.Method = "GET";
 
-						// Enviar la solicitud y obtener la respuesta
-						try
-						{
-							using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-							{
-								// Verificar el código de estado de la respuesta
-								if (response.StatusCode == HttpStatusCode.OK)
-								{
-									// Leer la respuesta
-									using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-									{
-										string responseData = reader.ReadToEnd();
+					//	// Enviar la solicitud y obtener la respuesta
+					//	try
+					//	{
+					//		using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+					//		{
+					//			// Verificar el código de estado de la respuesta
+					//			if (response.StatusCode == HttpStatusCode.OK)
+					//			{
+					//				// Leer la respuesta
+					//				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+					//				{
+					//					string responseData = reader.ReadToEnd();
 
-										// Deserializar la respuesta JSON en un objeto MiObjeto
-										datosH = JsonConvert.DeserializeObject<List<ResultadoPago>>(responseData);
+					//					// Deserializar la respuesta JSON en un objeto MiObjeto
+					//					datosH = JsonConvert.DeserializeObject<List<ResultadoPago>>(responseData);
 
-										if (datosH != null && datosH.Count > 0)
-										{
-											if (datos != null && datos.Count > 0)
-											{
-												resultado.AddRange(datosH);
-											}
-											else
-											{
-												resultado = datosH;
-											}
+					//					if (datosH != null && datosH.Count > 0)
+					//					{
+					//						if (datos != null && datos.Count > 0)
+					//						{
+					//							resultado.AddRange(datosH);
+					//						}
+					//						else
+					//						{
+					//							resultado = datosH;
+					//						}
 
-										}
-									}
-								}
-								else
-								{
-									//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
-									//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
-								}
-							}
-						}
-						catch (WebException ex)
-						{
-							//string ex_message = string.Empty;
-							//// Manejar excepciones de WebException
-							//if (ex.Response != null)
-							//{
-							//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
-							//	{
-							//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
-							//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
-							//		{
-							//			string errorText = reader.ReadToEnd();
-							//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
-							//		}
-							//	}
-							//}
-							//else
-							//{
-							//	ex_message = ("Error: " + ex.Message);
-							//}
+					//					}
+					//				}
+					//			}
+					//			else
+					//			{
+					//				//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+					//				//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+					//			}
+					//		}
+					//	}
+					//	catch (WebException ex)
+					//	{
+					//		//string ex_message = string.Empty;
+					//		//// Manejar excepciones de WebException
+					//		//if (ex.Response != null)
+					//		//{
+					//		//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					//		//	{
+					//		//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+					//		//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+					//		//		{
+					//		//			string errorText = reader.ReadToEnd();
+					//		//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+					//		//		}
+					//		//	}
+					//		//}
+					//		//else
+					//		//{
+					//		//	ex_message = ("Error: " + ex.Message);
+					//		//}
 
-							//throw new Exception(ex_message, ex);
-						}
+					//		//throw new Exception(ex_message, ex);
+					//	}
 
-					}
+					//}
 
 					//var retorno = datos.Select(d => new
 					//{
@@ -3276,29 +3846,29 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		}
 
-		[HttpGet]
-		[Route("Api/ObtenerHisPagosAdministracion")]
-		public IHttpActionResult ObtenerHisPagosAdministracion(string codigo_facturador, string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha)
-		{
-			try
-			{
-				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+		//[HttpGet]
+		//[Route("Api/ObtenerHisPagosAdministracion")]
+		//public IHttpActionResult ObtenerHisPagosAdministracion(string codigo_facturador, string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha)
+		//{
+		//	try
+		//	{
+		//		Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-				DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
+		//		DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
 
-				if (fecha_fin >= fecha_corte)
-					fecha_fin = fecha_corte;
+		//		if (fecha_fin >= fecha_corte)
+		//			fecha_fin = fecha_corte;
 
-				List<TblPagosElectronicos> datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, "*", fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
-				List<ResultadoPago> resultado = ConvertirPagos(datos);
-				return Ok(resultado);
+		//		List<TblPagosElectronicos> datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, "*", fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
+		//		List<ResultadoPago> resultado = ConvertirPagos(datos);
+		//		return Ok(resultado);
 
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-		}
+		//	}
+		//	catch (Exception excepcion)
+		//	{
+		//		throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+		//	}
+		//}
 
 		[HttpGet]
 		[Route("Api/ObtenerPagosFacturador")]
@@ -3319,128 +3889,133 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				}
 
 				try
-				{
+				{			  
 					DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
 
 					bool obtener_historico = true;
 
-					if (fecha_inicio >= fecha_corte)
-					{
-						obtener_historico = false;
-					}
+					//if (fecha_inicio >= fecha_corte)
+					//{
+					//	obtener_historico = false;
+					//}
 
 					if (tipo_consulta == 1)
 					{
 						List<TblPagosElectronicos> datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
-						List<ResultadoPago> resultado = ConvertirPagos(datos);
 
-						if (obtener_historico == true)
+						//if (obtener_historico == true)
+						//{
+						//	string UrlWs = "https://historico.hgidocs.co";
+
+						//	UrlWs = string.Format("{0}/Api/ObtenerHisPagosFacturador", UrlWs);
+
+						//	List<TblPagosElectronicos> datosH = new List<TblPagosElectronicos>();
+
+						//	if (string.IsNullOrWhiteSpace(numero_documento))
+						//		numero_documento = "*";
+						//	if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+						//		codigo_adquiriente = "*";
+
+						//	if (string.IsNullOrWhiteSpace(estado_recibo))
+						//		estado_recibo = "*";
+
+						//	List<string> LstResolucion = new List<string>();
+
+						//	if (string.IsNullOrWhiteSpace(resolucion))
+						//	{
+						//		resolucion = "*";
+						//	}
+						//	else
+						//	{
+						//		LstResolucion = Coleccion.ConvertirLista(resolucion);
+						//	}
+
+						//	if (string.IsNullOrEmpty(codigo_facturador))
+						//		codigo_facturador = "*";
+
+						//	// Construir la URL de la API con los parámetros
+						//	//string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha, int tipo_consulta = 1)
+						//	UrlWs += $"?codigo_facturador={codigo_facturador}&numero_documento={numero_documento}&codigo_adquiriente={codigo_adquiriente}&fecha_inicio={fecha_inicio.ToString("yyyy-MM-dd")}&fecha_fin={fecha_fin.ToString("yyyy-MM-dd")}&estado_recibo={estado_recibo}&resolucion={resolucion}&tipo_fecha={tipo_fecha}";
+
+						//	// Crear una solicitud HTTP utilizando la URL de la API
+						//	HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+						//	request.Method = "GET";
+
+						//	// Enviar la solicitud y obtener la respuesta
+						//	try
+						//	{
+						//		using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+						//		{
+						//			// Verificar el código de estado de la respuesta
+						//			if (response.StatusCode == HttpStatusCode.OK)
+						//			{
+						//				// Leer la respuesta
+						//				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+						//				{
+						//					string responseData = reader.ReadToEnd();
+
+						//					// Deserializar la respuesta JSON en un objeto MiObjeto
+						//					datosH = JsonConvert.DeserializeObject<List<TblPagosElectronicos>>(responseData);
+
+						//					if (datosH != null && datosH.Count > 0)
+						//					{
+						//						if (datos != null && datos.Count > 0)
+						//						{
+						//							datos.AddRange(datosH);
+						//						}
+						//						else
+						//						{
+						//							datos = datosH;
+						//						}
+
+						//					}
+						//				}
+						//			}
+						//			else
+						//			{
+						//				//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+						//				//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+						//			}
+						//		}
+						//	}
+						//	catch (WebException ex)
+						//	{
+						//		//string ex_message = string.Empty;
+						//		//// Manejar excepciones de WebException
+						//		//if (ex.Response != null)
+						//		//{
+						//		//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						//		//	{
+						//		//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						//		//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						//		//		{
+						//		//			string errorText = reader.ReadToEnd();
+						//		//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						//		//		}
+						//		//	}
+						//		//}
+						//		//else
+						//		//{
+						//		//	ex_message = ("Error: " + ex.Message);
+						//		//}
+
+						//		//throw new Exception(ex_message, ex);
+						//	}
+
+						//}
+
+						if (datos == null)
 						{
-							string UrlWs = "https://historico.hgidocs.co";
-
-							UrlWs = string.Format("{0}/Api/ObtenerHisPagosFacturador", UrlWs);
-
-							List<ResultadoPago> datosH = new List<ResultadoPago>();
-
-							if (string.IsNullOrWhiteSpace(numero_documento))
-								numero_documento = "*";
-							if (string.IsNullOrWhiteSpace(codigo_adquiriente))
-								codigo_adquiriente = "*";
-
-							if (string.IsNullOrWhiteSpace(estado_recibo))
-								estado_recibo = "*";
-
-							List<string> LstResolucion = new List<string>();
-
-							if (string.IsNullOrWhiteSpace(resolucion))
-							{
-								resolucion = "*";
-							}
-							else
-							{
-								LstResolucion = Coleccion.ConvertirLista(resolucion);
-							}
-
-							if (string.IsNullOrEmpty(codigo_facturador))
-								codigo_facturador = "*";
-
-							// Construir la URL de la API con los parámetros
-							//string codigo_facturador, string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string resolucion, int tipo_fecha, int tipo_consulta = 1)
-							UrlWs += $"?codigo_facturador={codigo_facturador}&numero_documento={numero_documento}&codigo_adquiriente={codigo_adquiriente}&fecha_inicio={fecha_inicio.ToString("yyyy-MM-dd")}&fecha_fin={fecha_fin.ToString("yyyy-MM-dd")}&estado_recibo={estado_recibo}&resolucion={resolucion}&tipo_fecha={tipo_fecha}";
-
-							// Crear una solicitud HTTP utilizando la URL de la API
-							HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
-							request.Method = "GET";
-
-							// Enviar la solicitud y obtener la respuesta
-							try
-							{
-								using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-								{
-									// Verificar el código de estado de la respuesta
-									if (response.StatusCode == HttpStatusCode.OK)
-									{
-										// Leer la respuesta
-										using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-										{
-											string responseData = reader.ReadToEnd();
-
-											// Deserializar la respuesta JSON en un objeto MiObjeto
-											datosH = JsonConvert.DeserializeObject<List<ResultadoPago>>(responseData);
-
-											if (datosH != null && datosH.Count > 0)
-											{
-												if (datos != null && datos.Count > 0)
-												{
-													resultado.AddRange(datosH);
-												}
-												else
-												{
-													resultado = datosH;
-												}
-
-											}
-										}
-									}
-									else
-									{
-										//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
-										//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
-									}
-								}
-							}
-							catch (WebException ex)
-							{
-								//string ex_message = string.Empty;
-								//// Manejar excepciones de WebException
-								//if (ex.Response != null)
-								//{
-								//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
-								//	{
-								//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
-								//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
-								//		{
-								//			string errorText = reader.ReadToEnd();
-								//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
-								//		}
-								//	}
-								//}
-								//else
-								//{
-								//	ex_message = ("Error: " + ex.Message);
-								//}
-
-								//throw new Exception(ex_message, ex);
-							}
-
+							return NotFound();
 						}
+
+						var resultado = ConvertirPagos(datos);
 
 						return Ok(resultado);
 					}
 					else
 					{
 						List<TblPagosDetalles> datos_detalle = Pago.ObtenerPagosDetalle(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
-						List<DetallePago> resultado = ConvertirDetalles(datos_detalle);
 
 						if (obtener_historico == true)
 						{
@@ -3448,7 +4023,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 							UrlWs = string.Format("{0}/Api/ObtenerHisPagosFacturador", UrlWs);
 
-							List<DetallePago> datosH = new List<DetallePago>();
+							List<TblPagosDetalles> datosH = new List<TblPagosDetalles>();
 
 							if (string.IsNullOrWhiteSpace(numero_documento))
 								numero_documento = "*";
@@ -3494,17 +4069,22 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 											string responseData = reader.ReadToEnd();
 
 											// Deserializar la respuesta JSON en un objeto MiObjeto
-											datosH = JsonConvert.DeserializeObject<List<DetallePago>>(responseData);
+											datosH = JsonConvert.DeserializeObject<List<TblPagosDetalles>>(responseData);
 
 											if (datosH != null && datosH.Count > 0)
 											{
 												if (datos_detalle != null && datos_detalle.Count > 0)
 												{
-													resultado.AddRange(datosH);
+													//datos_detalle.AddRange(datosH);
+													foreach (TblPagosDetalles item in datosH)
+													{
+														if (datos_detalle.Where(x => x.StrIdPagoPrincipal == item.StrIdPagoPrincipal).FirstOrDefault() == null)
+															datos_detalle.Add(item);
+													}
 												}
 												else
 												{
-													resultado = datosH;
+													datos_detalle = datosH;
 												}
 
 											}
@@ -3542,6 +4122,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 							}
 
 						}
+
+						if (datos_detalle == null)
+						{
+							return NotFound();
+						}
+
+						var resultado = ConvertirDetalles(datos_detalle);
 
 						return Ok(resultado);
 					}
@@ -3606,21 +4193,40 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			{
 				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-				DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
+				//DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
 
-				if (fecha_fin >= fecha_corte)
-					fecha_fin = fecha_corte;
+				//if (fecha_fin >= fecha_corte)
+				//	fecha_fin = fecha_corte;
 
 				if (tipo_consulta == 1)
 				{
 					List<TblPagosElectronicos> datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
-					List<ResultadoPago> resultado = ConvertirPagos(datos);
-					return Ok(resultado);
+					//List<ResultadoPago> resultado = ConvertirPagos(datos);
+
+					return Ok(datos);
 				}
 				else
 				{
-					List<TblPagosDetalles> datos_detalle = Pago.ObtenerPagosDetalle(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha);
-					List<DetallePago> resultado = ConvertirDetalles(datos_detalle);
+					List<TblPagosDetalles> datos_detalle = Pago.ObtenerPagosDetalle(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, resolucion, tipo_fecha, false);
+					List<TblPagosDetalles> resultado = new List<TblPagosDetalles>();
+					if (datos_detalle != null && datos_detalle.Count > 0)
+					{
+						Ctl_Documento ctldoc = new Ctl_Documento();
+						Ctl_PagosElectronicos ctlpagos = new Ctl_PagosElectronicos();
+						Ctl_Empresa ctlempresas = new Ctl_Empresa();
+
+						foreach (TblPagosDetalles item in datos_detalle)
+						{
+							item.TblDocumentos = ctldoc.ObtenerDocumento(item.StrIdSeguridadDoc);
+							item.TblPagosElectronicos = ctlpagos.ObtenerPagoPorRegistroPrincipal(item.StrIdPagoPrincipal, false);
+							item.TblPagosElectronicos.TblEmpresas = ctlempresas.Obtener(codigo_facturador, false);
+							item.TblPagosElectronicos.TblEmpresas1 = ctlempresas.Obtener(codigo_adquiriente, false);
+
+							resultado.Add(item);
+						}
+
+
+					}
 					return Ok(resultado);
 				}
 
@@ -3664,7 +4270,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						return NotFound();
 					}
 
-					List<ResultadoPago> resultado = ConvertirPagos(datos);
+					var resultado = ConvertirPagos(datos);
 
 					DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
 
@@ -3675,93 +4281,93 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 						obtener_historico = false;
 					}
 
-					if (obtener_historico == true)
-					{
-						string UrlWs = "https://historico.hgidocs.co";
+					//if (obtener_historico == true)
+					//{
+					//	string UrlWs = "https://historico.hgidocs.co";
 
-						UrlWs = string.Format("{0}/Api/ObtenerHisObtenerPagosAdquiriente", UrlWs);
+					//	UrlWs = string.Format("{0}/Api/ObtenerHisObtenerPagosAdquiriente", UrlWs);
 
-						List<ResultadoPago> datosH = new List<ResultadoPago>();
+					//	List<ResultadoPago> datosH = new List<ResultadoPago>();
 
-						if (string.IsNullOrWhiteSpace(numero_documento))
-							numero_documento = "*";
+					//	if (string.IsNullOrWhiteSpace(numero_documento))
+					//		numero_documento = "*";
 
-						if (string.IsNullOrWhiteSpace(estado_recibo))
-							estado_recibo = "*";
+					//	if (string.IsNullOrWhiteSpace(estado_recibo))
+					//		estado_recibo = "*";
 
-						if (string.IsNullOrEmpty(codigo_facturador))
-							codigo_facturador = "*";
+					//	if (string.IsNullOrEmpty(codigo_facturador))
+					//		codigo_facturador = "*";
 
-						// Construir la URL de la API con los parámetros
-						//ObtenerHisObtenerPagosAdquiriente(string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string codigo_facturador, int tipo_fecha)
-						UrlWs += $"?numero_documento={numero_documento}&codigo_adquiriente={codigo_adquiriente}&fecha_inicio={fecha_inicio.ToString("yyyy-MM-dd")}&fecha_fin={fecha_fin.ToString("yyyy-MM-dd")}&estado_recibo={estado_recibo}&codigo_facturador={codigo_facturador}&tipo_fecha={tipo_fecha}";
+					//	// Construir la URL de la API con los parámetros
+					//	//ObtenerHisObtenerPagosAdquiriente(string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string codigo_facturador, int tipo_fecha)
+					//	UrlWs += $"?numero_documento={numero_documento}&codigo_adquiriente={codigo_adquiriente}&fecha_inicio={fecha_inicio.ToString("yyyy-MM-dd")}&fecha_fin={fecha_fin.ToString("yyyy-MM-dd")}&estado_recibo={estado_recibo}&codigo_facturador={codigo_facturador}&tipo_fecha={tipo_fecha}";
 
-						// Crear una solicitud HTTP utilizando la URL de la API
-						HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
-						request.Method = "GET";
+					//	// Crear una solicitud HTTP utilizando la URL de la API
+					//	HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+					//	request.Method = "GET";
 
-						// Enviar la solicitud y obtener la respuesta
-						try
-						{
-							using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-							{
-								// Verificar el código de estado de la respuesta
-								if (response.StatusCode == HttpStatusCode.OK)
-								{
-									// Leer la respuesta
-									using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-									{
-										string responseData = reader.ReadToEnd();
+					//	// Enviar la solicitud y obtener la respuesta
+					//	try
+					//	{
+					//		using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+					//		{
+					//			// Verificar el código de estado de la respuesta
+					//			if (response.StatusCode == HttpStatusCode.OK)
+					//			{
+					//				// Leer la respuesta
+					//				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+					//				{
+					//					string responseData = reader.ReadToEnd();
 
-										// Deserializar la respuesta JSON en un objeto MiObjeto
-										datosH = JsonConvert.DeserializeObject<List<ResultadoPago>>(responseData);
+					//					// Deserializar la respuesta JSON en un objeto MiObjeto
+					//					datosH = JsonConvert.DeserializeObject<List<ResultadoPago>>(responseData);
 
-										if (datosH != null && datosH.Count > 0)
-										{
-											if (datos != null && datos.Count > 0)
-											{
-												resultado.AddRange(datosH);
-											}
-											else
-											{
-												resultado = datosH;
-											}
+					//					if (datosH != null && datosH.Count > 0)
+					//					{
+					//						if (datos != null && datos.Count > 0)
+					//						{
+					//							resultado.AddRange(datosH);
+					//						}
+					//						else
+					//						{
+					//							resultado = datosH;
+					//						}
 
-										}
-									}
-								}
-								else
-								{
-									//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
-									//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
-								}
-							}
-						}
-						catch (WebException ex)
-						{
-							//string ex_message = string.Empty;
-							//// Manejar excepciones de WebException
-							//if (ex.Response != null)
-							//{
-							//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
-							//	{
-							//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
-							//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
-							//		{
-							//			string errorText = reader.ReadToEnd();
-							//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
-							//		}
-							//	}
-							//}
-							//else
-							//{
-							//	ex_message = ("Error: " + ex.Message);
-							//}
+					//					}
+					//				}
+					//			}
+					//			else
+					//			{
+					//				//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+					//				//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+					//			}
+					//		}
+					//	}
+					//	catch (WebException ex)
+					//	{
+					//		//string ex_message = string.Empty;
+					//		//// Manejar excepciones de WebException
+					//		//if (ex.Response != null)
+					//		//{
+					//		//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					//		//	{
+					//		//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+					//		//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+					//		//		{
+					//		//			string errorText = reader.ReadToEnd();
+					//		//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+					//		//		}
+					//		//	}
+					//		//}
+					//		//else
+					//		//{
+					//		//	ex_message = ("Error: " + ex.Message);
+					//		//}
 
-							//throw new Exception(ex_message, ex);
-						}
+					//		//throw new Exception(ex_message, ex);
+					//	}
 
-					}
+					//}
 
 					return Ok(resultado);
 					//var retorno = datos.Select(d => new
@@ -3806,29 +4412,29 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			}
 		}
 
-		[HttpGet]
-		[Route("Api/ObtenerHisObtenerPagosAdquiriente")]
-		public IHttpActionResult ObtenerHisObtenerPagosAdquiriente(string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string codigo_facturador, int tipo_fecha)
-		{
-			try
-			{
-				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+		//[HttpGet]
+		//[Route("Api/ObtenerHisObtenerPagosAdquiriente")]
+		//public IHttpActionResult ObtenerHisObtenerPagosAdquiriente(string numero_documento, string codigo_adquiriente, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, string codigo_facturador, int tipo_fecha)
+		//{
+		//	try
+		//	{
+		//		Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-				DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
+		//		DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
 
-				if (fecha_fin >= fecha_corte)
-					fecha_fin = fecha_corte;
+		//		if (fecha_fin >= fecha_corte)
+		//			fecha_fin = fecha_corte;
 
-				List<TblPagosElectronicos> datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, "*", tipo_fecha);
-				List<ResultadoPago> resultado = ConvertirPagos(datos);
-				return Ok(resultado);
+		//		List<TblPagosElectronicos> datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, "*", tipo_fecha);
+		//		List<ResultadoPago> resultado = ConvertirPagos(datos);
+		//		return Ok(resultado);
 
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-		}
+		//	}
+		//	catch (Exception excepcion)
+		//	{
+		//		throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+		//	}
+		//}
 
 
 		/// <summary>
@@ -3873,7 +4479,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return NotFound();
 				}
 
-				List<ResultadoPago> resultado = ConvertirPagos(datos);
+				var resultado = ConvertirPagos(datos);
 
 				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
 
@@ -3884,92 +4490,92 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					obtener_historico = false;
 				}
 
-				if (obtener_historico == true)
-				{
-					string UrlWs = "https://historico.hgidocs.co";
+				//if (obtener_historico == true)
+				//{
+				//	string UrlWs = "https://historico.hgidocs.co";
 
-					UrlWs = string.Format("{0}/Api/ObtenerHisObtenerHGIpayPagosAdquiriente", UrlWs);
+				//	UrlWs = string.Format("{0}/Api/ObtenerHisObtenerHGIpayPagosAdquiriente", UrlWs);
 
-					List<ResultadoPago> datosH = new List<ResultadoPago>();
+				//	List<ResultadoPago> datosH = new List<ResultadoPago>();
 
-					if (string.IsNullOrWhiteSpace(numero_documento))
-						numero_documento = "*";
-					if (string.IsNullOrWhiteSpace(codigo_adquiriente))
-						codigo_adquiriente = "*";
+				//	if (string.IsNullOrWhiteSpace(numero_documento))
+				//		numero_documento = "*";
+				//	if (string.IsNullOrWhiteSpace(codigo_adquiriente))
+				//		codigo_adquiriente = "*";
 
-					if (string.IsNullOrWhiteSpace(estado_recibo))
-						estado_recibo = "*";
+				//	if (string.IsNullOrWhiteSpace(estado_recibo))
+				//		estado_recibo = "*";
 
-					// Construir la URL de la API con los parámetros
-					//ObtenerHisObtenerHGIpayPagosAdquiriente(string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, int tipo_fecha, string codigo_facturador, string codigo_adquiriente)
-					UrlWs += $"?numero_documento={numero_documento}&fecha_inicio={fecha_inicio.ToString("yyyy-MM-dd")}&fecha_fin={fecha_fin.ToString("yyyy-MM-dd")}&estado_recibo={estado_recibo}&tipo_fecha={tipo_fecha}&codigo_facturador={empresa.StrIdentificacion}&codigo_adquiriente={codigo_adquiriente}";
+				//	// Construir la URL de la API con los parámetros
+				//	//ObtenerHisObtenerHGIpayPagosAdquiriente(string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, int tipo_fecha, string codigo_facturador, string codigo_adquiriente)
+				//	UrlWs += $"?numero_documento={numero_documento}&fecha_inicio={fecha_inicio.ToString("yyyy-MM-dd")}&fecha_fin={fecha_fin.ToString("yyyy-MM-dd")}&estado_recibo={estado_recibo}&tipo_fecha={tipo_fecha}&codigo_facturador={empresa.StrIdentificacion}&codigo_adquiriente={codigo_adquiriente}";
 
-					// Crear una solicitud HTTP utilizando la URL de la API
-					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
-					request.Method = "GET";
+				//	// Crear una solicitud HTTP utilizando la URL de la API
+				//	HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+				//	request.Method = "GET";
 
-					// Enviar la solicitud y obtener la respuesta
-					try
-					{
-						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-						{
-							// Verificar el código de estado de la respuesta
-							if (response.StatusCode == HttpStatusCode.OK)
-							{
-								// Leer la respuesta
-								using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-								{
-									string responseData = reader.ReadToEnd();
+				//	// Enviar la solicitud y obtener la respuesta
+				//	try
+				//	{
+				//		using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+				//		{
+				//			// Verificar el código de estado de la respuesta
+				//			if (response.StatusCode == HttpStatusCode.OK)
+				//			{
+				//				// Leer la respuesta
+				//				using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+				//				{
+				//					string responseData = reader.ReadToEnd();
 
-									// Deserializar la respuesta JSON en un objeto MiObjeto
-									datosH = JsonConvert.DeserializeObject<List<ResultadoPago>>(responseData);
+				//					// Deserializar la respuesta JSON en un objeto MiObjeto
+				//					datosH = JsonConvert.DeserializeObject<List<ResultadoPago>>(responseData);
 
-									if (datosH != null && datosH.Count > 0)
-									{
-										if (datos != null && datos.Count > 0)
-										{
-											resultado.AddRange(datosH);
-										}
-										else
-										{
-											resultado = datosH;
-										}
+				//					if (datosH != null && datosH.Count > 0)
+				//					{
+				//						if (datos != null && datos.Count > 0)
+				//						{
+				//							resultado.AddRange(datosH);
+				//						}
+				//						else
+				//						{
+				//							resultado = datosH;
+				//						}
 
-									}
-								}
-							}
-							else
-							{
-								//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
-								//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
-							}
-						}
-					}
-					catch (WebException ex)
-					{
-						//string ex_message = string.Empty;
-						//// Manejar excepciones de WebException
-						//if (ex.Response != null)
-						//{
-						//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
-						//	{
-						//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
-						//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
-						//		{
-						//			string errorText = reader.ReadToEnd();
-						//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
-						//		}
-						//	}
-						//}
-						//else
-						//{
-						//	ex_message = ("Error: " + ex.Message);
-						//}
+				//					}
+				//				}
+				//			}
+				//			else
+				//			{
+				//				//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+				//				//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+				//			}
+				//		}
+				//	}
+				//	catch (WebException ex)
+				//	{
+				//		//string ex_message = string.Empty;
+				//		//// Manejar excepciones de WebException
+				//		//if (ex.Response != null)
+				//		//{
+				//		//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+				//		//	{
+				//		//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+				//		//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+				//		//		{
+				//		//			string errorText = reader.ReadToEnd();
+				//		//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+				//		//		}
+				//		//	}
+				//		//}
+				//		//else
+				//		//{
+				//		//	ex_message = ("Error: " + ex.Message);
+				//		//}
 
-						//throw new Exception(ex_message, ex);
-					}
+				//		//throw new Exception(ex_message, ex);
+				//	}
 
-				}
+				//}
 
 
 				return Ok(resultado);
@@ -4018,29 +4624,29 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 
 		}
 
-		[HttpGet]
-		[Route("Api/ObtenerHisObtenerHGIpayPagosAdquiriente")]
-		public IHttpActionResult ObtenerHisObtenerHGIpayPagosAdquiriente(string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, int tipo_fecha, string codigo_facturador, string codigo_adquiriente)
-		{
-			try
-			{
-				Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
+		//[HttpGet]
+		//[Route("Api/ObtenerHisObtenerHGIpayPagosAdquiriente")]
+		//public IHttpActionResult ObtenerHisObtenerHGIpayPagosAdquiriente(string numero_documento, DateTime fecha_inicio, DateTime fecha_fin, string estado_recibo, int tipo_fecha, string codigo_facturador, string codigo_adquiriente)
+		//{
+		//	try
+		//	{
+		//		Ctl_PagosElectronicos Pago = new Ctl_PagosElectronicos();
 
-				DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
+		//		DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
 
-				if (fecha_fin >= fecha_corte)
-					fecha_fin = fecha_corte;
+		//		if (fecha_fin >= fecha_corte)
+		//			fecha_fin = fecha_corte;
 
-				List<TblPagosElectronicos> datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, "*", tipo_fecha);
-				List<ResultadoPago> resultado = ConvertirPagos(datos);
-				return Ok(resultado);
+		//		List<TblPagosElectronicos> datos = Pago.ObtenerPagos(codigo_facturador, numero_documento, codigo_adquiriente, fecha_inicio, fecha_fin, estado_recibo, "*", tipo_fecha);
+		//		List<ResultadoPago> resultado = ConvertirPagos(datos);
+		//		return Ok(resultado);
 
-			}
-			catch (Exception excepcion)
-			{
-				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
-			}
-		}
+		//	}
+		//	catch (Exception excepcion)
+		//	{
+		//		throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+		//	}
+		//}
 
 		/// <summary>
 		/// Actualiza el estado del pago consultando antes en la plataforma intermedia y luego con los datos de dicha plataforma, estos son actualziados en FE
@@ -4594,43 +5200,36 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 		/// </summary>
 		/// <param name="datos">List<TblPagosElectronicos></param>
 		/// <returns>object con la Respuesta</returns>
-		public static List<ResultadoPago> ConvertirPagos(List<TblPagosElectronicos> datos)
+		public static object ConvertirPagos(List<TblPagosElectronicos> datos)
 		{
 			Ctl_Empresa ctlempresa = new Ctl_Empresa();
 
-			Ctl_PagosDetalles ctlpagosdet = new Ctl_PagosDetalles();
-
-			List<ResultadoPago> resultado = datos.Select(d => new ResultadoPago
+			var resultado = datos.Select(d => new
 			{
 				StrEmpresaFacturador = d.StrEmpresaFacturador,
-				NombreFacturador = (d.TblEmpresas != null) ? d.TblEmpresas.StrRazonSocial : ctlempresa.Obtener(d.StrEmpresaFacturador,false).StrRazonSocial,
+				NombreFacturador = (d.TblEmpresas != null) ? d.TblEmpresas.StrRazonSocial : ctlempresa.Obtener(d.StrEmpresaFacturador).StrRazonSocial,
 				StrEmpresaAdquiriente = d.StrEmpresaAdquiriente,
-				NombreAdquiriente = (d.TblEmpresas1 != null) ? d.TblEmpresas1.StrRazonSocial : ctlempresa.Obtener(d.StrEmpresaAdquiriente, false).StrRazonSocial,
+				NombreAdquiriente = (d.TblEmpresas1 != null) ? d.TblEmpresas1.StrRazonSocial : ctlempresa.Obtener(d.StrEmpresaAdquiriente).StrRazonSocial,
 				DatAdquirienteFechaRecibo = (d.DatFechaRegistro != null) ? d.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
 				DatFechaVencDocumento = (d.DatFechaVerificacion != null) ? d.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
 				PagoFactura = d.IntValorPago,
 				EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.IntEstadoPago)),
 				CodEstado = d.IntEstadoPago,
-				IdSeguridadPago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
+				idseguridadpago = (d.StrIdSeguridadPago == null) ? "" : d.StrIdSeguridadPago,
 				StrIdRegistro = d.StrIdRegistro,
-				StrIdSeguridadDoc = d.StrIdRegistro2.Value,
-				Ciclo = d.IntClicloTransaccion.Value,
+				StrIdSeguridadDoc = d.StrIdRegistro2,
+				Ciclo = d.IntClicloTransaccion,
 				Ticket = d.StrTicketID,
 				Cus = (d.IntFormaPago == 31) ? d.StrCampo1 : d.StrTransaccionCUS,//Si es tarjeta de credito, entonces el valor del campo Strcampo1, corresponde al cogido de aprobacion
 				Franquicia = (string.IsNullOrEmpty(d.StrCodigoFranquicia)) ? "" : d.StrCodigoFranquicia.ToUpper(),
-				Pagos = (d.TblPagosDetalles != null) ? d.TblPagosDetalles.Select(p => new ResDetallePago
+				Pagos = d.TblPagosDetalles.Select(p => new
 				{
 					Prefijo = p.TblDocumentos.StrPrefijo,
 					Documento = p.TblDocumentos.IntNumero,
-					Monto = p.IntValorPago
-				}).ToList()	: ctlpagosdet.Obtener(d.StrIdRegistro).Select(p => new ResDetallePago
-				{
-					Prefijo = p.TblDocumentos.StrPrefijo,
-					Documento = p.TblDocumentos.IntNumero,
-					Monto = p.IntValorPago
-				}).ToList()
+					Monto = p.IntValorPago,
+				})
 
-			}).ToList();
+			});
 			return resultado;
 		}
 
@@ -4656,46 +5255,31 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 			public long Documento { get; set; }
 		}
 
-		public static List<DetallePago> ConvertirDetalles(List<TblPagosDetalles> datos)
+		public static object ConvertirDetalles(List<TblPagosDetalles> datos)
 		{
 			Ctl_Empresa ctlempresa = new Ctl_Empresa();
 
-			var resultado = datos.Select(d => new DetallePago
+			var resultado = datos.Select(d => new
 			{
 				StrEmpresaFacturador = d.TblPagosElectronicos.StrEmpresaFacturador,
-				NombreFacturador = (d.TblPagosElectronicos.TblEmpresas != null)
-					? d.TblPagosElectronicos.TblEmpresas.StrRazonSocial
-					: ctlempresa.Obtener(d.TblPagosElectronicos.StrEmpresaFacturador, false).StrRazonSocial,
+				NombreFacturador = (d.TblPagosElectronicos.TblEmpresas != null) ? d.TblPagosElectronicos.TblEmpresas.StrRazonSocial : ctlempresa.Obtener(d.TblPagosElectronicos.StrEmpresaFacturador, false).StrRazonSocial,
 				StrEmpresaAdquiriente = d.TblPagosElectronicos.StrEmpresaAdquiriente,
-				NombreAdquiriente = (d.TblPagosElectronicos.TblEmpresas1 != null)
-					? d.TblPagosElectronicos.TblEmpresas1.StrRazonSocial
-					: ctlempresa.Obtener(d.TblPagosElectronicos.StrEmpresaAdquiriente, false).StrRazonSocial,
-				DatAdquirienteFechaRecibo = (d.TblPagosElectronicos.DatFechaRegistro != null)
-					? d.TblPagosElectronicos.DatFechaRegistro.ToString(Fecha.formato_fecha_hora)
-					: "",
-				DatFechaVencDocumento = (d.TblPagosElectronicos.DatFechaVerificacion != null)
-					? d.TblPagosElectronicos.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora)
-					: "",
+				NombreAdquiriente = (d.TblPagosElectronicos.TblEmpresas1 != null) ? d.TblPagosElectronicos.TblEmpresas1.StrRazonSocial : ctlempresa.Obtener(d.TblPagosElectronicos.StrEmpresaAdquiriente, false).StrRazonSocial,
+				DatAdquirienteFechaRecibo = (d.TblPagosElectronicos.DatFechaRegistro != null) ? d.TblPagosElectronicos.DatFechaRegistro.ToString(Fecha.formato_fecha_hora) : "",
+				DatFechaVencDocumento = (d.TblPagosElectronicos.DatFechaVerificacion != null) ? d.TblPagosElectronicos.DatFechaVerificacion?.ToString(Fecha.formato_fecha_hora) : "",
 				PagoFactura = d.IntValorPago,
 				EstadoFactura = Enumeracion.GetDescription(Enumeracion.GetEnumObjectByValue<EstadoPago>(d.TblPagosElectronicos.IntEstadoPago)),
 				CodEstado = d.TblPagosElectronicos.IntEstadoPago,
-				IdSeguridadPago = (d.TblPagosElectronicos.StrIdSeguridadPago == null)
-					? ""
-					: d.TblPagosElectronicos.StrIdSeguridadPago,
+				idseguridadpago = (d.TblPagosElectronicos.StrIdSeguridadPago == null) ? "" : d.TblPagosElectronicos.StrIdSeguridadPago,
 				StrIdRegistro = d.TblPagosElectronicos.StrIdRegistro,
-				StrIdSeguridadDoc = d.TblPagosElectronicos.StrIdRegistro2.Value,
+				StrIdSeguridadDoc = d.TblPagosElectronicos.StrIdRegistro2,
 				Ciclo = d.TblPagosElectronicos.IntClicloTransaccion,
 				Ticket = d.TblPagosElectronicos.StrTicketID,
-				Cus = (d.TblPagosElectronicos.IntFormaPago == 31)
-					? d.TblPagosElectronicos.StrCampo1
-					: d.TblPagosElectronicos.StrTransaccionCUS,
-				Franquicia = (string.IsNullOrEmpty(d.TblPagosElectronicos.StrCodigoFranquicia))
-					? ""
-					: d.TblPagosElectronicos.StrCodigoFranquicia.ToUpper(),
+				Cus = (d.TblPagosElectronicos.IntFormaPago == 31) ? d.TblPagosElectronicos.StrCampo1 : d.TblPagosElectronicos.StrTransaccionCUS,//Si es tarjeta de credito, entonces el valor del campo Strcampo1, corresponde al cogido de aprobacion
+				Franquicia = (string.IsNullOrEmpty(d.TblPagosElectronicos.StrCodigoFranquicia)) ? "" : d.TblPagosElectronicos.StrCodigoFranquicia.ToUpper(),
 				Prefijo = d.TblDocumentos.StrPrefijo,
 				Documento = d.TblDocumentos.IntNumero,
-			}).ToList();  // Convertir el resultado en una lista
-
+			});
 			return resultado;
 		}
 

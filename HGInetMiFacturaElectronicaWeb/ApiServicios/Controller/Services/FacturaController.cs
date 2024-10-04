@@ -3,8 +3,10 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectronicaWeb.Controllers.Services;
 using LibreriaGlobalHGInet.Error;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -77,6 +79,120 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 				catch (Exception)
 				{
 				}
+
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (FechaInicio >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					string UrlWs = "https://historico.hgidocs.co";
+
+					UrlWs = string.Format("{0}/Api/ObtenerHisPorFechasAdquiriente", UrlWs);
+
+					List<FacturaConsulta> datosH = new List<FacturaConsulta>();
+
+					// Construir la URL de la API con los parámetros
+					//ObtenerHisPorFechasAdquiriente(string Identificacion, DateTime FechaInicio, DateTime FechaFinal, int Procesados_ERP = 0)
+					UrlWs += $"?Identificacion={Identificacion}&FechaInicio={FechaInicio.ToString("yyyy-MM-dd")}&FechaFinal={FechaFinal.ToString("yyyy-MM-dd")}&Procesados_ERP={Procesados_ERP}";
+
+					// Crear una solicitud HTTP utilizando la URL de la API
+					HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+					request.Method = "GET";
+
+					// Enviar la solicitud y obtener la respuesta
+					try
+					{
+						using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+						{
+							// Verificar el código de estado de la respuesta
+							if (response.StatusCode == HttpStatusCode.OK)
+							{
+								// Leer la respuesta
+								using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+								{
+									string responseData = reader.ReadToEnd();
+
+									// Deserializar la respuesta JSON en un objeto MiObjeto
+									datosH = JsonConvert.DeserializeObject<List<FacturaConsulta>>(responseData);
+
+									if (datosH != null && datosH.Count > 0)
+									{
+										if (respuesta != null && respuesta.Count > 0)
+										{
+											respuesta.AddRange(datosH);
+										}
+										else
+										{
+											respuesta = datosH;
+										}
+
+									}
+								}
+							}
+							else
+							{
+								//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+								//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+							}
+						}
+					}
+					catch (WebException ex)
+					{
+						//string ex_message = string.Empty;
+						//// Manejar excepciones de WebException
+						//if (ex.Response != null)
+						//{
+						//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+						//	{
+						//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+						//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+						//		{
+						//			string errorText = reader.ReadToEnd();
+						//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+						//		}
+						//	}
+						//}
+						//else
+						//{
+						//	ex_message = ("Error: " + ex.Message);
+						//}
+
+						//throw new Exception(ex_message, ex);
+					}
+				}
+
+				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/Factura/ObtenerHisPorFechasAdquiriente")]
+		public HttpResponseMessage ObtenerHisPorFechasAdquiriente(string Identificacion, DateTime FechaInicio, DateTime FechaFinal, int Procesados_ERP = 0)
+		{
+			try
+			{
+
+				DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
+
+				if (FechaFinal >= fecha_corte)
+					FechaFinal = fecha_corte;
+
+				Ctl_Factura ctl_documento = new Ctl_Factura();
+
+				// obtiene los datos
+				List<FacturaConsulta> respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal, Procesados_ERP);
+ 
 
 				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
 			}
