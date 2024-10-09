@@ -528,7 +528,7 @@ namespace HGInetMiFacturaElectonicaController.PagosElectronicos
 				}
 
 				//Pago totalmente cancelado
-				if (Datos_pago >= Valor_Documento.IntVlrTotal)
+				if (Valor_Documento != null && Datos_pago >= Valor_Documento.IntVlrTotal)
 				{
 					return 1;
 				}

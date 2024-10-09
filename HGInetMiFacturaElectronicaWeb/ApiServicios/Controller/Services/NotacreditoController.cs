@@ -66,6 +66,63 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 				// obtiene los datos
 				respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal);
 
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (FechaInicio >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					List<NotaCreditoConsulta> datosH = new List<NotaCreditoConsulta>();
+
+					datosH = ctl_documento.ObtenerHisPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal, Procesados_ERP);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
+
+				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
+
+
+		[HttpGet]
+		[Route("Api/Notacredito/ObtenerHisPorFechasAdquiriente")]
+		public HttpResponseMessage ObtenerHisPorFechasAdquiriente(string Identificacion, DateTime FechaInicio, DateTime FechaFinal)
+		{
+			try
+			{
+
+				DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
+
+				if (FechaFinal >= fecha_corte)
+					FechaFinal = fecha_corte;
+
+				Ctl_NotaCredito ctl_documento = new Ctl_NotaCredito();
+
+				// obtiene los datos
+				List<NotaCreditoConsulta> respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal);
+
+
 				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
 			}
 			catch (Exception exec)
@@ -93,6 +150,49 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 
 				//Válida que la key sea correcta.
 				Peticion.Validar(DataKey, Identificacion);
+
+				Ctl_NotaCredito ctl_documento = new Ctl_NotaCredito();
+
+				// obtiene los datos
+				respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros, Facturador);
+
+				if (respuesta == null || respuesta.Count == 0)
+				{
+					List<NotaCreditoConsulta> datosH = new List<NotaCreditoConsulta>();
+
+					datosH = ctl_documento.ObtenerHisPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros, Facturador);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
+
+				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
+
+
+		[HttpGet]
+		[Route("Api/Notacredito/ObtenerHisPorIdSeguridadAdquiriente")]
+		public HttpResponseMessage ObtenerHisPorIdSeguridadAdquiriente(string Identificacion, string CodigosRegistros, bool Facturador = false)
+		{
+			try
+			{
+				List<NotaCreditoConsulta> respuesta = new List<NotaCreditoConsulta>();
 
 				Ctl_NotaCredito ctl_documento = new Ctl_NotaCredito();
 

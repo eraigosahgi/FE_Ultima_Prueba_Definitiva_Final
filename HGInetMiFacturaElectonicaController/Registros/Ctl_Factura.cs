@@ -11,9 +11,12 @@ using LibreriaGlobalHGInet.Funciones;
 using LibreriaGlobalHGInet.General;
 using LibreriaGlobalHGInet.Objetos;
 using LibreriaGlobalHGInet.RegistroLog;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
 
 namespace HGInetMiFacturaElectonicaController.Registros
@@ -124,6 +127,80 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 		}
 
+		public List<FacturaConsulta> ObtenerHisPorFechasAdquiriente(string identificacion_adquiriente, DateTime FechaInicio, DateTime FechaFinal, int Procesados_ERP = 0)
+		{
+			try
+			{
+				List<FacturaConsulta> lista_respuesta = new List<FacturaConsulta>();
+
+				string UrlWs = "https://historico.hgidocs.co";
+
+				UrlWs = string.Format("{0}/Api/Factura/ObtenerHisPorFechasAdquiriente", UrlWs);
+
+				// Construir la URL de la API con los parámetros
+				//ObtenerHisPorFechasAdquiriente(string Identificacion, DateTime FechaInicio, DateTime FechaFinal, int Procesados_ERP = 0)
+				UrlWs += $"?Identificacion={identificacion_adquiriente}&FechaInicio={FechaInicio.ToString("yyyy-MM-dd")}&FechaFinal={FechaFinal.ToString("yyyy-MM-dd")}&Procesados_ERP={Procesados_ERP}";
+
+				// Crear una solicitud HTTP utilizando la URL de la API
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+				request.Method = "GET";
+
+				// Enviar la solicitud y obtener la respuesta
+				try
+				{
+					using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+					{
+						// Verificar el código de estado de la respuesta
+						if (response.StatusCode == HttpStatusCode.OK)
+						{
+							// Leer la respuesta
+							using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+							{
+								string responseData = reader.ReadToEnd();
+
+								// Deserializar la respuesta JSON en un objeto MiObjeto
+								lista_respuesta = JsonConvert.DeserializeObject<List<FacturaConsulta>>(responseData);
+							}
+						}
+						else
+						{
+							//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+							//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+						}
+					}
+				}
+				catch (WebException ex)
+				{
+					//string ex_message = string.Empty;
+					//// Manejar excepciones de WebException
+					//if (ex.Response != null)
+					//{
+					//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					//	{
+					//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+					//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+					//		{
+					//			string errorText = reader.ReadToEnd();
+					//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+					//		}
+					//	}
+					//}
+					//else
+					//{
+					//	ex_message = ("Error: " + ex.Message);
+					//}
+
+					//throw new Exception(ex_message, ex);
+				}
+
+				return lista_respuesta;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
 
 
 		public List<FacturaConsulta> ActualizarEstadoProcesoERP(string identificacion_obligado, string CodigosRegistros)
@@ -282,6 +359,82 @@ namespace HGInetMiFacturaElectonicaController.Registros
 					}
 
 					lista_respuesta.Add(objeto);
+				}
+
+				return lista_respuesta;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+
+		public List<FacturaConsulta> ObtenerHisPorIdSeguridadAdquiriente(string identificacion_adquiriente, string CodigosRegistros, bool Facturador = false)
+		{
+
+			List<FacturaConsulta> lista_respuesta = new List<FacturaConsulta>();
+
+			try
+			{
+				string UrlWs = "https://historico.hgidocs.co";
+
+				UrlWs = string.Format("{0}/Api/Factura/ObtenerHisPorIdSeguridadAdquiriente", UrlWs);
+
+				// Construir la URL de la API con los parámetros
+				//ObtenerHisDocumentosIdseguridad(System.Guid id_seguridad)
+				UrlWs += $"?identificacion_adquiriente={identificacion_adquiriente}&CodigosRegistros={CodigosRegistros}&Facturador={Facturador}";
+
+				// Crear una solicitud HTTP utilizando la URL de la API
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+				request.Method = "GET";
+
+				// Enviar la solicitud y obtener la respuesta
+				try
+				{
+					using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+					{
+						// Verificar el código de estado de la respuesta
+						if (response.StatusCode == HttpStatusCode.OK)
+						{
+							// Leer la respuesta
+							using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+							{
+								string responseData = reader.ReadToEnd();
+
+								// Deserializar la respuesta JSON en un objeto MiObjeto
+								lista_respuesta = JsonConvert.DeserializeObject<List<FacturaConsulta>>(responseData);
+							}
+						}
+						else
+						{
+							//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+							//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+						}
+					}
+				}
+				catch (WebException ex)
+				{
+					//string ex_message = string.Empty;
+					//// Manejar excepciones de WebException
+					//if (ex.Response != null)
+					//{
+					//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					//	{
+					//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+					//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+					//		{
+					//			string errorText = reader.ReadToEnd();
+					//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+					//		}
+					//	}
+					//}
+					//else
+					//{
+					//	ex_message = ("Error: " + ex.Message);
+					//}
+
+					//throw new Exception(ex_message, ex);
 				}
 
 				return lista_respuesta;
