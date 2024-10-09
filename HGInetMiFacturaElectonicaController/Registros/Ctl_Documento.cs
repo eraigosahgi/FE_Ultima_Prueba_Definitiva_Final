@@ -939,7 +939,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 		public List<DocumentoRespuesta> ConsultaHisPorFechaElaboracion(string Identificacion, int TipoDocumento, DateTime FechaInicial, DateTime FechaFinal)
 		{
-			List<NotaCreditoConsulta> lista_respuesta = new List<NotaCreditoConsulta>();
+			List<DocumentoRespuesta> lista_respuesta = new List<DocumentoRespuesta>();
 
 			try
 			{
@@ -970,7 +970,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 								string responseData = reader.ReadToEnd();
 
 								// Deserializar la respuesta JSON en un objeto MiObjeto
-								lista_respuesta = JsonConvert.DeserializeObject<List<NotaCreditoConsulta>>(responseData);
+								lista_respuesta = JsonConvert.DeserializeObject<List<DocumentoRespuesta>>(responseData);
 							}
 						}
 						else
