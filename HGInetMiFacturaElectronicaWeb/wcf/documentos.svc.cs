@@ -46,6 +46,26 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
                 //Obtiene los datos
                 respuesta = ctl_documento.ConsultaPorNumeros(Identificacion, TipoDocumento, Numeros);
 
+				if (respuesta == null || respuesta.Count == 0)
+				{
+					List<DocumentoRespuesta> datosH = new List<DocumentoRespuesta>();
+
+					datosH = ctl_documento.ConsultaHisPorNumeros(Identificacion, TipoDocumento, Numeros);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
+
 				//Almacena la petición
 				try
 				{
@@ -85,6 +105,26 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
                 //Obtiene los datos
                 respuesta = ctl_documento.ConsultaPorCodigoRegistro(Identificacion, TipoDocumento, CodigosRegistros);
+
+				if (respuesta == null || respuesta.Count == 0)
+				{
+					List<DocumentoRespuesta> datosH = new List<DocumentoRespuesta>();
+
+					datosH = ctl_documento.ConsultaHisPorCodigoRegistro(Identificacion, TipoDocumento, CodigosRegistros);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
 
 				//Almacena la petición
 				try
@@ -151,6 +191,35 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
                 //Obtiene los datos
                 respuesta = ctl_documento.ConsultaPorFechaElaboracion(Identificacion, TipoDocumento, FechaInicial, FechaFinal);
+
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (FechaInicial >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					List<DocumentoRespuesta> datosH = new List<DocumentoRespuesta>();
+
+					datosH = ctl_documento.ConsultaHisPorFechaElaboracion(Identificacion, TipoDocumento, FechaInicial, FechaFinal);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
 
 				//Almacena la petición
 				try

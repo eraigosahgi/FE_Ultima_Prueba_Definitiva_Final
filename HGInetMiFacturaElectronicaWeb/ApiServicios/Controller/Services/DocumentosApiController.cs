@@ -37,10 +37,61 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 				//Obtiene los datos
 				respuesta = ctl_documento.ConsultaPorNumeros(Identificacion, TipoDocumento, Numeros);
 
+				if (respuesta == null || respuesta.Count == 0)
+				{
+					List<DocumentoRespuesta> datosH = new List<DocumentoRespuesta>();
+
+					datosH = ctl_documento.ConsultaHisPorNumeros(Identificacion, TipoDocumento, Numeros);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
+
 				//Almacena la petición
 				try
 				{
 					Task tarea = Peticion.GuardarPeticionAsync("ConsultaPorNumeros", DataKey, Identificacion, TipoDocumento.ToString(), Numeros, respuesta.Count.ToString());
+				}
+				catch (Exception)
+				{
+				}
+
+				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/DocumentosApi/ConsultaHisPorNumeros")]
+		public HttpResponseMessage ConsultaHisPorNumeros(string Identificacion, int TipoDocumento, string Numeros)
+		{
+			try
+			{
+				List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				//Obtiene los datos
+				respuesta = ctl_documento.ConsultaPorNumeros(Identificacion, TipoDocumento, Numeros);
+
+				//Almacena la petición
+				try
+				{
+					Task tarea = Peticion.GuardarPeticionAsync("HisConsultaPorNumeros", Identificacion, TipoDocumento.ToString(), Numeros, respuesta.Count.ToString());
 				}
 				catch (Exception)
 				{
@@ -72,10 +123,61 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 				//Obtiene los datos
 				respuesta = ctl_documento.ConsultaPorCodigoRegistro(Identificacion, TipoDocumento, CodigosRegistros);
 
+				if (respuesta == null || respuesta.Count == 0)
+				{
+					List<DocumentoRespuesta> datosH = new List<DocumentoRespuesta>();
+
+					datosH = ctl_documento.ConsultaHisPorCodigoRegistro(Identificacion, TipoDocumento, CodigosRegistros);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
+
 				//Almacena la petición
 				try
 				{
 					Task tarea = Peticion.GuardarPeticionAsync("ConsultaPorCodigoRegistro", DataKey, Identificacion, TipoDocumento.ToString(), CodigosRegistros.ToString(), respuesta.Count.ToString());
+				}
+				catch (Exception)
+				{
+				}
+
+				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/DocumentosApi/ConsultaHisPorCodigoRegistro")]
+		public HttpResponseMessage ConsultaHisPorCodigoRegistro(string Identificacion, int TipoDocumento, string CodigosRegistros)
+		{
+			try
+			{
+				List<DocumentoRespuesta> respuesta = new List<DocumentoRespuesta>();
+				
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				//Obtiene los datos
+				respuesta = ctl_documento.ConsultaPorCodigoRegistro(Identificacion, TipoDocumento, CodigosRegistros);
+
+				//Almacena la petición
+				try
+				{
+					Task tarea = Peticion.GuardarPeticionAsync("ConsultaHisPorCodigoRegistro", Identificacion, TipoDocumento.ToString(), CodigosRegistros.ToString(), respuesta.Count.ToString());
 				}
 				catch (Exception)
 				{
@@ -126,6 +228,35 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 				//Obtiene los datos
 				respuesta = ctl_documento.ConsultaPorFechaElaboracion(Identificacion, TipoDocumento, FechaInicial, FechaFinal);
 
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (FechaInicial >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					List<DocumentoRespuesta> datosH = new List<DocumentoRespuesta>();
+
+					datosH = ctl_documento.ConsultaHisPorFechaElaboracion(Identificacion, TipoDocumento, FechaInicial, FechaFinal);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
+
 				//Almacena la petición
 				try
 				{
@@ -141,6 +272,30 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 			{
 				Error error = new Error(CodigoError.VALIDACION, exec);
 				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
+
+
+		[HttpGet]
+		[Route("Api/DocumentosApi/ConsultaHisPorFechaElaboracion")]
+		public IHttpActionResult ConsultaHisPorFechaElaboracion(string Identificacion, int TipoDocumento, DateTime FechaInicial, DateTime FechaFinal)
+		{
+			try
+			{
+
+				DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
+
+				if (FechaFinal >= fecha_corte)
+					FechaFinal = fecha_corte;
+
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+				List<DocumentoRespuesta> datos = ctl_documento.ConsultaPorFechaElaboracion(Identificacion, TipoDocumento, FechaInicial, FechaFinal);
+
+				return Ok(datos);
+			}
+			catch (Exception excepcion)
+			{
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
 			}
 		}
 

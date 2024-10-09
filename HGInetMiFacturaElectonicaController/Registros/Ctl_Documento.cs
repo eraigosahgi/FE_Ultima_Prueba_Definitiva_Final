@@ -51,6 +51,7 @@ using DevExtreme.AspNet.Data.ResponseModel;
 using DevExtreme.AspNet.Mvc;
 using DevExtreme.AspNet.Data;
 using System.Globalization;
+using System.Net;
 
 namespace HGInetMiFacturaElectonicaController.Registros
 {
@@ -613,6 +614,83 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			}
 		}
 
+
+		public List<DocumentoRespuesta> ConsultaHisPorNumeros(string Identificacion, int TipoDocumento, string Numeros)
+		{
+
+			List<DocumentoRespuesta> lista_respuesta = new List<DocumentoRespuesta>();
+
+			try
+			{
+				string UrlWs = "https://historico.hgidocs.co";
+
+				UrlWs = string.Format("{0}/Api/DocumentosApi/ConsultaHisPorNumeros", UrlWs);
+
+				// Construir la URL de la API con los parámetros
+				//ObtenerHisDocumentosIdseguridad(System.Guid id_seguridad)
+				UrlWs += $"?Identificacion={Identificacion}&TipoDocumento={TipoDocumento}&Numeros={Numeros}";
+
+				// Crear una solicitud HTTP utilizando la URL de la API
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+				request.Method = "GET";
+
+				// Enviar la solicitud y obtener la respuesta
+				try
+				{
+					using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+					{
+						// Verificar el código de estado de la respuesta
+						if (response.StatusCode == HttpStatusCode.OK)
+						{
+							// Leer la respuesta
+							using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+							{
+								string responseData = reader.ReadToEnd();
+
+								// Deserializar la respuesta JSON en un objeto MiObjeto
+								lista_respuesta = JsonConvert.DeserializeObject<List<DocumentoRespuesta>>(responseData);
+							}
+						}
+						else
+						{
+							//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+							//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+						}
+					}
+				}
+				catch (WebException ex)
+				{
+					//string ex_message = string.Empty;
+					//// Manejar excepciones de WebException
+					//if (ex.Response != null)
+					//{
+					//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					//	{
+					//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+					//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+					//		{
+					//			string errorText = reader.ReadToEnd();
+					//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+					//		}
+					//	}
+					//}
+					//else
+					//{
+					//	ex_message = ("Error: " + ex.Message);
+					//}
+
+					//throw new Exception(ex_message, ex);
+				}
+
+				return lista_respuesta;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+
 		/// <summary>
 		/// Obtiene los documentos por Código de Registros
 		/// </summary>
@@ -660,6 +738,82 @@ namespace HGInetMiFacturaElectonicaController.Registros
 						ConsultarEventosRadian(false, item.StrIdSeguridad.ToString());
 					}
 					lista_respuesta.Add(Convertir(item));
+				}
+
+				return lista_respuesta;
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+		}
+
+		public List<DocumentoRespuesta> ConsultaHisPorCodigoRegistro(string Identificacion, int TipoDocumento, string CodigosRegistros)
+		{
+
+			List<DocumentoRespuesta> lista_respuesta = new List<DocumentoRespuesta>();
+
+			try
+			{
+				string UrlWs = "https://historico.hgidocs.co";
+
+				UrlWs = string.Format("{0}/Api/DocumentosApi/ConsultaHisPorCodigoRegistro", UrlWs);
+
+				// Construir la URL de la API con los parámetros
+				//ConsultaHisPorCodigoRegistro(string Identificacion, int TipoDocumento, string CodigosRegistros)
+				UrlWs += $"?Identificacion={Identificacion}&TipoDocumento={TipoDocumento}&CodigosRegistros={CodigosRegistros}";
+
+				// Crear una solicitud HTTP utilizando la URL de la API
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+				request.Method = "GET";
+
+				// Enviar la solicitud y obtener la respuesta
+				try
+				{
+					using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+					{
+						// Verificar el código de estado de la respuesta
+						if (response.StatusCode == HttpStatusCode.OK)
+						{
+							// Leer la respuesta
+							using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+							{
+								string responseData = reader.ReadToEnd();
+
+								// Deserializar la respuesta JSON en un objeto MiObjeto
+								lista_respuesta = JsonConvert.DeserializeObject<List<DocumentoRespuesta>>(responseData);
+							}
+						}
+						else
+						{
+							//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+							//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+						}
+					}
+				}
+				catch (WebException ex)
+				{
+					//string ex_message = string.Empty;
+					//// Manejar excepciones de WebException
+					//if (ex.Response != null)
+					//{
+					//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					//	{
+					//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+					//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+					//		{
+					//			string errorText = reader.ReadToEnd();
+					//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+					//		}
+					//	}
+					//}
+					//else
+					//{
+					//	ex_message = ("Error: " + ex.Message);
+					//}
+
+					//throw new Exception(ex_message, ex);
 				}
 
 				return lista_respuesta;
@@ -780,6 +934,83 @@ namespace HGInetMiFacturaElectonicaController.Registros
 				Error error = new Error(CodigoError.VALIDACION, exec);
 				throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
 			}
+		}
+
+
+		public List<DocumentoRespuesta> ConsultaHisPorFechaElaboracion(string Identificacion, int TipoDocumento, DateTime FechaInicial, DateTime FechaFinal)
+		{
+			List<NotaCreditoConsulta> lista_respuesta = new List<NotaCreditoConsulta>();
+
+			try
+			{
+
+				string UrlWs = "https://historico.hgidocs.co";
+
+				UrlWs = string.Format("{0}/Api/DocumentosApi/ConsultaHisPorFechaElaboracion", UrlWs);
+
+				// Construir la URL de la API con los parámetros
+				//ConsultaHisPorFechaElaboracion(string Identificacion, int TipoDocumento, DateTime FechaInicial, DateTime FechaFinal)
+				UrlWs += $"?Identificacion={Identificacion}&TipoDocumento={TipoDocumento}&FechaInicial={FechaInicial.ToString("yyyy-MM-dd")}&FechaFinal={FechaFinal.ToString("yyyy-MM-dd")}";
+
+				// Crear una solicitud HTTP utilizando la URL de la API
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrlWs);
+				request.Method = "GET";
+
+				// Enviar la solicitud y obtener la respuesta
+				try
+				{
+					using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+					{
+						// Verificar el código de estado de la respuesta
+						if (response.StatusCode == HttpStatusCode.OK)
+						{
+							// Leer la respuesta
+							using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+							{
+								string responseData = reader.ReadToEnd();
+
+								// Deserializar la respuesta JSON en un objeto MiObjeto
+								lista_respuesta = JsonConvert.DeserializeObject<List<NotaCreditoConsulta>>(responseData);
+							}
+						}
+						else
+						{
+							//Console.WriteLine("Error al llamar a la API. Código de estado: " + response.StatusCode);
+							//throw new Exception("Error al obtener los datos con los parámetros indicados. Código de estado:" + response.StatusCode);
+						}
+					}
+				}
+				catch (WebException ex)
+				{
+					//string ex_message = string.Empty;
+					//// Manejar excepciones de WebException
+					//if (ex.Response != null)
+					//{
+					//	using (HttpWebResponse errorResponse = (HttpWebResponse)ex.Response)
+					//	{
+					//		ex_message = ("Error de la API. Código de estado: " + errorResponse.StatusCode);
+					//		using (StreamReader reader = new StreamReader(errorResponse.GetResponseStream()))
+					//		{
+					//			string errorText = reader.ReadToEnd();
+					//			ex_message = string.Format("{0} - {1} - Error_Message: {2}", ex_message, ("Detalle del error: " + errorText), ex.Message);
+					//		}
+					//	}
+					//}
+					//else
+					//{
+					//	ex_message = ("Error: " + ex.Message);
+					//}
+
+					//throw new Exception(ex_message, ex);
+				}
+			}
+			catch (Exception exec)
+			{
+				//Error error = new Error(CodigoError.VALIDACION, exec);
+				//throw new FaultException<Error>(error, new FaultReason(string.Format("{0}", error.Mensaje)));
+			}
+
+			return lista_respuesta;
 		}
 
 		/// <summary>

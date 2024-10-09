@@ -1783,11 +1783,13 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					return NotFound();
 				}
 
+				Ctl_Empresa ctlempre = new Ctl_Empresa();
+
 				var retorno = datos.Select(d => new
 				{
 					NumeroDocumento = string.Format("{0}{1}", d.StrPrefijo, d.IntNumero),
-					IdAdquiriente = d.TblEmpresasAdquiriente.StrIdentificacion,
-					NombreAdquiriente = d.TblEmpresasAdquiriente.StrRazonSocial,
+					IdAdquiriente = d.StrEmpresaAdquiriente,
+					NombreAdquiriente = (d.TblEmpresasAdquiriente != null) ? d.TblEmpresasAdquiriente.StrRazonSocial : ctlempre.Obtener(d.StrEmpresaAdquiriente, false).StrRazonSocial,//d.TblEmpresasAdquiriente.StrRazonSocial,//
 					Cufe = d.StrCufe,
 					IdSeguridad = d.StrIdSeguridad,
 					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
@@ -1804,14 +1806,14 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					XmlAcuse = d.StrUrlAcuseUbl,
 					EstadoCat = d.IdCategoriaEstado,
 					EstadoFactura = DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado),
-					pago = d.TblPagosDetalles.Select(p => new
+					pago = (d.TblPagosDetalles != null) ? d.TblPagosDetalles.Select(p => new
 					{
 						p.TblPagosElectronicos.StrIdRegistro,
 						p.TblPagosElectronicos.IntEstadoPago
 					}
 					//Se coloca este codigo adicional, para validar si el documento tiene un pago pendiente, y si es asi, este debe retornar un segundo objeto
 					//con el codigo unico de pago en la plataforma de FE, para poder hacer la consulta desde acuse y validar en la plataforma intermedia el estado del documento
-					).Where(x => x.IntEstadoPago.Equals(EstadoPago.Pendiente.GetHashCode()) || x.IntEstadoPago.Equals(EstadoPago.Pendiente2.GetHashCode()))
+					).Where(x => x.IntEstadoPago.Equals(EstadoPago.Pendiente.GetHashCode()) || x.IntEstadoPago.Equals(EstadoPago.Pendiente2.GetHashCode())) : null
 				});
 
 				return Ok(retorno);
@@ -3071,7 +3073,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 					IntNeto = (d.IntDocTipo == TipoDocumento.NotaCredito.GetHashCode()) ? -d.IntValorNeto : d.IntValorNeto,
 					EstadoFactura = d.IntIdEstado,//string.Format("{0} - {1}", DescripcionEstadoFactura(d.IntIdEstado), DescripcionCategoriaFactura((Int16)d.IdCategoriaEstado)),
 					EstadoAcuse = DescripcionEstadoAcuse(d.IntAdquirienteRecibo),
-					MotivoRechazo = d.StrAdquirienteMvoRechazo,
+					MotivoRechazo = (!string.IsNullOrWhiteSpace(d.StrAdquirienteMvoRechazo)) ? d.StrAdquirienteMvoRechazo : "",
 					d.StrAdquirienteMvoRechazo,
 					IdentificacionAdquiriente = d.StrEmpresaAdquiriente,
 					NombreAdquiriente = ctlemp.Obtener(d.StrEmpresaAdquiriente, false).StrRazonSocial, // d.TblEmpresasAdquiriente.StrRazonSocial,
