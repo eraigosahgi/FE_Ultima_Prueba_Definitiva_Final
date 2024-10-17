@@ -100,7 +100,15 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 			}
             catch (Exception excepcion)
             {
-                respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0} ", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+				string mensaje_error = excepcion.Message;
+				//Caso 775723 - 776934
+				if (excepcion.Message.Contains("El proceso no puede obtener acceso al archivo"))
+				{
+					mensaje_error = "No fue posible generar el archivo XML del documento, por favor no modifique la información del documento y envíelo de nuevo.";
+					excepcion = new ApplicationException();
+				}
+
+				respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en el almacenamiento del documento UBL en XML. Detalle: {0} ", mensaje_error), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
 				Ctl_Log.Guardar(excepcion, MensajeCategoria.Archivos, MensajeTipo.Error, MensajeAccion.creacion);
 			}
             return respuesta;
