@@ -103,6 +103,35 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 
 				var datos = controlador.ConsultaPorFechaElaboracion(Identificacion, FechaInicial, FechaFinal, Procesados);
 
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (FechaInicial >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					List<PagoElectronicoRespuestaPorFecha> datosH = new List<PagoElectronicoRespuestaPorFecha>();
+
+					datosH = controlador.ConsultaHisPorFechaElaboracion(Identificacion, FechaInicial, FechaFinal, Procesados);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (datos != null && datos.Count > 0)
+						{
+							datos.AddRange(datosH);
+						}
+						else
+						{
+							datos = datosH;
+						}
+
+					}
+				}
+
 				//Almacena la petición
 				try
 				{
@@ -150,6 +179,35 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				Ctl_PagosElectronicos controlador = new Ctl_PagosElectronicos();
 
 				var datos = controlador.ConsultaAgrupadosPorFechaElaboracion(Identificacion, FechaInicial, FechaFinal, Procesados);
+
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (FechaInicial >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					List<PagoElectronicoRespuestaAgrupadoPorFecha> datosH = new List<PagoElectronicoRespuestaAgrupadoPorFecha>();
+
+					datosH = controlador.ConsultaAgrupadosHisPorFechaElaboracion(Identificacion, FechaInicial, FechaFinal, Procesados);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (datos != null && datos.Count > 0)
+						{
+							datos.AddRange(datosH);
+						}
+						else
+						{
+							datos = datosH;
+						}
+
+					}
+				}
 
 				//Almacena la petición
 				try
