@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 {
-    public class PagosController : ApiController
+    public class PagosApiController : ApiController
     {
 
 		[HttpGet]

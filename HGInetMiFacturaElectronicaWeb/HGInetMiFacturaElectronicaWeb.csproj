@@ -2954,7 +2954,7 @@
     <Compile Include="ApiServicios\Controller\Services\NominaController.cs" />
     <Compile Include="ApiServicios\Controller\Services\NotacreditoController.cs" />
     <Compile Include="ApiServicios\Controller\Services\NotadebitoController.cs" />
-    <Compile Include="ApiServicios\Controller\Services\PagosController.cs" />
+    <Compile Include="ApiServicios\Controller\Services\PagosApiController.cs" />
     <Compile Include="ApiServicios\Controller\Services\ResolucionController.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Services\AlertasController.cs" />
