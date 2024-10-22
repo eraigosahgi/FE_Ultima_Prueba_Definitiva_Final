@@ -2981,7 +2981,7 @@ namespace HGInetMiFacturaElectronicaWeb.Controllers.Services
 				if (tipo_doc == TipoDocumento.Factura.GetHashCode())
 					resolucion = list_resolucion[2];
 
-				List<TblDocumentos> datos = ctl_documento.ObtenerDocumentoCliente(codigo_facturador, numero_documento.Value, numero_resolucion,tipo_doc, prefijo);
+				List<TblDocumentos> datos = ctl_documento.ObtenerDocumentoCliente(codigo_facturador, numero_documento.Value, resolucion, tipo_doc, prefijo);
 
 				if (datos == null || datos.Count() == 0)
 				{
