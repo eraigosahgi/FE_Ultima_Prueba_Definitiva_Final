@@ -955,6 +955,7 @@ namespace HGInetMiFacturaElectonicaController.Configuracion
 						  where datos.StrEmpresaFacturador.Equals(Facturador)
 						  && datos.IntEstado == habilitado
 						  && datos.IntTipoProceso == postapago
+						  && datos.IntSucursal == Sucursal
 						  select datos).ToList();
 
 				if (planes != null && planes.Count > 0)
