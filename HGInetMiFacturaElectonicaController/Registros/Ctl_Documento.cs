@@ -6146,6 +6146,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 													if (item.StrUrlArchivoUbl.Contains("filesrecuperacion."))
 													{
 														item.StrUrlArchivoUbl = item.StrUrlArchivoUbl.Replace("https://filesrecuperacion.hgidocs.co", "https://files.hgidocs.co");
+														Actualizar(item);
 													}
 
 													datos_sincronizar_storage.Add(item);
