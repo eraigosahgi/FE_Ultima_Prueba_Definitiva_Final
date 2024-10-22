@@ -909,5 +909,68 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 		}
 
 
+		public static bool ObtenerDocumentoXML(TblDocumentos documentoBd, TblEmpresas empresa)
+		{
+
+			bool obtuvo_xml = true;
+
+			try
+			{
+				string url_ws_consulta = null;
+				string obligado_identificacion = string.Empty;
+
+				TipoDocumento doc_tipo = Enumeracion.GetEnumObjectByValue<TipoDocumento>(documentoBd.IntDocTipo);
+
+				PlataformaData plataforma_datos = HgiConfiguracion.GetConfiguration().PlataformaData;
+
+				// ruta física del xml
+				string carpeta_xml = string.Format("{0}\\{1}\\{2}", plataforma_datos.RutaDmsFisica, Constantes.CarpetaFacturaElectronica, empresa.StrIdSeguridad.ToString());
+				carpeta_xml = string.Format(@"{0}\{1}", carpeta_xml, LibreriaGlobalHGInet.Properties.RecursoDms.CarpetaFacturaEDian);
+
+				// valida la existencia de la carpeta
+				carpeta_xml = Directorio.CrearDirectorio(carpeta_xml);
+
+				// Nombre del archivo Xml 
+				string archivo_xml = string.Format(@"{0}.xml", HGInetUBLv2_1.NombramientoArchivo.ObtenerXml(documentoBd.IntNumero.ToString(), documentoBd.StrEmpresaFacturador, doc_tipo, documentoBd.StrPrefijo));
+
+				// ruta del xml
+				string ruta_xml = string.Format(@"{0}\{1}", carpeta_xml, archivo_xml);
+
+				// elimina el archivo xml si existe
+				if (Archivo.ValidarExistencia(ruta_xml))
+					Archivo.Borrar(ruta_xml);
+
+				string ruta_certificado = string.Empty;
+
+				// obtiene la información de configuración del certificado digital
+				CertificadoDigital certificado = HgiConfiguracion.GetConfiguration().CertificadoDigitalData;
+
+				// información del certificado digital
+				ruta_certificado = string.Format("{0}{1}", Directorio.ObtenerDirectorioRaiz(), certificado.RutaLocal);
+
+				// obtiene los datos del proveedor tecnológico de la DIAN para Validación Previa
+				DianProveedorV2 data_dian = HgiConfiguracion.GetConfiguration().DianProveedorV2;
+
+				url_ws_consulta = data_dian.UrlWSConsultaTransacciones;
+
+				string xml_archivo = Path.GetFileNameWithoutExtension(archivo_xml);
+
+				// Consulta del documento con validación previa
+				HGInetDIANServicios.DianWSValidacionPrevia.EventResponse resultado = Ctl_ConsultaTransacciones.ObtenerXML(carpeta_xml, ruta_certificado, certificado.Clave, url_ws_consulta, xml_archivo, documentoBd.StrCufe);
+			}
+			catch (Exception excepcion)
+			{
+				//respuesta.Error = new LibreriaGlobalHGInet.Error.Error(string.Format("Error en la consulta del estado del documento en la DIAN. Detalle: {0}", excepcion.Message), LibreriaGlobalHGInet.Error.CodigoError.VALIDACION, excepcion.InnerException);
+				//Ctl_Log.Guardar(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.actualizacion);
+				RegistroLog.EscribirLog(excepcion, MensajeCategoria.ServicioDian, MensajeTipo.Error, MensajeAccion.actualizacion, string.Format("No se pudo obtener el XML del documento en la DIAN. Facturador: {0} - Doc: {1} - Prefijo{2}", documentoBd.StrEmpresaFacturador,documentoBd.IntNumero, documentoBd.StrPrefijo));
+				obtuvo_xml = false;
+				//throw excepcion;
+			}
+
+			return obtuvo_xml;
+
+		}
+
+
 	}
 }

@@ -291,5 +291,75 @@ namespace HGInetDIANServicios
 			}
 
 		}
+
+
+		public static EventResponse ObtenerXML(string ruta_xml, string ruta_certificado, string clave_certificado, string ruta_servicio_web, string xml_archivo, string cufe)
+		{
+
+			MensajeCategoria log_categoria = MensajeCategoria.Certificado;
+			MensajeAccion log_accion = MensajeAccion.lectura;
+
+			try
+			{
+
+
+				DianWSValidacionPrevia.WcfDianCustomerServicesClient webServiceHab = new DianWSValidacionPrevia.WcfDianCustomerServicesClient();
+				webServiceHab.Endpoint.Address = new System.ServiceModel.EndpointAddress(ruta_servicio_web);
+
+				//Certificado de producción
+				X509Certificate2 cert = new X509Certificate2(ruta_certificado, clave_certificado);
+				webServiceHab.ClientCredentials.ClientCertificate.Certificate = cert;
+
+				//Se agrega instruccion para habilitar la seguridad en el envio
+				System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+				log_categoria = MensajeCategoria.ServicioDian;
+				log_accion = MensajeAccion.consulta;
+
+				EventResponse resultado_xml = webServiceHab.GetXmlByDocumentKey(cufe);
+
+				if (resultado_xml != null && resultado_xml.Code == "100" && !string.IsNullOrWhiteSpace(resultado_xml.XmlBytesBase64))
+				{
+					// Convertir la cadena Base64 a un arreglo de bytes
+					byte[] xmlBytes = Convert.FromBase64String(resultado_xml.XmlBytesBase64);
+
+					// Convertir los bytes a una cadena XML
+					string xmlContent = Encoding.UTF8.GetString(xmlBytes);
+
+					//Guardar el archivo XML en el sistema de archivos
+					File.WriteAllText(string.Format(@"{0}\{1}.xml", ruta_xml, xml_archivo), xmlContent);
+
+
+				}
+				//else
+				//{
+				//	log_categoria = MensajeCategoria.ServicioDian;
+				//	log_accion = MensajeAccion.consulta;
+				//	if (resultado[0] == null)
+				//	{
+				//		DianResponse respuesta = new DianResponse();
+				//		respuesta.StatusCode = "94";
+				//		respuesta.ErrorMessage = LibreriaGlobalHGInet.Formato.Coleccion.ConvertirLista(string.Format("No se obtuvo respuesta de la DIAN consultando el estado del documento,Por favor no hacer modificaciones al documento y enviarlo de nuevo a la plataforma. Radicado:{0}", TrackId)).ToArray();
+				//		respuesta.IsValid = false;
+				//		resultado[0] = respuesta;
+				//	}
+				//	else
+				//	{
+				//		throw new ApplicationException("No se obtuvo respuesta de la Plataforma de la DIAN");
+				//	}
+				//}
+
+
+				return resultado_xml;
+
+			}
+			catch (Exception excepcion)
+			{
+				RegistroLog.EscribirLog(excepcion, log_categoria, MensajeTipo.Error, log_accion);
+				//LogExcepcion.Guardar(excepcion);
+				throw new ApplicationException(excepcion.Message, excepcion.InnerException);
+			}
+		}
+
 	}
 }

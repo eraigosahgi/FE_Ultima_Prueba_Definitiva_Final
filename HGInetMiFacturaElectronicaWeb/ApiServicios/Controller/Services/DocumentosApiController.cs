@@ -528,6 +528,27 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 
 
 
+		[HttpGet]
+		[Route("Api/ObtenerXMLDian")]
+		public HttpResponseMessage ObtenerXMLDian(int mes)
+		{
+			try
+			{
+				Ctl_Documento ctl_documento = new Ctl_Documento();
+
+				ctl_documento.ObtenerXMLDian(mes);
+
+				return Request.CreateResponse(HttpStatusCode.OK, "");
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
+
+
+
 	}
 }
 
