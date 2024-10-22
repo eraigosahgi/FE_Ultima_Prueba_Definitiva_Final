@@ -6013,7 +6013,7 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 					int diasmes = DateTime.DaysInMonth(anyo, j);
 
-					for (int i = 1; i <= diasmes; i++)
+					for (int i = 0; i <= diasmes; i++)
 					{
 						DateTime fecha_proceso = fecha_inicio;
 
@@ -6143,18 +6143,58 @@ namespace HGInetMiFacturaElectonicaController.Registros
 
 												if (obtiene_doc == true)
 												{
+													if (item.StrUrlArchivoUbl.Contains("filesrecuperacion."))
+													{
+														item.StrUrlArchivoUbl = item.StrUrlArchivoUbl.Replace("https://filesrecuperacion.hgidocs.co", "https://files.hgidocs.co");
+													}
+
 													datos_sincronizar_storage.Add(item);
+
 													var tarea = TareaGenerarPDF(item.StrIdSeguridad.ToString(), true, true);
 												}
 
 											}
+											else
+											{
+												if (item.StrUrlArchivoUbl.Contains("filesrecuperacion."))
+												{
+													item.StrUrlArchivoUbl = item.StrUrlArchivoUbl.Replace("https://filesrecuperacion.hgidocs.co", "https://files.hgidocs.co");
+													Actualizar(item);
+												}
+
+												datos_sincronizar_storage.Add(item);
+											}
+										}
+										else
+										{
+											datos_sincronizar_storage.Add(item);
 										}
 									}
+
+									if (datos_sincronizar_storage.Count > 0 && datos_sincronizar_storage.Count == 50)
+									{
+										var tarea = TareaGenerarAlmacenamientoStorage(datos_sincronizar_storage, anyo, true);
+
+										try
+										{
+											RegistroLog.EscribirLog(new ApplicationException("Envio de docoumentos a storage"), LibreriaGlobalHGInet.RegistroLog.MensajeCategoria.Servicio, LibreriaGlobalHGInet.RegistroLog.MensajeTipo.Sincronizacion, LibreriaGlobalHGInet.RegistroLog.MensajeAccion.creacion, string.Format("Envio de docoumentos a storage. Cantidad {0}", datos_sincronizar_storage.Count));
+
+										}
+										catch (Exception)
+										{
+
+										}
+
+										System.Threading.Thread.Sleep(2000);
+										datos_sincronizar_storage = new List<TblDocumentos>();
+									}
+
 								}
 
 								if (datos_sincronizar_storage.Count > 0)
-									GenerarAlmacenamientoStorage(datos_sincronizar_storage, anyo, true);
-
+								{
+									var tarea = TareaGenerarAlmacenamientoStorage(datos_sincronizar_storage, anyo, true);
+								}
 							}
 						}
 					}
@@ -6169,6 +6209,17 @@ namespace HGInetMiFacturaElectonicaController.Registros
 			{
 				RegistroLog.EscribirLog(excepcion, MensajeCategoria.Sonda, MensajeTipo.Error, MensajeAccion.consulta, "Sonda para importar Archivos del documento");
 			}
+		}
+
+
+		public async Task TareaGenerarAlmacenamientoStorage(List<TblDocumentos> datos, int anyo, bool buscar_faltantes)
+		{
+			await Task.Factory.StartNew(() =>
+			{
+
+				GenerarAlmacenamientoStorage(datos, anyo, buscar_faltantes);
+
+			});
 		}
 
 
