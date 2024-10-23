@@ -1,0 +1,3 @@
+ALTER TABLE TblEmpresasResoluciones ADD
+	IntPermiteParciales bit Default(0)
+GO

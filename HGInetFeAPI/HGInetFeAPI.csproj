@@ -1,0 +1,680 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HGInetFeAPI</RootNamespace>
+    <AssemblyName>HGInetFeAPI</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Documentacion\Librerias\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Controladores\Ctl_AcuseRecibo.cs" />
+    <Compile Include="Controladores\Ctl_AjusteNomina.cs" />
+    <Compile Include="Controladores\Ctl_Documentos.cs" />
+    <Compile Include="Controladores\Ctl_Empresas.cs" />
+    <Compile Include="Controladores\Ctl_Factura.cs" />
+    <Compile Include="Controladores\Ctl_ListaFe.cs" />
+    <Compile Include="Controladores\Ctl_Nomina.cs" />
+    <Compile Include="Controladores\Ctl_NotaCredito.cs" />
+    <Compile Include="Controladores\Ctl_NotaDebito.cs" />
+    <Compile Include="Controladores\Ctl_PagosElectronicos.cs" />
+    <Compile Include="Controladores\Ctl_ReenvioDocumento.cs" />
+    <Compile Include="Controladores\Ctl_Resolucion.cs" />
+    <Compile Include="Controladores\Ctl_Utilidades.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\ServicioAcuseRecibo\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioAjusteNomina\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioDocumento\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioEmpresas\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioFactura\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioListaFe\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioNomina\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioNotaCredito\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioNotaDebito\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioPagosElectronicos\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioReenvioDocumento\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioResolucion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ServicioRutasPlataforma\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAcuseRecibo\acuserecibo2.wsdl" />
+    <None Include="Service References\ServicioAcuseRecibo\acuserecibo2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAcuseRecibo\acuserecibo21.wsdl" />
+    <None Include="Service References\ServicioAcuseRecibo\acuserecibo21.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAcuseRecibo\HGInetFeAPI.ServicioAcuseRecibo.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina2.wsdl" />
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina21.wsdl" />
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina51.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina52.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina53.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina54.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\HGInetFeAPI.ServicioAjusteNomina.RecepcionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioAjusteNomina\HGInetFeAPI.ServicioAjusteNomina.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\documentos2.wsdl" />
+    <None Include="Service References\ServicioDocumento\documentos21.wsdl" />
+    <None Include="Service References\ServicioDocumento\documentos4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioDocumento\documentos41.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioDocumento\documentos42.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioDocumento\documentos43.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ConsultaPorCodigoRegistroResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ConsultaPorFechaElaboracionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ConsultaPorNumerosResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.ObtenerCufeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.RecepcionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioDocumento\HGInetFeAPI.ServicioDocumento.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioEmpresas\empresas2.wsdl" />
+    <None Include="Service References\ServicioEmpresas\empresas21.wsdl" />
+    <None Include="Service References\ServicioEmpresas\empresas4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioEmpresas\empresas41.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioEmpresas\empresas42.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioEmpresas\empresas43.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioEmpresas\HGInetFeAPI.ServicioEmpresas.ConsultarAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioEmpresas\HGInetFeAPI.ServicioEmpresas.CrearResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioEmpresas\HGInetFeAPI.ServicioEmpresas.ObtenerResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioEmpresas\HGInetFeAPI.ServicioEmpresas.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioFactura\factura.wsdl" />
+    <None Include="Service References\ServicioFactura\factura.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioFactura\factura1.wsdl" />
+    <None Include="Service References\ServicioFactura\factura1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioFactura\factura2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioFactura\factura3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioFactura\factura4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioFactura\factura5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioFactura\HGInetFeAPI.ServicioFactura.ActualizarEstadoProcesoERPResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioFactura\HGInetFeAPI.ServicioFactura.ObtenerPorFechasAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioFactura\HGInetFeAPI.ServicioFactura.ObtenerPorIdSeguridadAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioFactura\HGInetFeAPI.ServicioFactura.RecepcionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioFactura\HGInetFeAPI.ServicioFactura.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioListaFe\HGInetFeAPI.ServicioListaFe.ObtenerResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioListaFe\HGInetFeAPI.ServicioListaFe.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioListaFe\listaFe2.wsdl" />
+    <None Include="Service References\ServicioListaFe\listaFe21.wsdl" />
+    <None Include="Service References\ServicioListaFe\listaFe4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioListaFe\listaFe41.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioListaFe\listaFe42.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioListaFe\listaFe43.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNomina\HGInetFeAPI.ServicioNomina.RecepcionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNomina\HGInetFeAPI.ServicioNomina.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNomina\nomina2.wsdl" />
+    <None Include="Service References\ServicioNomina\nomina21.wsdl" />
+    <None Include="Service References\ServicioNomina\nomina5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNomina\nomina51.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNomina\nomina52.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNomina\nomina53.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNomina\nomina54.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\HGInetFeAPI.ServicioNotaCredito.ObtenerPorFechasAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\HGInetFeAPI.ServicioNotaCredito.ObtenerPorIdSeguridadAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\HGInetFeAPI.ServicioNotaCredito.RecepcionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\HGInetFeAPI.ServicioNotaCredito.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\notacredito22.wsdl" />
+    <None Include="Service References\ServicioNotaCredito\notacredito23.wsdl" />
+    <None Include="Service References\ServicioNotaCredito\notacredito610.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\notacredito611.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\notacredito66.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\notacredito67.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\notacredito68.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaCredito\notacredito69.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\HGInetFeAPI.ServicioNotaDebito.ObtenerPorFechasAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\HGInetFeAPI.ServicioNotaDebito.ObtenerPorIdSeguridadAdquirienteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\HGInetFeAPI.ServicioNotaDebito.RecepcionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\HGInetFeAPI.ServicioNotaDebito.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\notadebito22.wsdl" />
+    <None Include="Service References\ServicioNotaDebito\notadebito23.wsdl" />
+    <None Include="Service References\ServicioNotaDebito\notadebito610.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\notadebito611.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\notadebito66.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\notadebito67.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\notadebito68.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioNotaDebito\notadebito69.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.ActualizarEstadoPagoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.ConsultaAgrupadosPorFechaElaboracionResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorCodigoRegistroResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.ConsultaPorFechaElaboracionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\HGInetFeAPI.ServicioPagosElectronicos.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos2.wsdl" />
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos3.wsdl" />
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioReenvioDocumento\HGInetFeAPI.ServicioReenvioDocumento.RecepcionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioReenvioDocumento\HGInetFeAPI.ServicioReenvioDocumento.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioReenvioDocumento\reenviodocumento.wsdl" />
+    <None Include="Service References\ServicioReenvioDocumento\reenviodocumento.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioReenvioDocumento\reenviodocumento1.wsdl" />
+    <None Include="Service References\ServicioReenvioDocumento\reenviodocumento1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioReenvioDocumento\reenviodocumento2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioReenvioDocumento\reenviodocumento3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioResolucion\HGInetFeAPI.ServicioResolucion.ConsultarResolucionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioResolucion\HGInetFeAPI.ServicioResolucion.ConsultarResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioResolucion\HGInetFeAPI.ServicioResolucion.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioResolucion\resolucion.wsdl" />
+    <None Include="Service References\ServicioResolucion\resolucion.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioResolucion\resolucion1.wsdl" />
+    <None Include="Service References\ServicioResolucion\resolucion1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioResolucion\resolucion2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioResolucion\resolucion3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioRutasPlataforma\facturae.wsdl" />
+    <None Include="Service References\ServicioRutasPlataforma\facturae.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioRutasPlataforma\facturae1.wsdl" />
+    <None Include="Service References\ServicioRutasPlataforma\facturae1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServicioRutasPlataforma\facturae2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ServicioAcuseRecibo\" />
+    <WCFMetadataStorage Include="Service References\ServicioAjusteNomina\" />
+    <WCFMetadataStorage Include="Service References\ServicioDocumento\" />
+    <WCFMetadataStorage Include="Service References\ServicioEmpresas\" />
+    <WCFMetadataStorage Include="Service References\ServicioFactura\" />
+    <WCFMetadataStorage Include="Service References\ServicioListaFe\" />
+    <WCFMetadataStorage Include="Service References\ServicioNomina\" />
+    <WCFMetadataStorage Include="Service References\ServicioNotaCredito\" />
+    <WCFMetadataStorage Include="Service References\ServicioNotaDebito\" />
+    <WCFMetadataStorage Include="Service References\ServicioPagosElectronicos\" />
+    <WCFMetadataStorage Include="Service References\ServicioReenvioDocumento\" />
+    <WCFMetadataStorage Include="Service References\ServicioResolucion\" />
+    <WCFMetadataStorage Include="Service References\ServicioRutasPlataforma\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioDocumento\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioDocumento\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioDocumento\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAcuseRecibo\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAcuseRecibo\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAcuseRecibo\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaCredito\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaCredito\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaCredito\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioResolucion\resolucion.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioResolucion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioResolucion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioResolucion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaDebito\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaDebito\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaDebito\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioReenvioDocumento\reenviodocumento.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioReenvioDocumento\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioReenvioDocumento\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioReenvioDocumento\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioEmpresas\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioEmpresas\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioEmpresas\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioListaFe\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioListaFe\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioListaFe\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioRutasPlataforma\facturae.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioRutasPlataforma\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioRutasPlataforma\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioRutasPlataforma\HGInetFeAPI.ServicioRutasPlataforma.ObtenerServidorFEResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioRutasPlataforma\HGInetFeAPI.ServicioRutasPlataforma.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ServicioRutasPlataforma\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioPagosElectronicos\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioPagosElectronicos\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioPagosElectronicos\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNomina\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNomina\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNomina\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAjusteNomina\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAjusteNomina\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAjusteNomina\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioPagosElectronicos\pagoselectronicos11.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioFactura\factura.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaCredito\notacredito11.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNotaDebito\notadebito11.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioEmpresas\empresas1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAjusteNomina\ajustenomina1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioAcuseRecibo\acuserecibo1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioDocumento\documentos1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioListaFe\listaFe1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ServicioNomina\nomina1.disco" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

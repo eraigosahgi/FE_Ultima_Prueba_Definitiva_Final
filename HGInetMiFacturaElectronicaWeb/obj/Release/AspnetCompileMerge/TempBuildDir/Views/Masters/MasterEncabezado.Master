@@ -1,0 +1,374 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterEncabezado.master.cs" Inherits="HGInetMiFacturaElectronicaWeb.Views.Masters.MasterEncabezado" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge-Firefox" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="Pragma" content="no-cache" />
+
+	<title>HGIDocs: Sistema de Factura Electrónica</title>
+
+	<!-- Global stylesheets -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css" />
+	<!-- /Global stylesheets -->
+
+	<asp:ContentPlaceHolder ID="head" runat="server">
+	</asp:ContentPlaceHolder>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+	<!-- Global stylesheets -->
+	<link href="../../Scripts/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css" />
+	<link href="../../Scripts/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="../../Scripts/assets/css/core.css" rel="stylesheet" type="text/css" />
+	<link href="../../Scripts/assets/css/components.css" rel="stylesheet" type="text/css" />
+	<link href="../../Scripts/assets/css/colors.css" rel="stylesheet" type="text/css" />
+	<!-- /global stylesheets -->
+
+	<!-- Core JS files -->
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/loaders/pace.min.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/core/libraries/jquery.min.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/core/libraries/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/loaders/blockui.min.js"></script>
+	<!-- /core JS files -->
+
+	<!-- Theme JS files -->
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/visualization/d3/d3.min.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/visualization/d3/d3_tooltip.js"></script>
+
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/forms/styling/switchery.min.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/forms/styling/uniform.min.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/forms/selects/bootstrap_multiselect.js"></script>
+
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/moment/moment.min.js"></script>
+
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/headroom/headroom.min.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/headroom/headroom_jquery.min.js"></script>
+
+
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/notifications/bootbox.min.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/notifications/pnotify.min.js"></script>
+	<%--<script type="text/javascript" src="../../Scripts/assets/js/plugins/notifications/sweet_alert.min.js"></script>--%>
+
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/media/fancybox.min.js"></script>
+
+	<script type="text/javascript" src="../../Scripts/assets/js/core/app.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/pages/user_pages_team.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/pages/components_popups.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/pages/components_modals.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/pages/layout_navbar_hideable.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/extensions/session_timeout.min.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/pages/gallery.js"></script>
+	<script type="text/javascript" src="../../Scripts/assets/js/plugins/ui/ripple.min.js"></script>
+	<!-- /theme JS files -->
+
+	<!-- Estilos CSS -->
+	<%-- <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.spa.css" />--%>
+	<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.common.css" />
+	<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.2.7/css/dx.light.css" />
+
+	<!-- Scripts Requeridos
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.2/jszip.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
+	<!--<script src="https://cdn3.devexpress.com/jslib/17.2.7/js/dx.all.js"></script>    -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.2/jszip.min.js"></script>
+	<script src="https://unpkg.com/devextreme-aspnet-data@1.3.0"></script>
+
+	<!-- JS Localización -->
+	<script src="../../Scripts/devextreme-localization/dx.messages.es.js"></script>
+	<script src="../../Scripts/config.js"></script>
+	<script src="../../Scripts/Services/Loading.js"></script>
+
+	<style>
+		.swal-button {
+			background-color: #337ab7;
+		}
+
+		.divImg {
+			border-radius: 40px;
+			-moz-border-radius: 40px;
+			-webkit-border-radius: 50px;
+			border-style: solid;
+			border-color: white;
+			border-right-width: 15px;
+			border-left-width: 15px;
+			background-color: white;
+		}
+	</style>
+	<link href="../../Content/dx.hgi.css" rel="stylesheet" />
+	<script>
+
+		function inicio() {
+			window.location.assign("/Views/Pages/Inicio.aspx");
+		}
+
+	</script>
+</head>
+<body>
+
+	<%--Panel carga o Loading--%>
+	<div id="wait" style="display: none; z-index: 9999;">
+		<div class="modal" style="background-color: lightslategray; opacity: 0.6; display: block;"></div>
+		<div>
+			<img class="divImg" style="position: absolute; left: 43%; top: 30%; z-index: 9999; width: 20%; height: 20%;" src="../../Content/icons/Loading.gif" />
+		</div>
+
+	</div>
+
+	<form id="form1" runat="server">
+
+		<asp:ScriptManager ID="ScriptManager1" runat="server">
+			<Scripts>
+				<asp:ScriptReference Path="../../Scripts/assets/js/plugins/notifications/sweet_alert.min.js"></asp:ScriptReference>
+			</Scripts>
+		</asp:ScriptManager>
+
+		<!-- Barra de Navegación Principal -->
+		<div class="navbar navbar-inverse bg-slate-800">
+
+			<div class="navbar-header">
+				<h4 class="navbar-brand" style="margin: 0%">HGI Facturación Electrónica</h4>
+
+				<ul class="nav navbar-nav visible-xs-block">
+					<li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
+					<li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
+				</ul>
+			</div>
+
+			<div class="navbar-collapse collapse" id="navbar-mobile">
+				<ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<i class="icon-puzzle3"></i>
+						</a>
+
+
+						<div class="dropdown-menu dropdown-content">
+							<div class="dropdown-content-heading">
+								Actualizaciones
+							<ul class="icons-list">
+								<li><a href="#"><i class="icon-sync"></i></a></li>
+							</ul>
+							</div>
+
+							<ul class="media-list dropdown-content-body width-350">
+								<li class="media">
+									<div class="media-left">
+										<a href="#" class="btn border-primary text-primary btn-flat btn-rounded btn-icon btn-sm"><i class="icon-newspaper"></i></a>
+									</div>
+
+									<div class="media-body">
+										<b>
+											<asp:Label runat="server" ID="Label_version_actualizacion"></asp:Label></b>
+										<br />
+										Nueva Versión HGI Facturación Electrónica
+									<div class="media-annotation">HGI SAS</div>
+									</div>
+								</li>
+							</ul>
+
+							<div class="dropdown-content-footer">
+								<a href="#"><i class="icon-menu display-block"></i></a>
+							</div>
+						</div>
+					</li>
+					<li><a href="/Views/Pages/Inicio.aspx" class="icon-home2"></a></li>
+				</ul>
+
+				<div class="navbar-right navbar-collapse collapse" id="Div2">
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<label runat="server" id="LblNombreUsuario">Nombre de Usuario Barra</label>
+							</a>
+
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="icon-user"></i>
+							</a>
+
+							<div class="dropdown-menu dropdown-content">
+								<div class="dropdown-content-heading">
+									<asp:Label runat="server">Información de Usuario</asp:Label>
+								</div>
+
+								<ul class="media-list dropdown-content-body width-350">
+									<li class="media">
+										<div class="media-body">
+											<i id="icono_usuario" class="icon-vcard position-left" title="Usuario"></i>
+											<label runat="server" id="LblCodigoUsuario">Código de Usuario</label>
+											<br />
+											<i class="icon-user position-left" title="Nombre del usuario"></i>
+											<label runat="server" id="LblNombreUsuarioDet">Nombre de Usuario</label>
+											<br />
+											<div runat="server" id="EmailUsuario">
+												<i class="icon-envelop5 position-left" title="Email"></i>
+												<label runat="server" id="lblEmailUsuario">E-mail de Usuario</label>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li>
+							<asp:LinkButton ID="LinkCerrarSesionHeader" runat="server" class="legitRipple" ToolTip="Cerrar Sesión" OnClick="LinkCerrarSesion_Click"><i class="icon-switch2"></i><span></span></asp:LinkButton>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+		<!-- /Barra de Navegación Principal -->
+
+		<!-- Contenedor de la página -->
+		<div class="page-container">
+
+			<!-- Contenido de la página -->
+			<div class="page-content">
+
+				<!-- Contenido Principal -->
+				<div class="content-wrapper">
+
+					<!-- Encabezado de la página -->
+					<div class="page-header page-header-default">
+						<div class="page-header-content">
+
+							<div class="page-title">
+
+								<h4>
+									<asp:Label ID="lb_TituloPagina" runat="server" Text="lb_TituloPagina"></asp:Label></h4>
+
+							</div>
+
+							<div class="heading-elements">
+								<div class="heading-btn-group">
+									<a id="a_info_acerca" class="btn btn-link btn-float text-size-small has-text" data-toggle="modal" data-target="#modal_default"><i class="icon-info22"></i><span>Acerca de..</span></a>
+								</div>
+							</div>
+
+
+							<!-- Modal Acerca de-->
+							<div id="modal_default" class="modal fade">
+								<div class="modal-dialog modal-sm">
+									<div class="modal-content">
+										<div class="modal-header bg-primary" style="background-color: #0C4995; color: white">
+											<button style="color: white" type="button" class="close" data-dismiss="modal">&times;</button>
+											<%--<h5 class="modal-title">HGInet Smart</h5>--%>
+											<h4 class="modal-title" style="margin-top: 2%;">HGI Facturación Electrónica</h4>
+										</div>
+
+										<div class="modal-body">
+											<img class="img-responsive" src="../../Scripts/Images/LogoPlataforma.png" width="300" style="margin-top: 2%; margin-left: 10%" />
+
+											<div style="margin-top: 5%; margin-left: 15%">
+
+												<!-- Teléfono Empresa -->
+												<div class="media-left media-middle">
+													<label id="Label6" class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;"><i class="icon-phone-wave"></i></label>
+												</div>
+												<div class="media-left">
+													<div>
+														<label id="LblTelefonoEmpresa">Medellín: (4) 444 45 84</label>
+														<label id="LblTelefonoEmpresaB">Bogotá: (1) 482 32 01 </label>
+														<label id="LblTelefonoEmpresaBa">Barranquilla: (5) 319 79 71</label>
+													</div>
+
+												</div>
+												<br />
+												<!-- /Teléfono Empresa -->
+
+												<!-- Página Web -->
+												<div class="media-left media-middle">
+													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;"><i class="icon-earth"></i></label>
+												</div>
+												<div class="media-left">
+													<label class="text-default text-semibold" font-size="Medium">Página Web:</label>
+													<div>
+														<a href="http://www.hgi.com.co" font-size="Small" target="_blank">www.hgi.com.co</a>
+													</div>
+												</div>
+												<br />
+												<!-- /Página Web -->
+
+												<!-- E-mail Empresa -->
+												<div class="media-left media-middle">
+													<label class="btn btn-flat btn-rounded btn-xs btn-icon" style="border-color: #0C4995; color: #0C4995;"><i class="icon-envelop5"></i></label>
+												</div>
+												<div class="media-left">
+													<label id="Label4" class="text-default text-semibold" font-size="Medium">E-mail:</label>
+													<div>
+														<a href="mailto:info@hgi.com.co" font-size="Small" target="_blank">info@hgi.com.co</a>
+													</div>
+												</div>
+												<!-- /E-mail Empresa -->
+
+											</div>
+
+											<div id="div_redes" style="text-align: center; margin-top: 10%;">
+												<a href="https://www.facebook.com/HGInet/" target="_blank"><i class=" icon-facebook2" style="color: black"></i></a>
+
+												&nbsp;
+                                                <a href="http://www.twitter.com/HGInetERP/" target="_blank"><i class=" icon-twitter2" style="color: black"></i></a>
+
+												&nbsp;
+                                                <a href="https://www.linkedin.com/company/10623078" target="_blank"><i class=" icon-linkedin" style="color: black"></i></a>
+											</div>
+
+											<div id="div_copyright" class=" text-center" style="margin-top: 2%;">
+												<img src="../../Scripts/Images/LogoHGICertificados.png" style="align-content: center; width: 130px" class="img-responsive center-block" />
+												<label class="text-default text-semibold" style="text-align: center">
+													Copyright © 2022 HGI S.A.S - NIT 811.021.438-4<br />
+													Todos los Derechos Reservados</label>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /Modal Acerca de -->
+
+						</div>
+
+						<div class="breadcrumb-line">
+							<ul class="breadcrumb">
+								<li><a href="../Pages/Inicio.aspx"><i class="icon-home2 position-left"></i>Inicio /</a>
+									<asp:Label ID="lb_GrupoPagina" runat="server" Text="lb_GrupoPagina"></asp:Label>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<!-- /Encabezado de la página -->
+
+					<!-- Área Contenido -->
+					<div class="content">
+
+						<asp:ContentPlaceHolder ID="ContenidoPagina" runat="server"></asp:ContentPlaceHolder>
+
+						<!-- Pie de Página -->
+						<div class="footer text-muted">
+							Copyright &copy; 2018 <a href="http://www.hgi.com.co" target="_blank">HGI S.A.S - HGI Facturación Electrónica</a>
+						</div>
+						<!-- /Pie de Página -->
+
+					</div>
+					<!-- /Área Contenido -->
+
+				</div>
+				<!-- /Contenido Principal -->
+
+			</div>
+			<!-- /Contenido de la página -->
+
+		</div>
+		<!-- /Contenedor de la página -->
+
+	</form>
+</body>
+</html>

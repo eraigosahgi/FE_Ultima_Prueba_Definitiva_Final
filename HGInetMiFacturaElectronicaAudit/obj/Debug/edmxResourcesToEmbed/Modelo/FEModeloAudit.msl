@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="HGIAuditoriaModelStoreContainer" CdmEntityContainer="FEHGIAuditoria">
+    <EntitySetMapping Name="TblSeguimientoAlertas">
+      <EntityTypeMapping TypeName="HGIAuditoriaModel.TblSeguimientoAlertas">
+        <MappingFragment StoreEntitySet="TblSeguimientoAlertas">
+          <ScalarProperty Name="StrIdSeguridadPlan" ColumnName="StrIdSeguridadPlan" />
+          <ScalarProperty Name="StrResultadoProceso" ColumnName="StrResultadoProceso" />
+          <ScalarProperty Name="StrMensaje" ColumnName="StrMensaje" />
+          <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+          <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacion" />
+          <ScalarProperty Name="StrIdSeguridadEmpresa" ColumnName="StrIdSeguridadEmpresa" />
+          <ScalarProperty Name="IntIdAlerta" ColumnName="IntIdAlerta" />
+          <ScalarProperty Name="IntIdTipo" ColumnName="IntIdTipo" />
+          <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblAuditDocumentos">
+      <EntityTypeMapping TypeName="HGIAuditoriaModel.TblAuditDocumentos">
+        <MappingFragment StoreEntitySet="TblAuditDocumentos">
+          <ScalarProperty Name="StrNumero" ColumnName="StrNumero" />
+          <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
+          <ScalarProperty Name="StrResultadoProceso" ColumnName="StrResultadoProceso" />
+          <ScalarProperty Name="StrMensaje" ColumnName="StrMensaje" />
+          <ScalarProperty Name="StrRealizadoPor" ColumnName="StrRealizadoPor" />
+          <ScalarProperty Name="IntIdProcesadoPor" ColumnName="IntIdProcesadoPor" />
+          <ScalarProperty Name="IntTipoRegistro" ColumnName="IntTipoRegistro" />
+          <ScalarProperty Name="IntIdProceso" ColumnName="IntIdProceso" />
+          <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+          <ScalarProperty Name="StrObligado" ColumnName="StrObligado" />
+          <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
+          <ScalarProperty Name="StrIdPeticion" ColumnName="StrIdPeticion" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblAuditFormatos">
+      <EntityTypeMapping TypeName="HGIAuditoriaModel.TblAuditFormatos">
+        <MappingFragment StoreEntitySet="TblAuditFormatos">
+          <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+          <ScalarProperty Name="DatFechaProceso" ColumnName="DatFechaProceso" />
+          <ScalarProperty Name="StrUsuarioProceso" ColumnName="StrUsuarioProceso" />
+          <ScalarProperty Name="IntTipoProceso" ColumnName="IntTipoProceso" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
+          <ScalarProperty Name="IntCodigoFormato" ColumnName="IntCodigoFormato" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblLog">
+      <EntityTypeMapping TypeName="HGIAuditoriaModel.TblLog">
+        <MappingFragment StoreEntitySet="TblLog">
+          <ScalarProperty Name="StrModulo" ColumnName="StrModulo" />
+          <ScalarProperty Name="StrMetodo" ColumnName="StrMetodo" />
+          <ScalarProperty Name="StrClase" ColumnName="StrClase" />
+          <ScalarProperty Name="StrArchivo" ColumnName="StrArchivo" />
+          <ScalarProperty Name="StrLinea" ColumnName="StrLinea" />
+          <ScalarProperty Name="Strerror_custom" ColumnName="Strerror_custom" />
+          <ScalarProperty Name="StrExcepcion" ColumnName="StrExcepcion" />
+          <ScalarProperty Name="StrMensaje" ColumnName="StrMensaje" />
+          <ScalarProperty Name="StrAccion" ColumnName="StrAccion" />
+          <ScalarProperty Name="IntAccion" ColumnName="IntAccion" />
+          <ScalarProperty Name="StrTipo" ColumnName="StrTipo" />
+          <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
+          <ScalarProperty Name="StrCategoria" ColumnName="StrCategoria" />
+          <ScalarProperty Name="IntCategoria" ColumnName="IntCategoria" />
+          <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

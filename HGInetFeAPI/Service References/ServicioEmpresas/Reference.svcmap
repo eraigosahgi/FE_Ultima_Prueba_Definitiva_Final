@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="20f42f8b-2699-46fc-a22a-5635114db132" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://habilitacion.hgidocs.co/wcf/empresas.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="empresas4.xsd" MetadataType="Schema" ID="6a202013-8251-46ae-9f11-aded1856d28a" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/empresas.svc?xsd=xsd3" />
+    <MetadataFile FileName="empresas41.xsd" MetadataType="Schema" ID="d0a21043-97ba-46c5-bf30-c3f38a2cf736" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/empresas.svc?xsd=xsd2" />
+    <MetadataFile FileName="empresas42.xsd" MetadataType="Schema" ID="2ce26b7b-f089-4bef-91f7-e8694ed8643d" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/empresas.svc?xsd=xsd1" />
+    <MetadataFile FileName="empresas43.xsd" MetadataType="Schema" ID="8ed11998-6551-4282-b29d-f3c9f45e669b" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/empresas.svc?xsd=xsd0" />
+    <MetadataFile FileName="empresas2.wsdl" MetadataType="Wsdl" ID="6b364b95-7d28-40f5-8380-6210ef71e6f7" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/empresas.svc?wsdl" />
+    <MetadataFile FileName="empresas21.wsdl" MetadataType="Wsdl" ID="6c6aab2f-1159-412b-ad25-511f8df2194a" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/empresas.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="empresas1.disco" MetadataType="Disco" ID="7a14f744-b603-4869-b009-917119050cc7" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/empresas.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

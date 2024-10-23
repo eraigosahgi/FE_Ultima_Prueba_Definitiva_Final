@@ -1,0 +1,355 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B3B46672-9956-48F5-B7CE-24C013995E47}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HGInetMiFacturaElectonicaData</RootNamespace>
+    <AssemblyName>HGInetMiFacturaElectonicaData</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>Svn</SccProjectName>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccProvider>SubversionScc</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="MongoDB.Bson, Version=2.7.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.7.2\lib\net45\MongoDB.Bson.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=2.7.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.2.7.2\lib\net45\MongoDB.Driver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core, Version=2.7.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Driver.Core.2.7.2\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Documentacion\Librerias\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="ControllerSql\BaseObject.cs" />
+    <Compile Include="ControllerSql\ExtType.cs" />
+    <Compile Include="ControllerSql\IBaseObject.cs" />
+    <Compile Include="ControllerSql\ModelExt.cs" />
+    <Compile Include="ControllerSql\Repositorio.Buscar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Editar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Eliminar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Exportar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Importar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Insertar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Obtener.cs" />
+    <Compile Include="ControllerSql\Repositorio.Ordenar.cs" />
+    <Compile Include="ControllerSql\Repositorio.Validar.cs" />
+    <Compile Include="Enumerables\Accion.cs" />
+    <Compile Include="Enumerables\AdquirienteRecibo.cs" />
+    <Compile Include="Enumerables\Auditorias.cs" />
+    <Compile Include="Enumerables\CamposSalud.cs" />
+    <Compile Include="Enumerables\CategoriaEstado.cs" />
+    <Compile Include="Enumerables\EstadoEmail.cs" />
+    <Compile Include="Enumerables\EstadoEmpresa.cs" />
+    <Compile Include="Enumerables\EstadoPago.cs" />
+    <Compile Include="Enumerables\EstadoPlan.cs" />
+    <Compile Include="Enumerables\EstadosFormato.cs" />
+    <Compile Include="Enumerables\Habilitacion.cs" />
+    <Compile Include="Enumerables\InterOperabilidad.cs" />
+    <Compile Include="Enumerables\OperacionesBD.cs" />
+    <Compile Include="Enumerables\Perfiles.cs" />
+    <Compile Include="Enumerables\PeriodoNomina.cs" />
+    <Compile Include="Enumerables\ProcesoEstado.cs" />
+    <Compile Include="Enumerables\TipoAlerta.cs" />
+    <Compile Include="Enumerables\TipoArchivoStorage.cs" />
+    <Compile Include="Enumerables\TipoCompra.cs" />
+    <Compile Include="Enumerables\TipoDocPlanes.cs" />
+    <Compile Include="Enumerables\TipoHoraNomina.cs" />
+    <Compile Include="Enumerables\TipoOperacionV2.cs" />
+    <Compile Include="Enumerables\TipoFormato.cs" />
+    <Compile Include="Enumerables\TipoFrecuencia.cs" />
+    <Compile Include="Enumerables\TipoOpciones.cs" />
+    <Compile Include="Formatos\Nomina\Novedad.cs" />
+    <Compile Include="Formatos\Nomina\Planilla.cs" />
+    <Compile Include="ModeloAuditoria\Objetos\TblAuditFormatos.cs" />
+    <Compile Include="ModeloAuditoria\Objetos\TblGenerica.cs" />
+    <Compile Include="ModeloAuditoria\Objetos\TblAuditDocumentos.cs" />
+    <Compile Include="ModeloAuditoria\Objetos\TblSeguimientoAlertas.cs" />
+    <Compile Include="ModeloServicio\Documentos\Acuse.cs" />
+    <Compile Include="ModeloServicio\Documentos\Anticipo.cs" />
+    <Compile Include="ModeloServicio\Documentos\Attached.cs" />
+    <Compile Include="ModeloServicio\Documentos\BeneficiosComprador.cs" />
+    <Compile Include="ModeloServicio\Documentos\CampoValor.cs" />
+    <Compile Include="ModeloServicio\Documentos\Cargo.cs" />
+    <Compile Include="ModeloServicio\Documentos\Cuota.cs" />
+    <Compile Include="ModeloServicio\Documentos\Descuento.cs" />
+    <Compile Include="ModeloServicio\Documentos\DocumentoArchivo.cs" />
+    <Compile Include="ModeloServicio\Documentos\DocumentoDetalle.cs" />
+    <Compile Include="ModeloServicio\Documentos\FabricanteSoftwarePos.cs" />
+    <Compile Include="ModeloServicio\Documentos\Factura.cs" />
+    <Compile Include="ModeloServicio\Documentos\InformacionPos.cs" />
+    <Compile Include="ModeloServicio\Documentos\InfoTicket.cs" />
+    <Compile Include="ModeloServicio\Documentos\NotaCredito.cs" />
+    <Compile Include="ModeloServicio\Documentos\NotaDebito.cs" />
+    <Compile Include="ModeloServicio\Documentos\PuntoVenta.cs" />
+    <Compile Include="ModeloServicio\Documentos\ReferenciaAdicional.cs" />
+    <Compile Include="ModeloServicio\Documentos\ReferenciaDocumento.cs" />
+    <Compile Include="ModeloServicio\Documentos\ReferenciaPago.cs" />
+    <Compile Include="ModeloServicio\Documentos\Salud.cs" />
+    <Compile Include="ModeloServicio\Documentos\TasaCambio.cs" />
+    <Compile Include="ModeloServicio\General\AIU.cs" />
+    <Compile Include="ModeloServicio\General\Anexo.cs" />
+    <Compile Include="ModeloServicio\General\CondicionEntrega.cs" />
+    <Compile Include="ModeloServicio\General\DestinatarioEmail.cs" />
+    <Compile Include="ModeloServicio\General\Direcciones.cs" />
+    <Compile Include="ModeloServicio\General\Empresa.cs" />
+    <Compile Include="ModeloServicio\General\ExtensionDian.cs" />
+    <Compile Include="ModeloServicio\General\Formato.cs" />
+    <Compile Include="ModeloServicio\General\FormatoCampo.cs" />
+    <Compile Include="ModeloServicio\General\ListadosV2.cs" />
+    <Compile Include="ModeloServicio\General\Tercero.cs" />
+    <Compile Include="ModeloServicio\Documentos\EnvioDocumento.cs" />
+    <Compile Include="ModeloServicio\Nomina\Cesantias.cs" />
+    <Compile Include="ModeloServicio\Nomina\Deducciones.cs" />
+    <Compile Include="ModeloServicio\Nomina\Devengados.cs" />
+    <Compile Include="ModeloServicio\Nomina\Empleador.cs" />
+    <Compile Include="ModeloServicio\Nomina\FondoSP.cs" />
+    <Compile Include="ModeloServicio\Nomina\Hora.cs" />
+    <Compile Include="ModeloServicio\Nomina\Libranza.cs" />
+    <Compile Include="ModeloServicio\Nomina\Nomina.cs" />
+    <Compile Include="ModeloServicio\Nomina\NominaAjuste.cs" />
+    <Compile Include="ModeloServicio\Nomina\NovedadDeduccion.cs" />
+    <Compile Include="ModeloServicio\Nomina\NovedadSalNoSal.cs" />
+    <Compile Include="ModeloServicio\Nomina\OtroConcepto.cs" />
+    <Compile Include="ModeloServicio\Nomina\Pago.cs" />
+    <Compile Include="ModeloServicio\Nomina\Periodo.cs" />
+    <Compile Include="ModeloServicio\Nomina\Prima.cs" />
+    <Compile Include="ModeloServicio\Nomina\Sancion.cs" />
+    <Compile Include="ModeloServicio\Nomina\Trabajador.cs" />
+    <Compile Include="ModeloServicio\Nomina\Transporte.cs" />
+    <Compile Include="ModeloServicio\Nomina\NovedadGeneral.cs" />
+    <Compile Include="ModeloServicio\Respuestas\AcuseConsulta.cs" />
+    <Compile Include="ModeloServicio\Respuestas\DocumentoCufe.cs" />
+    <Compile Include="ModeloServicio\Respuestas\FacturaConsulta.cs" />
+    <Compile Include="ModeloServicio\Respuestas\DocumentoRespuesta.cs" />
+    <Compile Include="ModeloServicio\Respuestas\ListaFE.cs" />
+    <Compile Include="ModeloServicio\Respuestas\NotaCreditoConsulta.cs" />
+    <Compile Include="ModeloServicio\Respuestas\NotaDebitoConsulta.cs" />
+    <Compile Include="ModeloServicio\Respuestas\NotificacionCorreo.cs" />
+    <Compile Include="ModeloServicio\Respuestas\PagoElectronicoRespuesta.cs" />
+    <Compile Include="ModeloServicio\Respuestas\Resolucion.cs" />
+    <Compile Include="ModeloServicio\Respuestas\RespuestaDian.cs" />
+    <Compile Include="ModeloAuditoria\IDatabase.cs" />
+    <Compile Include="Modelo\ModeloAutenticacion.cs" />
+    <Compile Include="Modelo\ModeloConexion.cs" />
+    <Compile Include="Modelo\ModeloDatos.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModeloDatos.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ModeloDatos.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ModeloDatos.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModeloDatos.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="ModeloAuditoria\MongoDBContext.cs" />
+    <Compile Include="Modelo\QryAdquirientes.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\QryDocumentosSaldo.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\QryEmpleados.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblAlertas.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblAlmacenamientoDocs.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblConfiguracionInteroperabilidad.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblCorreosRecepcion.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblDocumentos.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblEmpresaIntegradores.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblEmpresas.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblEmpresasResoluciones.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblEmpresaSucursal.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblEventosRadian.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblFormatos.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblImportacionDoc.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblIntegradores.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblOpciones.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblOpcionesERP.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblOpcionesPerfil.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblOpcionesUsuario.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblPagosDetalles.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblPagosElectronicos.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblPerfiles.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblPlanes.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblPlanesTransacciones.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblProcesoCorreo.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblRegistroRecepcion.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblUsuarios.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TblUsuariosPagos.cs">
+      <DependentUpon>ModeloDatos.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Objetos\ObjDocumentos.cs" />
+    <Compile Include="Objetos\ObjEmpresa.cs" />
+    <Compile Include="Objetos\ObjUsuario.cs" />
+    <Compile Include="Parametros\AzureStorage.cs" />
+    <Compile Include="Parametros\CertificadoDigital.cs" />
+    <Compile Include="Parametros\DataBaseServer.cs" />
+    <Compile Include="Parametros\DataBaseAuditoria.cs" />
+    <Compile Include="Parametros\DianProveedor.cs" />
+    <Compile Include="Parametros\DianProveedorTest.cs" />
+    <Compile Include="Parametros\DianProveedorV2.cs" />
+    <Compile Include="Parametros\HgiConfiguracion.cs" />
+    <Compile Include="Parametros\MailServer.cs" />
+    <Compile Include="Parametros\PasarelaPagos.cs" />
+    <Compile Include="Parametros\PlataformaData.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="Modelo\ModeloDatos.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ModeloDatos.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Modelo\ModeloDatos.edmx.diagram">
+      <DependentUpon>ModeloDatos.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Modelo\ModeloDatos.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ModeloDatos.edmx</DependentUpon>
+      <LastGenOutput>ModeloDatos.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Modelo\ModeloDatos.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ModeloDatos.edmx</DependentUpon>
+      <LastGenOutput>ModeloDatos.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
+      <Project>{a966a394-f6cc-482f-87a4-56ec1af05e5e}</Project>
+      <Name>LibreriaGlobalHGInet</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,3 @@
+ALTER TABLE TblOpciones ADD
+	IntTipo int Default(0)
+GO

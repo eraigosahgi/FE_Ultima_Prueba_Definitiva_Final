@@ -1,0 +1,7 @@
+ALTER TABLE TblEmpresas  ADD
+	IntIdEstado smallint NOT NULL default(1)
+GO
+
+ALTER TABLE TblEmpresas  ADD
+	IntCobroPostPago smallint NOT NULL default(0)
+GO

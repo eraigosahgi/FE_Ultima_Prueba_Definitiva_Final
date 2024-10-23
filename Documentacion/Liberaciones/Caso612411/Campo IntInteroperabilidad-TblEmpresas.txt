@@ -1,0 +1,3 @@
+ALTER TABLE TblEmpresas ADD
+IntInteroperabilidad bit NOT NULL Default(0)
+GO

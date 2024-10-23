@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="93b93c3a-2678-4c45-9dd2-3497191c2f4a" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://habilitacion.hgidocs.co/wcf/listaFe.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="listaFe4.xsd" MetadataType="Schema" ID="89710c45-7b63-442b-89a8-91c194f78a1e" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?xsd=xsd2" />
+    <MetadataFile FileName="listaFe2.wsdl" MetadataType="Wsdl" ID="42fe55d0-bb72-4d9f-9a46-794750cc88ac" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?wsdl" />
+    <MetadataFile FileName="listaFe41.xsd" MetadataType="Schema" ID="663f35d5-2226-49ff-9bfc-4eb98860ea8a" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?xsd=xsd0" />
+    <MetadataFile FileName="listaFe1.disco" MetadataType="Disco" ID="a98aacc3-035b-4db0-bd8c-f210efc0349b" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?disco" />
+    <MetadataFile FileName="listaFe42.xsd" MetadataType="Schema" ID="25358152-5493-4f23-9a6e-e15147139fd6" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?xsd=xsd3" />
+    <MetadataFile FileName="listaFe21.wsdl" MetadataType="Wsdl" ID="82563284-7afa-4c21-9a0d-c6324c23eaeb" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="listaFe43.xsd" MetadataType="Schema" ID="4fd25a92-166d-49c0-86ab-7130b783efbe" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/listaFe.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

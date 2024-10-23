@@ -1,0 +1,7 @@
+ALTER TABLE TblUsuarios ADD
+	StrToken uniqueidentifier  null
+GO
+
+ALTER TABLE TblUsuarios ADD
+	DatFechaUltimoIngreso datetime null
+GO

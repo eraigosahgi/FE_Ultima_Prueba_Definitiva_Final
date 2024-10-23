@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HGInetFacturaEReports</RootNamespace>
+    <AssemblyName>HGInetFacturaEReports</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\Documentacion\Librerias\Firma\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Charts.v18.2.Core, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.v18.2, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Office.v18.2.Core, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Pdf.v18.2.Core, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.PivotGrid.v18.2.Core, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v18.2.Core, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v18.2.Core, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v18.2.Export, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Sparkline.v18.2.Core, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v18.2, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraGauges.v18.2.Core, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.CodeParser.v18.2, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v18.2, Version=18.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Telerik.Reporting, Version=10.1.16.615, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enumerables\Extensiones.cs" />
+    <Compile Include="Facturas\Formato1Detalles.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato1Detalles.Designer.cs">
+      <DependentUpon>Formato1Detalles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Facturas\Formato2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato2.Designer.cs">
+      <DependentUpon>Formato2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Facturas\Formato2Detalles.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato2Detalles.Designer.cs">
+      <DependentUpon>Formato2Detalles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Facturas\Formato3.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato3.Designer.cs">
+      <DependentUpon>Formato3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Facturas\Formato3Detalles.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato3Detalles.Designer.cs">
+      <DependentUpon>Formato3Detalles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Facturas\Formato4.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato4.Designer.cs">
+      <DependentUpon>Formato4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Facturas\Formato4Detalles.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato4Detalles.Designer.cs">
+      <DependentUpon>Formato4Detalles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Facturas\Formato5.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato5.Designer.cs">
+      <DependentUpon>Formato5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Facturas\Formato5Detalles.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato5Detalles.Designer.cs">
+      <DependentUpon>Formato5Detalles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Funciones\Reporte.cs" />
+    <Compile Include="Funciones\Reporte.Pdf.cs" />
+    <Compile Include="NotasCredito\Formato1Detalles.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NotasCredito\Formato1Detalles.Designer.cs">
+      <DependentUpon>Formato1Detalles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NotasDebito\Formato1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NotasDebito\Formato1.Designer.cs">
+      <DependentUpon>Formato1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NotasDebito\Formato1Detalles.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NotasDebito\Formato1Detalles.Designer.cs">
+      <DependentUpon>Formato1Detalles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\MensajesGenerales.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MensajesGenerales.resx</DependentUpon>
+    </Compile>
+    <Compile Include="NotasCredito\Formato1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="NotasCredito\Formato1.Designer.cs">
+      <DependentUpon>Formato1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Facturas\Formato1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Facturas\Formato1.Designer.cs">
+      <DependentUpon>Formato1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReportDesigner\XtraReportDesigner.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ReportDesigner\XtraReportDesigner.Designer.cs">
+      <DependentUpon>XtraReportDesigner.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Facturas\Formato1Detalles.resx">
+      <DependentUpon>Formato1Detalles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato2.resx">
+      <DependentUpon>Formato2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato2Detalles.resx">
+      <DependentUpon>Formato2Detalles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato3.resx">
+      <DependentUpon>Formato3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato3Detalles.resx">
+      <DependentUpon>Formato3Detalles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato4.resx">
+      <DependentUpon>Formato4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato4Detalles.resx">
+      <DependentUpon>Formato4Detalles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato5.resx">
+      <DependentUpon>Formato5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato5Detalles.resx">
+      <DependentUpon>Formato5Detalles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotasCredito\Formato1Detalles.resx">
+      <DependentUpon>Formato1Detalles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotasDebito\Formato1.resx">
+      <DependentUpon>Formato1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotasDebito\Formato1Detalles.resx">
+      <DependentUpon>Formato1Detalles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\MensajesGenerales.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MensajesGenerales.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotasCredito\Formato1.resx">
+      <DependentUpon>Formato1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facturas\Formato1.resx">
+      <DependentUpon>Formato1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportDesigner\XtraReportDesigner.resx">
+      <DependentUpon>XtraReportDesigner.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj">
+      <Project>{b3b46672-9956-48f5-b7ce-24c013995e47}</Project>
+      <Name>HGInetMiFacturaElectonicaData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
+      <Project>{a966a394-f6cc-482f-87a4-56ec1af05e5e}</Project>
+      <Name>LibreriaGlobalHGInet</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

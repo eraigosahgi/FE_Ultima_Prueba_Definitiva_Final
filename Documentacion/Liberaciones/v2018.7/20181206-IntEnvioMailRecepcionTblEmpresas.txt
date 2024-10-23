@@ -1,0 +1,8 @@
+ /*
+ En relación al caso número 456235
+ */
+
+
+ALTER TABLE TblEmpresas ADD
+	IntEnvioMailRecepcion bit NOT NULL default(1)
+GO

@@ -1,0 +1,63 @@
+/*Se requiere eliminar la tabla TblEmpresasPasarela*/
+
+ALTER TABLE TblEmpresasResoluciones   
+DROP CONSTRAINT FK_TblEmpresasResoluciones_TblEmpresasPasarela;   
+GO
+
+ALTER TABLE TblEmpresasResoluciones   
+DROP CONSTRAINT DF_TblEmpresasResoluciones_IntComercioId;   
+GO
+
+
+DROP TABLE TblEmpresasPasarela;
+
+
+
+/*Se requiere eliminar en la tabla TblEmpresasResoluciones el campo IntComercioId*/
+
+ALTER TABLE TblEmpresasResoluciones DROP COLUMN IntComercioId;
+
+
+
+/*Se requiere crear el campo en base de datos para almacenar el serial de la plataforma intermedia desde el formulario de Empresa.
+
+Tabla: TblEmpresas
+Campo: StrSerialCloudServices
+Tipo: varchar(50)	
+Permite Nulo
+
+Tabla: TblEmpresas
+Campo: IntDebug
+Tipo: bit	
+Permite Nulo
+Defecto: False (0)*/
+
+ALTER TABLE TblEmpresas ADD
+StrSerialCloudServices varchar(50) NULL 
+GO
+
+ALTER TABLE TblEmpresas ADD
+IntDebug bit NULL Default(0)
+GO
+
+
+
+/*Se requiere generar dos campos para almacenar el id y descripción de la configuración de la pasarela de pagos electrónicos en la plataforma intermedia.
+
+Tabla: TblEmpresasResoluciones
+
+Campo: StrComercioConfigId
+Tipo: uniqueidentifier
+Permite Nulo
+
+Campo: StrComercioConfigDescrip
+Tipo: varchar(50)	
+Permite Nulo*/
+
+ALTER TABLE TblEmpresasResoluciones ADD
+StrComercioConfigId uniqueidentifier NULL
+GO
+
+ALTER TABLE TblEmpresasResoluciones ADD
+StrComercioConfigDescrip varchar(50) NULL
+GO

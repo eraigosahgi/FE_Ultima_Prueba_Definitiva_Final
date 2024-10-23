@@ -1,0 +1,5 @@
+
+begin tran
+update tbldocumentos set IntEnvioMail =1 where DatFechaIngreso <'2019-02-01' and IntEnvioMail is null
+--rollback tran
+--commit tran

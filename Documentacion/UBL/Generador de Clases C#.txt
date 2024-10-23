@@ -1,0 +1,10 @@
+cd C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin
+
+
+
+>> CREA LA CLASE PARA UBL-ApplicationResponse-2_0
+https://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-ApplicationResponse-2.0.xsd
+http://www.datypic.com/sc/ubl20/e-ns2_ApplicationResponse.html
+-----------------------------------------------------------
+xsd E:\xsd\CCTS_CCT_SchemaModule-2.0.xsd E:\xsd\CodeList_CurrencyCode_ISO_7_04.xsd E:\xsd\CodeList_LanguageCode_ISO_7_04.xsd E:\xsd\CodeList_MIMEMediaTypeCode_IANA_7_04.xsd E:\xsd\CodeList_UnitCode_UNECE_7_04.xsd E:\xsd\genericode-code-list-1.0.xsd E:\xsd\UBL-CommonAggregateComponents-2.0.xsd E:\xsd\UBL-CommonBasicComponents-2.0.xsd E:\xsd\UnqualifiedDataTypeSchemaModule-2.0.xsd E:\xsd\UBL-CommonExtensionComponents-2.0.xsd E:\xsd\UBL-QualifiedDatatypes-2.0.xsd E:\xsd\UBL-ApplicationResponse-2.0.xsd /c /l:cs /o:E:\xsd\out
+

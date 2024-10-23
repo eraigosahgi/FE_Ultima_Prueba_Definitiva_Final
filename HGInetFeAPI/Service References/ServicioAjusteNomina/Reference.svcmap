@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="4a1f9716-db1a-47a0-8edb-bfc464a24c97" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ajustenomina5.xsd" MetadataType="Schema" ID="ee10d31f-3589-4ee2-9cea-ab8814caffb2" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?xsd=xsd3" />
+    <MetadataFile FileName="ajustenomina51.xsd" MetadataType="Schema" ID="d3a30f9c-343f-4953-8d68-f8a4525b2f38" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?xsd=xsd2" />
+    <MetadataFile FileName="ajustenomina52.xsd" MetadataType="Schema" ID="e5dfd33d-35ca-4bc0-bb9d-c006f3b9b8df" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?xsd=xsd1" />
+    <MetadataFile FileName="ajustenomina53.xsd" MetadataType="Schema" ID="12c04414-176e-4979-8dc9-b1ed1357b5f3" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?xsd=xsd0" />
+    <MetadataFile FileName="ajustenomina2.wsdl" MetadataType="Wsdl" ID="eec96c50-c0d3-4049-bdc1-f1e02b197573" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="ajustenomina21.wsdl" MetadataType="Wsdl" ID="b177f99b-0da5-4337-b092-ba4a2a3e8ae5" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?wsdl" />
+    <MetadataFile FileName="ajustenomina1.disco" MetadataType="Disco" ID="1e1060d5-a408-4a17-b1ba-58547aa6b9b3" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?disco" />
+    <MetadataFile FileName="ajustenomina54.xsd" MetadataType="Schema" ID="cdf7d243-40db-4bbc-a73d-f2958fa66eef" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/ajustenomina.svc?xsd=xsd4" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

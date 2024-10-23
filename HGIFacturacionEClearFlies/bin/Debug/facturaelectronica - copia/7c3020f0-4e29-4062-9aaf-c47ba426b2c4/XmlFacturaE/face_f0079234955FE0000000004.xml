@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Invoice xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+	<ext:UBLExtensions>
+		<ext:UBLExtension>
+			<ext:ExtensionContent>
+				<sts:DianExtensions xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1">
+					<sts:InvoiceControl>
+						<sts:InvoiceAuthorization>18763005298984</sts:InvoiceAuthorization>
+						<sts:AuthorizationPeriod>
+							<cbc:StartDate>2020-03-30</cbc:StartDate>
+							<cbc:EndDate>2021-09-30</cbc:EndDate>
+						</sts:AuthorizationPeriod>
+						<sts:AuthorizedInvoices>
+							<sts:Prefix>FE</sts:Prefix>
+							<sts:From>1</sts:From>
+							<sts:To>10000</sts:To>
+						</sts:AuthorizedInvoices>
+					</sts:InvoiceControl>
+					<sts:InvoiceSource>
+						<cbc:IdentificationCode listAgencyID="6" listAgencyName="United Nations Economic Commission for Europe" listSchemeURI="urn:oasis:names:specification:ubl:codelist:gc:CountryIdentificationCode-2.1">CO</cbc:IdentificationCode>
+					</sts:InvoiceSource>
+					<sts:SoftwareProvider>
+						<sts:ProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="4" schemeName="31">811021438</sts:ProviderID>
+						<sts:SoftwareID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">def923e2-8326-42e2-a022-d0fa4a2f8188</sts:SoftwareID>
+					</sts:SoftwareProvider>
+					<sts:SoftwareSecurityCode schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">5021885ba3bdb3c6e4b5a5c623a170c2a0b3fa7308262f858e02250ee4d03eeb6bdf3b7e9f216bb1c3cc51d9b9a760de</sts:SoftwareSecurityCode>
+					<sts:AuthorizationProvider>
+						<sts:AuthorizationProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="4" schemeName="31">800197268</sts:AuthorizationProviderID>
+					</sts:AuthorizationProvider>
+					<sts:QRCode>https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=ec8f0078310d4c2bd616fea079928d75e4b6c370ef65b04763cd0f01b8f4f55bffef1ad74e5c74229d12ddda57d490b7</sts:QRCode>
+				</sts:DianExtensions>
+			</ext:ExtensionContent>
+		</ext:UBLExtension>
+		<ext:UBLExtension>
+			<ext:ExtensionContent></ext:ExtensionContent>
+		</ext:UBLExtension>
+	</ext:UBLExtensions>
+	<cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
+	<cbc:CustomizationID>05</cbc:CustomizationID>
+	<cbc:ProfileID>DIAN 2.1</cbc:ProfileID>
+	<cbc:ProfileExecutionID>1</cbc:ProfileExecutionID>
+	<cbc:ID>FE4</cbc:ID>
+	<cbc:UUID schemeID="1" schemeName="CUFE-SHA384">ec8f0078310d4c2bd616fea079928d75e4b6c370ef65b04763cd0f01b8f4f55bffef1ad74e5c74229d12ddda57d490b7</cbc:UUID>
+	<cbc:IssueDate>2020-04-07</cbc:IssueDate>
+	<cbc:IssueTime>15:23:00-05:00</cbc:IssueTime>
+	<cbc:DueDate>2020-04-07</cbc:DueDate>
+	<cbc:InvoiceTypeCode>01</cbc:InvoiceTypeCode>
+	<cbc:Note> 18763005298984 de 2020-03-30 del FE-1 al FE-10000</cbc:Note>
+	<cbc:Note>HONORARIOS POR PRESTACION DE SERVICIOS
+</cbc:Note>
+	<cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>
+	<cbc:LineCountNumeric>1</cbc:LineCountNumeric>
+	<cac:InvoicePeriod>
+		<cbc:StartDate>2020-04-01</cbc:StartDate>
+		<cbc:EndDate>2020-04-30</cbc:EndDate>
+	</cac:InvoicePeriod>
+	<cac:AccountingSupplierParty>
+		<cbc:AdditionalAccountID schemeAgencyID="195">1</cbc:AdditionalAccountID>
+		<cac:Party>
+			<cbc:IndustryClassificationCode>6201</cbc:IndustryClassificationCode>
+			<cac:PartyName>
+				<cbc:Name>FERNANDO JOSE OTERO MUÑOZ</cbc:Name>
+			</cac:PartyName>
+			<cac:PhysicalLocation>
+				<cac:Address>
+					<cbc:ID>05001</cbc:ID>
+					<cbc:CityName>Medellín</cbc:CityName>
+					<cbc:PostalZone>050034</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CALLE 7 # 39-197</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:Address>
+			</cac:PhysicalLocation>
+			<cac:PartyTaxScheme>
+				<cbc:RegistrationName>FERNANDO JOSE OTERO MUÑOZ</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="0" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">79234955</cbc:CompanyID>
+				<cbc:TaxLevelCode listName="48">O-06;O-39</cbc:TaxLevelCode>
+				<cac:RegistrationAddress>
+					<cbc:ID>05001</cbc:ID>
+					<cbc:CityName>Medellín</cbc:CityName>
+					<cbc:PostalZone>050034</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CALLE 7 # 39-197</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+				<cac:TaxScheme>
+					<cbc:ID>01</cbc:ID>
+					<cbc:Name>IVA</cbc:Name>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>FERNANDO JOSE OTERO MUÑOZ</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="0" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">79234955</cbc:CompanyID>
+				<cac:CorporateRegistrationScheme>
+					<cbc:ID>FE</cbc:ID>
+					<cbc:Name>0</cbc:Name>
+				</cac:CorporateRegistrationScheme>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Telephone>326 18 16</cbc:Telephone>
+				<cbc:ElectronicMail>elizagutierrezc@hotmail.com</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cbc:AdditionalAccountID>1</cbc:AdditionalAccountID>
+		<cac:Party>
+			<cac:PartyName>
+				<cbc:Name>SURAMERICANA</cbc:Name>
+			</cac:PartyName>
+			<cac:PhysicalLocation>
+				<cac:Address>
+					<cbc:ID>05001</cbc:ID>
+					<cbc:CityName>Medellín</cbc:CityName>
+					<cbc:PostalZone>050001</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CL 8B N° 65-191 ED PUERTO SECO</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:Address>
+			</cac:PhysicalLocation>
+			<cac:PartyTaxScheme>
+				<cbc:RegistrationName>SURAMERICANA</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="5" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">890903790</cbc:CompanyID>
+				<cbc:TaxLevelCode listName="48"></cbc:TaxLevelCode>
+				<cac:RegistrationAddress>
+					<cbc:ID>05001</cbc:ID>
+					<cbc:CityName>Medellín</cbc:CityName>
+					<cbc:PostalZone>050001</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CL 8B N° 65-191 ED PUERTO SECO</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+				<cac:TaxScheme>
+					<cbc:ID>01</cbc:ID>
+					<cbc:Name>IVA</cbc:Name>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>SURAMERICANA</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="5" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">890903790</cbc:CompanyID>
+				<cac:CorporateRegistrationScheme>
+					<cbc:Name>0</cbc:Name>
+				</cac:CorporateRegistrationScheme>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Telephone>26021 00         </cbc:Telephone>
+				<cbc:ElectronicMail>ripssalud@grupokonecta.com</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:TaxRepresentativeParty>
+		<cac:PartyIdentification>
+			<cbc:ID schemeID="4" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">811021438</cbc:ID>
+		</cac:PartyIdentification>
+	</cac:TaxRepresentativeParty>
+	<cac:PaymentMeans>
+		<cbc:ID>1</cbc:ID>
+		<cbc:PaymentMeansCode>1</cbc:PaymentMeansCode>
+		<cbc:PaymentID>12345</cbc:PaymentID>
+	</cac:PaymentMeans>
+	<cac:PrepaidPayment>
+		<cbc:ID>999</cbc:ID>
+		<cbc:PaidAmount currencyID="COP">0</cbc:PaidAmount>
+	</cac:PrepaidPayment>
+	<cac:AllowanceCharge>
+		<cbc:ID>1</cbc:ID>
+		<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+		<cbc:AllowanceChargeReasonCode>09</cbc:AllowanceChargeReasonCode>
+		<cbc:AllowanceChargeReason>Descuento general</cbc:AllowanceChargeReason>
+		<cbc:MultiplierFactorNumeric>0</cbc:MultiplierFactorNumeric>
+		<cbc:Amount currencyID="COP">0</cbc:Amount>
+		<cbc:BaseAmount currencyID="COP">4567200.00</cbc:BaseAmount>
+	</cac:AllowanceCharge>
+	<cac:PaymentExchangeRate>
+		<cbc:SourceCurrencyCode>COP</cbc:SourceCurrencyCode>
+		<cbc:SourceCurrencyBaseRate>1.00</cbc:SourceCurrencyBaseRate>
+		<cbc:TargetCurrencyCode>COP</cbc:TargetCurrencyCode>
+		<cbc:TargetCurrencyBaseRate>1.00</cbc:TargetCurrencyBaseRate>
+		<cbc:CalculationRate>1.00</cbc:CalculationRate>
+		<cbc:Date>2020-04-07</cbc:Date>
+	</cac:PaymentExchangeRate>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="COP">0.00</cbc:TaxAmount>
+		<cbc:TaxEvidenceIndicator>false</cbc:TaxEvidenceIndicator>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="COP">0.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="COP">0.00</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:Percent>0.00</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>01</cbc:ID>
+					<cbc:Name>IVA</cbc:Name>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="COP">4567200.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="COP">0.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="COP">4567200.00</cbc:TaxInclusiveAmount>
+		<cbc:AllowanceTotalAmount currencyID="COP">0.00</cbc:AllowanceTotalAmount>
+		<cbc:ChargeTotalAmount currencyID="COP">0.00</cbc:ChargeTotalAmount>
+		<cbc:PrepaidAmount currencyID="COP">0.00</cbc:PrepaidAmount>
+		<cbc:PayableAmount currencyID="COP">4567200.00</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="94">1.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="COP">4567200.00</cbc:LineExtensionAmount>
+		<cbc:FreeOfChargeIndicator>false</cbc:FreeOfChargeIndicator>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="COP">0.00</cbc:TaxAmount>
+			<cbc:TaxEvidenceIndicator>false</cbc:TaxEvidenceIndicator>
+			<cac:TaxSubtotal>
+				<cbc:TaxableAmount currencyID="COP">0.00</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="COP">0.00</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cbc:Percent>0.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>01</cbc:ID>
+						<cbc:Name>IVA</cbc:Name>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+		</cac:TaxTotal>
+		<cac:Item>
+			<cbc:Description>PROCEDIMIENTOS</cbc:Description>
+			<cbc:AdditionalInformation>PROCEDIMIENTOS</cbc:AdditionalInformation>
+			<cac:SellersItemIdentification>
+				<cbc:ID>3158.0</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:StandardItemIdentification>
+				<cbc:ID schemeID="999"></cbc:ID>
+			</cac:StandardItemIdentification>
+			<cac:OriginAddress>
+				<cbc:ID></cbc:ID>
+			</cac:OriginAddress>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="COP">4567200.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="94">1.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice>

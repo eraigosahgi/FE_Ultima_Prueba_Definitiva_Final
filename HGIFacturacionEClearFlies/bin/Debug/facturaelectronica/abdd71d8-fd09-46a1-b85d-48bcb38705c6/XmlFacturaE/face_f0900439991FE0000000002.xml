@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Invoice xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+	<ext:UBLExtensions>
+		<ext:UBLExtension>
+			<ext:ExtensionContent>
+				<sts:DianExtensions xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1">
+					<sts:InvoiceControl>
+						<sts:InvoiceAuthorization>18763001937903</sts:InvoiceAuthorization>
+						<sts:AuthorizationPeriod>
+							<cbc:StartDate>2019-11-25</cbc:StartDate>
+							<cbc:EndDate>2021-05-25</cbc:EndDate>
+						</sts:AuthorizationPeriod>
+						<sts:AuthorizedInvoices>
+							<sts:Prefix>FE</sts:Prefix>
+							<sts:From>1</sts:From>
+							<sts:To>1000</sts:To>
+						</sts:AuthorizedInvoices>
+					</sts:InvoiceControl>
+					<sts:InvoiceSource>
+						<cbc:IdentificationCode listAgencyID="6" listAgencyName="United Nations Economic Commission for Europe" listSchemeURI="urn:oasis:names:specification:ubl:codelist:gc:CountryIdentificationCode-2.1">CO</cbc:IdentificationCode>
+					</sts:InvoiceSource>
+					<sts:SoftwareProvider>
+						<sts:ProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="4" schemeName="31">811021438</sts:ProviderID>
+						<sts:SoftwareID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">def923e2-8326-42e2-a022-d0fa4a2f8188</sts:SoftwareID>
+					</sts:SoftwareProvider>
+					<sts:SoftwareSecurityCode schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">414e6a7de03c5bc2f914e357aed9a980a544a0fa24ec51fb29ac18f16a623dab29c54764838a4cc17be8bb081dc91956</sts:SoftwareSecurityCode>
+					<sts:AuthorizationProvider>
+						<sts:AuthorizationProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="4" schemeName="31">800197268</sts:AuthorizationProviderID>
+					</sts:AuthorizationProvider>
+					<sts:QRCode>https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=ba2871cd73018c0d56cba24964e2dfcf47582c76ca88e05105e2040f45182a4f2dc2ef8401d4dbac547014610dfd86f4</sts:QRCode>
+				</sts:DianExtensions>
+			</ext:ExtensionContent>
+		</ext:UBLExtension>
+		<ext:UBLExtension>
+			<ext:ExtensionContent></ext:ExtensionContent>
+		</ext:UBLExtension>
+	</ext:UBLExtensions>
+	<cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
+	<cbc:CustomizationID>05</cbc:CustomizationID>
+	<cbc:ProfileID>DIAN 2.1</cbc:ProfileID>
+	<cbc:ProfileExecutionID>1</cbc:ProfileExecutionID>
+	<cbc:ID>FE2</cbc:ID>
+	<cbc:UUID schemeID="1" schemeName="CUFE-SHA384">ba2871cd73018c0d56cba24964e2dfcf47582c76ca88e05105e2040f45182a4f2dc2ef8401d4dbac547014610dfd86f4</cbc:UUID>
+	<cbc:IssueDate>2020-04-03</cbc:IssueDate>
+	<cbc:IssueTime>14:40:45-05:00</cbc:IssueTime>
+	<cbc:DueDate>2020-05-03</cbc:DueDate>
+	<cbc:InvoiceTypeCode>01</cbc:InvoiceTypeCode>
+	<cbc:Note> 18763001937903 de 2019-11-25 del FE-1 al FE-1000</cbc:Note>
+	<cbc:Note>Contacto: Erika Yuliana Rosas / Mes 21: Marzo2020 / Actividad: 7020
+PEDIDO: 3680954982 / POSICIÓN:330 / Hoja de Entrada:1009211791
+Consignar a la Cuenta de Ahorros de  Bancolombia No. 003-703765-14 </cbc:Note>
+	<cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>
+	<cbc:LineCountNumeric>1</cbc:LineCountNumeric>
+	<cac:InvoicePeriod>
+		<cbc:StartDate>2020-04-01</cbc:StartDate>
+		<cbc:EndDate>2020-04-30</cbc:EndDate>
+	</cac:InvoicePeriod>
+	<cac:OrderReference>
+		<cbc:ID>0</cbc:ID>
+	</cac:OrderReference>
+	<cac:DespatchDocumentReference>
+		<cbc:ID>0</cbc:ID>
+	</cac:DespatchDocumentReference>
+	<cac:ReceiptDocumentReference>
+		<cbc:ID>0</cbc:ID>
+	</cac:ReceiptDocumentReference>
+	<cac:AccountingSupplierParty>
+		<cbc:AdditionalAccountID schemeAgencyID="195">1</cbc:AdditionalAccountID>
+		<cac:Party>
+			<cbc:IndustryClassificationCode>7020</cbc:IndustryClassificationCode>
+			<cac:PartyName>
+				<cbc:Name>OPM prime S.A.S.</cbc:Name>
+			</cac:PartyName>
+			<cac:PhysicalLocation>
+				<cac:Address>
+					<cbc:ID>05266</cbc:ID>
+					<cbc:CityName>Envigado</cbc:CityName>
+					<cbc:PostalZone>055421</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CLL 35 SUR  # 43-20</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:Address>
+			</cac:PhysicalLocation>
+			<cac:PartyTaxScheme>
+				<cbc:RegistrationName>OPM prime S.A.S.</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="4" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">900439991</cbc:CompanyID>
+				<cbc:TaxLevelCode listName="48">O-48;O-07;O-14</cbc:TaxLevelCode>
+				<cac:RegistrationAddress>
+					<cbc:ID>05266</cbc:ID>
+					<cbc:CityName>Envigado</cbc:CityName>
+					<cbc:PostalZone>055421</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CLL 35 SUR  # 43-20</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+				<cac:TaxScheme>
+					<cbc:ID>01</cbc:ID>
+					<cbc:Name>IVA</cbc:Name>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>OPM prime S.A.S.</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="4" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">900439991</cbc:CompanyID>
+				<cac:CorporateRegistrationScheme>
+					<cbc:ID>FE</cbc:ID>
+					<cbc:Name>0</cbc:Name>
+				</cac:CorporateRegistrationScheme>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Telephone>5167770</cbc:Telephone>
+				<cbc:ElectronicMail>contabilidad@opm-prime.com</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cbc:AdditionalAccountID>1</cbc:AdditionalAccountID>
+		<cac:Party>
+			<cac:PartyName>
+				<cbc:Name>GASEOSAS POSADA TOBON S A</cbc:Name>
+			</cac:PartyName>
+			<cac:PhysicalLocation>
+				<cac:Address>
+					<cbc:ID>05001</cbc:ID>
+					<cbc:CityName>Medellín</cbc:CityName>
+					<cbc:PostalZone>050012</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CL 52 47 42</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:Address>
+			</cac:PhysicalLocation>
+			<cac:PartyTaxScheme>
+				<cbc:RegistrationName>GASEOSAS POSADA TOBON S A</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="5" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">890903939</cbc:CompanyID>
+				<cbc:TaxLevelCode listName="49">O-48;O-07;O-09;O-13;O-15;O-08;O-14;O-16;O-33</cbc:TaxLevelCode>
+				<cac:RegistrationAddress>
+					<cbc:ID>05001</cbc:ID>
+					<cbc:CityName>Medellín</cbc:CityName>
+					<cbc:PostalZone>050012</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CL 52 47 42</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+				<cac:TaxScheme>
+					<cbc:ID>01</cbc:ID>
+					<cbc:Name>IVA</cbc:Name>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>GASEOSAS POSADA TOBON S A</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="5" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">890903939</cbc:CompanyID>
+				<cac:CorporateRegistrationScheme>
+					<cbc:Name>0</cbc:Name>
+				</cac:CorporateRegistrationScheme>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Telephone>5765100 </cbc:Telephone>
+				<cbc:ElectronicMail>recepcionfe@postobon.com.co</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:TaxRepresentativeParty>
+		<cac:PartyIdentification>
+			<cbc:ID schemeID="4" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">811021438</cbc:ID>
+		</cac:PartyIdentification>
+	</cac:TaxRepresentativeParty>
+	<cac:PaymentMeans>
+		<cbc:ID>2</cbc:ID>
+		<cbc:PaymentMeansCode>1</cbc:PaymentMeansCode>
+		<cbc:PaymentDueDate>2020-05-03</cbc:PaymentDueDate>
+		<cbc:PaymentID>12345</cbc:PaymentID>
+	</cac:PaymentMeans>
+	<cac:PaymentTerms>
+		<cbc:ID>1</cbc:ID>
+		<cbc:PaymentMeansID>1</cbc:PaymentMeansID>
+		<cbc:Note>Cuota 1 de 1</cbc:Note>
+		<cbc:Amount currencyID="COP">20713695.00000</cbc:Amount>
+		<cbc:PaymentDueDate>2020-05-03</cbc:PaymentDueDate>
+	</cac:PaymentTerms>
+	<cac:PaymentExchangeRate>
+		<cbc:SourceCurrencyCode>COP</cbc:SourceCurrencyCode>
+		<cbc:SourceCurrencyBaseRate>1.00</cbc:SourceCurrencyBaseRate>
+		<cbc:TargetCurrencyCode>COP</cbc:TargetCurrencyCode>
+		<cbc:TargetCurrencyBaseRate>1.00</cbc:TargetCurrencyBaseRate>
+		<cbc:CalculationRate>1.00</cbc:CalculationRate>
+		<cbc:Date>2020-04-03</cbc:Date>
+	</cac:PaymentExchangeRate>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="COP">3307228.54</cbc:TaxAmount>
+		<cbc:TaxEvidenceIndicator>false</cbc:TaxEvidenceIndicator>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="COP">17406466.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="COP">3307228.54</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:Percent>19.00</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>01</cbc:ID>
+					<cbc:Name>IVA</cbc:Name>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="COP">17406466.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="COP">17406466.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="COP">20713694.54</cbc:TaxInclusiveAmount>
+		<cbc:AllowanceTotalAmount currencyID="COP">0.00</cbc:AllowanceTotalAmount>
+		<cbc:ChargeTotalAmount currencyID="COP">0.00</cbc:ChargeTotalAmount>
+		<cbc:PrepaidAmount currencyID="COP">0.00</cbc:PrepaidAmount>
+		<cbc:PayableRoundingAmount currencyID="COP">0.46</cbc:PayableRoundingAmount>
+		<cbc:PayableAmount currencyID="COP">20713695.00</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="94">1</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="COP">17406466.00</cbc:LineExtensionAmount>
+		<cbc:FreeOfChargeIndicator>false</cbc:FreeOfChargeIndicator>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="COP">3307228.54</cbc:TaxAmount>
+			<cbc:TaxEvidenceIndicator>false</cbc:TaxEvidenceIndicator>
+			<cac:TaxSubtotal>
+				<cbc:TaxableAmount currencyID="COP">17406466.00</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="COP">3307228.54</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cbc:Percent>19.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>01</cbc:ID>
+						<cbc:Name>IVA</cbc:Name>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+		</cac:TaxTotal>
+		<cac:Item>
+			<cbc:Description>Implementación Servicio de Oficina de Proyectos (PMO)</cbc:Description>
+			<cbc:AdditionalInformation></cbc:AdditionalInformation>
+			<cac:SellersItemIdentification>
+				<cbc:ID>02</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:StandardItemIdentification>
+				<cbc:ID schemeID="999"></cbc:ID>
+			</cac:StandardItemIdentification>
+			<cac:OriginAddress>
+				<cbc:ID></cbc:ID>
+			</cac:OriginAddress>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="COP">17406466.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="94">1</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice>

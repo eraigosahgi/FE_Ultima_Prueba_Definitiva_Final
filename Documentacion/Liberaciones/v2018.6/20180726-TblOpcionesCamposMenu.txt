@@ -1,0 +1,8 @@
+ALTER TABLE TblOpciones ADD
+	StrClaseMenu varchar(100) NULL
+GO
+
+
+ALTER TABLE TblOpciones ADD
+	StrRutaMenu varchar(100) NULL
+GO

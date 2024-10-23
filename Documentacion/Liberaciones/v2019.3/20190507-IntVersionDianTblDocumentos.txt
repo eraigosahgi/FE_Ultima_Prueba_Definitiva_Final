@@ -1,0 +1,3 @@
+ALTER TABLE TblDocumentos ADD
+	IntVersionDian smallint NOT NULL default(1)
+GO

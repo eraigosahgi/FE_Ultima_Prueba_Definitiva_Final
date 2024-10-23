@@ -1,0 +1,3 @@
+ALTER TABLE TblDocumentos ADD
+StrUrlAcuseUbl varchar(300) NULL;
+GO

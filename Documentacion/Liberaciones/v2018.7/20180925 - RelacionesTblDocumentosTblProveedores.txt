@@ -1,0 +1,24 @@
+ALTER TABLE dbo.TblDocumentos ADD CONSTRAINT
+	FK_TblDocumentos_TblConfiguracionInteroperabilidadEmisor FOREIGN KEY
+	(
+	StrProveedorEmisor
+	) REFERENCES dbo.TblConfiguracionInteroperabilidad
+	(
+	StrIdentificacion
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
+ALTER TABLE dbo.TblDocumentos ADD CONSTRAINT
+	FK_TblDocumentos_TblConfiguracionInteroperabilidadReceptor FOREIGN KEY
+	(
+	StrProveedorReceptor
+	) REFERENCES dbo.TblConfiguracionInteroperabilidad
+	(
+	StrIdentificacion
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
+ALTER TABLE dbo.TblDocumentos SET (LOCK_ESCALATION = TABLE)
+GO

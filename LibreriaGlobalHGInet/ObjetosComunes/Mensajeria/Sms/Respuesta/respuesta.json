@@ -1,0 +1,42 @@
+﻿{
+	"cliente": "10011131",
+	"lote_id": "1530034586546296",
+	"fecha_recepcion": "2018-06-26 12:36:26",
+	"resultado": 0,
+	"resultado_t": null,
+	"sms_procesados": 3,
+	"referecia": "TestIntegracion",
+	"ip": "181.129.12.90",
+	"sms": {
+		"1": {
+			"id": "1530034586549736",
+			"numero": "573216836060",
+			"sms": "Mensaje de prueba desde libreria (mparamo)",
+			"fecha_envio": "2018-06-26 12:36:26",
+			"ind_area_nom": "Colombia Celular",
+			"precio_sms": "9.00000",
+			"resultado_t": "",
+			"resultado": "0"
+		},
+		"2": {
+			"id": "1530034586559442",
+			"numero": "573122843741",
+			"sms": "Mensaje de prueba desde libreria (mparamo)",
+			"fecha_envio": "2018-06-26 12:36:26",
+			"ind_area_nom": "Colombia Celular",
+			"precio_sms": "9.00000",
+			"resultado_t": "",
+			"resultado": "0"
+		},
+		"3": {
+			"id": "1530034586562806",
+			"numero": "573104935257",
+			"sms": "Mensaje de prueba desde libreria (mparamo)",
+			"fecha_envio": "2018-06-26 12:36:26",
+			"ind_area_nom": "Colombia Celular",
+			"precio_sms": "9.00000",
+			"resultado_t": "",
+			"resultado": "0"
+		}
+	}
+}

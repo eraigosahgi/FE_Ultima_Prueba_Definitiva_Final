@@ -1,0 +1,12 @@
+
+*********************************** ACTUALIZACIÓN DESCRIPCIONES **********************************
+Update TblOpciones set StrDescripcion	= 'Documentos por Proceso' where IntId = 13511
+Update TblOpciones set StrDescripcion	= 'Documentos por Proceso' where IntId = 13521
+
+
+*********************************** CREACIÓN OPCIONES**********************************
+INSERT INTO TblOpciones (IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad, StrClaseMenu, StrRutaMenu, IntTipo)
+VALUES (13519, 1351, N'Documentos por Estado', 1, 1, N'06875c7e-cd83-4077-ad9a-69133255e8fb', N'icon-chart', NULL, 1)
+
+INSERT INTO TblOpciones (IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad, StrClaseMenu, StrRutaMenu, IntTipo)
+VALUES (13527, 1352, N'Documentos por Estado', 1, 1, N'5f88cd6b-9426-4126-b648-9750b2f99950', N'icon-chart', NULL, 1)

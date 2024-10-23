@@ -1,0 +1,4 @@
+/*InValorSubtotal Caso [465394]*/
+ALTER TABLE TblDocumentos ADD
+	IntValorNeto numeric(17, 2)  NOT NULL default(0)
+GO

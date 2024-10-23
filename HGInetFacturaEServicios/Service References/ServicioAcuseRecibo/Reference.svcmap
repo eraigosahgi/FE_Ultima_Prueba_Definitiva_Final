@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="a6076fd5-82f9-43e5-b9e6-a9379be7019c" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/acuserecibo.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="acuserecibo2.disco" MetadataType="Disco" ID="1dcf4192-702d-44c0-ab8a-1e0059ebfc43" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/acuserecibo.svc?disco" />
+    <MetadataFile FileName="acuserecibo3.wsdl" MetadataType="Wsdl" ID="e497f652-5f42-46cc-84e0-5586480b18b2" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/acuserecibo.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="acuserecibo3.xsd" MetadataType="Schema" ID="07895f1b-edfb-4ea5-b7d4-2379ba018f8c" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/acuserecibo.svc?xsd=xsd1" />
+    <MetadataFile FileName="acuserecibo4.xsd" MetadataType="Schema" ID="dd42989f-1404-4104-9954-5ed4df511a3a" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/acuserecibo.svc?xsd=xsd0" />
+    <MetadataFile FileName="acuserecibo4.wsdl" MetadataType="Wsdl" ID="dc0c8108-aa31-46c9-b35b-3bc59079fcbc" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/acuserecibo.svc?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,26 @@
+[
+    {
+        "Regla": "NABG05",
+        "IdPrioridad": 1,
+        "DescripcionHGI": "Algoritmo no corresponde",
+        "Solucion": "Corresponde a una intermitencia, reenviar de nuevo el documento "
+    },
+    {
+        "Regla": "90",
+        "IdPrioridad": 2,
+        "DescripcionHGI": "Rechazo: Documento procesado anteriormente.",
+        "Solucion": "Validar en la DIAN la emisión del documento"
+    },
+    {
+        "Regla": "LGC15",
+        "IdPrioridad": 1,
+        "DescripcionHGI": "Rechazo: No es posible la transmisión de una nota crédito, por cuanto la factura ya se encuentra aceptada.",
+        "Solucion": "Se debe realizar la nota crédito con el tipo de documento Nota crédito no referenciada.  "
+    },
+    {
+        "Regla": "FAJ43b",
+        "IdPrioridad": 2,
+        "DescripcionHGI": "Error al validar regla: Valida información registro RUT.",
+        "Solucion": "Corresponde a una alerta de la DIAN, donde alguno de los datos del adquiriente no están igual al RUT, se debe realizar la validación del adquiriente pero no es causal de rechazo. "
+    }
+]

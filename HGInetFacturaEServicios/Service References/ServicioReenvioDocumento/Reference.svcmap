@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="48746988-f079-482c-8a4e-a2bd64094816" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="reenviodocumento2.wsdl" MetadataType="Wsdl" ID="ce7e78aa-b44e-4496-a0ae-9ba2d30854de" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?wsdl" />
+    <MetadataFile FileName="reenviodocumento4.xsd" MetadataType="Schema" ID="8a21b22f-7e88-455a-a4b5-c4edec970603" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?xsd=xsd2" />
+    <MetadataFile FileName="reenviodocumento41.xsd" MetadataType="Schema" ID="a0d0598a-563e-4ee9-ae04-b68488b1b14a" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?xsd=xsd3" />
+    <MetadataFile FileName="reenviodocumento42.xsd" MetadataType="Schema" ID="70613dc4-f83a-48ab-acef-84621afd601f" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?xsd=xsd0" />
+    <MetadataFile FileName="reenviodocumento43.xsd" MetadataType="Schema" ID="cfb5824d-3d04-47c9-a34b-f823f955c6ed" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?xsd=xsd1" />
+    <MetadataFile FileName="reenviodocumento21.wsdl" MetadataType="Wsdl" ID="b611dbe9-bb66-49dc-b7e0-00c6dea25427" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="reenviodocumento1.disco" MetadataType="Disco" ID="8e6df1db-b193-4886-b7b6-f94b3373d7d3" SourceId="1" SourceUrl="https://habilitacion.mifacturaenlinea.com.co/wcf/reenviodocumento.svc?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

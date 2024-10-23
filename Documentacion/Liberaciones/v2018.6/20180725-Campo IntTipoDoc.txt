@@ -1,0 +1,3 @@
+ALTER TABLE TblEmpresasResoluciones ADD
+IntTipoDoc INT NOT NULL Default((1));
+GO

@@ -1,0 +1,3 @@
+ALTER TABLE TblDocumentos ADD
+IntProcesadoERP bit NOT NULL Default(0)
+GO

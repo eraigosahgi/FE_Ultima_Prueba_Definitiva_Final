@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NumberRangeResponseList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ExtensionData />
+  <OperationCode>100</OperationCode>
+  <OperationDescription>Acción completada OK.</OperationDescription>
+  <ResponseList>
+    <NumberRangeResponse>
+      <ExtensionData />
+      <ResolutionNumber>18763005332246</ResolutionNumber>
+      <ResolutionDate>2020-04-01</ResolutionDate>
+      <Prefix>FE</Prefix>
+      <FromNumber>1</FromNumber>
+      <ToNumber>250</ToNumber>
+      <ValidDateFrom>2020-04-01</ValidDateFrom>
+      <ValidDateTo>2020-10-01</ValidDateTo>
+      <TechnicalKey>edc7dd724f7e408f87c153fbdd3e505a0dae179f9c4ee0025184630e259ddd09</TechnicalKey>
+    </NumberRangeResponse>
+  </ResponseList>
+</NumberRangeResponseList>

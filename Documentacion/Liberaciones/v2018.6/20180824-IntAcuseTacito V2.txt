@@ -1,0 +1,3 @@
+ALTER TABLE TblEmpresas ADD
+IntAcuseTacito smallint NULL Default((0));
+GO

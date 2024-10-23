@@ -1,0 +1,3 @@
+ALTER TABLE TblDocumentos ADD
+	IntMensajeEnvio smallint NOT NULL default(0)
+GO

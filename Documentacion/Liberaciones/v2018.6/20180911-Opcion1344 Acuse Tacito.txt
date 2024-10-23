@@ -1,0 +1,2 @@
+INSERT INTO TblOpciones (IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad, StrClaseMenu, StrRutaMenu, IntTipo)
+VALUES (1344,134,'Consulta Acuse Tácito',1,1, NEWID(), 'icon-folder-search', 'ConsultaAcuseTacito.aspx', 0);

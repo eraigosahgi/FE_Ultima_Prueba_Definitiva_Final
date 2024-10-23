@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HGInetFirmaDigital</RootNamespace>
+    <AssemblyName>HGInetFirmaDigital</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>Svn</SccProjectName>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccProvider>SubversionScc</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Documentacion\Librerias\Firma\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Documentacion\Librerias\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Controladores\Ctl_FirmadoStringBuilder.cs" />
+    <Compile Include="Controladores\Ctl_FirmadoXml.cs" />
+    <Compile Include="Funciones\Seguridad.cs" />
+    <Compile Include="Properties\CertificadorasDatos.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CertificadorasDatos.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Firmado.cs" />
+    <Compile Include="FirmaXadesNet\Clients\OcspClient.cs" />
+    <Compile Include="FirmaXadesNet\Clients\TimeStampClient.cs" />
+    <Compile Include="FirmaXadesNet\Crypto\CryptoConst.cs" />
+    <Compile Include="FirmaXadesNet\Crypto\DigestMethod.cs" />
+    <Compile Include="FirmaXadesNet\Crypto\SignatureMethod.cs" />
+    <Compile Include="FirmaXadesNet\Crypto\Signer.cs" />
+    <Compile Include="FirmaXadesNet\Signature\Parameters\SignatureParameters.cs" />
+    <Compile Include="FirmaXadesNet\Signature\Parameters\SignaturePolicyInfo.cs" />
+    <Compile Include="FirmaXadesNet\Signature\Parameters\SignatureXPathExpression.cs" />
+    <Compile Include="FirmaXadesNet\Signature\Parameters\SignerRole.cs" />
+    <Compile Include="FirmaXadesNet\Signature\SignatureDocument.cs" />
+    <Compile Include="FirmaXadesNet\Upgraders\IXadesUpgrader.cs" />
+    <Compile Include="FirmaXadesNet\Upgraders\Parameters\UpgradeParameters.cs" />
+    <Compile Include="FirmaXadesNet\Upgraders\XadesTUpgrader.cs" />
+    <Compile Include="FirmaXadesNet\Upgraders\XadesUpgraderService.cs" />
+    <Compile Include="FirmaXadesNet\Upgraders\XadesXLUpgrader.cs" />
+    <Compile Include="FirmaXadesNet\Utils\CertUtil.cs" />
+    <Compile Include="FirmaXadesNet\Utils\DigestUtil.cs" />
+    <Compile Include="FirmaXadesNet\Utils\X509Certificate2Extensions.cs" />
+    <Compile Include="FirmaXadesNet\Utils\XMLUtil.cs" />
+    <Compile Include="FirmaXadesNet\Validation\ValidationResult.cs" />
+    <Compile Include="FirmaXadesNet\Validation\XadesValidator.cs" />
+    <Compile Include="FirmaXadesNet\XadesService.cs" />
+    <Compile Include="Microsoft.Xades\AllDataObjectsTimeStampCollection.cs" />
+    <Compile Include="Microsoft.Xades\Cert.cs" />
+    <Compile Include="Microsoft.Xades\CertCollection.cs" />
+    <Compile Include="Microsoft.Xades\CertificateValues.cs" />
+    <Compile Include="Microsoft.Xades\CertifiedRole.cs" />
+    <Compile Include="Microsoft.Xades\CertifiedRoleCollection.cs" />
+    <Compile Include="Microsoft.Xades\CertifiedRoles.cs" />
+    <Compile Include="Microsoft.Xades\CertRefs.cs" />
+    <Compile Include="Microsoft.Xades\ClaimedRole.cs" />
+    <Compile Include="Microsoft.Xades\ClaimedRoleCollection.cs" />
+    <Compile Include="Microsoft.Xades\ClaimedRoles.cs" />
+    <Compile Include="Microsoft.Xades\CommitmentTypeIndication.cs" />
+    <Compile Include="Microsoft.Xades\CommitmentTypeIndicationCollection.cs" />
+    <Compile Include="Microsoft.Xades\CommitmentTypeQualifier.cs" />
+    <Compile Include="Microsoft.Xades\CommitmentTypeQualifierCollection.cs" />
+    <Compile Include="Microsoft.Xades\CommitmentTypeQualifiers.cs" />
+    <Compile Include="Microsoft.Xades\CompleteCertificateRefs.cs" />
+    <Compile Include="Microsoft.Xades\CompleteRevocationRefs.cs" />
+    <Compile Include="Microsoft.Xades\CounterSignatureCollection.cs" />
+    <Compile Include="Microsoft.Xades\CRLIdentifier.cs" />
+    <Compile Include="Microsoft.Xades\CRLRef.cs" />
+    <Compile Include="Microsoft.Xades\CRLRefCollection.cs" />
+    <Compile Include="Microsoft.Xades\CRLRefs.cs" />
+    <Compile Include="Microsoft.Xades\CRLValue.cs" />
+    <Compile Include="Microsoft.Xades\CRLValueCollection.cs" />
+    <Compile Include="Microsoft.Xades\CRLValues.cs" />
+    <Compile Include="Microsoft.Xades\DataObjectFormat.cs" />
+    <Compile Include="Microsoft.Xades\DataObjectFormatCollection.cs" />
+    <Compile Include="Microsoft.Xades\DigestAlgAndValueType.cs" />
+    <Compile Include="Microsoft.Xades\DigestMethod.cs" />
+    <Compile Include="Microsoft.Xades\DocumentationReference.cs" />
+    <Compile Include="Microsoft.Xades\DocumentationReferenceCollection.cs" />
+    <Compile Include="Microsoft.Xades\DocumentationReferences.cs" />
+    <Compile Include="Microsoft.Xades\EncapsulatedPKIData.cs" />
+    <Compile Include="Microsoft.Xades\EncapsulatedX509Certificate.cs" />
+    <Compile Include="Microsoft.Xades\EncapsulatedX509CertificateCollection.cs" />
+    <Compile Include="Microsoft.Xades\HashDataInfo.cs" />
+    <Compile Include="Microsoft.Xades\HashDataInfoCollection.cs" />
+    <Compile Include="Microsoft.Xades\Identifier.cs" />
+    <Compile Include="Microsoft.Xades\IndividualDataObjectsTimeStampCollection.cs" />
+    <Compile Include="Microsoft.Xades\IssuerSerial.cs" />
+    <Compile Include="Microsoft.Xades\NoticeNumberCollection.cs" />
+    <Compile Include="Microsoft.Xades\NoticeNumbers.cs" />
+    <Compile Include="Microsoft.Xades\NoticeRef.cs" />
+    <Compile Include="Microsoft.Xades\ObjectIdentifier.cs" />
+    <Compile Include="Microsoft.Xades\ObjectReference.cs" />
+    <Compile Include="Microsoft.Xades\ObjectReferenceCollection.cs" />
+    <Compile Include="Microsoft.Xades\OCSPIdentifier.cs" />
+    <Compile Include="Microsoft.Xades\OCSPRef.cs" />
+    <Compile Include="Microsoft.Xades\OCSPRefCollection.cs" />
+    <Compile Include="Microsoft.Xades\OCSPRefs.cs" />
+    <Compile Include="Microsoft.Xades\OCSPValue.cs" />
+    <Compile Include="Microsoft.Xades\OCSPValueCollection.cs" />
+    <Compile Include="Microsoft.Xades\OCSPValues.cs" />
+    <Compile Include="Microsoft.Xades\OtherCertificate.cs" />
+    <Compile Include="Microsoft.Xades\OtherCertificateCollection.cs" />
+    <Compile Include="Microsoft.Xades\OtherRef.cs" />
+    <Compile Include="Microsoft.Xades\OtherRefCollection.cs" />
+    <Compile Include="Microsoft.Xades\OtherRefs.cs" />
+    <Compile Include="Microsoft.Xades\OtherValue.cs" />
+    <Compile Include="Microsoft.Xades\OtherValueCollection.cs" />
+    <Compile Include="Microsoft.Xades\OtherValues.cs" />
+    <Compile Include="Microsoft.Xades\QualifyingProperties.cs" />
+    <Compile Include="Microsoft.Xades\RevocationValues.cs" />
+    <Compile Include="Microsoft.Xades\RSAPKCS1SHA256SignatureDescription.cs" />
+    <Compile Include="Microsoft.Xades\RSAPKCS1SHA512SignatureDescription.cs" />
+    <Compile Include="Microsoft.Xades\SignaturePolicyId.cs" />
+    <Compile Include="Microsoft.Xades\SignaturePolicyIdentifier.cs" />
+    <Compile Include="Microsoft.Xades\SignatureProductionPlace.cs" />
+    <Compile Include="Microsoft.Xades\SignatureTimeStampCollection.cs" />
+    <Compile Include="Microsoft.Xades\SignedDataObjectProperties.cs" />
+    <Compile Include="Microsoft.Xades\SignedProperties.cs" />
+    <Compile Include="Microsoft.Xades\SignedSignatureProperties.cs" />
+    <Compile Include="Microsoft.Xades\SignerRole.cs" />
+    <Compile Include="Microsoft.Xades\SigningCertificate.cs" />
+    <Compile Include="Microsoft.Xades\SigPolicyQualifier.cs" />
+    <Compile Include="Microsoft.Xades\SigPolicyQualifierCollection.cs" />
+    <Compile Include="Microsoft.Xades\SigPolicyQualifiers.cs" />
+    <Compile Include="Microsoft.Xades\SPUri.cs" />
+    <Compile Include="Microsoft.Xades\SPUserNotice.cs" />
+    <Compile Include="Microsoft.Xades\TimeStamp.cs" />
+    <Compile Include="Microsoft.Xades\Transform.cs" />
+    <Compile Include="Microsoft.Xades\TransformCollection.cs" />
+    <Compile Include="Microsoft.Xades\Transforms.cs" />
+    <Compile Include="Microsoft.Xades\UnsignedDataObjectProperties.cs" />
+    <Compile Include="Microsoft.Xades\UnsignedDataObjectProperty.cs" />
+    <Compile Include="Microsoft.Xades\UnsignedDataObjectPropertyCollection.cs" />
+    <Compile Include="Microsoft.Xades\UnsignedProperties.cs" />
+    <Compile Include="Microsoft.Xades\UnsignedSignatureProperties.cs" />
+    <Compile Include="Microsoft.Xades\XadesObject.cs" />
+    <Compile Include="Microsoft.Xades\XadesSignedXml.cs" />
+    <Compile Include="Microsoft.Xades\XMLTimeStamp.cs" />
+    <Compile Include="Objetos\ArchivoXml.cs" />
+    <Compile Include="Objetos\EnumCertificadoras.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Microsoft.Xades\doc\XAdES.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Microsoft.Xades\Microsoft.Xades.snk" />
+    <None Include="Microsoft.Xades\XAdES.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Microsoft.Xades\xmldsig-core-schema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\CertificadorasDatos.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CertificadorasDatos.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj">
+      <Project>{a966a394-f6cc-482f-87a4-56ec1af05e5e}</Project>
+      <Name>LibreriaGlobalHGInet</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

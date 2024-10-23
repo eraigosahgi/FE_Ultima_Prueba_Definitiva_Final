@@ -1,0 +1,17 @@
+/**** TblEmpresas ****/
+ALTER TABLE TblEmpresas 
+ADD  ComercioConfigId uniqueidentifier NULL;
+
+ALTER TABLE TblEmpresas 
+ADD  ComercioConfigDescrip varchar(150) NULL;
+
+
+/**** TblEmpresasResoluciones ****/
+ALTER TABLE TblEmpresasResoluciones 
+ADD  PermiteParciales int default(0) NOT NULL;
+
+ALTER TABLE TblEmpresasResoluciones 
+ADD  ComercioConfigId uniqueidentifier NULL;
+
+ALTER TABLE TblEmpresasResoluciones 
+ADD  ComercioConfigDescrip varchar(150) NULL;

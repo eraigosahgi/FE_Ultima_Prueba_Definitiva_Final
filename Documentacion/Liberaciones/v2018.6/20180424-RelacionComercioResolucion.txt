@@ -1,0 +1,13 @@
+ALTER TABLE dbo.TblEmpresasResoluciones ADD CONSTRAINT
+	FK_TblEmpresasResoluciones_TblEmpresasPasarela FOREIGN KEY
+	(
+	StrEmpresa,
+	IntComercioId
+	) REFERENCES dbo.TblEmpresasPasarela
+	(
+	StrEmpresa,
+	IntComercioId
+	) ON UPDATE  CASCADE 
+	 ON DELETE  NO ACTION 
+	
+GO

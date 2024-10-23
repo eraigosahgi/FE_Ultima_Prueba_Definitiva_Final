@@ -1,0 +1,2 @@
+INSERT INTO TblOpciones (IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad, StrClaseMenu, StrRutaMenu, IntTipo)
+VALUES (1346,134,'Alertas y Notificaciones',1,1, '2ee3babd-3762-444e-bc28-2a02e8f792bd', 'icon-bell3', 'ConsultaNotificaciones.aspx', 0);

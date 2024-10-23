@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ApplicationResponse xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2">
+	<ext:UBLExtensions>
+		<ext:UBLExtension>
+			<ext:ExtensionContent></ext:ExtensionContent>
+		</ext:UBLExtension>
+	</ext:UBLExtensions>
+	<cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
+	<cbc:CustomizationID>1</cbc:CustomizationID>
+	<cbc:ProfileID>Factura Electrónica de Venta</cbc:ProfileID>
+	<cbc:ProfileExecutionID>1</cbc:ProfileExecutionID>
+	<cbc:ID>1</cbc:ID>
+	<cbc:UUID schemeID="1" schemeName="CUDE-SHA384">7f2091d66e3a382cd13828b8c7a0a751540719e24884ce3c6543783dbf0d09467d42b0224aaffae44f8e18ee6cc31ff3</cbc:UUID>
+	<cbc:IssueDate>2020-04-17</cbc:IssueDate>
+	<cbc:IssueTime>03:04:12-05:00</cbc:IssueTime>
+	<cac:SenderParty>
+		<cac:PartyTaxScheme>
+			<cbc:RegistrationName>SOCIEDAD DE SAN VICENTE DE PAUL DE MEDELLIN</cbc:RegistrationName>
+			<cbc:CompanyID schemeID="8" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">890904592</cbc:CompanyID>
+			<cac:TaxScheme>
+				<cbc:ID>01</cbc:ID>
+				<cbc:Name>IVA</cbc:Name>
+			</cac:TaxScheme>
+		</cac:PartyTaxScheme>
+	</cac:SenderParty>
+	<cac:ReceiverParty>
+		<cac:PartyTaxScheme>
+			<cbc:RegistrationName>ESTRUCTURAR INFRAESTRUCTURA S.A.S.</cbc:RegistrationName>
+			<cbc:CompanyID schemeID="5" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">901051294</cbc:CompanyID>
+			<cac:TaxScheme>
+				<cbc:ID>01</cbc:ID>
+				<cbc:Name>IVA</cbc:Name>
+			</cac:TaxScheme>
+		</cac:PartyTaxScheme>
+		<cac:Contact>
+			<cbc:Telephone>3121888</cbc:Telephone>
+			<cbc:ElectronicMail>contabilidad@estructurar.co</cbc:ElectronicMail>
+		</cac:Contact>
+	</cac:ReceiverParty>
+	<cac:DocumentResponse>
+		<cac:Response>
+			<cbc:ReferenceID>E8</cbc:ReferenceID>
+			<cbc:ResponseCode>033</cbc:ResponseCode>
+			<cbc:Description>Aceptación Expresa de Documento</cbc:Description>
+		</cac:Response>
+		<cac:DocumentReference>
+			<cbc:ID>E8</cbc:ID>
+			<cbc:UUID schemeName="CUFE-SHA384">6bb10fa022bf67b388618c3502012b25129cea3504c1e2af498499e1bd88df5b5b98f287d1c4a2168561ae35bf087d00</cbc:UUID>
+			<cbc:DocumentType>01</cbc:DocumentType>
+		</cac:DocumentReference>
+	</cac:DocumentResponse>
+</ApplicationResponse>

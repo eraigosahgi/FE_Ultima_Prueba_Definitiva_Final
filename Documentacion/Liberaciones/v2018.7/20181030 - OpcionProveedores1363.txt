@@ -1,0 +1,2 @@
+INSERT INTO TblOpciones (IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad, StrClaseMenu, StrRutaMenu, IntTipo)
+VALUES (1363,136,'Proveedores',1,1, NEWID(), 'icon-user-tie', 'ConsultaProveedores.aspx', 0);

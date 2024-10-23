@@ -1,0 +1,54 @@
+/*CAMPO StrIdIntegrador*/
+ALTER TABLE TblDocumentos
+ADD StrIdIntegrador varchar(50) NULL;
+
+
+/*TABLA TblIntegradores*/
+CREATE TABLE TblIntegradores(
+	StrIdentificacion varchar(50) NOT NULL,
+	StrRazonSocial varchar(200) NOT NULL,
+	IntId int IDENTITY(1,1) NOT NULL,
+ CONSTRAINT PK_TblIntegradores PRIMARY KEY CLUSTERED 
+(
+	StrIdentificacion ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE TblIntegradores  WITH CHECK ADD  CONSTRAINT FK_TblIntegradores_TblEmpresas FOREIGN KEY(StrIdentificacion)
+REFERENCES TblEmpresas (StrIdentificacion)
+GO
+
+ALTER TABLE TblIntegradores CHECK CONSTRAINT FK_TblIntegradores_TblEmpresas
+GO
+
+
+/*TABLA TblEmpresaIntegradores*/
+CREATE TABLE TblEmpresaIntegradores(
+	StrIdentificacionEmp varchar(50) NOT NULL,
+	StrIdentificacionInt varchar(50) NOT NULL,
+	StrIdSeguridad uniqueidentifier NOT NULL,
+ CONSTRAINT PK_TblEmpresaIntegradores PRIMARY KEY CLUSTERED 
+(
+	StrIdentificacionEmp ASC,
+	StrIdentificacionInt ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE TblEmpresaIntegradores ADD  CONSTRAINT DF_TblEmpresaIntegradores_StrIdSeguridad  DEFAULT (newid()) FOR StrIdSeguridad
+GO
+
+ALTER TABLE TblEmpresaIntegradores  WITH CHECK ADD  CONSTRAINT FK_TblEmpresaIntegradores_TblEmpresas FOREIGN KEY(StrIdentificacionEmp)
+REFERENCES TblEmpresas (StrIdentificacion)
+GO
+
+ALTER TABLE TblEmpresaIntegradores CHECK CONSTRAINT FK_TblEmpresaIntegradores_TblEmpresas
+GO
+
+ALTER TABLE TblEmpresaIntegradores  WITH CHECK ADD  CONSTRAINT FK_TblEmpresaIntegradores_TblIntegradores FOREIGN KEY(StrIdentificacionInt)
+REFERENCES TblIntegradores (StrIdentificacion)
+GO
+
+ALTER TABLE TblEmpresaIntegradores CHECK CONSTRAINT FK_TblEmpresaIntegradores_TblIntegradores
+GO

@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ArchivoCaso" xml:space="preserve">
+    <value>{num_caso}</value>
+    <comment>Nombre del archivo del caso, reemplazando el valor {num_caso} por el número del caso</comment>
+  </data>
+  <data name="ArchivoCesantias" xml:space="preserve">
+    <value>{anyo}-{doc}</value>
+    <comment>Nombre del archivo de las cesantías, reemplazando el valor {anyo} por el año y {doc} por el número del documento del empleado.</comment>
+  </data>
+  <data name="ArchivoDocumento" xml:space="preserve">
+    <value>{cod_trans}-{num_doc}</value>
+    <comment>Nombre del archivo del documento, reemplazando el valor {cod_trans} por el código de la transacción y {num_doc} por el número del documento</comment>
+  </data>
+  <data name="ArchivoParametrosSmart" xml:space="preserve">
+    <value>ParametrosConfiguracion</value>
+    <comment>Nombre del archivo de la información de respuesta de la licencia</comment>
+  </data>
+  <data name="ArchivoPlanillaPago" xml:space="preserve">
+    <value>{anyo}-{periodo}-{doc}</value>
+    <comment>Nombre del archivo de la planilla de pago, reemplazando el valor {anyo} por el año, {periodo} por el periodo y {doc} por el número del documento del empleado.</comment>
+  </data>
+  <data name="CarpetaCasos" xml:space="preserve">
+    <value>Casos</value>
+    <comment>Nombre de la carpeta donde se almacenan los casos del cliente</comment>
+  </data>
+  <data name="CarpetaCliente" xml:space="preserve">
+    <value>{ruta_app}dms\{nit}\</value>
+    <comment>Ruta de la carpeta donde se almacenan los archivos del cliente, reemplanzando {nit} por el número de documento del cliente</comment>
+  </data>
+  <data name="CarpetaCompania" xml:space="preserve">
+    <value>cia{cod_cia}</value>
+    <comment>Nombre de la carpeta de la compañía, reemplazando el valor {ruta_app} por la ruta fisica donde se encuentra el aplicativo y {cod_cia} por el número de la compañía</comment>
+  </data>
+  <data name="CarpetaComprobantes" xml:space="preserve">
+    <value>comprobantes</value>
+    <comment>Nombre de la carpeta donde se almacenan los comprobantes del cliente</comment>
+  </data>
+  <data name="CarpetaDatConfiguracion" xml:space="preserve">
+    <value>ArchivosDat</value>
+    <comment>Nombre de la carpeta donde se almacenan los archivos de configuración de HGInet (.dat)</comment>
+  </data>
+  <data name="CarpetaDocumentos" xml:space="preserve">
+    <value>documentos</value>
+    <comment>Nombre de la carpeta donde se almacenan los documentos del cliente</comment>
+  </data>
+  <data name="CarpetaEmpresa" xml:space="preserve">
+    <value>emp{cod_emp}</value>
+    <comment>Nombre de la carpeta de la empresa reemplazando el valor {cod_emp} por el número de la empresa</comment>
+  </data>
+  <data name="CarpetaFacturaEAnexos" xml:space="preserve">
+    <value>FacturaEAnexos</value>
+    <comment>Nombre de la carpeta donde se almacenan los archivos adjuntos</comment>
+  </data>
+  <data name="CarpetaFacturaEConsultaDian" xml:space="preserve">
+    <value>FacturaEConsultaDian</value>
+    <comment>Nombre de la carpeta del log de consulta de transacciones a la DIAN</comment>
+  </data>
+  <data name="CarpetaFacturaEDian" xml:space="preserve">
+    <value>FacturaEDian</value>
+    <comment>Nombre de la carpeta donde se almacenan los archivos de facturación electrónica enviados a la DIAN</comment>
+  </data>
+  <data name="CarpetaFacturaEFirmado" xml:space="preserve">
+    <value>FacturaEFirmado</value>
+    <comment>Nombre de la carpeta donde se almacenan los xml y zip de las facturas electrónicas firmadas</comment>
+  </data>
+  <data name="CarpetaFormatosPdf" xml:space="preserve">
+    <value>FormatosPdf</value>
+    <comment>Nombre de la carpeta donde se almacenan los pdf resultantes de la creación de formatos.</comment>
+  </data>
+  <data name="CarpetaHGIMovil" xml:space="preserve">
+    <value>ArchivosMovil</value>
+  </data>
+  <data name="CarpetaHGInetMailLogs" xml:space="preserve">
+    <value>HgiNetEmailLogs</value>
+    <comment>Nombre de la carpeta donde se almacena el log de HGInet Email</comment>
+  </data>
+  <data name="CarpetaLicencia" xml:space="preserve">
+    <value>Licencias</value>
+    <comment>Nombre de la carpeta donde se almacena el archivo json con los datos de la licencia</comment>
+  </data>
+  <data name="CarpetaLogin" xml:space="preserve">
+    <value>login</value>
+    <comment>Nombre de la carpeta donde se almacenan las imágenes de la autenticación del cliente</comment>
+  </data>
+  <data name="CarpetaPdfFacturaE" xml:space="preserve">
+    <value>PdfFacturaE</value>
+    <comment>Nombre de la carpeta donde se almacenan los pdf generados de facturación electrónica</comment>
+  </data>
+  <data name="CarpetaPlanillaPago" xml:space="preserve">
+    <value>PlanillasPago</value>
+    <comment>Nombre de la carpeta donde se almacenan las planillas de pago del cliente</comment>
+  </data>
+  <data name="CarpetaPrincipal" xml:space="preserve">
+    <value>dms</value>
+    <comment>Nombre de la carpeta principal donde se almacenarán los archivos de los clientes</comment>
+  </data>
+  <data name="CarpetaProductos" xml:space="preserve">
+    <value>productos</value>
+    <comment>Nombre de la carpeta donde se almacenan las imágenes de los productos del cliente</comment>
+  </data>
+  <data name="CarpetaPuntosColombiaRequest" xml:space="preserve">
+    <value>Request</value>
+    <comment>Ruta de la carpeta de Puntos Colombia para guardar peticiones</comment>
+  </data>
+  <data name="CarpetaPuntosColombiaResponse" xml:space="preserve">
+    <value>Response</value>
+    <comment>Ruta de la carpeta de Puntos Colombia para guardar Respuesta de los servicios de PC</comment>
+  </data>
+  <data name="CarpetaTerceros" xml:space="preserve">
+    <value>terceros</value>
+    <comment>Nombre de la carpeta donde se almacenan los archivos de los terceros del cliente</comment>
+  </data>
+  <data name="CarpetaXmlAcuse" xml:space="preserve">
+    <value>XmlAcuse</value>
+    <comment>Nombre de la carpeta donde se almacenan los xml generados de Acuse de Recibo</comment>
+  </data>
+  <data name="CarpetaXmlFacturaE" xml:space="preserve">
+    <value>XmlFacturaE</value>
+    <comment>Nombre de la carpeta donde se almacenan los xml generados de facturación electrónica temporalmente</comment>
+  </data>
+  <data name="CarpetaXmlFacturaERecepcion" xml:space="preserve">
+    <value>XmlFacturaERecepcion</value>
+    <comment>Nombre de la carpeta donde se almacenan los xml recibidos por servicios web de facturación electrónica</comment>
+  </data>
+  <data name="CarpetaXmlFacturaEResoluciones" xml:space="preserve">
+    <value>XmlFacturaEResoluciones</value>
+    <comment>Nombre de la carpeta donde se almacenan los xml resultantes de la consulta de resoluciones de facturación electrónica</comment>
+  </data>
+</root>

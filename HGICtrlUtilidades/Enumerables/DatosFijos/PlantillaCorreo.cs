@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HGICtrlUtilidades.Enumerables.DatosFijos
+{
+	public enum PlantillaCorreo
+	{
+		[Description("Nómina")]
+		Nomina = 1,
+
+		[Description("Extracto")]
+		Extracto = 2,
+	}
+}

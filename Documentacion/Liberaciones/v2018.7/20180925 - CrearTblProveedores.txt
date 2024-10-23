@@ -1,0 +1,32 @@
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TblConfiguracionInteroperabilidad](
+[StrIdentificacion] [varchar](50) NOT NULL,
+[StrIdSeguridad] [uniqueidentifier] NOT NULL,
+[StrRazonSocial] [varchar](200) NOT NULL,
+[StrMail] [varchar](200) NOT NULL,
+[StrTelefono] [varchar](50) NOT NULL,
+[StrObservaciones] [varchar](150) NULL,
+[DatFechaIngreso] [datetime] NOT NULL,
+[DatFechaActualizacion] [datetime] NOT NULL,
+[StrUsuario] [varchar](20) NOT NULL,
+[StrClave] [varchar](200) NOT NULL,
+[DatFechaExpiracion] [datetime] NOT NULL,
+[StrHgiUsuario] [varchar](20) NOT NULL,
+[StrHgiClave] [varchar](200) NOT NULL,
+[DatHgiFechaExpiracion] [datetime] NOT NULL,
+[StrHgiToken] [varchar](200) NULL,
+[DatHgiFechaToken] [datetime] NULL,
+[StrUrlApi] [varchar](300) NOT NULL,
+[StrUrlFtp] [varchar](300) NOT NULL,
+[BitActivo] [bit] NOT NULL,
+ CONSTRAINT [PK_TblConfiguracionInteroperabilidad] PRIMARY KEY CLUSTERED 
+(
+	[StrIdentificacion] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO

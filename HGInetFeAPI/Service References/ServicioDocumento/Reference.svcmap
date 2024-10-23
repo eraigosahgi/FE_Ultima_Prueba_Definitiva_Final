@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="5cd8354b-94ec-4e5b-a5f2-c679ee118e4d" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://habilitacion.hgidocs.co/wcf/documentos.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="documentos2.wsdl" MetadataType="Wsdl" ID="25fe9739-dc87-42cd-9576-023351c6407b" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/documentos.svc?wsdl" />
+    <MetadataFile FileName="documentos4.xsd" MetadataType="Schema" ID="d7d173ba-3d1b-48bc-9fc9-ea7143f87eab" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/documentos.svc?xsd=xsd1" />
+    <MetadataFile FileName="documentos21.wsdl" MetadataType="Wsdl" ID="8913413c-2af4-4f2f-9356-2ca26833b279" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/documentos.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="documentos41.xsd" MetadataType="Schema" ID="54042988-05a3-41cd-9085-e3eaf0f1abfb" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/documentos.svc?xsd=xsd0" />
+    <MetadataFile FileName="documentos1.disco" MetadataType="Disco" ID="d94db961-00fe-433a-bbba-9cf9ef115d71" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/documentos.svc?disco" />
+    <MetadataFile FileName="documentos42.xsd" MetadataType="Schema" ID="40166f1a-f54e-41b4-ba1d-8fbcb252bb23" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/documentos.svc?xsd=xsd3" />
+    <MetadataFile FileName="documentos43.xsd" MetadataType="Schema" ID="b4233a85-8aee-4592-9fcd-809952d3e9e0" SourceId="1" SourceUrl="https://habilitacion.hgidocs.co/wcf/documentos.svc?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

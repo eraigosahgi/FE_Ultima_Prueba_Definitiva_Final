@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HGInetUBLv2_1
+{
+	public partial class ParametrosArgumentosType
+	{
+		private CampoValorType[] ParametroArgumentoField;
+
+		public CampoValorType[] ParametroArgumento
+		{
+			get
+			{
+				return this.ParametroArgumentoField;
+			}
+			set
+			{
+				this.ParametroArgumentoField = value;
+			}
+		}
+	}
+}

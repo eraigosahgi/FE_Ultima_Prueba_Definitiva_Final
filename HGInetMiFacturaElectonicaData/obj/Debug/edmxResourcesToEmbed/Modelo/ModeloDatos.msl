@@ -1,0 +1,577 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ModeloStoreContainer" CdmEntityContainer="ModeloConexion">
+    <EntitySetMapping Name="TblOpcionesUsuario">
+      <EntityTypeMapping TypeName="Modelo.TblOpcionesUsuario">
+        <MappingFragment StoreEntitySet="TblOpcionesUsuario">
+          <ScalarProperty Name="IntGestion" ColumnName="IntGestion" />
+          <ScalarProperty Name="IntAnular" ColumnName="IntAnular" />
+          <ScalarProperty Name="IntEliminar" ColumnName="IntEliminar" />
+          <ScalarProperty Name="IntEditar" ColumnName="IntEditar" />
+          <ScalarProperty Name="IntAgregar" ColumnName="IntAgregar" />
+          <ScalarProperty Name="IntConsultar" ColumnName="IntConsultar" />
+          <ScalarProperty Name="IntIdOpcion" ColumnName="IntIdOpcion" />
+          <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
+          <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblPlanes">
+      <EntityTypeMapping TypeName="Modelo.TblPlanes">
+        <MappingFragment StoreEntitySet="TblPlanes">
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
+          <ScalarProperty Name="DatFechaIngreso" ColumnName="DatFechaIngreso" />
+          <ScalarProperty Name="IntHabilitado" ColumnName="IntHabilitado" />
+          <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+          <ScalarProperty Name="StrUrlImagen" ColumnName="StrUrlImagen" />
+          <ScalarProperty Name="IntValor" ColumnName="IntValor" />
+          <ScalarProperty Name="IntNumeroTransacciones" ColumnName="IntNumeroTransacciones" />
+          <ScalarProperty Name="StrDescripcion" ColumnName="StrDescripcion" />
+          <ScalarProperty Name="StrCodigo" ColumnName="StrCodigo" />
+          <ScalarProperty Name="IntId" ColumnName="IntId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblOpcionesPerfil">
+      <EntityTypeMapping TypeName="Modelo.TblOpcionesPerfil">
+        <MappingFragment StoreEntitySet="TblOpcionesPerfil">
+          <ScalarProperty Name="IntGestion" ColumnName="IntGestion" />
+          <ScalarProperty Name="IntAnular" ColumnName="IntAnular" />
+          <ScalarProperty Name="IntEliminar" ColumnName="IntEliminar" />
+          <ScalarProperty Name="IntEditar" ColumnName="IntEditar" />
+          <ScalarProperty Name="IntAgregar" ColumnName="IntAgregar" />
+          <ScalarProperty Name="IntConsultar" ColumnName="IntConsultar" />
+          <ScalarProperty Name="IntIdPerfil" ColumnName="IntIdPerfil" />
+          <ScalarProperty Name="IntIdOpcion" ColumnName="IntIdOpcion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblOpciones">
+      <EntityTypeMapping TypeName="Modelo.TblOpciones">
+        <MappingFragment StoreEntitySet="TblOpciones">
+          <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
+          <ScalarProperty Name="StrRutaMenu" ColumnName="StrRutaMenu" />
+          <ScalarProperty Name="StrClaseMenu" ColumnName="StrClaseMenu" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="IntIdPerfilSuperior" ColumnName="IntIdPerfilSuperior" />
+          <ScalarProperty Name="IntHabilitado" ColumnName="IntHabilitado" />
+          <ScalarProperty Name="StrDescripcion" ColumnName="StrDescripcion" />
+          <ScalarProperty Name="IntIdDependencia" ColumnName="IntIdDependencia" />
+          <ScalarProperty Name="IntId" ColumnName="IntId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblPerfiles">
+      <EntityTypeMapping TypeName="Modelo.TblPerfiles">
+        <MappingFragment StoreEntitySet="TblPerfiles">
+          <ScalarProperty Name="IntVisible" ColumnName="IntVisible" />
+          <ScalarProperty Name="IntHabilitado" ColumnName="IntHabilitado" />
+          <ScalarProperty Name="StrDescripcion" ColumnName="StrDescripcion" />
+          <ScalarProperty Name="IntId" ColumnName="IntId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblConfiguracionInteroperabilidad">
+      <EntityTypeMapping TypeName="Modelo.TblConfiguracionInteroperabilidad">
+        <MappingFragment StoreEntitySet="TblConfiguracionInteroperabilidad">
+          <ScalarProperty Name="BitActivo" ColumnName="BitActivo" />
+          <ScalarProperty Name="StrUrlFtp" ColumnName="StrUrlFtp" />
+          <ScalarProperty Name="StrUrlApi" ColumnName="StrUrlApi" />
+          <ScalarProperty Name="DatHgiFechaToken" ColumnName="DatHgiFechaToken" />
+          <ScalarProperty Name="StrHgiToken" ColumnName="StrHgiToken" />
+          <ScalarProperty Name="DatHgiFechaExpiracion" ColumnName="DatHgiFechaExpiracion" />
+          <ScalarProperty Name="StrHgiClave" ColumnName="StrHgiClave" />
+          <ScalarProperty Name="StrHgiUsuario" ColumnName="StrHgiUsuario" />
+          <ScalarProperty Name="DatFechaExpiracion" ColumnName="DatFechaExpiracion" />
+          <ScalarProperty Name="StrClave" ColumnName="StrClave" />
+          <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
+          <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
+          <ScalarProperty Name="DatFechaIngreso" ColumnName="DatFechaIngreso" />
+          <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+          <ScalarProperty Name="StrTelefono" ColumnName="StrTelefono" />
+          <ScalarProperty Name="StrMail" ColumnName="StrMail" />
+          <ScalarProperty Name="StrRazonSocial" ColumnName="StrRazonSocial" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblAlertas">
+      <EntityTypeMapping TypeName="Modelo.TblAlertas">
+        <MappingFragment StoreEntitySet="TblAlertas">
+          <ScalarProperty Name="IntUsuario" ColumnName="IntUsuario" />
+          <ScalarProperty Name="IntSms" ColumnName="IntSms" />
+          <ScalarProperty Name="IntWeb" ColumnName="IntWeb" />
+          <ScalarProperty Name="IntMail" ColumnName="IntMail" />
+          <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+          <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
+          <ScalarProperty Name="StrInternoMails" ColumnName="StrInternoMails" />
+          <ScalarProperty Name="IntCliente" ColumnName="IntCliente" />
+          <ScalarProperty Name="IntInterno" ColumnName="IntInterno" />
+          <ScalarProperty Name="IntValor" ColumnName="IntValor" />
+          <ScalarProperty Name="StrDescripcion" ColumnName="StrDescripcion" />
+          <ScalarProperty Name="IntIdAlerta" ColumnName="IntIdAlerta" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblFormatos">
+      <EntityTypeMapping TypeName="Modelo.TblFormatos">
+        <MappingFragment StoreEntitySet="TblFormatos">
+          <ScalarProperty Name="StrUsuarioActualizacion" ColumnName="StrUsuarioActualizacion" />
+          <ScalarProperty Name="FormatoTmp" ColumnName="FormatoTmp" />
+          <ScalarProperty Name="IntDocTipo" ColumnName="IntDocTipo" />
+          <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+          <ScalarProperty Name="Formato" ColumnName="Formato" />
+          <ScalarProperty Name="IntGenerico" ColumnName="IntGenerico" />
+          <ScalarProperty Name="IntEstado" ColumnName="IntEstado" />
+          <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
+          <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
+          <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
+          <ScalarProperty Name="IntCodigoFormato" ColumnName="IntCodigoFormato" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblUsuarios">
+      <EntityTypeMapping TypeName="Modelo.TblUsuarios">
+        <MappingFragment StoreEntitySet="TblUsuarios">
+          <ScalarProperty Name="DatFechaUltimoIngreso" ColumnName="DatFechaUltimoIngreso" />
+          <ScalarProperty Name="StrToken" ColumnName="StrToken" />
+          <ScalarProperty Name="StrIdCambioClave" ColumnName="StrIdCambioClave" />
+          <ScalarProperty Name="DatFechaCambioClave" ColumnName="DatFechaCambioClave" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+          <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
+          <ScalarProperty Name="DatFechaIngreso" ColumnName="DatFechaIngreso" />
+          <ScalarProperty Name="StrMail" ColumnName="StrMail" />
+          <ScalarProperty Name="StrCelular" ColumnName="StrCelular" />
+          <ScalarProperty Name="StrExtension" ColumnName="StrExtension" />
+          <ScalarProperty Name="StrTelefono" ColumnName="StrTelefono" />
+          <ScalarProperty Name="StrCargo" ColumnName="StrCargo" />
+          <ScalarProperty Name="StrApellidos" ColumnName="StrApellidos" />
+          <ScalarProperty Name="StrNombres" ColumnName="StrNombres" />
+          <ScalarProperty Name="StrClave" ColumnName="StrClave" />
+          <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
+          <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblCorreosRecepcion">
+      <EntityTypeMapping TypeName="Modelo.TblCorreosRecepcion">
+        <MappingFragment StoreEntitySet="TblCorreosRecepcion">
+          <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
+          <ScalarProperty Name="StrMailRegistrado" ColumnName="StrMailRegistrado" />
+          <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblOpcionesERP">
+      <EntityTypeMapping TypeName="Modelo.TblOpcionesERP">
+        <MappingFragment StoreEntitySet="TblOpcionesERP">
+          <ScalarProperty Name="IntTipo" ColumnName="IntTipo" />
+          <ScalarProperty Name="StrClaseCss" ColumnName="StrClaseCss" />
+          <ScalarProperty Name="StrUrl" ColumnName="StrUrl" />
+          <ScalarProperty Name="IntHabAuditoria" ColumnName="IntHabAuditoria" />
+          <ScalarProperty Name="IntActual" ColumnName="IntActual" />
+          <ScalarProperty Name="Auditoria" ColumnName="Auditoria" />
+          <ScalarProperty Name="IdImagen" ColumnName="IdImagen" />
+          <ScalarProperty Name="OpcionPadre" ColumnName="OpcionPadre" />
+          <ScalarProperty Name="control" ColumnName="control" />
+          <ScalarProperty Name="Edicion" ColumnName="Edicion" />
+          <ScalarProperty Name="Menu" ColumnName="Menu" />
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+          <ScalarProperty Name="Aplicacion" ColumnName="Aplicacion" />
+          <ScalarProperty Name="IdOpcion" ColumnName="IdOpcion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblDocumentos">
+      <EntityTypeMapping TypeName="Modelo.TblDocumentos">
+        <MappingFragment StoreEntitySet="TblDocumentos">
+          <ScalarProperty Name="StrIdIntegrador" ColumnName="StrIdIntegrador" />
+          <ScalarProperty Name="IntSucursal" ColumnName="IntSucursal" />
+          <ScalarProperty Name="IntFormaPago" ColumnName="IntFormaPago" />
+          <ScalarProperty Name="IntValorPagar" ColumnName="IntValorPagar" />
+          <ScalarProperty Name="IntProcesadoERP" ColumnName="IntProcesadoERP" />
+          <ScalarProperty Name="StrLineaNegocio" ColumnName="StrLineaNegocio" />
+          <ScalarProperty Name="IntTipoOperacion" ColumnName="IntTipoOperacion" />
+          <ScalarProperty Name="StrIdRadicadoDian" ColumnName="StrIdRadicadoDian" />
+          <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />
+          <ScalarProperty Name="IntMensajeEnvio" ColumnName="IntMensajeEnvio" />
+          <ScalarProperty Name="IntEstadoEnvio" ColumnName="IntEstadoEnvio" />
+          <ScalarProperty Name="IntValorNeto" ColumnName="IntValorNeto" />
+          <ScalarProperty Name="IntValorSubtotal" ColumnName="IntValorSubtotal" />
+          <ScalarProperty Name="IntEnvioMail" ColumnName="IntEnvioMail" />
+          <ScalarProperty Name="IdCategoriaEstado" ColumnName="IdCategoriaEstado" />
+          <ScalarProperty Name="IntPesoAnexo" ColumnName="IntPesoAnexo" />
+          <ScalarProperty Name="StrObservacionAnexo" ColumnName="StrObservacionAnexo" />
+          <ScalarProperty Name="StrUrlAnexo" ColumnName="StrUrlAnexo" />
+          <ScalarProperty Name="IntIdEstadoPago" ColumnName="IntIdEstadoPago" />
+          <ScalarProperty Name="StrIdInteroperabilidad" ColumnName="StrIdInteroperabilidad" />
+          <ScalarProperty Name="StrProveedorReceptor" ColumnName="StrProveedorReceptor" />
+          <ScalarProperty Name="StrProveedorEmisor" ColumnName="StrProveedorEmisor" />
+          <ScalarProperty Name="StrUrlAcuseUbl" ColumnName="StrUrlAcuseUbl" />
+          <ScalarProperty Name="StrVersion" ColumnName="StrVersion" />
+          <ScalarProperty Name="DatFechaActualizaEstado" ColumnName="DatFechaActualizaEstado" />
+          <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+          <ScalarProperty Name="StrIdPlanTransaccion" ColumnName="StrIdPlanTransaccion" />
+          <ScalarProperty Name="StrUrlArchivoZip" ColumnName="StrUrlArchivoZip" />
+          <ScalarProperty Name="StrUrlArchivoPdf" ColumnName="StrUrlArchivoPdf" />
+          <ScalarProperty Name="StrUrlArchivoUbl" ColumnName="StrUrlArchivoUbl" />
+          <ScalarProperty Name="IntVlrTotal" ColumnName="IntVlrTotal" />
+          <ScalarProperty Name="StrAdquirienteMvoRechazo" ColumnName="StrAdquirienteMvoRechazo" />
+          <ScalarProperty Name="DatAdquirienteFechaRecibo" ColumnName="DatAdquirienteFechaRecibo" />
+          <ScalarProperty Name="IntAdquirienteRecibo" ColumnName="IntAdquirienteRecibo" />
+          <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+          <ScalarProperty Name="StrObligadoIdRegistro" ColumnName="StrObligadoIdRegistro" />
+          <ScalarProperty Name="DatFechaVencDocumento" ColumnName="DatFechaVencDocumento" />
+          <ScalarProperty Name="DatFechaDocumento" ColumnName="DatFechaDocumento" />
+          <ScalarProperty Name="StrCufe" ColumnName="StrCufe" />
+          <ScalarProperty Name="IntNumero" ColumnName="IntNumero" />
+          <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
+          <ScalarProperty Name="StrNumResolucion" ColumnName="StrNumResolucion" />
+          <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+          <ScalarProperty Name="IntDocTipo" ColumnName="IntDocTipo" />
+          <ScalarProperty Name="DatFechaIngreso" ColumnName="DatFechaIngreso" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblEmpresas">
+      <EntityTypeMapping TypeName="Modelo.TblEmpresas">
+        <MappingFragment StoreEntitySet="TblEmpresas">
+          <ScalarProperty Name="IntValidacionVersion" ColumnName="IntValidacionVersion" />
+          <ScalarProperty Name="IntEnvioSms" ColumnName="IntEnvioSms" />
+          <ScalarProperty Name="IntTipoOperador" ColumnName="IntTipoOperador" />
+          <ScalarProperty Name="StrCargo" ColumnName="StrCargo" />
+          <ScalarProperty Name="StrTipoIdentificacionRep" ColumnName="StrTipoIdentificacionRep" />
+          <ScalarProperty Name="StrIdentificacionRep" ColumnName="StrIdentificacionRep" />
+          <ScalarProperty Name="StrApellidosRep" ColumnName="StrApellidosRep" />
+          <ScalarProperty Name="StrNombresRep" ColumnName="StrNombresRep" />
+          <ScalarProperty Name="IntDocSoporte" ColumnName="IntDocSoporte" />
+          <ScalarProperty Name="IntNominaE" ColumnName="IntNominaE" />
+          <ScalarProperty Name="IntFacturaE" ColumnName="IntFacturaE" />
+          <ScalarProperty Name="IntCompraPlan" ColumnName="IntCompraPlan" />
+          <ScalarProperty Name="IntTipoPlan" ColumnName="IntTipoPlan" />
+          <ScalarProperty Name="IntEnvioNominaMail" ColumnName="IntEnvioNominaMail" />
+          <ScalarProperty Name="IntRadian" ColumnName="IntRadian" />
+          <ScalarProperty Name="IntInteroperabilidad" ColumnName="IntInteroperabilidad" />
+          <ScalarProperty Name="ComercioConfigDescrip" ColumnName="ComercioConfigDescrip" />
+          <ScalarProperty Name="ComercioConfigId" ColumnName="ComercioConfigId" />
+          <ScalarProperty Name="IntPagosPermiteConsTodos" ColumnName="IntPagosPermiteConsTodos" />
+          <ScalarProperty Name="IntHabilitacionNomina" ColumnName="IntHabilitacionNomina" />
+          <ScalarProperty Name="IntPagoEParcial" ColumnName="IntPagoEParcial" />
+          <ScalarProperty Name="IntManejaPagoE" ColumnName="IntManejaPagoE" />
+          <ScalarProperty Name="IntPdfCampoDianPosY" ColumnName="IntPdfCampoDianPosY" />
+          <ScalarProperty Name="IntPdfCampoDianPosX" ColumnName="IntPdfCampoDianPosX" />
+          <ScalarProperty Name="IntPdfCampoDian" ColumnName="IntPdfCampoDian" />
+          <ScalarProperty Name="IntDebug" ColumnName="IntDebug" />
+          <ScalarProperty Name="StrSerialCloudServices" ColumnName="StrSerialCloudServices" />
+          <ScalarProperty Name="IntCertFirma" ColumnName="IntCertFirma" />
+          <ScalarProperty Name="IntMailPagosVerificado" ColumnName="IntMailPagosVerificado" />
+          <ScalarProperty Name="IntMailAcuseVerificado" ColumnName="IntMailAcuseVerificado" />
+          <ScalarProperty Name="IntMailRecepcionVerificado" ColumnName="IntMailRecepcionVerificado" />
+          <ScalarProperty Name="IntMailAdminVerificado" ColumnName="IntMailAdminVerificado" />
+          <ScalarProperty Name="IntMailEnvioVerificado" ColumnName="IntMailEnvioVerificado" />
+          <ScalarProperty Name="DatCertVence" ColumnName="DatCertVence" />
+          <ScalarProperty Name="IntCertProveedor" ColumnName="IntCertProveedor" />
+          <ScalarProperty Name="StrCertClave" ColumnName="StrCertClave" />
+          <ScalarProperty Name="StrCertRuta" ColumnName="StrCertRuta" />
+          <ScalarProperty Name="IntCertNotificar" ColumnName="IntCertNotificar" />
+          <ScalarProperty Name="IntCertResponsableHGI" ColumnName="IntCertResponsableHGI" />
+          <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />
+          <ScalarProperty Name="IntTimeout" ColumnName="IntTimeout" />
+          <ScalarProperty Name="StrMailPagos" ColumnName="StrMailPagos" />
+          <ScalarProperty Name="StrMailAcuse" ColumnName="StrMailAcuse" />
+          <ScalarProperty Name="StrMailRecepcion" ColumnName="StrMailRecepcion" />
+          <ScalarProperty Name="StrMailEnvio" ColumnName="StrMailEnvio" />
+          <ScalarProperty Name="IntCobroPostPago" ColumnName="IntCobroPostPago" />
+          <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+          <ScalarProperty Name="StrEmpresaDescuento" ColumnName="StrEmpresaDescuento" />
+          <ScalarProperty Name="IntEnvioMailRecepcion" ColumnName="IntEnvioMailRecepcion" />
+          <ScalarProperty Name="IntManejaAnexos" ColumnName="IntManejaAnexos" />
+          <ScalarProperty Name="IntAcuseTacito" ColumnName="IntAcuseTacito" />
+          <ScalarProperty Name="StrTelefono" ColumnName="StrTelefono" />
+          <ScalarProperty Name="IntNumUsuarios" ColumnName="IntNumUsuarios" />
+          <ScalarProperty Name="StrEmpresaAsociada" ColumnName="StrEmpresaAsociada" />
+          <ScalarProperty Name="IntHabilitacion" ColumnName="IntHabilitacion" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
+          <ScalarProperty Name="StrResolucionDian" ColumnName="StrResolucionDian" />
+          <ScalarProperty Name="IntIntegrador" ColumnName="IntIntegrador" />
+          <ScalarProperty Name="IntAdministrador" ColumnName="IntAdministrador" />
+          <ScalarProperty Name="IntObligado" ColumnName="IntObligado" />
+          <ScalarProperty Name="IntAdquiriente" ColumnName="IntAdquiriente" />
+          <ScalarProperty Name="StrSerial" ColumnName="StrSerial" />
+          <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+          <ScalarProperty Name="DatFechaIngreso" ColumnName="DatFechaIngreso" />
+          <ScalarProperty Name="StrMailAdmin" ColumnName="StrMailAdmin" />
+          <ScalarProperty Name="StrRazonSocial" ColumnName="StrRazonSocial" />
+          <ScalarProperty Name="StrTipoIdentificacion" ColumnName="StrTipoIdentificacion" />
+          <ScalarProperty Name="IntIdentificacionDv" ColumnName="IntIdentificacionDv" />
+          <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblEmpresasResoluciones">
+      <EntityTypeMapping TypeName="Modelo.TblEmpresasResoluciones">
+        <MappingFragment StoreEntitySet="TblEmpresasResoluciones">
+          <ScalarProperty Name="ComercioConfigDescrip" ColumnName="ComercioConfigDescrip" />
+          <ScalarProperty Name="ComercioConfigId" ColumnName="ComercioConfigId" />
+          <ScalarProperty Name="PermiteParciales" ColumnName="PermiteParciales" />
+          <ScalarProperty Name="IntVersionDian" ColumnName="IntVersionDian" />
+          <ScalarProperty Name="StrIdSetDian" ColumnName="StrIdSetDian" />
+          <ScalarProperty Name="IntTipoDoc" ColumnName="IntTipoDoc" />
+          <ScalarProperty Name="StrRespuestaServicioWeb" ColumnName="StrRespuestaServicioWeb" />
+          <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
+          <ScalarProperty Name="DatFechaIngreso" ColumnName="DatFechaIngreso" />
+          <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="StrClaveTecnica" ColumnName="StrClaveTecnica" />
+          <ScalarProperty Name="DatFechaVigenciaHasta" ColumnName="DatFechaVigenciaHasta" />
+          <ScalarProperty Name="DatFechaVigenciaDesde" ColumnName="DatFechaVigenciaDesde" />
+          <ScalarProperty Name="IntRangoFinal" ColumnName="IntRangoFinal" />
+          <ScalarProperty Name="IntRangoInicial" ColumnName="IntRangoInicial" />
+          <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
+          <ScalarProperty Name="StrNumResolucion" ColumnName="StrNumResolucion" />
+          <ScalarProperty Name="StrEmpresa" ColumnName="StrEmpresa" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblUsuariosPagos">
+      <EntityTypeMapping TypeName="Modelo.TblUsuariosPagos">
+        <MappingFragment StoreEntitySet="TblUsuariosPagos">
+          <ScalarProperty Name="DatFechaUltimoIngreso" ColumnName="DatFechaUltimoIngreso" />
+          <ScalarProperty Name="StrToken" ColumnName="StrToken" />
+          <ScalarProperty Name="StrIdCambioClave" ColumnName="StrIdCambioClave" />
+          <ScalarProperty Name="DatFechaCambioClave" ColumnName="DatFechaCambioClave" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+          <ScalarProperty Name="DatFechaActualizacion" ColumnName="DatFechaActualizacion" />
+          <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
+          <ScalarProperty Name="StrMail" ColumnName="StrMail" />
+          <ScalarProperty Name="StrTelefono" ColumnName="StrTelefono" />
+          <ScalarProperty Name="StrApellidos" ColumnName="StrApellidos" />
+          <ScalarProperty Name="StrNombres" ColumnName="StrNombres" />
+          <ScalarProperty Name="StrClave" ColumnName="StrClave" />
+          <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+          <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
+          <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QryAdquirientes">
+      <EntityTypeMapping TypeName="Modelo.QryAdquirientes">
+        <MappingFragment StoreEntitySet="QryAdquirientes">
+          <ScalarProperty Name="StrRazonSocial" ColumnName="StrRazonSocial" />
+          <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+          <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QryDocumentosSaldo">
+      <EntityTypeMapping TypeName="Modelo.QryDocumentosSaldo">
+        <MappingFragment StoreEntitySet="QryDocumentosSaldo">
+          <ScalarProperty Name="DatFechaDocumento" ColumnName="DatFechaDocumento" />
+          <ScalarProperty Name="IntEstadoEnvio" ColumnName="IntEstadoEnvio" />
+          <ScalarProperty Name="IntValorNeto" ColumnName="IntValorNeto" />
+          <ScalarProperty Name="IntValorSubtotal" ColumnName="IntValorSubtotal" />
+          <ScalarProperty Name="IntEnvioMail" ColumnName="IntEnvioMail" />
+          <ScalarProperty Name="IdCategoriaEstado" ColumnName="IdCategoriaEstado" />
+          <ScalarProperty Name="IntIdEstadoPago" ColumnName="IntIdEstadoPago" />
+          <ScalarProperty Name="IntIdEstado" ColumnName="IntIdEstado" />
+          <ScalarProperty Name="StrAdquirienteMvoRechazo" ColumnName="StrAdquirienteMvoRechazo" />
+          <ScalarProperty Name="IntAdquirienteRecibo" ColumnName="IntAdquirienteRecibo" />
+          <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+          <ScalarProperty Name="IntNumero" ColumnName="IntNumero" />
+          <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
+          <ScalarProperty Name="StrNumResolucion" ColumnName="StrNumResolucion" />
+          <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+          <ScalarProperty Name="IntDocTipo" ColumnName="IntDocTipo" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="Abono" ColumnName="Abono" />
+          <ScalarProperty Name="IntVlrTotal" ColumnName="IntVlrTotal" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblPagosDetalles">
+      <EntityTypeMapping TypeName="Modelo.TblPagosDetalles">
+        <MappingFragment StoreEntitySet="TblPagosDetalles">
+          <ScalarProperty Name="IntValorPago" ColumnName="IntValorPago" />
+          <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
+          <ScalarProperty Name="StrIdPagoPrincipal" ColumnName="StrIdPagoPrincipal" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblPagosElectronicos">
+      <EntityTypeMapping TypeName="Modelo.TblPagosElectronicos">
+        <MappingFragment StoreEntitySet="TblPagosElectronicos">
+          <ScalarProperty Name="IntProcesado" ColumnName="IntProcesado" />
+          <ScalarProperty Name="StrCampo3" ColumnName="StrCampo3" />
+          <ScalarProperty Name="StrCampo2" ColumnName="StrCampo2" />
+          <ScalarProperty Name="StrCampo1" ColumnName="StrCampo1" />
+          <ScalarProperty Name="StrMensaje" ColumnName="StrMensaje" />
+          <ScalarProperty Name="StrCodigoFranquicia" ColumnName="StrCodigoFranquicia" />
+          <ScalarProperty Name="IntFormaPago" ColumnName="IntFormaPago" />
+          <ScalarProperty Name="IntCodigoServicio" ColumnName="IntCodigoServicio" />
+          <ScalarProperty Name="StrCodigoBanco" ColumnName="StrCodigoBanco" />
+          <ScalarProperty Name="IntClicloTransaccion" ColumnName="IntClicloTransaccion" />
+          <ScalarProperty Name="IntValorPago" ColumnName="IntValorPago" />
+          <ScalarProperty Name="StrTransaccionCUS" ColumnName="StrTransaccionCUS" />
+          <ScalarProperty Name="StrTicketID" ColumnName="StrTicketID" />
+          <ScalarProperty Name="IntEstadoPago" ColumnName="IntEstadoPago" />
+          <ScalarProperty Name="DatFechaVerificacion" ColumnName="DatFechaVerificacion" />
+          <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
+          <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+          <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+          <ScalarProperty Name="StrIdSeguridadPlanes" ColumnName="StrIdSeguridadPlanes" />
+          <ScalarProperty Name="StrIdRegistro2" ColumnName="StrIdRegistro2" />
+          <ScalarProperty Name="StrIdPlataforma" ColumnName="StrIdPlataforma" />
+          <ScalarProperty Name="StrIdSeguridadPago" ColumnName="StrIdSeguridadPago" />
+          <ScalarProperty Name="StrIdRegistro" ColumnName="StrIdRegistro" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QryEmpleados">
+      <EntityTypeMapping TypeName="Modelo.QryEmpleados">
+        <MappingFragment StoreEntitySet="QryEmpleados">
+          <ScalarProperty Name="StrRazonSocial" ColumnName="StrRazonSocial" />
+          <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+          <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblPlanesTransacciones">
+      <EntityTypeMapping TypeName="Modelo.TblPlanesTransacciones">
+        <MappingFragment StoreEntitySet="TblPlanesTransacciones">
+          <ScalarProperty Name="IntSucursal" ColumnName="IntSucursal" />
+          <ScalarProperty Name="IntTipoDocumento" ColumnName="IntTipoDocumento" />
+          <ScalarProperty Name="DatFechaInicio" ColumnName="DatFechaInicio" />
+          <ScalarProperty Name="DocumentoRef" ColumnName="DocumentoRef" />
+          <ScalarProperty Name="IntMesesVence" ColumnName="IntMesesVence" />
+          <ScalarProperty Name="IntEstado" ColumnName="IntEstado" />
+          <ScalarProperty Name="IntNumTransaccProceso" ColumnName="IntNumTransaccProceso" />
+          <ScalarProperty Name="DatFechaVencimiento" ColumnName="DatFechaVencimiento" />
+          <ScalarProperty Name="StrUsuario" ColumnName="StrUsuario" />
+          <ScalarProperty Name="StrEmpresaUsuario" ColumnName="StrEmpresaUsuario" />
+          <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+          <ScalarProperty Name="IntValor" ColumnName="IntValor" />
+          <ScalarProperty Name="IntNumTransaccProcesadas" ColumnName="IntNumTransaccProcesadas" />
+          <ScalarProperty Name="IntNumTransaccCompra" ColumnName="IntNumTransaccCompra" />
+          <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+          <ScalarProperty Name="IntTipoProceso" ColumnName="IntTipoProceso" />
+          <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblEventosRadian">
+      <EntityTypeMapping TypeName="Modelo.TblEventosRadian">
+        <MappingFragment StoreEntitySet="TblEventosRadian">
+          <ScalarProperty Name="StrUrlEvento" ColumnName="StrUrlEvento" />
+          <ScalarProperty Name="DatFechaEvento" ColumnName="DatFechaEvento" />
+          <ScalarProperty Name="IntEstadoEvento" ColumnName="IntEstadoEvento" />
+          <ScalarProperty Name="IntNumeroEvento" ColumnName="IntNumeroEvento" />
+          <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblAlmacenamientoDocs">
+      <EntityTypeMapping TypeName="Modelo.TblAlmacenamientoDocs">
+        <MappingFragment StoreEntitySet="TblAlmacenamientoDocs">
+          <ScalarProperty Name="DatFechaBorrado" ColumnName="DatFechaBorrado" />
+          <ScalarProperty Name="IntBorrado" ColumnName="IntBorrado" />
+          <ScalarProperty Name="DatFechaSincronizacion" ColumnName="DatFechaSincronizacion" />
+          <ScalarProperty Name="DatFechaRegistroDoc" ColumnName="DatFechaRegistroDoc" />
+          <ScalarProperty Name="StrUrlActual" ColumnName="StrUrlActual" />
+          <ScalarProperty Name="StrUrlAnterior" ColumnName="StrUrlAnterior" />
+          <ScalarProperty Name="IntConsecutivo" ColumnName="IntConsecutivo" />
+          <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblRegistroRecepcion">
+      <EntityTypeMapping TypeName="Modelo.TblRegistroRecepcion">
+        <MappingFragment StoreEntitySet="TblRegistroRecepcion">
+          <ScalarProperty Name="IntProceso" ColumnName="IntProceso" />
+          <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+          <ScalarProperty Name="IntEstado" ColumnName="IntEstado" />
+          <ScalarProperty Name="StrAsunto" ColumnName="StrAsunto" />
+          <ScalarProperty Name="StrRemitente" ColumnName="StrRemitente" />
+          <ScalarProperty Name="DatFechaCorreo" ColumnName="DatFechaCorreo" />
+          <ScalarProperty Name="DatFechaRegistro" ColumnName="DatFechaRegistro" />
+          <ScalarProperty Name="StrId" ColumnName="StrId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblImportacionDoc">
+      <EntityTypeMapping TypeName="Modelo.TblImportacionDoc">
+        <MappingFragment StoreEntitySet="TblImportacionDoc">
+          <ScalarProperty Name="StrGrupo" ColumnName="StrGrupo" />
+          <ScalarProperty Name="StrEstadoDian" ColumnName="StrEstadoDian" />
+          <ScalarProperty Name="IntVlrTotal" ColumnName="IntVlrTotal" />
+          <ScalarProperty Name="IntVlrIPC" ColumnName="IntVlrIPC" />
+          <ScalarProperty Name="IntVlrIca" ColumnName="IntVlrIca" />
+          <ScalarProperty Name="IntVlrIva" ColumnName="IntVlrIva" />
+          <ScalarProperty Name="StrNombreAdquiriente" ColumnName="StrNombreAdquiriente" />
+          <ScalarProperty Name="StrEmpresaAdquiriente" ColumnName="StrEmpresaAdquiriente" />
+          <ScalarProperty Name="StrNombreFacturador" ColumnName="StrNombreFacturador" />
+          <ScalarProperty Name="StrEmpresaFacturador" ColumnName="StrEmpresaFacturador" />
+          <ScalarProperty Name="DatFechaRecepcion" ColumnName="DatFechaRecepcion" />
+          <ScalarProperty Name="DatFechaEmision" ColumnName="DatFechaEmision" />
+          <ScalarProperty Name="StrPrefijo" ColumnName="StrPrefijo" />
+          <ScalarProperty Name="IntNumero" ColumnName="IntNumero" />
+          <ScalarProperty Name="StrCufe" ColumnName="StrCufe" />
+          <ScalarProperty Name="StrTipodoc" ColumnName="StrTipodoc" />
+          <ScalarProperty Name="StrObservaciones" ColumnName="StrObservaciones" />
+          <ScalarProperty Name="IdProceso" ColumnName="IdProceso" />
+          <ScalarProperty Name="IdSeguridad" ColumnName="IdSeguridad" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblProcesoCorreo">
+      <EntityTypeMapping TypeName="Modelo.TblProcesoCorreo">
+        <MappingFragment StoreEntitySet="TblProcesoCorreo">
+          <ScalarProperty Name="IntEventoResp" ColumnName="IntEventoResp" />
+          <ScalarProperty Name="StrMailEnviado" ColumnName="StrMailEnviado" />
+          <ScalarProperty Name="DatFechaValidado" ColumnName="DatFechaValidado" />
+          <ScalarProperty Name="IntValidadoMail" ColumnName="IntValidadoMail" />
+          <ScalarProperty Name="StrIdMensaje" ColumnName="StrIdMensaje" />
+          <ScalarProperty Name="IntEnvioMail" ColumnName="IntEnvioMail" />
+          <ScalarProperty Name="DatFecha" ColumnName="DatFecha" />
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="StrIdSeguridadDoc" ColumnName="StrIdSeguridadDoc" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblEmpresaSucursal">
+      <EntityTypeMapping TypeName="Modelo.TblEmpresaSucursal">
+        <MappingFragment StoreEntitySet="TblEmpresaSucursal">
+          <ScalarProperty Name="StrDescSucursal" ColumnName="StrDescSucursal" />
+          <ScalarProperty Name="IntCodigoSucursal" ColumnName="IntCodigoSucursal" />
+          <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblEmpresaIntegradores">
+      <EntityTypeMapping TypeName="Modelo.TblEmpresaIntegradores">
+        <MappingFragment StoreEntitySet="TblEmpresaIntegradores">
+          <ScalarProperty Name="StrIdSeguridad" ColumnName="StrIdSeguridad" />
+          <ScalarProperty Name="StrIdentificacionInt" ColumnName="StrIdentificacionInt" />
+          <ScalarProperty Name="StrIdentificacionEmp" ColumnName="StrIdentificacionEmp" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TblIntegradores">
+      <EntityTypeMapping TypeName="Modelo.TblIntegradores">
+        <MappingFragment StoreEntitySet="TblIntegradores">
+          <ScalarProperty Name="IntId" ColumnName="IntId" />
+          <ScalarProperty Name="StrRazonSocial" ColumnName="StrRazonSocial" />
+          <ScalarProperty Name="StrIdentificacion" ColumnName="StrIdentificacion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,231 @@
+﻿
+
+<div id="modal_eventos_radian" class="modal fade" style="display: none;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div id="EncabezadoModal" class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h5 style="margin-bottom: 10px;" class="modal-title">Eventos Radian</h5>
+			</div>
+			<div class="modal-body">
+				<div class="col-md-12 ">
+
+					<!-- JS Modal Auditoría Documento-->
+					<!-- CONTENEDOR PRINCIPAL -->
+					<div data-ng-controller="EventosRadianController">
+
+
+						<div class="col-md-12">
+							<div class="panel panel-white">
+								<div class="panel-body">
+
+									<div class="row">
+
+										<div class="col-sm-4" style="background-color: #F3F3F3;">
+											<Label Style="vertical-align: inherit;"><b>IdSeguridad:</b></Label>
+										</div>
+										<div class="col-sm-8">
+											<Label Style="vertical-align: inherit;" id="IdSeguridad"></Label>
+										</div>
+
+										<div class="col-sm-4" style="background-color: #F3F3F3;">
+											<Label Style="vertical-align: inherit;"><b>Número Documento:</b></Label>
+										</div>
+										<div class="col-sm-8">
+											<Label Style="vertical-align: inherit;" id="NumeroDocumento"></Label>
+										</div>
+
+										<div class="col-sm-4" style="background-color: #F3F3F3;">
+											<Label Style="vertical-align: inherit;"><b>Identificación Obligado:</b></Label>
+										</div>
+										<div class="col-sm-8">
+											<Label Style="vertical-align: inherit;" id="Obligado"></Label>
+										</div>
+										<div class="col-sm-12 text-left" style="margin-top: 15px;">
+											<div id="cmdenviar0"></div>
+											<div id="cmdenviar"></div>
+											<div id="cmdenviar1"></div>
+											<div id="cmdenviar2"></div>
+											<div id="cmdenviar3"></div>
+											<div id="cmdenviar4"></div>
+											<div id="cmdenviar5"></div>
+										</div>
+
+									</div>
+                                    <br />
+                                    <!-- FILTROS DE PARA HACER ENDOSO -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="panelEndoso" class="panel panel-white" style="display: none;">
+                                                <div class="panel-heading">
+                                                    <h6 class="panel-title">Filtros para hacer Endoso<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="col-lg-12">
+                                                        <div class="row">
+                                                            <div class="dx-fieldset">
+                                                                <div class="col-md-3" style="margin-top: 1%">
+                                                                    <i class="icon-files-empty"></i>
+                                                                    <label>Tipo de Endoso:</label>
+                                                                    <div id="tiposEndoso"></div>
+                                                                </div>
+                                                                <div class="col-md-3" style="margin-top: 1%">
+                                                                    <i class="icon-file-openoffice"></i>
+                                                                    <label>Operación Evento:</label>
+                                                                    <div id="tiposOperacionEvento"></div>
+                                                                </div>
+                                                                <div class="col-md-3" style="margin-top: 1%">
+                                                                    <i class="dx-icon-percent"></i>
+                                                                    <label>Tasa Descuento:</label>
+                                                                    <div id="tasaDescuentoEndoso"></div>
+                                                                </div>
+                                                                <div class="col-md-3" style="margin-top: 1%">
+                                                                    <i class="dx-icon-user"></i>
+                                                                    <label>ID Endosatario:</label>
+                                                                    <div id="idEndosatario"></div>
+                                                                </div>
+                                                                <div class="col-lg-12 text-center">
+                                                                    <br>
+																	<div id="summaryEndoso"></div>
+                                                                    <p id="razonSocialEmpresa"></p>
+
+                                                                    <!-- FORMULARIO PARA CREAR EMPRESA -->
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div id="panelCrearEmpresa" class="panel panel-white" style="display: none; margin-top: 15px;">
+                                                                                <div class="panel-heading">
+                                                                                    <h6 class="panel-title">Registrar empresa</h6>
+                                                                                </div>
+                                                                                <div class="panel-body">
+                                                                                    <div class="col-lg-12">
+                                                                                        <div class="row">
+                                                                                            <div class="dx-fieldset">
+                                                                                                <div class="col-md-4 text-left" style="margin-top: 1%">
+                                                                                                    <i class="icon-files-empty"></i>
+                                                                                                    <label>Nro de identificación:</label>
+                                                                                                    <div id="numIdentificacionEmp"></div>
+                                                                                                </div>
+                                                                                                <div class="col-md-4 text-left" style="margin-top: 1%">
+                                                                                                    <i class="icon-files-empty"></i>
+                                                                                                    <label>Tipo de identificación:</label>
+                                                                                                    <div id="tipoIdentificacionEmp"></div>
+                                                                                                </div>
+                                                                                                <div class="col-md-4 text-left" style="margin-top: 1%">
+                                                                                                    <i class="icon-files-empty"></i>
+                                                                                                    <label>Tipo de operador:</label>
+                                                                                                    <div id="tipoOperadorEmp"></div>
+                                                                                                </div>
+                                                                                                <div class="col-md-6 text-left" style="margin-top: 1%">
+                                                                                                    <i class="icon-files-empty"></i>
+                                                                                                    <label>Correo electrónico:</label>
+                                                                                                    <div id="correoEmp"></div>
+                                                                                                </div>
+                                                                                                <div class="col-md-6 text-left" style="margin-top: 1%">
+                                                                                                    <i class="icon-files-empty"></i>
+                                                                                                    <label>Razón social:</label>
+                                                                                                    <div id="razonSocialEmp"></div>
+                                                                                                </div>                                                                                                
+                                                                                                <div class="col-lg-12 text-center">
+                                                                                                    <br>
+                                                                                                    <div id="summaryCrearEmpresa"></div>
+                                                                                                    <p id="mensajesCrearEmpresa"></p>
+                                                                                                </div>
+                                                                                                <div class="col-lg-12 text-center">
+                                                                                                    <br>
+
+                                                                                                    <div data-dx-button="btnCrearEmpresa"></div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                    <p data-ng-bind-html="message" class="ng-binding"></p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- /FORMULARIO PARA CREAR EMPRESA -->
+
+
+                                                                </div>
+                                                                <div class="col-lg-12 text-center">
+                                                                    <br>
+																	
+                                                                    <div data-dx-button="btnRealizarEndoso" ></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <p data-ng-bind-html="message" class="ng-binding"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /FILTROS DE PARA HACER ENDOSO -->
+									<br />
+
+									<br />
+									<!-- FILTROS DE PARA REPORTAR EL PAGO -->
+									<div class="row">
+										<div class="col-md-12">
+											<div id="panelPago" class="panel panel-white" style="display: none;">
+												<div class="panel-heading">
+													<h6 class="panel-title">Filtros para reportar el Pago<a class="heading-elements-toggle"><i class="icon-more"></i></a></h6>
+												</div>
+												<div class="panel-body">
+													<div class="col-lg-12">
+														<div class="row">
+															<div class="dx-fieldset">
+																<div class="col-md-3" style="margin-top: 1%">
+																	<i class="icon-file-openoffice"></i>
+																	<label>Operación Evento:</label>
+																	<div id="tipoPago"></div>
+																</div>
+																<div class="col-md-3" style="margin-top: 1%">
+																	<i class="icon-files-empty"></i>
+																	<label>Valor Factura:</label>
+																	<div id="ValorF"></div>
+																</div>
+																<div class="col-md-3" style="margin-top: 1%">
+																	<i class="dx-icon-user"></i>
+																	<label>Pago:</label>
+																	<div id="Pago"></div>
+																</div>
+																<div class="col-lg-12 text-center">
+																	<br>
+
+																	<div data-dx-button="btnRealizarPago"></div>
+																</div>
+															</div>
+														</div>
+
+													</div>
+													<p data-ng-bind-html="message" class="ng-binding"></p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- /FILTROS DE PARA REPORTAR EL PAGO -->
+									<br />
+
+									<div class="demo-container">
+										<div id="GridEventosRadianDocumento"></div>
+									</div>
+
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+
+			<div id="divsombra" class="modal-footer" style="margin-top: 22%">
+			</div>
+
+		</div>
+	</div>
+</div>

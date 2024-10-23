@@ -1,0 +1,8 @@
+﻿<Security xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+	<wsse:UsernameToken xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="SecurityToken-22b1ccfe-8d56-4cc2-8e95-e87146a38726" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+		<wsse:Username>86abaaf9-d745-448f-860c-b3ba1d23c498</wsse:Username>
+		<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">7FRN6qCkVP+FA4mSiz7MVr2M0bA=</wsse:Password>
+		<wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">xbAJBBRHbf6xY6dya7YuBQ==</wsse:Nonce>
+		<wsu:Created>2017-05-23T14:57:42Z</wsu:Created>
+	</wsse:UsernameToken>
+</Security>

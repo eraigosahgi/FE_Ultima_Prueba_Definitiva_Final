@@ -1,0 +1,19 @@
+ALTER TABLE TblEmpresas ADD
+StrNombresRep varchar(200) NULL
+GO
+
+ALTER TABLE TblEmpresas ADD
+StrApellidosRep varchar(200) NULL
+GO
+
+ALTER TABLE TblEmpresas ADD
+StrIdentificacionRep varchar(50) NULL
+GO
+
+ALTER TABLE TblEmpresas ADD
+StrTipoIdentificacionRep varchar(2) NULL
+GO
+
+ALTER TABLE TblEmpresas ADD
+StrCargo varchar(50) NULL
+GO

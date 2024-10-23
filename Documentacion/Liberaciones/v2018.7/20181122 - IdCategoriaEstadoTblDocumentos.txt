@@ -1,0 +1,19 @@
+ALTER TABLE TblDocumentos ADD
+	IdCategoriaEstado int NOT NULL default(0)
+GO
+
+begin tran
+update TblDocumentos set IdCategoriaEstado = 100 WHERE(IntIdEstado in (4,5,6))
+commit tran
+
+begin tran
+update TblDocumentos set IdCategoriaEstado = 200 WHERE(IntIdEstado = 7)
+commit tran
+
+begin tran
+update TblDocumentos set IdCategoriaEstado = 300 WHERE(IntIdEstado in (8,9,10,11,12,13,99))
+commit tran
+
+begin tran
+update TblDocumentos set IdCategoriaEstado = 400 WHERE(IntIdEstado = 90)
+commit tran

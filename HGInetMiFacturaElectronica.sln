@@ -1,0 +1,683 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMiFacturaElectronicaWeb", "HGInetMiFacturaElectronicaWeb\HGInetMiFacturaElectronicaWeb.csproj", "{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D} = {C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMiFacturaElectonicaData", "HGInetMiFacturaElectonicaData\HGInetMiFacturaElectonicaData.csproj", "{B3B46672-9956-48F5-B7CE-24C013995E47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetUBL", "HGInetUBL\HGInetUBL.csproj", "{E571F23F-B598-4DB1-893B-D94EC0354775}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibreriaGlobalHGInet", "LibreriaGlobalHGInet\LibreriaGlobalHGInet.csproj", "{A966A394-F6CC-482F-87A4-56EC1AF05E5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetUtilidadAzure", "HGInetUtilidadAzure\HGInetUtilidadAzure.csproj", "{F112EDD7-AAE3-46CE-9A87-0BFAF3EDAF3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMiFacturaElectonicaController", "HGInetMiFacturaElectonicaController\HGInetMiFacturaElectonicaController.csproj", "{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentacion", "Documentacion", "{2088ABAD-E463-4F38-8668-C410072AC57F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ManualTecnico", "ManualTecnico", "{EFD98A42-3E60-459D-9574-8270FBFAC35E}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\ManualTecnico\20180327-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\20180327-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\20180409-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\20180409-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\20180413-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\20180413-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\20180425-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\20180425-ManualTecnicoServiciosFacturacionElectronica.pdf
+		\\Atila\qa\MANUALES\Hginet Facturación Electrónica\Guia Gestion de Formatos FE.doc = \\Atila\qa\MANUALES\Hginet Facturación Electrónica\Guia Gestion de Formatos FE.doc
+		\\Atila\qa\MANUALES\Hginet Facturación Electrónica\Guia Gestion de Formatos FE.pdf = \\Atila\qa\MANUALES\Hginet Facturación Electrónica\Guia Gestion de Formatos FE.pdf
+		Documentacion\ManualTecnico\ManualArquitecturaFacturacionElectronica.docx = Documentacion\ManualTecnico\ManualArquitecturaFacturacionElectronica.docx
+		Documentacion\ManualTecnico\ManualTecnicoServiciosFacturaE.docx = Documentacion\ManualTecnico\ManualTecnicoServiciosFacturaE.docx
+		Documentacion\ManualTecnico\ManualTecnicoServiciosFacturaEV2.docx = Documentacion\ManualTecnico\ManualTecnicoServiciosFacturaEV2.docx
+		Documentacion\ManualTecnico\v20185-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20185-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\v20185Rev2-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20185Rev2-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\v20186-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20186-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\v20187Rev1-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20187Rev1-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\v20187Rev2-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20187Rev2-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\v20187Rev3-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20187Rev3-ManualTecnicoServiciosFacturacionElectronica.pdf
+		\\Atila\qa\MANUALES\Hginet Facturación Electrónica\v20191-ManualTecnicoServiciosFacturacionElectronica.pdf = \\Atila\qa\MANUALES\Hginet Facturación Electrónica\v20191-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\v20191Rev7-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20191Rev7-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\v20191Rev8-ManualTecnicoServiciosFacturacionElectronica.pdf = Documentacion\ManualTecnico\v20191Rev8-ManualTecnicoServiciosFacturacionElectronica.pdf
+		Documentacion\ManualTecnico\V20202-ManualTecnicoServiciosFacturaEV2.pdf = Documentacion\ManualTecnico\V20202-ManualTecnicoServiciosFacturaEV2.pdf
+		Documentacion\ManualTecnico\V20202Rev1-ManualTecnicoServiciosFacturaEV2.pdf = Documentacion\ManualTecnico\V20202Rev1-ManualTecnicoServiciosFacturaEV2.pdf
+		Documentacion\ManualTecnico\V20203Rev4-ManualTecnicoServiciosFacturaEV2.pdf = Documentacion\ManualTecnico\V20203Rev4-ManualTecnicoServiciosFacturaEV2.pdf
+		\\Atila\qa\MANUALES\Hginet Facturación Electrónica\V20206-ManualTecnicoServiciosFacturaEV2.pdf = \\Atila\qa\MANUALES\Hginet Facturación Electrónica\V20206-ManualTecnicoServiciosFacturaEV2.pdf
+		\\Atila\qa\MANUALES\Hginet Facturación Electrónica\V20206Rev1-ManualTecnicoServiciosFacturaEV2.pdf = \\Atila\qa\MANUALES\Hginet Facturación Electrónica\V20206Rev1-ManualTecnicoServiciosFacturaEV2.pdf
+		\\Atila\qa\MANUALES\Hginet Facturación Electrónica\V20207-ManualTecnicoServiciosFacturaEV2.pdf = \\Atila\qa\MANUALES\Hginet Facturación Electrónica\V20207-ManualTecnicoServiciosFacturaEV2.pdf
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetFacturaETestConsola", "HGInetFacturaETestConsola\HGInetFacturaETestConsola.csproj", "{101B7B4C-B4CF-42E9-8370-30B2C3147346}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetDIANServicios", "HGInetDIANServicios\HGInetDIANServicios.csproj", "{E87C13D9-AEF2-442C-B377-7A5D7290502A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Librerias", "Librerias", "{59113B66-AE70-4B22-83BC-94B88ED048AF}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Librerias\GlobalAssemblyInfo.cs = Documentacion\Librerias\GlobalAssemblyInfo.cs
+		Documentacion\Librerias\HGICtrlUtilidades.dll = Documentacion\Librerias\HGICtrlUtilidades.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Firma", "Firma", "{EBACB14C-A142-4A25-84E0-EE8A1626BE41}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Librerias\Firma\BouncyCastle.Crypto.dll = Documentacion\Librerias\Firma\BouncyCastle.Crypto.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetFirmaDigital", "HGInetFirmaDigital\HGInetFirmaDigital.csproj", "{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CertificadoDigital", "CertificadoDigital", "{23109A26-F049-4B31-B856-61B9F8990E5C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Errores", "Errores", "{B86938E2-C84C-46A0-A40D-F4DB79E9DBA9}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\CertificadoDigital\Errores\CryptographicException Cannot find the specified file.txt = Documentacion\CertificadoDigital\Errores\CryptographicException Cannot find the specified file.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Email", "Email", "{DD134E07-6322-4EA9-8A1F-777C13D3D20F}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Librerias\Email\HGInetEmailServicios.dll = Documentacion\Librerias\Email\HGInetEmailServicios.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DIANPruebas", "DIANPruebas", "{1B150BCF-D3BC-4E30-B239-74891D9AFC1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WSConsultaDocumentos", "WSConsultaDocumentos", "{74CA58BC-3812-4DBA-9D46-CD8E78A6EAF1}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\DIANPruebas\WSConsultaDocumentos\396-Inexistente-Peticion.txt = Documentacion\DIANPruebas\WSConsultaDocumentos\396-Inexistente-Peticion.txt
+		Documentacion\DIANPruebas\WSConsultaDocumentos\396-Inexistente-Respuesta.txt = Documentacion\DIANPruebas\WSConsultaDocumentos\396-Inexistente-Respuesta.txt
+		Documentacion\DIANPruebas\WSConsultaDocumentos\990000396-Correcto-Peticion.txt = Documentacion\DIANPruebas\WSConsultaDocumentos\990000396-Correcto-Peticion.txt
+		Documentacion\DIANPruebas\WSConsultaDocumentos\990000396-Correcto-Respuesta.txt = Documentacion\DIANPruebas\WSConsultaDocumentos\990000396-Correcto-Respuesta.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Liberaciones", "Liberaciones", "{F68822E5-02C3-462C-BCDB-847EEA6D72A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.2", "v2018.2", "{455E2F68-5469-4137-B886-347444F87FF4}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2018.2\20180606 - TblEmpresas.txt = Documentacion\Liberaciones\v2018.2\20180606 - TblEmpresas.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetFacturaEReports", "HGInetFacturaEReports\HGInetFacturaEReports.csproj", "{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.5", "v2018.5", "{6C8336DF-8668-454E-BFDF-DA7EEFFC2E40}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2018.5\20180711.txt = Documentacion\Liberaciones\v2018.5\20180711.txt
+		Documentacion\Liberaciones\v2018.5\20180712.txt = Documentacion\Liberaciones\v2018.5\20180712.txt
+		Documentacion\Liberaciones\v2018.5\20180716.txt = Documentacion\Liberaciones\v2018.5\20180716.txt
+		Documentacion\Liberaciones\v2018.5\20180717.txt = Documentacion\Liberaciones\v2018.5\20180717.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.6", "v2018.6", "{4F6933ED-0456-49B4-8DB6-F333AA02BD63}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2018.6\20180210-DatFechaVencimiento.txt = Documentacion\Liberaciones\v2018.6\20180210-DatFechaVencimiento.txt
+		Documentacion\Liberaciones\v2018.6\20180424-RelacionComercioResolucion.txt = Documentacion\Liberaciones\v2018.6\20180424-RelacionComercioResolucion.txt
+		Documentacion\Liberaciones\v2018.6\20180724-IntIdComercioTblEmpresasResoluciones.txt = Documentacion\Liberaciones\v2018.6\20180724-IntIdComercioTblEmpresasResoluciones.txt
+		Documentacion\Liberaciones\v2018.6\20180724-NumUsuariosEmpresa.txt = Documentacion\Liberaciones\v2018.6\20180724-NumUsuariosEmpresa.txt
+		Documentacion\Liberaciones\v2018.6\20180724-TblEmpresasPasarela.txt = Documentacion\Liberaciones\v2018.6\20180724-TblEmpresasPasarela.txt
+		Documentacion\Liberaciones\v2018.6\20180724-TblPagosElectronicos.txt = Documentacion\Liberaciones\v2018.6\20180724-TblPagosElectronicos.txt
+		Documentacion\Liberaciones\v2018.6\20180725-Campo IntTipoDoc.txt = Documentacion\Liberaciones\v2018.6\20180725-Campo IntTipoDoc.txt
+		Documentacion\Liberaciones\v2018.6\20180726-TblOpcionesCamposMenu.txt = Documentacion\Liberaciones\v2018.6\20180726-TblOpcionesCamposMenu.txt
+		Documentacion\Liberaciones\v2018.6\20180730-TblEmpresasCampoStrResolucionDian.txt = Documentacion\Liberaciones\v2018.6\20180730-TblEmpresasCampoStrResolucionDian.txt
+		Documentacion\Liberaciones\v2018.6\20180808-IntPermiteParciales.txt = Documentacion\Liberaciones\v2018.6\20180808-IntPermiteParciales.txt
+		Documentacion\Liberaciones\v2018.6\20180808-StrTelefonoTblEmpresas.txt = Documentacion\Liberaciones\v2018.6\20180808-StrTelefonoTblEmpresas.txt
+		Documentacion\Liberaciones\v2018.6\20180811-StrVersionTblDocumentos.txt = Documentacion\Liberaciones\v2018.6\20180811-StrVersionTblDocumentos.txt
+		Documentacion\Liberaciones\v2018.6\20180814-IntTipoTblOpciones.txt = Documentacion\Liberaciones\v2018.6\20180814-IntTipoTblOpciones.txt
+		Documentacion\Liberaciones\v2018.6\20180905-ActualizacionTblPagosElectronicos.txt = Documentacion\Liberaciones\v2018.6\20180905-ActualizacionTblPagosElectronicos.txt
+		Documentacion\Liberaciones\v2018.6\20180911-Opcion1344 Acuse Tacito.txt = Documentacion\Liberaciones\v2018.6\20180911-Opcion1344 Acuse Tacito.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UBL", "UBL", "{ABC6BEBB-CCE9-4BEB-92A9-AD83FFC3D3BD}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\UBL\Generador de Clases C#.txt = Documentacion\UBL\Generador de Clases C#.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetInteroperabilidadApi", "HGInetInteroperabilidadApi\HGInetInteroperabilidadApi.csproj", "{115E59B2-036E-4F16-8272-F1A011A9DEAA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D} = {C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetInteroperabilidad", "HGInetInteroperabilidad\HGInetInteroperabilidad.csproj", "{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0} = {29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Soap", "Soap", "{E0F33763-DA85-46D9-9491-B799C4CAC3B0}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Soap\HGInetFacturaElectronica-Soapui-Project.xml = Documentacion\Soap\HGInetFacturaElectronica-Soapui-Project.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2018.7", "v2018.7", "{816DBCC8-33A5-4D4D-87B8-EB3D5BC4494F}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2018.7\201800925 - StrUrlAcuseUbl.txt = Documentacion\Liberaciones\v2018.7\201800925 - StrUrlAcuseUbl.txt
+		Documentacion\Liberaciones\v2018.7\20180918 - DropCamposPlantillasResoluciones.txt = Documentacion\Liberaciones\v2018.7\20180918 - DropCamposPlantillasResoluciones.txt
+		Documentacion\Liberaciones\v2018.7\20180920 - Opcion1335 Formatos.txt = Documentacion\Liberaciones\v2018.7\20180920 - Opcion1335 Formatos.txt
+		Documentacion\Liberaciones\v2018.7\20180925 - CamposInteroperabilidadTblDocumentos.txt = Documentacion\Liberaciones\v2018.7\20180925 - CamposInteroperabilidadTblDocumentos.txt
+		Documentacion\Liberaciones\v2018.7\20180925 - CrearTblProveedores.txt = Documentacion\Liberaciones\v2018.7\20180925 - CrearTblProveedores.txt
+		Documentacion\Liberaciones\v2018.7\20180925 - RelacionesTblDocumentosTblProveedores.txt = Documentacion\Liberaciones\v2018.7\20180925 - RelacionesTblDocumentosTblProveedores.txt
+		Documentacion\Liberaciones\v2018.7\20180925 - UpdateStrProveedorEmisor.txt = Documentacion\Liberaciones\v2018.7\20180925 - UpdateStrProveedorEmisor.txt
+		Documentacion\Liberaciones\v2018.7\20180928 - IntIdEstadoPago.txt = Documentacion\Liberaciones\v2018.7\20180928 - IntIdEstadoPago.txt
+		Documentacion\Liberaciones\v2018.7\20180928 - OpcionesInteroperabilidad.txt = Documentacion\Liberaciones\v2018.7\20180928 - OpcionesInteroperabilidad.txt
+		Documentacion\Liberaciones\v2018.7\20181005 - TblFormatos.txt = Documentacion\Liberaciones\v2018.7\20181005 - TblFormatos.txt
+		Documentacion\Liberaciones\v2018.7\20181026 - CamposAnexosTblDocumentos.txt = Documentacion\Liberaciones\v2018.7\20181026 - CamposAnexosTblDocumentos.txt
+		Documentacion\Liberaciones\v2018.7\20181030 - OpcionProveedores1363.txt = Documentacion\Liberaciones\v2018.7\20181030 - OpcionProveedores1363.txt
+		Documentacion\Liberaciones\v2018.7\20181108 - Actualizar Rutas de FE a Files.txt = Documentacion\Liberaciones\v2018.7\20181108 - Actualizar Rutas de FE a Files.txt
+		Documentacion\Liberaciones\v2018.7\20181122 - IdCategoriaEstadoTblDocumentos.txt = Documentacion\Liberaciones\v2018.7\20181122 - IdCategoriaEstadoTblDocumentos.txt
+		Documentacion\Liberaciones\v2018.7\20181123 - IntManejaAnexosTblEmpresas.txt = Documentacion\Liberaciones\v2018.7\20181123 - IntManejaAnexosTblEmpresas.txt
+		Documentacion\Liberaciones\v2018.7\20181128 - ActualizacionOpcIndicadores.txt = Documentacion\Liberaciones\v2018.7\20181128 - ActualizacionOpcIndicadores.txt
+		Documentacion\Liberaciones\v2018.7\20181204 - IntEnvioMailTblDocumentos.txt = Documentacion\Liberaciones\v2018.7\20181204 - IntEnvioMailTblDocumentos.txt
+		Documentacion\Liberaciones\v2018.7\20181206-IntEnvioMailRecepcionTblEmpresas.txt = Documentacion\Liberaciones\v2018.7\20181206-IntEnvioMailRecepcionTblEmpresas.txt
+		Documentacion\Liberaciones\v2018.7\20181214 - IntNumTransaccProcesoTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2018.7\20181214 - IntNumTransaccProcesoTblPlanesTransacciones.txt
+		Documentacion\Liberaciones\v2018.7\20181219-DropBitProcesadaTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2018.7\20181219-DropBitProcesadaTblPlanesTransacciones.txt
+		Documentacion\Liberaciones\v2018.7\20181219-IntEstadoTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2018.7\20181219-IntEstadoTblPlanesTransacciones.txt
+		Documentacion\Liberaciones\v2018.7\20181227-StrClave TblUsuarios.txt = Documentacion\Liberaciones\v2018.7\20181227-StrClave TblUsuarios.txt
+		Documentacion\Liberaciones\v2018.7\20190110-Inserta Nuevas opciones de Menu para planes.txt = Documentacion\Liberaciones\v2018.7\20190110-Inserta Nuevas opciones de Menu para planes.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1", "v2019.1", "{FF1660BC-E1CE-4614-8840-4EC6909431E0}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2019.1\20190111-StrEmpresaDescuentoTblEmpresas.txt = Documentacion\Liberaciones\v2019.1\20190111-StrEmpresaDescuentoTblEmpresas.txt
+		Documentacion\Liberaciones\v2019.1\20190115-Actualiza StrEmpresaDescuentoTblEmpresas.txt = Documentacion\Liberaciones\v2019.1\20190115-Actualiza StrEmpresaDescuentoTblEmpresas.txt
+		Documentacion\Liberaciones\v2019.1\20190116-IntIdEstadoIntCobroPostPagoTblEmpresas.txt = Documentacion\Liberaciones\v2019.1\20190116-IntIdEstadoIntCobroPostPagoTblEmpresas.txt
+		Documentacion\Liberaciones\v2019.1\20190117-AlterStrObservacionesTblPlanesTransacciones.txt = Documentacion\Liberaciones\v2019.1\20190117-AlterStrObservacionesTblPlanesTransacciones.txt
+		Documentacion\Liberaciones\v2019.1\20190128-TblAlertas.txt = Documentacion\Liberaciones\v2019.1\20190128-TblAlertas.txt
+		Documentacion\Liberaciones\v2019.1\20190205-CamposMailTblEmpresas.txt = Documentacion\Liberaciones\v2019.1\20190205-CamposMailTblEmpresas.txt
+		Documentacion\Liberaciones\v2019.1\20190205-Opcion1346AlertasyNotificaciones.txt = Documentacion\Liberaciones\v2019.1\20190205-Opcion1346AlertasyNotificaciones.txt
+		Documentacion\Liberaciones\v2019.1\20190205-UpdateOpcion13.txt = Documentacion\Liberaciones\v2019.1\20190205-UpdateOpcion13.txt
+		Documentacion\Liberaciones\v2019.1\20190207-IntValorSubtotal.txt = Documentacion\Liberaciones\v2019.1\20190207-IntValorSubtotal.txt
+		Documentacion\Liberaciones\v2019.1\20190208-Opcion1347ConsultaAuditoriaAdmin.txt = Documentacion\Liberaciones\v2019.1\20190208-Opcion1347ConsultaAuditoriaAdmin.txt
+		Documentacion\Liberaciones\v2019.1\20190211-IntValorNeto.txt = Documentacion\Liberaciones\v2019.1\20190211-IntValorNeto.txt
+		Documentacion\Liberaciones\v2019.1\20190215-TblFormatosDatFechaActualizacion.txt = Documentacion\Liberaciones\v2019.1\20190215-TblFormatosDatFechaActualizacion.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "selects", "selects", "{A3A0A8E3-3480-47A6-B494-FA61C23A0979}"
+	ProjectSection(SolutionItems) = preProject
+		Consulta de Estado de Planes.txt = Consulta de Estado de Planes.txt
+		Planes Adquiridos y Saldos.txt = Planes Adquiridos y Saldos.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1Rev4", "v2019.1Rev4", "{C420E912-5DC2-4F53-9B3A-A882B62C7C58}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2019.1Rev4\20190218-ntIdEstadoAlertas.txt = Documentacion\Liberaciones\v2019.1Rev4\20190218-ntIdEstadoAlertas.txt
+		Documentacion\Liberaciones\v2019.1Rev4\20190219-ActualizaIntEnvioMail.txt = Documentacion\Liberaciones\v2019.1Rev4\20190219-ActualizaIntEnvioMail.txt
+		Documentacion\Liberaciones\v2019.1Rev4\20190221-CamposTblAlertas.txt = Documentacion\Liberaciones\v2019.1Rev4\20190221-CamposTblAlertas.txt
+		Documentacion\Liberaciones\v2019.1Rev4\20190226-CamposFormatoTemportal.txt = Documentacion\Liberaciones\v2019.1Rev4\20190226-CamposFormatoTemportal.txt
+		Documentacion\Liberaciones\v2019.1Rev4\20190226-Opcion1336GestionAlertas.txt = Documentacion\Liberaciones\v2019.1Rev4\20190226-Opcion1336GestionAlertas.txt
+		Documentacion\Liberaciones\v2019.1Rev4\20190226-OpcionesIndicadores.txt = Documentacion\Liberaciones\v2019.1Rev4\20190226-OpcionesIndicadores.txt
+		Documentacion\Liberaciones\v2019.1Rev4\Consulta de Estado de Planes.txt = Documentacion\Liberaciones\v2019.1Rev4\Consulta de Estado de Planes.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebConfig - Ambientes", "WebConfig - Ambientes", "{85FACE89-D7D2-47B0-90D3-B90E14AD15EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Produccion", "Produccion", "{8C6D6F98-41CD-44D3-9C2F-9E4FAA99ACC5}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\WebConfig - Ambientes\Produccion\Web.config = Documentacion\WebConfig - Ambientes\Produccion\Web.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Habilitacion", "Habilitacion", "{622730B6-AB41-4894-BDCB-AE0E339C64B6}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\WebConfig - Ambientes\Habilitacion\Web.config = Documentacion\WebConfig - Ambientes\Habilitacion\Web.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1Rev7", "v2019.1Rev7", "{8ED7B04C-27BA-4776-B139-21F0617E9987}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2019.1Rev7\20190301-UsuarioEdicionTblFormatos.txt = Documentacion\Liberaciones\v2019.1Rev7\20190301-UsuarioEdicionTblFormatos.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.1Rev8", "v2019.1Rev8", "{57EA43DD-0E6A-4E3F-B780-CAC1D4F54181}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2019.2\20190307-TblUsuarios.txt = Documentacion\Liberaciones\v2019.2\20190307-TblUsuarios.txt
+		Documentacion\Liberaciones\v2019.1Rev8\20190323-IntEstadoEnvioTblDoc.txt = Documentacion\Liberaciones\v2019.1Rev8\20190323-IntEstadoEnvioTblDoc.txt
+		Documentacion\Liberaciones\v2019.1Rev8\20190328-IntMensajeEnvioTblDoc.txt = Documentacion\Liberaciones\v2019.1Rev8\20190328-IntMensajeEnvioTblDoc.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2019.3", "v2019.3", "{E00CBE9E-08E1-4C5F-A6DD-5D610CC93116}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2019.3\20190507-IntVersionDianTblDocumentos.txt = Documentacion\Liberaciones\v2019.3\20190507-IntVersionDianTblDocumentos.txt
+		Documentacion\Liberaciones\v2019.3\20190512-IntVersionDianTblEmpresas.txt = Documentacion\Liberaciones\v2019.3\20190512-IntVersionDianTblEmpresas.txt
+		Documentacion\Liberaciones\v2019.3\20190709-Caso464898.txt = Documentacion\Liberaciones\v2019.3\20190709-Caso464898.txt
+		Documentacion\Liberaciones\v2019.3\20190717-IntTimeout.txt = Documentacion\Liberaciones\v2019.3\20190717-IntTimeout.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetUBLv2_1", "HGInetUBLv2_1\HGInetUBLv2_1.csproj", "{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso493983", "Caso493983", "{EBA9F112-FFF6-4DE9-B324-3C75E8226B16}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso493983\CamposTblEmpresas.txt = Documentacion\Liberaciones\Caso493983\CamposTblEmpresas.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2020.1", "v2020.1", "{906F82DF-E534-4F42-AC8F-1F24D871EE46}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2020.1\497137 Crear Perfiles.txt = Documentacion\Liberaciones\v2020.1\497137 Crear Perfiles.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso499130", "Caso499130", "{30AF7E6A-ECD0-41E9-B5AD-5F47BAC425D1}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso499130\CamposTblPlanesTransacciones.txt = Documentacion\Liberaciones\Caso499130\CamposTblPlanesTransacciones.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso500630", "Caso500630", "{CC2BBBB3-4589-4AF8-A0E6-3245D3E51F2D}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso500630\PasarelaTblEmpresasPasarela.txt = Documentacion\Liberaciones\Caso500630\PasarelaTblEmpresasPasarela.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CambioFormato", "CambioFormato", "{0A1CC09D-12DB-46AF-A9F8-86614F0DC5AA}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\CambioFormato\StrFormato-TblDocumentos.txt = Documentacion\Liberaciones\CambioFormato\StrFormato-TblDocumentos.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetFeAPI", "HGInetFeAPI\HGInetFeAPI.csproj", "{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491} = {AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso510224", "Caso510224", "{A62A61A7-CEF6-48AC-905F-4C45723BE7B6}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso510224\EmpresasPasarela.txt = Documentacion\Liberaciones\Caso510224\EmpresasPasarela.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso511728", "Caso511728", "{BF7BD325-A511-4119-9FE2-1CDD60C12F48}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso511728\CambiosPagosEnLinea.txt = Documentacion\Liberaciones\Caso511728\CambiosPagosEnLinea.txt
+		Documentacion\Liberaciones\Caso511728\Script Nuevo Permiso Resoluciones.txt = Documentacion\Liberaciones\Caso511728\Script Nuevo Permiso Resoluciones.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMiFacturaElectronicaAudit", "HGInetMiFacturaElectronicaAudit\HGInetMiFacturaElectronicaAudit.csproj", "{B044D0CE-3B14-4D09-B22B-6183269E6ACF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auditoria", "Auditoria", "{B8068B7D-C1D3-4F1A-90D2-132DD573D4AE}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Auditoria\20191210-Tablas Auditoria.txt = Documentacion\Liberaciones\Auditoria\20191210-Tablas Auditoria.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "v2020.4", "v2020.4", "{9348B25B-EF5A-421F-B0F2-F3A213E4DA2F}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\v2020.4\20200318-TblEmpresas-PdfCamposDian.sql = Documentacion\Liberaciones\v2020.4\20200318-TblEmpresas-PdfCamposDian.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso553356", "Caso553356", "{3EDF24D1-55B1-47A8-976D-06E4C774FFD4}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso553356\TblCorreosRecepcion.sql = Documentacion\Liberaciones\Caso553356\TblCorreosRecepcion.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso562214-563593", "Caso562214-563593", "{3C74ABA9-841A-4034-9EBA-D945D13627C4}"
+	ProjectSection(SolutionItems) = preProject
+		CamposTblDocumentos.txt = CamposTblDocumentos.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMonitorServWeb", "HGInetMonitorServWeb\HGInetMonitorServWeb.csproj", "{FA96BAE1-D2EC-4343-A5D1-349102DB8988}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetMonitorServController", "HGInetMonitorServController\HGInetMonitorServController.csproj", "{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FormasPago", "FormasPago", "{40ADCB67-6DFE-4D1F-A5D9-9BC9D795A9F6}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\FormasPago\ScriptTblEmpresas-TblEmpresasResoluciones.txt = Documentacion\Liberaciones\FormasPago\ScriptTblEmpresas-TblEmpresasResoluciones.txt
+		Documentacion\Liberaciones\FormasPago\ScriptTblEmpresas-TblEmpresasResoluciones2.txt = Documentacion\Liberaciones\FormasPago\ScriptTblEmpresas-TblEmpresasResoluciones2.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServicioConsultaPagosXFecha", "ServicioConsultaPagosXFecha", "{B713EFD5-6A3D-4385-B9B4-AE30CFB4FA9E}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\ServicioConsultaPagosXFecha\IntProcesado-TblPagosElectronicos.txt = Documentacion\Liberaciones\ServicioConsultaPagosXFecha\IntProcesado-TblPagosElectronicos.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso583592", "Caso583592", "{3FA69635-51B3-4997-9848-EA81FDDF50C6}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso583592\TblProcesoCorreo.txt = Documentacion\Liberaciones\Caso583592\TblProcesoCorreo.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso586514", "Caso586514", "{DD56E40F-C15A-4CB9-878A-E4EFE15A8A32}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso586514\CampoIntHabilitacionNomina-TblEmpresas.txt = Documentacion\Liberaciones\Caso586514\CampoIntHabilitacionNomina-TblEmpresas.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProcesosPagos", "ProcesosPagos", "{D1B8A409-6E0B-439F-AFF0-927337BD0377}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\ProcesosPagos\TblUsuariosPagos.txt = Documentacion\Liberaciones\ProcesosPagos\TblUsuariosPagos.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProcesoERP", "ProcesoERP", "{7F2A4119-8345-4D0C-AF64-A772BBA1F325}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\ProcesoERP\TblDocumentos-IntProcesadoERP.txt = Documentacion\Liberaciones\ProcesoERP\TblDocumentos-IntProcesadoERP.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EmpresaConsultaPagos", "EmpresaConsultaPagos", "{4053CFED-AC25-4032-8D0B-635F8C43D0E5}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\EmpresaConsultaPagos\TblEmpresas-IntPagosPermiteConsTodos.txt = Documentacion\Liberaciones\EmpresaConsultaPagos\TblEmpresas-IntPagosPermiteConsTodos.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MultiplesComercios", "MultiplesComercios", "{227A9F03-6B68-4526-A617-5AD89C6BAFC4}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\MultiplesComercios\Empresa y Adquiriente en TblPagosElectronicos.txt = Documentacion\Liberaciones\MultiplesComercios\Empresa y Adquiriente en TblPagosElectronicos.txt
+		Documentacion\Liberaciones\MultiplesComercios\Pagos Electronicos de Multiples Documentos.txt = Documentacion\Liberaciones\MultiplesComercios\Pagos Electronicos de Multiples Documentos.txt
+		Documentacion\Liberaciones\MultiplesComercios\Script Empresas-Resoluciones.txt = Documentacion\Liberaciones\MultiplesComercios\Script Empresas-Resoluciones.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CamposXY", "CamposXY", "{04725DF0-4044-4FAC-BDA5-728109147048}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\CamposXY\PermisoAccesoFormulario.txt = Documentacion\Liberaciones\CamposXY\PermisoAccesoFormulario.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso603306", "Caso603306", "{08B5CDFA-9AFD-4DAC-8E73-861A735D1282}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso603306\Campo-IntValorPagar.txt = Documentacion\Liberaciones\Caso603306\Campo-IntValorPagar.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso612411", "Caso612411", "{A0BD85EF-B35A-42FC-BE77-B690F89F3467}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso612411\Campo IntInteroperabilidad-TblEmpresas.txt = Documentacion\Liberaciones\Caso612411\Campo IntInteroperabilidad-TblEmpresas.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso625648", "Caso625648", "{F748C7A1-B65E-4A85-87D3-38F4A911BF4B}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso625648\Campo IntTipoDocumento-TblPlanesTransacciones.txt = Documentacion\Liberaciones\Caso625648\Campo IntTipoDocumento-TblPlanesTransacciones.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso643003", "Caso643003", "{CC2F66C0-8863-4A23-896C-CBE914C3D0B5}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso643003\IntRadian - TblEmpresas.txt = Documentacion\Liberaciones\Caso643003\IntRadian - TblEmpresas.txt
+		Documentacion\Liberaciones\Caso643003\TblDocumentos.txt = Documentacion\Liberaciones\Caso643003\TblDocumentos.txt
+		Documentacion\Liberaciones\Caso643003\TblEventosRadian.txt = Documentacion\Liberaciones\Caso643003\TblEventosRadian.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "646319", "646319", "{6724C77F-DF4F-4711-A912-CBB2824176E2}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\646319\IntEnvioNominaMail-TblEmpresas.txt = Documentacion\Liberaciones\646319\IntEnvioNominaMail-TblEmpresas.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso659751", "Caso659751", "{C0E875B7-0042-4D37-A4BD-7642451BD32B}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso659751\TblEmpresas.txt = Documentacion\Liberaciones\Caso659751\TblEmpresas.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso662804", "Caso662804", "{DEFD9551-9508-46B8-9E08-1B039C23B030}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso662804\TblAlmacenamientoDocs.txt = Documentacion\Liberaciones\Caso662804\TblAlmacenamientoDocs.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso667569", "Caso667569", "{DBC8D470-03CD-4C67-91F0-3E65999F9FF5}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso667569\TblRegistroRecepcion.txt = Documentacion\Liberaciones\Caso667569\TblRegistroRecepcion.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso673122", "Caso673122", "{9BEB343A-4FFB-4996-8951-DB0409649B07}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso673122\TblEmpresas.txt = Documentacion\Liberaciones\Caso673122\TblEmpresas.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso676829", "Caso676829", "{B36E8FF4-C2D1-46AF-ACF1-2A63E8FE449E}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso676829\TblEmpresas.txt = Documentacion\Liberaciones\Caso676829\TblEmpresas.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso677484", "Caso677484", "{FA02A0A0-1DB1-408E-86AF-D0E50DDF1BF5}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso677484\TblImportacionDoc.txt = Documentacion\Liberaciones\Caso677484\TblImportacionDoc.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso678720", "Caso678720", "{8A6BD9A3-6CE9-4FCF-A3C5-D1CA6201DF89}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso678720\TblEmpresas.txt = Documentacion\Liberaciones\Caso678720\TblEmpresas.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso691671", "Caso691671", "{DF66701B-1E45-496D-A7A8-F88AC6FDB197}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso691671\TblProcesoCorreo.txt = Documentacion\Liberaciones\Caso691671\TblProcesoCorreo.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGIFacturacionEClearFlies", "HGIFacturacionEClearFlies\HGIFacturacionEClearFlies.csproj", "{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso708635", "Caso708635", "{5C3E2DEF-3A77-4DBA-A64A-9994B7797065}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso708635\TblAlmacenamientoDocs.txt = Documentacion\Liberaciones\Caso708635\TblAlmacenamientoDocs.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso727811", "Caso727811", "{77981C2C-D55E-4022-A515-409A297CD834}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso727811\TblEmpresas.txt = Documentacion\Liberaciones\Caso727811\TblEmpresas.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso757414", "Caso757414", "{0B55F9B7-02B0-4B2A-A5B2-1483F05765E6}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso757414\TblEmpresaSucursal-CamposNuevos.txt = Documentacion\Liberaciones\Caso757414\TblEmpresaSucursal-CamposNuevos.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caso757690", "Caso757690", "{25D0ADB7-09DC-42F1-8903-E90D67E1D539}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\Caso757690\script.txt = Documentacion\Liberaciones\Caso757690\script.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TblEmpresas_IntValidacionVersion", "TblEmpresas_IntValidacionVersion", "{8F217FD5-3422-45B0-A8E7-C1BE7699EA57}"
+	ProjectSection(SolutionItems) = preProject
+		Documentacion\Liberaciones\TblEmpresas_IntValidacionVersion\script.txt = Documentacion\Liberaciones\TblEmpresas_IntValidacionVersion\script.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HGInetConvertirXMLUBL", "HGInetConvertirXMLUBL\HGInetConvertirXMLUBL.csproj", "{F04B402B-5BD7-4632-AF83-61AA0EB06639}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Debug|x86.Build.0 = Debug|Any CPU
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Release|x86.ActiveCfg = Release|Any CPU
+		{AC6AED45-A02D-4DF9-8CBF-2BF90C3CB491}.Release|x86.Build.0 = Release|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Debug|x86.Build.0 = Debug|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Release|x86.ActiveCfg = Release|Any CPU
+		{B3B46672-9956-48F5-B7CE-24C013995E47}.Release|x86.Build.0 = Release|Any CPU
+		{E571F23F-B598-4DB1-893B-D94EC0354775}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E571F23F-B598-4DB1-893B-D94EC0354775}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E571F23F-B598-4DB1-893B-D94EC0354775}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E571F23F-B598-4DB1-893B-D94EC0354775}.Debug|x86.Build.0 = Debug|Any CPU
+		{E571F23F-B598-4DB1-893B-D94EC0354775}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E571F23F-B598-4DB1-893B-D94EC0354775}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E571F23F-B598-4DB1-893B-D94EC0354775}.Release|x86.ActiveCfg = Release|Any CPU
+		{E571F23F-B598-4DB1-893B-D94EC0354775}.Release|x86.Build.0 = Release|Any CPU
+		{A966A394-F6CC-482F-87A4-56EC1AF05E5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A966A394-F6CC-482F-87A4-56EC1AF05E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A966A394-F6CC-482F-87A4-56EC1AF05E5E}.Debug|x86.ActiveCfg = Debug|x86
+		{A966A394-F6CC-482F-87A4-56EC1AF05E5E}.Debug|x86.Build.0 = Debug|x86
+		{A966A394-F6CC-482F-87A4-56EC1AF05E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A966A394-F6CC-482F-87A4-56EC1AF05E5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A966A394-F6CC-482F-87A4-56EC1AF05E5E}.Release|x86.ActiveCfg = Release|x86
+		{A966A394-F6CC-482F-87A4-56EC1AF05E5E}.Release|x86.Build.0 = Release|x86
+		{F112EDD7-AAE3-46CE-9A87-0BFAF3EDAF3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F112EDD7-AAE3-46CE-9A87-0BFAF3EDAF3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F112EDD7-AAE3-46CE-9A87-0BFAF3EDAF3E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F112EDD7-AAE3-46CE-9A87-0BFAF3EDAF3E}.Debug|x86.Build.0 = Debug|Any CPU
+		{F112EDD7-AAE3-46CE-9A87-0BFAF3EDAF3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F112EDD7-AAE3-46CE-9A87-0BFAF3EDAF3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F112EDD7-AAE3-46CE-9A87-0BFAF3EDAF3E}.Release|x86.ActiveCfg = Release|Any CPU
+		{F112EDD7-AAE3-46CE-9A87-0BFAF3EDAF3E}.Release|x86.Build.0 = Release|Any CPU
+		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Debug|x86.Build.0 = Debug|Any CPU
+		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Release|x86.ActiveCfg = Release|Any CPU
+		{29CB08F8-08EA-40AE-AFD6-7A2A6C0D13D0}.Release|x86.Build.0 = Release|Any CPU
+		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Debug|x86.Build.0 = Debug|Any CPU
+		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Release|Any CPU.Build.0 = Release|Any CPU
+		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Release|x86.ActiveCfg = Release|Any CPU
+		{101B7B4C-B4CF-42E9-8370-30B2C3147346}.Release|x86.Build.0 = Release|Any CPU
+		{E87C13D9-AEF2-442C-B377-7A5D7290502A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E87C13D9-AEF2-442C-B377-7A5D7290502A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E87C13D9-AEF2-442C-B377-7A5D7290502A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E87C13D9-AEF2-442C-B377-7A5D7290502A}.Debug|x86.Build.0 = Debug|Any CPU
+		{E87C13D9-AEF2-442C-B377-7A5D7290502A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E87C13D9-AEF2-442C-B377-7A5D7290502A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E87C13D9-AEF2-442C-B377-7A5D7290502A}.Release|x86.ActiveCfg = Release|Any CPU
+		{E87C13D9-AEF2-442C-B377-7A5D7290502A}.Release|x86.Build.0 = Release|Any CPU
+		{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}.Debug|x86.Build.0 = Debug|Any CPU
+		{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}.Release|x86.ActiveCfg = Release|Any CPU
+		{9C888DE6-5AAE-45C6-9C50-E0844EF42A3C}.Release|x86.Build.0 = Release|Any CPU
+		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Debug|x86.Build.0 = Debug|Any CPU
+		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Release|x86.ActiveCfg = Release|Any CPU
+		{1E3E0A55-1C61-44B2-BBB9-87FD753585AA}.Release|x86.Build.0 = Release|Any CPU
+		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Debug|x86.Build.0 = Debug|Any CPU
+		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Release|x86.ActiveCfg = Release|Any CPU
+		{115E59B2-036E-4F16-8272-F1A011A9DEAA}.Release|x86.Build.0 = Release|Any CPU
+		{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}.Debug|x86.Build.0 = Debug|Any CPU
+		{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}.Release|x86.ActiveCfg = Release|Any CPU
+		{C5391CEE-225B-40F7-BA3C-A4D475ED6A5D}.Release|x86.Build.0 = Release|Any CPU
+		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Debug|x86.Build.0 = Debug|Any CPU
+		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Release|x86.ActiveCfg = Release|Any CPU
+		{3782EC8B-12E6-44C9-A31B-9EB4EC7755AC}.Release|x86.Build.0 = Release|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Debug|x86.Build.0 = Debug|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|x86.ActiveCfg = Release|Any CPU
+		{FB700AE3-33EA-4A54-B9B9-CC70E7B502D7}.Release|x86.Build.0 = Release|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Debug|x86.Build.0 = Debug|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|x86.ActiveCfg = Release|Any CPU
+		{B044D0CE-3B14-4D09-B22B-6183269E6ACF}.Release|x86.Build.0 = Release|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Debug|x86.Build.0 = Debug|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Release|x86.ActiveCfg = Release|Any CPU
+		{FA96BAE1-D2EC-4343-A5D1-349102DB8988}.Release|x86.Build.0 = Release|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Debug|x86.Build.0 = Debug|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|x86.ActiveCfg = Release|Any CPU
+		{309F3841-4F0D-4D8C-AB21-4CF14ED7A00F}.Release|x86.Build.0 = Release|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Debug|x86.Build.0 = Debug|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|x86.ActiveCfg = Release|Any CPU
+		{C4CA1BA9-7DDC-4DC3-8580-DDE410746E57}.Release|x86.Build.0 = Release|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Debug|x86.Build.0 = Debug|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Release|x86.ActiveCfg = Release|Any CPU
+		{F04B402B-5BD7-4632-AF83-61AA0EB06639}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EFD98A42-3E60-459D-9574-8270FBFAC35E} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{59113B66-AE70-4B22-83BC-94B88ED048AF} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{EBACB14C-A142-4A25-84E0-EE8A1626BE41} = {59113B66-AE70-4B22-83BC-94B88ED048AF}
+		{23109A26-F049-4B31-B856-61B9F8990E5C} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{B86938E2-C84C-46A0-A40D-F4DB79E9DBA9} = {23109A26-F049-4B31-B856-61B9F8990E5C}
+		{DD134E07-6322-4EA9-8A1F-777C13D3D20F} = {59113B66-AE70-4B22-83BC-94B88ED048AF}
+		{1B150BCF-D3BC-4E30-B239-74891D9AFC1E} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{74CA58BC-3812-4DBA-9D46-CD8E78A6EAF1} = {1B150BCF-D3BC-4E30-B239-74891D9AFC1E}
+		{F68822E5-02C3-462C-BCDB-847EEA6D72A6} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{455E2F68-5469-4137-B886-347444F87FF4} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{6C8336DF-8668-454E-BFDF-DA7EEFFC2E40} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{4F6933ED-0456-49B4-8DB6-F333AA02BD63} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{ABC6BEBB-CCE9-4BEB-92A9-AD83FFC3D3BD} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{E0F33763-DA85-46D9-9491-B799C4CAC3B0} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{816DBCC8-33A5-4D4D-87B8-EB3D5BC4494F} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{FF1660BC-E1CE-4614-8840-4EC6909431E0} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{A3A0A8E3-3480-47A6-B494-FA61C23A0979} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{C420E912-5DC2-4F53-9B3A-A882B62C7C58} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{85FACE89-D7D2-47B0-90D3-B90E14AD15EA} = {2088ABAD-E463-4F38-8668-C410072AC57F}
+		{8C6D6F98-41CD-44D3-9C2F-9E4FAA99ACC5} = {85FACE89-D7D2-47B0-90D3-B90E14AD15EA}
+		{622730B6-AB41-4894-BDCB-AE0E339C64B6} = {85FACE89-D7D2-47B0-90D3-B90E14AD15EA}
+		{8ED7B04C-27BA-4776-B139-21F0617E9987} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{57EA43DD-0E6A-4E3F-B780-CAC1D4F54181} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{E00CBE9E-08E1-4C5F-A6DD-5D610CC93116} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{EBA9F112-FFF6-4DE9-B324-3C75E8226B16} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{906F82DF-E534-4F42-AC8F-1F24D871EE46} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{30AF7E6A-ECD0-41E9-B5AD-5F47BAC425D1} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{CC2BBBB3-4589-4AF8-A0E6-3245D3E51F2D} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{0A1CC09D-12DB-46AF-A9F8-86614F0DC5AA} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{A62A61A7-CEF6-48AC-905F-4C45723BE7B6} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{BF7BD325-A511-4119-9FE2-1CDD60C12F48} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{B8068B7D-C1D3-4F1A-90D2-132DD573D4AE} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{9348B25B-EF5A-421F-B0F2-F3A213E4DA2F} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{3EDF24D1-55B1-47A8-976D-06E4C774FFD4} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{3C74ABA9-841A-4034-9EBA-D945D13627C4} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{40ADCB67-6DFE-4D1F-A5D9-9BC9D795A9F6} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{B713EFD5-6A3D-4385-B9B4-AE30CFB4FA9E} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{3FA69635-51B3-4997-9848-EA81FDDF50C6} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{DD56E40F-C15A-4CB9-878A-E4EFE15A8A32} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{D1B8A409-6E0B-439F-AFF0-927337BD0377} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{7F2A4119-8345-4D0C-AF64-A772BBA1F325} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{4053CFED-AC25-4032-8D0B-635F8C43D0E5} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{227A9F03-6B68-4526-A617-5AD89C6BAFC4} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{04725DF0-4044-4FAC-BDA5-728109147048} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{08B5CDFA-9AFD-4DAC-8E73-861A735D1282} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{A0BD85EF-B35A-42FC-BE77-B690F89F3467} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{F748C7A1-B65E-4A85-87D3-38F4A911BF4B} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{CC2F66C0-8863-4A23-896C-CBE914C3D0B5} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{6724C77F-DF4F-4711-A912-CBB2824176E2} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{C0E875B7-0042-4D37-A4BD-7642451BD32B} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{DEFD9551-9508-46B8-9E08-1B039C23B030} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{DBC8D470-03CD-4C67-91F0-3E65999F9FF5} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{9BEB343A-4FFB-4996-8951-DB0409649B07} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{B36E8FF4-C2D1-46AF-ACF1-2A63E8FE449E} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{FA02A0A0-1DB1-408E-86AF-D0E50DDF1BF5} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{8A6BD9A3-6CE9-4FCF-A3C5-D1CA6201DF89} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{DF66701B-1E45-496D-A7A8-F88AC6FDB197} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{5C3E2DEF-3A77-4DBA-A64A-9994B7797065} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{77981C2C-D55E-4022-A515-409A297CD834} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{0B55F9B7-02B0-4B2A-A5B2-1483F05765E6} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{25D0ADB7-09DC-42F1-8903-E90D67E1D539} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+		{8F217FD5-3422-45B0-A8E7-C1BE7699EA57} = {F68822E5-02C3-462C-BCDB-847EEA6D72A6}
+	EndGlobalSection
+EndGlobal

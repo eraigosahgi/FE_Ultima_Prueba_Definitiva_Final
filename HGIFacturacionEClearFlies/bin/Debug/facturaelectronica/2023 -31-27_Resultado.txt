@@ -1,0 +1,3 @@
+Obteniendo directorios de la ruta E:\Desarrollo\jflores\Proyectos\HGIFacturacionEClearFlies\HGIFacturacionEClearFlies\bin\Debug\\dms
+Se encontraron 9 directorios.
+[{"empresa":"133d66db-5e2d-4e7e-b7de-7618d29a6c56","descreipcion":"Se encontraron 23 archivos en E:\\Desarrollo\\jflores\\Proyectos\\HGIFacturacionEClearFlies\\HGIFacturacionEClearFlies\\bin\\Debug\\\\dms\\133d66db-5e2d-4e7e-b7de-7618d29a6c56\\XmlFacturaEResoluciones.","lista_archivos":[]},{"empresa":"133d66db-5e2d-4e7e-b7de-7618d29a6c56","descreipcion":"Se encontraron 23 archivos en E:\\Desarrollo\\jflores\\Proyectos\\HGIFacturacionEClearFlies\\HGIFacturacionEClearFlies\\bin\\Debug\\\\dms\\133d66db-5e2d-4e7e-b7de-7618d29a6c56\\XmlFacturaEResoluciones.","lista_archivos":[]}]

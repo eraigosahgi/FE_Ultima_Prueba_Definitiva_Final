@@ -1,0 +1,11 @@
+ALTER TABLE TblEmpresas ADD
+IntFacturaE bit NOT NULL Default(0)
+GO
+
+ALTER TABLE TblEmpresas ADD
+IntNominaE bit NOT NULL Default(0)
+GO
+
+ALTER TABLE TblEmpresas ADD
+IntDocSoporte bit NOT NULL Default(0)
+GO

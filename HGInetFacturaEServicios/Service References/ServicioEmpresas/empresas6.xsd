@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="Empresa">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EmailAcuse" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EmailAdmin" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EmailEnvio" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EmailPagos" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EmailRecepcion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="HorasAcuseTacito" type="xs:short" />
+      <xs:element minOccurs="0" name="Identificacion" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdentificacionDv" type="xs:int" />
+      <xs:element minOccurs="0" name="ManejaAnexo" type="xs:boolean" />
+      <xs:element minOccurs="0" name="PinSoftware" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RazonSocial" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Telefono" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="VersionDian" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Empresa" nillable="true" type="tns:Empresa" />
+</xs:schema>

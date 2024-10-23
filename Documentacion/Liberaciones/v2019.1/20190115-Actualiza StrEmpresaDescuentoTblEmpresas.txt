@@ -1,0 +1,3 @@
+update TblEmpresas set StrEmpresaDescuento = StrIdentificacion where StrEmpresaDescuento is null
+
+update TblEmpresas set StrEmpresaAsociada = StrIdentificacion where StrEmpresaAsociada is null

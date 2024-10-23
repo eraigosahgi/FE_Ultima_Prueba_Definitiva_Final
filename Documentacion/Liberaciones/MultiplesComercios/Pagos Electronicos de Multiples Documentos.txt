@@ -1,0 +1,112 @@
+--Se cambia nombre del campo StrIdSeguridadDoc y se quita la relacion con la tabla de documentos
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.TblPagosElectronicos
+	DROP CONSTRAINT FK_TblPagosElectronicos_TblDocumentos
+GO
+ALTER TABLE dbo.TblDocumentos SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+select Has_Perms_By_Name(N'dbo.TblDocumentos', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.TblDocumentos', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.TblDocumentos', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
+GO
+EXECUTE sp_rename N'dbo.TblPagosElectronicos.StrIdSeguridadDoc', N'Tmp_StrIdRegistro2', 'COLUMN' 
+GO
+EXECUTE sp_rename N'dbo.TblPagosElectronicos.Tmp_StrIdRegistro2', N'StrIdRegistro2', 'COLUMN' 
+GO
+ALTER TABLE dbo.TblPagosElectronicos SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+select Has_Perms_By_Name(N'dbo.TblPagosElectronicos', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.TblPagosElectronicos', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.TblPagosElectronicos', 'Object', 'CONTROL') as Contr_Per 
+
+
+--Crear Tabla de Detalles
+
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+BEGIN TRANSACTION
+GO
+CREATE TABLE dbo.TblPagosDetalles
+	(
+	StrIdPagoPrincipal uniqueidentifier NOT NULL,
+	StrIdSeguridadDoc uniqueidentifier NOT NULL,
+	IntValorPago numeric(17, 2) NOT NULL
+	)  ON [PRIMARY]
+GO
+ALTER TABLE dbo.TblPagosDetalles ADD CONSTRAINT
+	PK_TblPagosDetalles PRIMARY KEY CLUSTERED 
+	(
+	StrIdPagoPrincipal,
+	StrIdSeguridadDoc
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+
+GO
+ALTER TABLE dbo.TblPagosDetalles SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+select Has_Perms_By_Name(N'dbo.TblPagosDetalles', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.TblPagosDetalles', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.TblPagosDetalles', 'Object', 'CONTROL') as Contr_Per 
+
+--Crear Relaciones
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.TblDocumentos SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+select Has_Perms_By_Name(N'dbo.TblDocumentos', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.TblDocumentos', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.TblDocumentos', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.TblPagosElectronicos SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+select Has_Perms_By_Name(N'dbo.TblPagosElectronicos', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.TblPagosElectronicos', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.TblPagosElectronicos', 'Object', 'CONTROL') as Contr_Per BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.TblPagosDetalles ADD CONSTRAINT
+	FK_TblPagosDetalles_TblPagosElectronicos FOREIGN KEY
+	(
+	StrIdPagoPrincipal
+	) REFERENCES dbo.TblPagosElectronicos
+	(
+	StrIdRegistro
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
+ALTER TABLE dbo.TblPagosDetalles ADD CONSTRAINT
+	FK_TblPagosDetalles_TblDocumentos FOREIGN KEY
+	(
+	StrIdSeguridadDoc
+	) REFERENCES dbo.TblDocumentos
+	(
+	StrIdSeguridad
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
+ALTER TABLE dbo.TblPagosDetalles SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+select Has_Perms_By_Name(N'dbo.TblPagosDetalles', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.TblPagosDetalles', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.TblPagosDetalles', 'Object', 'CONTROL') as Contr_Per 
+

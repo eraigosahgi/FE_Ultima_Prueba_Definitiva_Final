@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4C1F6A31-DA22-4274-AAFB-D158ED00C22A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HGICtrlUtilidades</RootNamespace>
+    <AssemblyName>HGICtrlUtilidades</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.8.9\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MailKit, Version=2.10.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailKit.2.10.0\lib\net46\MailKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="MimeKit, Version=2.10.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.2.10.1\lib\net46\MimeKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OpenPop, Version=2.0.6.1120, Culture=neutral, PublicKeyToken=6bdb97f144b7efc8, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenPop.NET.2.0.6.1120\lib\net40\OpenPop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Documentacion\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Controladores\Aplicacion\Cl_Version.cs" />
+    <Compile Include="Controladores\Correos\Cl_MailImap.cs" />
+    <Compile Include="Controladores\Correos\Cl_MailObjetos.cs" />
+    <Compile Include="Controladores\Correos\Cl_MailPop.cs" />
+    <Compile Include="Controladores\Correos\Cl_MailRest.cs" />
+    <Compile Include="Controladores\Correos\Cl_MailSmtp.cs" />
+    <Compile Include="Controladores\Envios\Cl_MiPaquete.cs" />
+    <Compile Include="Controladores\HGInet\Mensajeria\Cl_CloudMensajeria.cs" />
+    <Compile Include="Controladores\HGInet\Registro\Cl_ValidacionesLicencia.cs" />
+    <Compile Include="Controladores\Logs\Cl_JsonLog.cs" />
+    <Compile Include="Controladores\Logs\Cl_RegistroLog.cs" />
+    <Compile Include="Controladores\PlataformaServicios\Cl_Configuraciones.cs" />
+    <Compile Include="Dms\Cl_Archivo.cs" />
+    <Compile Include="Dms\Cl_Directorio.cs" />
+    <Compile Include="Dms\Cl_Dms.cs" />
+    <Compile Include="Enumerables\Aplicacion\AmbientesUrl.cs" />
+    <Compile Include="Enumerables\Aplicacion\CodigosAplicativo.cs" />
+    <Compile Include="Enumerables\Aplicacion\CodigosEdicionAplicativo.cs" />
+    <Compile Include="Enumerables\DatosFijos\AceptacionAdquiriente.cs" />
+    <Compile Include="Enumerables\DatosFijos\AIU.cs" />
+    <Compile Include="Enumerables\DatosFijos\Bancos.cs" />
+    <Compile Include="Enumerables\DatosFijos\Bodegas.cs" />
+    <Compile Include="Enumerables\DatosFijos\CapturaDescuento.cs" />
+    <Compile Include="Enumerables\DatosFijos\Clases.cs" />
+    <Compile Include="Enumerables\DatosFijos\Consecutivo.cs" />
+    <Compile Include="Enumerables\DatosFijos\ControlUvt.cs" />
+    <Compile Include="Enumerables\DatosFijos\DocRefDian.cs" />
+    <Compile Include="Enumerables\DatosFijos\DocRefDianFecha.cs" />
+    <Compile Include="Enumerables\DatosFijos\EstadosProcesoPagosE.cs" />
+    <Compile Include="Enumerables\DatosFijos\PlantillaCorreo.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoAnexoFormato.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoContratoEmpleado.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoEmpleados.cs" />
+    <Compile Include="Enumerables\DatosFijos\EstadoFacturaE.cs" />
+    <Compile Include="Enumerables\DatosFijos\Factura.cs" />
+    <Compile Include="Enumerables\DatosFijos\FacturacionElectronica.cs" />
+    <Compile Include="Enumerables\DatosFijos\FormaPago.cs" />
+    <Compile Include="Enumerables\DatosFijos\FormaPagoPColombia.cs" />
+    <Compile Include="Enumerables\DatosFijos\GrupoLiquidacion.cs" />
+    <Compile Include="Enumerables\DatosFijos\InterfazAdmTercero.cs" />
+    <Compile Include="Enumerables\DatosFijos\InterfazAdmTrValor.cs" />
+    <Compile Include="Enumerables\DatosFijos\InterfazAgrupar.cs" />
+    <Compile Include="Enumerables\DatosFijos\InterfazBase.cs" />
+    <Compile Include="Enumerables\DatosFijos\InterfazDetalle.cs" />
+    <Compile Include="Enumerables\DatosFijos\InterfazDocumento.cs" />
+    <Compile Include="Enumerables\DatosFijos\ManejaDescuento.cs" />
+    <Compile Include="Enumerables\DatosFijos\ModoCon.cs" />
+    <Compile Include="Enumerables\DatosFijos\Naturaleza.cs" />
+    <Compile Include="Enumerables\DatosFijos\Operaciones.cs" />
+    <Compile Include="Enumerables\DatosFijos\Periodicidad.cs" />
+    <Compile Include="Enumerables\DatosFijos\Plazo.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoAusentismo.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoConcepto.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoConceptoPago.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoDocumentoElectronico.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoFormato.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoIdentificacion.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoIva.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoLiquidacion.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoPersona.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoPrecioUnitario.cs" />
+    <Compile Include="Enumerables\DatosFijos\TiposTerceros.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoTercero.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoTransaccion.cs" />
+    <Compile Include="Enumerables\DatosFijos\TipoUsuario.cs" />
+    <Compile Include="Enumerables\DatosFijos\Transacciones.cs" />
+    <Compile Include="Enumerables\DatosFijos\ValorBaseConceptoNom.cs" />
+    <Compile Include="Enumerables\Ecommerce\EstadosCompra.cs" />
+    <Compile Include="Enumerables\Ecommerce\TiposEntrega.cs" />
+    <Compile Include="Enumerables\Generales\Accion.cs" />
+    <Compile Include="Enumerables\Generales\Crud.cs" />
+    <Compile Include="Enumerables\Generales\MotorBd.cs" />
+    <Compile Include="Enumerables\Generales\NotificacionCodigo.cs" />
+    <Compile Include="Enumerables\Logs\MensajeAccion.cs" />
+    <Compile Include="Enumerables\Logs\MensajeCategoria.cs" />
+    <Compile Include="Enumerables\Logs\MensajeTipo.cs" />
+    <Compile Include="Enumerables\PagosElectronicos\AplicativosPlataforma.cs" />
+    <Compile Include="Enumerables\PagosElectronicos\EstadoPago.cs" />
+    <Compile Include="Enumerables\PagosElectronicos\FormasPago.cs" />
+    <Compile Include="Enumerables\Peticiones\TipoContenido.cs" />
+    <Compile Include="Enumerables\Peticiones\TipoPeticion.cs" />
+    <Compile Include="Enumerables\Registro\TipoBloqueo.cs" />
+    <Compile Include="Formato\Cl_Coleccion.cs" />
+    <Compile Include="Formato\Cl_Texto.cs" />
+    <Compile Include="Funciones\Arbol.cs" />
+    <Compile Include="Funciones\Cl_Archivos.cs" />
+    <Compile Include="Funciones\Cl_Funciones.cs" />
+    <Compile Include="Funciones\Cl_FuncionesTexto.cs" />
+    <Compile Include="Funciones\Cl_Generales.cs" />
+    <Compile Include="Funciones\Cl_Enumeracion.cs" />
+    <Compile Include="Funciones\Cl_Fecha.cs" />
+    <Compile Include="Funciones\Cl_FuncionesBD.cs" />
+    <Compile Include="Funciones\Cl_InfoConfiguracionServer.cs" />
+    <Compile Include="Funciones\Cl_Listas.cs" />
+    <Compile Include="Funciones\Cl_Mail.cs" />
+    <Compile Include="Funciones\Cl_ParametrosXml.cs" />
+    <Compile Include="Funciones\Cl_Seguridad.cs" />
+    <Compile Include="Funciones\Cl_Versiones.cs" />
+    <Compile Include="Funciones\Cl_Xml.cs" />
+    <Compile Include="ManejoDatos\Cl_EjecutarSQL.cs" />
+    <Compile Include="Objetos\Correos\Adjunto.cs" />
+    <Compile Include="Objetos\Correos\MensajeContenido.cs" />
+    <Compile Include="Objetos\Correos\MensajeEnvio.cs" />
+    <Compile Include="Objetos\Correos\MensajeResumen.cs" />
+    <Compile Include="Objetos\Correos\MensajeResumenGlobal.cs" />
+    <Compile Include="Objetos\Correos\MensajeSeguimiento.cs" />
+    <Compile Include="Objetos\Correos\RespuestaError.cs" />
+    <Compile Include="Objetos\Correos\TipoDestinatario.cs" />
+    <Compile Include="Objetos\Envios\MiPaquete\ApiKey.cs" />
+    <Compile Include="Objetos\Envios\MiPaquete\cancelSending.cs" />
+    <Compile Include="Objetos\Envios\MiPaquete\createSending.cs" />
+    <Compile Include="Objetos\Envios\MiPaquete\getDeliveryCompanies.cs" />
+    <Compile Include="Objetos\Envios\MiPaquete\getSendings.cs" />
+    <Compile Include="Objetos\Envios\MiPaquete\getSendingTracking.cs" />
+    <Compile Include="Objetos\Envios\MiPaquete\quoteShipping.cs" />
+    <Compile Include="Objetos\Envios\MiPaquete\Usuario.cs" />
+    <Compile Include="Objetos\Generales\ExcepcionHgi.cs" />
+    <Compile Include="Objetos\Generales\Notificacion.cs" />
+    <Compile Include="Objetos\Correos\ArchivoUrl.cs" />
+    <Compile Include="Objetos\Correos\DestinatarioEmail.cs" />
+    <Compile Include="Objetos\Generales\ObjComboTabla.cs" />
+    <Compile Include="Objetos\Generales\ObjetoVistaPrevia.cs" />
+    <Compile Include="Objetos\Logs\LogArchivo.cs" />
+    <Compile Include="Objetos\Logs\LogClase.cs" />
+    <Compile Include="Objetos\Logs\LogDetalle.cs" />
+    <Compile Include="Objetos\Logs\LogMensaje.cs" />
+    <Compile Include="Objetos\PagosEnLinea\ObjetosHGIPay\ObjSondaHGIpay.cs" />
+    <Compile Include="Objetos\PagosEnLinea\ObjetosHGIPay\RegistroHGIPagos.cs" />
+    <Compile Include="Objetos\PagosEnLinea\ObjetosHGIPay\RespuestaHGIPagos.cs" />
+    <Compile Include="Objetos\PagosEnLinea\TblPasarelaPagosPI.cs" />
+    <Compile Include="Objetos\PlataformaServicios\ObjConfiguracion.cs" />
+    <Compile Include="Objetos\PlataformaServicios\ObjParametrosAnyo.cs" />
+    <Compile Include="Objetos\Registro\InformacionServidor.cs" />
+    <Compile Include="Objetos\Registro\RecargaDocsFE.cs" />
+    <Compile Include="Objetos\Registro\RespuestaLicenciamiento.cs" />
+    <Compile Include="Objetos\Registro\ValidarLicencia.cs" />
+    <Compile Include="Objetos\Sistema\InfoFramework.cs" />
+    <Compile Include="Objetos\Sistema\InfoOS.cs" />
+    <Compile Include="Objetos\Sms\MensajeContenidoSms.cs" />
+    <Compile Include="Objetos\Sms\MensajeDatos.cs" />
+    <Compile Include="Objetos\Sms\MensajeEnvioSms.cs" />
+    <Compile Include="Objetos\Usuarios\PermisoUsuario.cs" />
+    <Compile Include="Peticiones\Cl_ClienteRest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Recursos\RecursoArchivosParametros.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RecursoArchivosParametros.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Recursos\RecursoDms.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RecursoDms.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Recursos\RecursoHGIServiciosWeb.Designer.cs" />
+    <Compile Include="Recursos\RecursoMensajes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RecursoMensajes.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utilitario.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Recursos\RecursoArchivosParametros.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecursoArchivosParametros.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Recursos\RecursoDms.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecursoDms.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Recursos\RecursoHGIServiciosWeb.resx" />
+    <EmbeddedResource Include="Recursos\RecursoMensajes.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecursoMensajes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

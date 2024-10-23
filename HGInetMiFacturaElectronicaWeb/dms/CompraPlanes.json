@@ -1,0 +1,82 @@
+{
+    "Plan": [
+		{
+            "Idplan": 1,
+            "desde": 1,
+            "hasta": 999,
+            "cantidad": 1,
+            "valor": 330.00,
+
+        }, 
+		{
+            "Idplan": 2,
+            "desde": 1000,
+            "hasta": 1999,
+            "cantidad": 1000,
+            "valor": 310.0,
+        }, 
+		{
+            "Idplan": 3,
+            "desde": 2000,
+            "hasta": 4999,
+            "cantidad": 2000,
+            "valor": 290.0,
+        }, 
+		{
+            "Idplan": 4,
+            "desde": 5000,
+            "hasta": 9999,
+            "cantidad": 5000,
+            "valor": 270.0,
+        }, 
+		{
+            "Idplan": 5,
+            "desde": 10000,
+            "hasta": 19999,
+            "cantidad": 10000,
+            "valor": 240.0,
+        }, 
+		{
+            "Idplan": 6,
+            "desde": 20000,
+            "hasta": 49999,
+            "cantidad": 20000,
+            "valor": 200.0,
+        }, 
+		{
+            "Idplan": 7,
+            "desde": 50000,
+            "hasta": 99999,
+            "cantidad": 50000,
+            "valor": 160.0,
+        }, 
+		{
+            "Idplan": 8,
+            "desde": 100000,
+            "hasta": 199999,
+            "cantidad": 100000,
+            "valor": 120.0,
+        }, 
+		{
+            "Idplan": 9,
+            "desde": 200000,
+            "hasta": 499999,
+            "cantidad": 200000,
+            "valor": 80.0,
+        }, 
+		{
+            "Idplan": 10,
+            "desde": 500000,
+            "hasta": 999999,
+            "cantidad": 500000,
+            "valor": 60.0,
+        }, 
+		{
+            "Idplan": 11,
+            "desde": 1000000,
+            "hasta": 9999999,
+            "cantidad": 1000000,
+            "valor": 50.0,
+        }
+    ],
+}

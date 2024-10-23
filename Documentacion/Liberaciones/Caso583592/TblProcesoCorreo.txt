@@ -1,0 +1,48 @@
+/*
+   lunes, 8 de febrero de 20219:03:02
+   User: 
+   Server: DESAQA-PC\SQL2014
+   Database: ModeloNetFacturacionElectronica
+   Application: 
+*/
+
+/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+BEGIN TRANSACTION
+GO
+CREATE TABLE dbo.TblProcesoCorreo
+	(
+	StrIdSeguridadDoc uniqueidentifier NOT NULL,
+	DatFecha datetime NOT NULL,
+	IntEnvioMail bit NOT NULL,
+	StrIdMensaje varchar(50) NULL,
+	IntValidadoMail bit NOT NULL,
+	DatFechaValidado datetime NULL,
+	StrMailEnviado varchar(100) NULL
+	)  ON [PRIMARY]
+GO
+ALTER TABLE dbo.TblProcesoCorreo ADD CONSTRAINT
+	DF_TblProcesoCorreo_IntEnvioMail DEFAULT 0 FOR IntEnvioMail
+GO
+ALTER TABLE dbo.TblProcesoCorreo ADD CONSTRAINT
+	DF_TblProcesoCorreo_IntValidadoMail DEFAULT 0 FOR IntValidadoMail
+GO
+ALTER TABLE dbo.TblProcesoCorreo ADD CONSTRAINT
+	PK_TblProcesoCorreo PRIMARY KEY CLUSTERED 
+	(
+	StrIdSeguridadDoc
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+
+GO
+ALTER TABLE dbo.TblProcesoCorreo SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+select Has_Perms_By_Name(N'dbo.TblProcesoCorreo', 'Object', 'ALTER') as ALT_Per, Has_Perms_By_Name(N'dbo.TblProcesoCorreo', 'Object', 'VIEW DEFINITION') as View_def_Per, Has_Perms_By_Name(N'dbo.TblProcesoCorreo', 'Object', 'CONTROL') as Contr_Per 

@@ -1,0 +1,2 @@
+INSERT INTO TblOpciones (IntId,IntIdDependencia,StrDescripcion,IntHabilitado,IntIdPerfilSuperior,StrIdSeguridad, StrClaseMenu, StrRutaMenu, IntTipo)
+VALUES (1347,134,'Consulta Auditoria Administrador',1,1, '495b9c59-85ae-48df-b052-71cc45c9caeb', 'icon-reading', 'ConsultaAuditoriaAdmin.aspx', 0);

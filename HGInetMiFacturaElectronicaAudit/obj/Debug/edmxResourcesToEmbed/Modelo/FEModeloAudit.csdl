@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HGIAuditoriaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="FEHGIAuditoria" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="TblSeguimientoAlertas" EntityType="HGIAuditoriaModel.TblSeguimientoAlertas" />
+    <EntitySet Name="TblAuditDocumentos" EntityType="HGIAuditoriaModel.TblAuditDocumentos" />
+    <EntitySet Name="TblAuditFormatos" EntityType="HGIAuditoriaModel.TblAuditFormatos" />
+    <EntitySet Name="TblLog" EntityType="HGIAuditoriaModel.TblLog" />
+  </EntityContainer>
+  <EntityType Name="TblSeguimientoAlertas">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="DatFecha" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IntIdTipo" Type="Int32" Nullable="false" />
+    <Property Name="IntIdAlerta" Type="Int32" Nullable="false" />
+    <Property Name="StrIdSeguridadEmpresa" Type="Guid" Nullable="false" />
+    <Property Name="StrIdentificacion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IntIdEstado" Type="Int32" Nullable="false" />
+    <Property Name="StrMensaje" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StrResultadoProceso" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StrIdSeguridadPlan" Type="Guid" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TblAuditDocumentos">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+    <Property Name="StrIdPeticion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DatFecha" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="StrObligado" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IntIdEstado" Type="Int32" Nullable="false" />
+    <Property Name="IntIdProceso" Type="Int32" Nullable="false" />
+    <Property Name="IntTipoRegistro" Type="Int32" Nullable="false" />
+    <Property Name="IntIdProcesadoPor" Type="Int32" Nullable="false" />
+    <Property Name="StrRealizadoPor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="StrMensaje" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StrResultadoProceso" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StrPrefijo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="StrNumero" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="TblAuditFormatos">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="IntCodigoFormato" Type="Int32" Nullable="false" />
+    <Property Name="StrEmpresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="StrIdSeguridad" Type="Guid" Nullable="false" />
+    <Property Name="IntTipoProceso" Type="Int32" Nullable="false" />
+    <Property Name="StrUsuarioProceso" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DatFechaProceso" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="StrObservaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="TblLog">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="DatFecha" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IntCategoria" Type="Int32" Nullable="false" />
+    <Property Name="StrCategoria" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IntTipo" Type="Int32" Nullable="false" />
+    <Property Name="StrTipo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IntAccion" Type="Int32" Nullable="false" />
+    <Property Name="StrAccion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="StrMensaje" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StrExcepcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Strerror_custom" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StrLinea" Type="Int32" />
+    <Property Name="StrArchivo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StrClase" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StrMetodo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StrModulo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>

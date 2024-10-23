@@ -1,0 +1,72 @@
+/*
+IntMailAdminVerificado  (bit - Null - Defecto: 0)
+IntMailEnvioVerificado (bit - Null - Defecto: 0)
+IntMailRecepcionVerificado (bit - Null - Defecto: 0)
+IntMailAcuseVerificado (bit - Null - Defecto: 0)
+IntMailPagosVerificado (bit - Null - Defecto: 0)
+*/
+
+ALTER TABLE TblEmpresas ADD
+IntMailEnvioVerificado smallint NOT NULL Default(0)
+GO
+
+ALTER TABLE TblEmpresas ADD
+IntMailAdminVerificado smallint NOT NULL Default(0)
+GO
+
+ALTER TABLE TblEmpresas ADD
+IntMailRecepcionVerificado smallint NOT NULL Default(0)
+GO
+
+ALTER TABLE TblEmpresas ADD
+IntMailAcuseVerificado smallint NOT NULL Default(0)
+GO
+
+ALTER TABLE TblEmpresas ADD
+IntMailPagosVerificado smallint NOT NULL Default(0)
+GO
+
+
+/*
+Caso 493983    
+
+IntCertResponsableHGI (bit - Null - Defecto: Null) Responsable del certificado digital HGI SAS
+IntCertNotificar (bit - Null - Defecto: Null)  Notificaciones del certificado digital 
+StrCertRuta (varchar(200) - Null - Defecto: Null) Ruta Física del Archivo Certificado Digital
+StrCertClave (varchar(200) - Null - Defecto: Null) Clave del Certificado Digital
+IntCertProveedor  (smallint - Null - Defecto: Null) Proveedor del certificado digital
+DatCertVence (date - Null - Defecto: Null) Fecha de Vencimiento del certificado digital 
+*/
+
+ALTER TABLE TblEmpresas ADD
+IntCertResponsableHGI bit NULL default(NULL)
+GO
+
+ALTER TABLE TblEmpresas ADD
+IntCertNotificar bit NULL default(NULL)
+GO
+
+ALTER TABLE TblEmpresas ADD
+StrCertRuta varchar(200) NULL default(NULL)
+GO
+
+ALTER TABLE TblEmpresas ADD
+StrCertClave varchar(200) NULL default(NULL)
+GO
+
+ALTER TABLE TblEmpresas ADD
+IntCertProveedor smallint NULL default(NULL)
+GO
+
+ALTER TABLE TblEmpresas ADD
+DatCertVence Date NULL default(NULL)
+GO
+
+
+/****
+Se requiere la creación del campo IntCertFirma de tipo smallint, en la tabla TblEmpresas el cual no permitirá valores null y el valor por defecto será cero.
+****/
+
+ALTER TABLE TblEmpresas ADD
+IntCertFirma smallint NOT NULL Default(0)
+GO

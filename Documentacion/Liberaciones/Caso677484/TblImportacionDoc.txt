@@ -1,0 +1,32 @@
+CREATE TABLE [dbo].[TblImportacionDoc](
+	[IdSeguridad] [uniqueidentifier] NOT NULL,
+	[IdProceso] [int] NOT NULL,
+	[StrObservaciones] [varchar](400) NULL,
+	[StrTipodoc] [varchar](60) NOT NULL,
+	[StrCufe] [varchar](100) NOT NULL,
+	[IntNumero] [varchar](50) NOT NULL,
+	[StrPrefijo] [varchar](5) NOT NULL,
+	[DatFechaEmision] [datetime] NOT NULL,
+	[DatFechaRecepcion] [datetime] NOT NULL,
+	[StrEmpresaFacturador] [varchar](50) NOT NULL,
+	[StrNombreFacturador] [varchar](200) NULL,
+	[StrEmpresaAdquiriente] [varchar](50) NOT NULL,
+	[StrNombreAdquiriente] [varchar](200) NULL,
+	[IntVlrIva] [numeric](17, 2) NOT NULL,
+	[IntVlrIca] [numeric](17, 2) NOT NULL,
+	[IntVlrIPC] [numeric](17, 2) NOT NULL,
+	[IntVlrTotal] [numeric](17, 2) NOT NULL,
+	[StrEstadoDian] [varchar](50) NOT NULL,
+	[StrGrupo] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_TblImportacionDoc] PRIMARY KEY CLUSTERED 
+(
+	[IdSeguridad] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[TblImportacionDoc] ADD  CONSTRAINT [DF_TblImportacionDoc_IdSeguridad]  DEFAULT (newid()) FOR [IdSeguridad]
+GO
+
+ALTER TABLE [dbo].[TblImportacionDoc] ADD  CONSTRAINT [DF_TblImportacionDoc_IdProceso]  DEFAULT ((0)) FOR [IdProceso]
+GO

@@ -1,0 +1,11 @@
+ALTER TABLE TblDocumentos ADD
+	StrUrlAnexo varchar(300) NULL
+GO
+
+ALTER TABLE TblDocumentos ADD
+	StrObservacionAnexo varchar(MAX) NULL
+GO
+
+ALTER TABLE TblDocumentos ADD
+	IntPesoAnexo int NULL 
+GO

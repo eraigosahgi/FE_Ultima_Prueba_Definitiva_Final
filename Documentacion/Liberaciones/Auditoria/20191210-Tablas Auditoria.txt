@@ -1,0 +1,94 @@
+
+USE [HGIAuditoria]
+
+
+CREATE TABLE [dbo].[TblAuditDocumentos](
+	[Id] [uniqueidentifier] NOT NULL,
+	[StrIdSeguridad] [uniqueidentifier] NOT NULL,
+	[StrIdPeticion] [nvarchar](50) NOT NULL,
+	[DatFecha] [datetime] NOT NULL,
+	[StrObligado] [nvarchar](50) NOT NULL,
+	[IntIdEstado] [int] NOT NULL,
+	[IntIdProceso] [int] NOT NULL,
+	[IntTipoRegistro] [int] NOT NULL,
+	[IntIdProcesadoPor] [int] NOT NULL,
+	[StrRealizadoPor] [nvarchar](50) NULL,
+	[StrMensaje] [nvarchar](max) NULL,
+	[StrResultadoProceso] [nvarchar](max) NULL,
+	[StrPrefijo] [nvarchar](50) NULL,
+	[StrNumero] [nvarchar](50) NULL,
+ CONSTRAINT [PK_TblAuditDocumentos] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+
+CREATE TABLE [dbo].[TblAuditFormatos](
+	[Id] [uniqueidentifier] NOT NULL,
+	[IntCodigoFormato] [int] NOT NULL,
+	[StrEmpresa] [nvarchar](50) NOT NULL,
+	[StrIdSeguridad] [uniqueidentifier] NOT NULL,
+	[IntTipoProceso] [int] NOT NULL,
+	[StrUsuarioProceso] [nvarchar](50) NOT NULL,
+	[DatFechaProceso] [datetime] NOT NULL,
+	[StrObservaciones] [nvarchar](max) NULL,
+ CONSTRAINT [PK_TblAuditFormatos] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+
+
+CREATE TABLE [dbo].[TblLog](
+	[Id] [uniqueidentifier] NOT NULL,
+	[DatFecha] [datetime] NOT NULL,
+	[IntCategoria] [int] NOT NULL,
+	[StrCategoria] [nvarchar](50) NOT NULL,
+	[IntTipo] [int] NOT NULL,
+	[StrTipo] [nvarchar](50) NOT NULL,
+	[IntAccion] [int] NOT NULL,
+	[StrAccion] [nvarchar](50) NOT NULL,
+	[StrMensaje] [nvarchar](max) NULL,
+	[StrExcepcion] [nvarchar](max) NULL,
+	[Strerror_custom] [nvarchar](max) NULL,
+	[StrLinea] [int] NULL,
+	[StrArchivo] [nvarchar](max) NULL,
+	[StrClase] [nvarchar](max) NULL,
+	[StrMetodo] [nvarchar](max) NULL,
+	[StrModulo] [nvarchar](max) NULL,
+ CONSTRAINT [PK_TblLog] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+
+
+CREATE TABLE [dbo].[TblSeguimientoAlertas](
+	[Id] [uniqueidentifier] NOT NULL,
+	[DatFecha] [datetime] NOT NULL,
+	[IntIdTipo] [int] NOT NULL,
+	[IntIdAlerta] [int] NOT NULL,
+	[StrIdSeguridadEmpresa] [uniqueidentifier] NOT NULL,
+	[StrIdentificacion] [nvarchar](50) NOT NULL,
+	[IntIdEstado] [int] NOT NULL,
+	[StrMensaje] [nvarchar](max) NOT NULL,
+	[StrResultadoProceso] [nvarchar](max) NULL,
+	[StrIdSeguridadPlan] [uniqueidentifier] NOT NULL,
+ CONSTRAINT [PK_TblSeguimientoAlertas] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+

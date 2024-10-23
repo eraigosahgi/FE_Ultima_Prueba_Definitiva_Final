@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Invoice xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+	<ext:UBLExtensions>
+		<ext:UBLExtension>
+			<ext:ExtensionContent>
+				<sts:DianExtensions xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:sts="dian:gov:co:facturaelectronica:Structures-2-1">
+					<sts:InvoiceControl>
+						<sts:InvoiceAuthorization>18763005281112</sts:InvoiceAuthorization>
+						<sts:AuthorizationPeriod>
+							<cbc:StartDate>2020-03-27</cbc:StartDate>
+							<cbc:EndDate>2021-09-27</cbc:EndDate>
+						</sts:AuthorizationPeriod>
+						<sts:AuthorizedInvoices>
+							<sts:Prefix>FE</sts:Prefix>
+							<sts:From>1</sts:From>
+							<sts:To>100</sts:To>
+						</sts:AuthorizedInvoices>
+					</sts:InvoiceControl>
+					<sts:InvoiceSource>
+						<cbc:IdentificationCode listAgencyID="6" listAgencyName="United Nations Economic Commission for Europe" listSchemeURI="urn:oasis:names:specification:ubl:codelist:gc:CountryIdentificationCode-2.1">CO</cbc:IdentificationCode>
+					</sts:InvoiceSource>
+					<sts:SoftwareProvider>
+						<sts:ProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="4" schemeName="31">811021438</sts:ProviderID>
+						<sts:SoftwareID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">def923e2-8326-42e2-a022-d0fa4a2f8188</sts:SoftwareID>
+					</sts:SoftwareProvider>
+					<sts:SoftwareSecurityCode schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">414e6a7de03c5bc2f914e357aed9a980a544a0fa24ec51fb29ac18f16a623dab29c54764838a4cc17be8bb081dc91956</sts:SoftwareSecurityCode>
+					<sts:AuthorizationProvider>
+						<sts:AuthorizationProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="4" schemeName="31">800197268</sts:AuthorizationProviderID>
+					</sts:AuthorizationProvider>
+					<sts:QRCode>https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=caed436ecc0bf6da6ee361a56a0102297ebf0abaf6253dbe27e446024449c55017ac6ddcfaf7f8bf2faf43611b20d21c</sts:QRCode>
+				</sts:DianExtensions>
+			</ext:ExtensionContent>
+		</ext:UBLExtension>
+		<ext:UBLExtension>
+			<ext:ExtensionContent><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="xmldsig-ab2df1fb-1819-413d-8b8c-79e9ed75638a"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" /><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" /><ds:Reference Id="xmldsig-ab2df1fb-1819-413d-8b8c-79e9ed75638a-ref0" URI=""><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" /><ds:DigestValue>pG7XmMMST4ME2aMbJT0Hfrz/OdlXNEq9V4++j2UlCYo=</ds:DigestValue></ds:Reference><ds:Reference Id="xmldsig-ab2df1fb-1819-413d-8b8c-79e9ed75638a-ref1" URI="#KeyInfo"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" /><ds:DigestValue>SBxZK/8fnFTHCZxzKmQGDvX0XLAbmderyAB7f16zKnM=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#xmldsig-ab2df1fb-1819-413d-8b8c-79e9ed75638a-signedprops"><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" /><ds:DigestValue>V+3QCTjau01IXAtsvH7tCn5wb1Tu7vCEALbqdz9Rvcc=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="xmldsig-ab2df1fb-1819-413d-8b8c-79e9ed75638a-sigvalue">vK0dZfFpMNl1JtuJNZauvT9r+JoWtVMptdnRG8L6y9rOz3L98hyzI2XUk5EhB8b2Vl1lVzybevOukbipfatH3QF3LgwDe/3HpBjGqEbVYdyaDFFh834Od9AgfplQN2EqPzRlgDLUZDmNxcBobQ4u66cwDQAIJHCjPAOze9AXoMUKsKg+AoqOJdnkrbOCb3r1S6fnaedwIb8/lVYF7j3TLblSqYhbe/Iq9CA/8JII6vIwOioepgLjBz/pZF2uyXi6XIgYMO5WKAhQ1oN5U828nRn4yRrETrLlpjNeSw0jqSYXiHm5c9hHtk+wSW8L+THJwsdirBFWunjILaYK76khsA==</ds:SignatureValue><ds:KeyInfo Id="KeyInfo"><ds:X509Data><ds:X509IssuerSerial><ds:X509IssuerName>C=CO, L=Bogota D.C., O=Andes SCD, OU=Division de certificacion entidad final, CN=CA ANDES SCD S.A. Clase II v2, E=info@andesscd.com.co</ds:X509IssuerName><ds:X509SerialNumber>3201049686624779525</ds:X509SerialNumber></ds:X509IssuerSerial><ds:X509SubjectName>C=CO, S=ANTIOQUIA, L=MEDELLIN, O=Carrera 50 FF 8 Sur 27 OF 213, OU=Emitido por Andes SCD Ac 26 69C 03 Torre B Of 701, T=Emisor Factura Electronica - Persona Juridica, SERIALNUMBER=8909324943, CN=J. VALENCIA Y CIA. S.C.A., E=tic@hgi.com.co, STREET=Carrera 50 FF 8 Sur 27 OF 213</ds:X509SubjectName><ds:X509Certificate>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</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" Target="#xmldsig-ab2df1fb-1819-413d-8b8c-79e9ed75638a"><xades:SignedProperties Id="xmldsig-ab2df1fb-1819-413d-8b8c-79e9ed75638a-signedprops"><xades:SignedSignatureProperties><xades:SigningTime>2020-04-13T15:59:56.884-05:00</xades:SigningTime><xades:SigningCertificate><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" /><ds:DigestValue>0uqGpm+bdDpyuU4lzkRK457FuO+Wg5MZaChqZrdH/nY=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>C=CO,L=Bogota D.C.,O=Andes SCD.,OU=Division de certificacion entidad final,CN=CA ANDES SCD S.A. Clase II,1.2.840.113549.1.9.1=#1614696e666f40616e6465737363642e636f6d2e636f</ds:X509IssuerName><ds:X509SerialNumber>3201049686624779525</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" /><ds:DigestValue>Cs7emRwtXWVYHJrqS9eXEXfUcFyJJBqFhDFOetHu8ts=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>C=CO,L=Bogota D.C.,O=Andes SCD,OU=Division de certificacion,CN=ROOT CA ANDES SCD S.A.,1.2.840.113549.1.9.1=#1614696e666f40616e6465737363642e636f6d2e636f</ds:X509IssuerName><ds:X509SerialNumber>3184328748892787122</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert><xades:Cert><xades:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" /><ds:DigestValue>PbsKGMpB0A2Y9NAz6F8LkU5nR+ONJASyK9D/bRTdbZ0=</ds:DigestValue></xades:CertDigest><xades:IssuerSerial><ds:X509IssuerName>C=CO,L=Bogota D.C.,O=Andes SCD,OU=Division de certificacion,CN=ROOT CA ANDES SCD S.A.,1.2.840.113549.1.9.1=#1614696e666f40616e6465737363642e636f6d2e636f</ds:X509IssuerName><ds:X509SerialNumber>4951343590990220136</ds:X509SerialNumber></xades:IssuerSerial></xades:Cert></xades:SigningCertificate><xades:SignaturePolicyIdentifier><xades:SignaturePolicyId><xades:SigPolicyId><xades:Identifier>https://facturaelectronica.dian.gov.co/politicadefirma/v2/politicadefirmav2.pdf</xades:Identifier></xades:SigPolicyId><xades:SigPolicyHash><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" /><ds:DigestValue>dMoMvtcG5aIzgYo0tIsSQeVJBDnUnfSOfBpxXrmor0Y=</ds:DigestValue></xades:SigPolicyHash></xades:SignaturePolicyId></xades:SignaturePolicyIdentifier><xades:SignerRole><xades:ClaimedRoles><xades:ClaimedRole>supplier</xades:ClaimedRole></xades:ClaimedRoles></xades:SignerRole></xades:SignedSignatureProperties></xades:SignedProperties></xades:QualifyingProperties></ds:Object></ds:Signature></ext:ExtensionContent>
+		</ext:UBLExtension>
+	</ext:UBLExtensions>
+	<cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
+	<cbc:CustomizationID>05</cbc:CustomizationID>
+	<cbc:ProfileID>DIAN 2.1</cbc:ProfileID>
+	<cbc:ProfileExecutionID>1</cbc:ProfileExecutionID>
+	<cbc:ID>FE2</cbc:ID>
+	<cbc:UUID schemeID="1" schemeName="CUFE-SHA384">caed436ecc0bf6da6ee361a56a0102297ebf0abaf6253dbe27e446024449c55017ac6ddcfaf7f8bf2faf43611b20d21c</cbc:UUID>
+	<cbc:IssueDate>2020-04-13</cbc:IssueDate>
+	<cbc:IssueTime>20:54:37-05:00</cbc:IssueTime>
+	<cbc:DueDate>2020-04-21</cbc:DueDate>
+	<cbc:InvoiceTypeCode>01</cbc:InvoiceTypeCode>
+	<cbc:Note> 18763005281112 de 2020-03-27 del FE-1 al FE-100</cbc:Note>
+	<cbc:Note>DEL 15 ABRIL AL 14 MAYO 2020</cbc:Note>
+	<cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>
+	<cbc:LineCountNumeric>1</cbc:LineCountNumeric>
+	<cac:InvoicePeriod>
+		<cbc:StartDate>2020-04-01</cbc:StartDate>
+		<cbc:EndDate>2020-04-30</cbc:EndDate>
+	</cac:InvoicePeriod>
+	<cac:AccountingSupplierParty>
+		<cbc:AdditionalAccountID schemeAgencyID="195">1</cbc:AdditionalAccountID>
+		<cac:Party>
+			<cbc:IndustryClassificationCode>6810</cbc:IndustryClassificationCode>
+			<cac:PartyName>
+				<cbc:Name>J VALENCIA Y CIA S.C.A.</cbc:Name>
+			</cac:PartyName>
+			<cac:PhysicalLocation>
+				<cac:Address>
+					<cbc:ID>05001</cbc:ID>
+					<cbc:CityName>Medellín</cbc:CityName>
+					<cbc:PostalZone>050023</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CRA 50 FF 8 SUR 27 OF 213</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:Address>
+			</cac:PhysicalLocation>
+			<cac:PartyTaxScheme>
+				<cbc:RegistrationName>J VALENCIA Y CIA S.C.A.</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="3" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">890932494</cbc:CompanyID>
+				<cbc:TaxLevelCode listName="48">O-48</cbc:TaxLevelCode>
+				<cac:RegistrationAddress>
+					<cbc:ID>05001</cbc:ID>
+					<cbc:CityName>Medellín</cbc:CityName>
+					<cbc:PostalZone>050023</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CRA 50 FF 8 SUR 27 OF 213</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+				<cac:TaxScheme>
+					<cbc:ID>01</cbc:ID>
+					<cbc:Name>IVA</cbc:Name>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>J VALENCIA Y CIA S.C.A.</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="3" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">890932494</cbc:CompanyID>
+				<cac:CorporateRegistrationScheme>
+					<cbc:ID>FE</cbc:ID>
+					<cbc:Name>0</cbc:Name>
+				</cac:CorporateRegistrationScheme>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Telephone>3224534</cbc:Telephone>
+				<cbc:ElectronicMail>gerencia@jvalencia.com.co</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cbc:AdditionalAccountID>1</cbc:AdditionalAccountID>
+		<cac:Party>
+			<cac:PartyName>
+				<cbc:Name>PERCEPTUAL S.A.S.</cbc:Name>
+			</cac:PartyName>
+			<cac:PhysicalLocation>
+				<cac:Address>
+					<cbc:ID>05001</cbc:ID>
+					<cbc:CityName>Medellín</cbc:CityName>
+					<cbc:PostalZone>050021</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CL 14 46 30</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:Address>
+			</cac:PhysicalLocation>
+			<cac:PartyTaxScheme>
+				<cbc:RegistrationName>PERCEPTUAL S.A.S.</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="4" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">900215223</cbc:CompanyID>
+				<cbc:TaxLevelCode listName="48">O-48</cbc:TaxLevelCode>
+				<cac:RegistrationAddress>
+					<cbc:ID>05001</cbc:ID>
+					<cbc:CityName>Medellín</cbc:CityName>
+					<cbc:PostalZone>050021</cbc:PostalZone>
+					<cbc:CountrySubentity>Antioquia</cbc:CountrySubentity>
+					<cbc:CountrySubentityCode>05</cbc:CountrySubentityCode>
+					<cac:AddressLine>
+						<cbc:Line>CL 14 46 30</cbc:Line>
+					</cac:AddressLine>
+					<cac:Country>
+						<cbc:IdentificationCode>CO</cbc:IdentificationCode>
+						<cbc:Name languageID="es">Colombia</cbc:Name>
+					</cac:Country>
+				</cac:RegistrationAddress>
+				<cac:TaxScheme>
+					<cbc:ID>01</cbc:ID>
+					<cbc:Name>IVA</cbc:Name>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>PERCEPTUAL S.A.S.</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="4" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">900215223</cbc:CompanyID>
+				<cac:CorporateRegistrationScheme>
+					<cbc:Name>0</cbc:Name>
+				</cac:CorporateRegistrationScheme>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Telephone>3221467</cbc:Telephone>
+				<cbc:ElectronicMail>yolanda.palacio@pctgroup.co</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:TaxRepresentativeParty>
+		<cac:PartyIdentification>
+			<cbc:ID schemeID="4" schemeName="31" schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)">811021438</cbc:ID>
+		</cac:PartyIdentification>
+	</cac:TaxRepresentativeParty>
+	<cac:PaymentMeans>
+		<cbc:ID>1</cbc:ID>
+		<cbc:PaymentMeansCode>1</cbc:PaymentMeansCode>
+		<cbc:PaymentID>12345</cbc:PaymentID>
+	</cac:PaymentMeans>
+	<cac:PaymentExchangeRate>
+		<cbc:SourceCurrencyCode>COP</cbc:SourceCurrencyCode>
+		<cbc:SourceCurrencyBaseRate>1.00</cbc:SourceCurrencyBaseRate>
+		<cbc:TargetCurrencyCode>COP</cbc:TargetCurrencyCode>
+		<cbc:TargetCurrencyBaseRate>1.00</cbc:TargetCurrencyBaseRate>
+		<cbc:CalculationRate>1.00</cbc:CalculationRate>
+		<cbc:Date>2020-04-13</cbc:Date>
+	</cac:PaymentExchangeRate>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="COP">4093748.74</cbc:TaxAmount>
+		<cbc:TaxEvidenceIndicator>false</cbc:TaxEvidenceIndicator>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="COP">21546046.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="COP">4093748.74</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:Percent>19.00</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>01</cbc:ID>
+					<cbc:Name>IVA</cbc:Name>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="COP">21546046.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="COP">21546046.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="COP">25639794.74</cbc:TaxInclusiveAmount>
+		<cbc:AllowanceTotalAmount currencyID="COP">0.00</cbc:AllowanceTotalAmount>
+		<cbc:ChargeTotalAmount currencyID="COP">0.00</cbc:ChargeTotalAmount>
+		<cbc:PrepaidAmount currencyID="COP">0.00</cbc:PrepaidAmount>
+		<cbc:PayableRoundingAmount currencyID="COP">0.26</cbc:PayableRoundingAmount>
+		<cbc:PayableAmount currencyID="COP">25639795.00</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="94">1</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="COP">21546046.00</cbc:LineExtensionAmount>
+		<cbc:FreeOfChargeIndicator>false</cbc:FreeOfChargeIndicator>
+		<cac:TaxTotal>
+			<cbc:TaxAmount currencyID="COP">4093748.74</cbc:TaxAmount>
+			<cbc:TaxEvidenceIndicator>false</cbc:TaxEvidenceIndicator>
+			<cac:TaxSubtotal>
+				<cbc:TaxableAmount currencyID="COP">21546046.00</cbc:TaxableAmount>
+				<cbc:TaxAmount currencyID="COP">4093748.74</cbc:TaxAmount>
+				<cac:TaxCategory>
+					<cbc:Percent>19.00</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>01</cbc:ID>
+						<cbc:Name>IVA</cbc:Name>
+					</cac:TaxScheme>
+				</cac:TaxCategory>
+			</cac:TaxSubtotal>
+		</cac:TaxTotal>
+		<cac:Item>
+			<cbc:Description>ARRENDAMIENTO BODEGA CL 14 46 30</cbc:Description>
+			<cbc:AdditionalInformation></cbc:AdditionalInformation>
+			<cac:SellersItemIdentification>
+				<cbc:ID>02</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:StandardItemIdentification>
+				<cbc:ID schemeID="999"></cbc:ID>
+			</cac:StandardItemIdentification>
+			<cac:OriginAddress>
+				<cbc:ID></cbc:ID>
+			</cac:OriginAddress>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="COP">21546046.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="94">1</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice>

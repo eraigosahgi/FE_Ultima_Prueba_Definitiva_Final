@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8089/wcf/documentos.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="Error">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Codigo" type="tns:CodigoError" />
+      <xs:element minOccurs="0" name="Fecha" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Mensaje" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Error" nillable="true" type="tns:Error" />
+  <xs:simpleType name="CodigoError">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OK" />
+      <xs:enumeration value="ERROR_NO_CONTROLADO" />
+      <xs:enumeration value="ERROR_EN_SERVIDOR" />
+      <xs:enumeration value="VALIDACION" />
+      <xs:enumeration value="ERROR_AGREGAR" />
+      <xs:enumeration value="ERROR_EDITAR" />
+      <xs:enumeration value="ERROR_ELIMINAR" />
+      <xs:enumeration value="ERROR_LICENCIA">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">98</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="NINGUNO">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">99</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="CodigoError" nillable="true" type="tns:CodigoError" />
+</xs:schema>

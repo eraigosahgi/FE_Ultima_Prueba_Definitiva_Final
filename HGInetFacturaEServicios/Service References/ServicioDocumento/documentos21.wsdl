@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="HGInetFacturaElectronica.ServiciosWcf" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="HGInetFacturaElectronica.ServiciosWcf" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="HGInetFacturaElectronica.ServiciosWcf/Imports">
+      <xsd:import schemaLocation="http://localhost:8089/wcf/documentos.svc?xsd=xsd0" namespace="HGInetFacturaElectronica.ServiciosWcf" />
+      <xsd:import schemaLocation="http://localhost:8089/wcf/documentos.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8089/wcf/documentos.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/HGInetMiFacturaElectonicaData.ModeloServicio" />
+      <xsd:import schemaLocation="http://localhost:8089/wcf/documentos.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/LibreriaGlobalHGInet.Error" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ServicioDocumentos_Test_InputMessage">
+    <wsdl:part name="parameters" element="tns:Test" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_Test_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TestResponse" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_ConsultaPorNumeros_InputMessage">
+    <wsdl:part name="parameters" element="tns:ConsultaPorNumeros" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_ConsultaPorNumeros_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConsultaPorNumerosResponse" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_ConsultaPorNumeros_Error_FaultMessage">
+    <wsdl:part name="detail" element="tns:Error" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_ConsultaPorCodigoRegistro_InputMessage">
+    <wsdl:part name="parameters" element="tns:ConsultaPorCodigoRegistro" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_ConsultaPorCodigoRegistro_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConsultaPorCodigoRegistroResponse" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_ConsultaPorCodigoRegistro_Error_FaultMessage">
+    <wsdl:part name="detail" element="tns:Error" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_ConsultaPorFechaElaboracion_InputMessage">
+    <wsdl:part name="parameters" element="tns:ConsultaPorFechaElaboracion" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_ConsultaPorFechaElaboracion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConsultaPorFechaElaboracionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_ConsultaPorFechaElaboracion_Error_FaultMessage">
+    <wsdl:part name="detail" element="tns:Error" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_Recepcion_InputMessage">
+    <wsdl:part name="parameters" element="tns:Recepcion" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_Recepcion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RecepcionResponse" />
+  </wsdl:message>
+  <wsdl:message name="ServicioDocumentos_Recepcion_Error_FaultMessage">
+    <wsdl:part name="detail" element="tns:Error" />
+  </wsdl:message>
+  <wsdl:portType name="ServicioDocumentos">
+    <wsdl:operation name="Test">
+      <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/Test" message="tns:ServicioDocumentos_Test_InputMessage" />
+      <wsdl:output wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/TestResponse" message="tns:ServicioDocumentos_Test_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultaPorNumeros">
+      <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorNumeros" message="tns:ServicioDocumentos_ConsultaPorNumeros_InputMessage" />
+      <wsdl:output wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorNumerosResponse" message="tns:ServicioDocumentos_ConsultaPorNumeros_OutputMessage" />
+      <wsdl:fault wsaw:Action="ConsultaPorNumeros" name="Error" message="tns:ServicioDocumentos_ConsultaPorNumeros_Error_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultaPorCodigoRegistro">
+      <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorCodigoRegistro" message="tns:ServicioDocumentos_ConsultaPorCodigoRegistro_InputMessage" />
+      <wsdl:output wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorCodigoRegistroResponse" message="tns:ServicioDocumentos_ConsultaPorCodigoRegistro_OutputMessage" />
+      <wsdl:fault wsaw:Action="ConsultaPorCodigoRegistro" name="Error" message="tns:ServicioDocumentos_ConsultaPorCodigoRegistro_Error_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ConsultaPorFechaElaboracion">
+      <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorFechaElaboracion" message="tns:ServicioDocumentos_ConsultaPorFechaElaboracion_InputMessage" />
+      <wsdl:output wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/ConsultaPorFechaElaboracionResponse" message="tns:ServicioDocumentos_ConsultaPorFechaElaboracion_OutputMessage" />
+      <wsdl:fault wsaw:Action="ConsultaPorFechaElaboracion" name="Error" message="tns:ServicioDocumentos_ConsultaPorFechaElaboracion_Error_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Recepcion">
+      <wsdl:input wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/Recepcion" message="tns:ServicioDocumentos_Recepcion_InputMessage" />
+      <wsdl:output wsaw:Action="HGInetFacturaElectronica.ServiciosWcf/ServicioDocumentos/RecepcionResponse" message="tns:ServicioDocumentos_Recepcion_OutputMessage" />
+      <wsdl:fault wsaw:Action="Recepcion" name="Error" message="tns:ServicioDocumentos_Recepcion_Error_FaultMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

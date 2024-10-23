@@ -1,0 +1,2 @@
+ALTER TABLE TblEmpresas
+ADD IntEnvioSms bit NOT NULL default(0)

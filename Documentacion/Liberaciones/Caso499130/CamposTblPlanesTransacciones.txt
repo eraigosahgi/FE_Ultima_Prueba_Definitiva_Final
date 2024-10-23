@@ -1,0 +1,24 @@
+/*
+[499130]
+Tabla: TblPlanesTransacciones
+Campos:
+1. nombre: IntMesesVence, tipo: smallint , Defecto: 12 
+2. nombre: DocumentoRef, tipo: nvarchar(10), permite null
+3. nombre: DatFechaInicio, tipo Datetime, permite null
+*/
+
+
+ALTER TABLE TblPlanesTransacciones ADD
+IntMesesVence smallint NOT NULL Default(12)
+GO
+
+ALTER TABLE TblPlanesTransacciones ADD
+DocumentoRef nvarchar(10) NULL
+GO
+
+ALTER TABLE TblPlanesTransacciones ADD
+DatFechaInicio DateTime NULL
+GO
+
+--Actualizar Fecha de Inicio de Planes antiguos
+UPDATE TblPlanesTransacciones SET DatFechaInicio = DatFecha

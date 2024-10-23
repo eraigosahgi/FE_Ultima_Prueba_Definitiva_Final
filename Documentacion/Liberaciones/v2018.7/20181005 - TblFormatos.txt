@@ -1,0 +1,27 @@
+
+CREATE TABLE [dbo].[TblFormatos](
+	[IntCodigoFormato] [int] NOT NULL,
+	[StrEmpresa] [varchar](50) NOT NULL,
+	[StrIdSeguridad] [uniqueidentifier] NOT NULL,
+	[IntTipo] [int] NOT NULL,
+	[DatFechaRegistro] [datetime] NOT NULL,
+	[DatFechaActualización] [datetime] NULL,
+	[IntEstado] [bit] NOT NULL,
+	[IntGenerico] [bit] NOT NULL,
+	[Formato] [varbinary](max) NOT NULL,
+	[StrObservaciones] [varchar](200) NULL,	
+	[IntDocTipo] [int] NULL,
+ CONSTRAINT [PK_TblFormatos] PRIMARY KEY CLUSTERED 
+(
+	[StrEmpresa] ASC,
+	[IntCodigoFormato] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[TblFormatos]  WITH CHECK ADD  CONSTRAINT [FK_TblFormatos_TblEmpresas] FOREIGN KEY([StrEmpresa])
+REFERENCES [dbo].[TblEmpresas] ([StrIdentificacion])
+GO
+
+ALTER TABLE [dbo].[TblFormatos] CHECK CONSTRAINT [FK_TblFormatos_TblEmpresas]
+GO

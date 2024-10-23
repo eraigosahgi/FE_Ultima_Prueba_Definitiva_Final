@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AsuntoEmailBienvenida" xml:space="preserve">
+    <value>Acceso Plataforma HGI Facturación Electrónica</value>
+  </data>
+  <data name="AsuntoEnviaSerial" xml:space="preserve">
+    <value>Serial de activacion HGI Facturación Electrónica</value>
+  </data>
+  <data name="AsuntoNotificacionDocumento" xml:space="preserve">
+    <value>Facturación Electrónica</value>
+  </data>
+  <data name="CarpetaFacturaElectronica" xml:space="preserve">
+    <value>facturaelectronica</value>
+    <comment>Carpeta para guardar los documentos generados de Factura Electronica</comment>
+  </data>
+  <data name="CierreAutomaticoPostPago" xml:space="preserve">
+    <value>PLAN CERRADO AUT. EL {0}, CON UNA CANT. DE DOC. DE {1} POR VENCIMIENTO EL {2}</value>
+    <comment>Descripción para las observaciones de la Cierre automatico del plan postpago</comment>
+  </data>
+  <data name="EmailCopiaOculta" xml:space="preserve">
+    <value>tic@hgi.com.co</value>
+    <comment>email para copias ocultas (auditorías)</comment>
+  </data>
+  <data name="EmailRemitente" xml:space="preserve">
+    <value>notificaciones@hgidocs.co</value>
+    <comment>email del remitente</comment>
+  </data>
+  <data name="HorasAcuseTacitoInteroperabilidad" xml:space="preserve">
+    <value>240</value>
+    <comment>Son 10 dias de acuse tacito entre proveedores tecnologicos</comment>
+  </data>
+  <data name="NitResolucionconPrefijo" xml:space="preserve">
+    <value>811021438</value>
+    <comment>Nit de pruebas para Resolucion con Prefijo</comment>
+  </data>
+  <data name="NitResolucionsinPrefijo" xml:space="preserve">
+    <value>811021438</value>
+    <comment>Nit de pruebas para Resolucion sin Prefijo</comment>
+  </data>
+  <data name="NombreRemitenteEmail" xml:space="preserve">
+    <value>HGI Facturación Electrónica</value>
+    <comment>nombre del remitente.</comment>
+  </data>
+  <data name="PaginaAcuseRecibo" xml:space="preserve">
+    <value>/Views/Pages/AcuseRecibo.aspx?id_seguridad={id_seguridad}</value>
+    <comment>Ruta de redirección página de acuse recibo (adquiriente factura)</comment>
+  </data>
+  <data name="PaginaConsultaAuditoriaDoc" xml:space="preserve">
+    <value>/Views/Pages/ConsultaAuditoriaDocumento.aspx?id_seguridad={id_seguridad_doc}</value>
+    <comment>Página para la consulta de la auditoría de un documento</comment>
+  </data>
+  <data name="PaginaRestablecerClave" xml:space="preserve">
+    <value>/Views/Login/RestablecerClave.aspx?id_seguridad={id_seguridad}</value>
+    <comment>Ruta de redireccion página restablecer contraseña</comment>
+  </data>
+  <data name="PrefijoResolucionPruebas" xml:space="preserve">
+    <value>PRUE</value>
+    <comment>Prefijo de la Resolucion de Pruebas</comment>
+  </data>
+  <data name="RecargaAutomaticaPostPago" xml:space="preserve">
+    <value>PLAN CREADO AUT. EL {0} CON FECHA DE VENCIMIENTO EL {1}</value>
+    <comment>Descripción para las observaciones de la recarga del plan postpago</comment>
+  </data>
+  <data name="ResolucionPruebas" xml:space="preserve">
+    <value>9000000033394696</value>
+    <comment>Numero de Resolución de Pruebas de HGI </comment>
+  </data>
+  <data name="RutaAccesoPlataforma" xml:space="preserve">
+    <value>http://habilitacion.mifacturaenlinea.com.co</value>
+    <comment>Ruta de eacceso a la plataforma web.</comment>
+  </data>
+  <data name="RutaInteroperabilidadEnvio" xml:space="preserve">
+    <value>interoperabilidad\operacion\envio\</value>
+    <comment>Ruta fisica para el proceso de envio de los documentos a interoperabilidad</comment>
+  </data>
+  <data name="RutaInteroperabilidadFtp" xml:space="preserve">
+    <value>interoperabilidad\publico\</value>
+    <comment>Ruta fisica para el ftp interoperabilidad</comment>
+  </data>
+  <data name="RutaInteroperabilidadRecepcion" xml:space="preserve">
+    <value>interoperabilidad\operacion\recepcion\</value>
+    <comment>Ruta fisica para el proceso de recepcion de los documentos a interoperabilidad</comment>
+  </data>
+  <data name="RutaPlantillaAcuse" xml:space="preserve">
+    <value>emails\\plantilla_documento_acuse.html</value>
+    <comment>Ruta de la plantilla Html de envío acuse de recibo</comment>
+  </data>
+  <data name="RutaPlantillaBienvenidaAdquiriente" xml:space="preserve">
+    <value>emails\\plantilla_bienvenida_adquiriente.html</value>
+    <comment>Ruta de la plantilla Html de envío bienvenida Adquiriente</comment>
+  </data>
+  <data name="RutaPlantillaBienvenidaObligado" xml:space="preserve">
+    <value>emails\\plantilla_bienvenida_facturador.html</value>
+    <comment>Ruta de la plantilla Html de envío bienvenida Obligado a facturar</comment>
+  </data>
+  <data name="RutaplantillaCorreoNoEntregado" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_correo_no_entregado.html</value>
+    <comment>Ruta de plantilla Html de notificación de facturador del correo no entregado</comment>
+  </data>
+  <data name="RutaPlantillaEnviarSerial" xml:space="preserve">
+    <value>emails\\plantilla_envio_serial.html</value>
+    <comment>Ruta de la plantilla Html de envío serial de activacion al facturador</comment>
+  </data>
+  <data name="RutaPlantillaHtmlDocumentos" xml:space="preserve">
+    <value>emails\\plantilla_documento.html</value>
+    <comment>Ruta de la plantilla Html de envío de documentos</comment>
+  </data>
+  <data name="RutaPlantillaHtmlDocumentosBasica" xml:space="preserve">
+    <value>emails\\plantilla_documento_basica.html</value>
+    <comment>Ruta de la plantilla Html de envío de documentos en formato basica solo envia PDF</comment>
+  </data>
+  <data name="RutaPlantillaPlanPorcentaje" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_consumo_facturador.html</value>
+    <comment>Ruta de la plantilla Html de envío notificación de plan con porcentaje especifico de cosumo</comment>
+  </data>
+  <data name="RutaPlantillaPlanPorcentajehgi" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_consumo_hgi.html</value>
+    <comment>Ruta de la plantilla Html de envío notificación de plan con porcentaje especifico de cosumo para hgi</comment>
+  </data>
+  <data name="RutaPlantillaPlanporVencer" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_planes_vence.html</value>
+    <comment>Ruta de la plantilla Html de envío notificación de plan por vencer</comment>
+  </data>
+  <data name="RutaPlantillaPlanporVencerHGI" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_planes_vence_hgi.html</value>
+    <comment>Ruta de la plantilla Html de envío notificación de plan por vencer HGI</comment>
+  </data>
+  <data name="RutaPlantillaRecarga" xml:space="preserve">
+    <value>emails\\plantilla_recarga_transacciones.html</value>
+    <comment>Ruta de la plantilla Html de envió de recarga de transacciones</comment>
+  </data>
+  <data name="RutaPlantillaRestablecer" xml:space="preserve">
+    <value>emails\\plantilla_restablecer_clave.html</value>
+    <comment>Ruta de la plantilla Html de envío restablecer contraseña</comment>
+  </data>
+  <data name="RutaplantillaSinSaldo" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_sinsaldo.html</value>
+    <comment>Ruta de plantilla Html de notificación de facturador sin saldo</comment>
+  </data>
+  <data name="RutaplantillaSinSaldoHGI" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_sinsaldo_hgi.html</value>
+    <comment>Ruta de plantilla Html de notificación de facturador sin saldo hgi</comment>
+  </data>
+  <data name="RutaPlantillaSolicitudAprobacionFormato" xml:space="preserve">
+    <value>emails\\plantilla_solicitud_aprobacion_formato.html</value>
+    <comment>Ruta de la plantilla Html de envío de notificaciones de solicitud de aprobación de formatos.</comment>
+  </data>
+  <data name="SmsCelulares" xml:space="preserve">
+    <value>573163494083,573136469239,573104935257,573053954360</value>
+    <comment>Números de celulares para auditoría por SMS</comment>
+  </data>
+  <data name="TamanoAnexo" xml:space="preserve">
+    <value>2097152</value>
+    <comment>Tamaño máximo de archivo permitido en los Anexos</comment>
+  </data>
+  <data name="AsuntoNotificacionCorreoNoEntregado" xml:space="preserve">
+    <value>Correo No Entregado Facturación Electronica</value>
+  </data>
+  <data name="RutaPlantillaPruebaFormato" xml:space="preserve">
+    <value>emails\\plantilla_prueba_formato.html</value>
+    <comment>Ruta de la plantilla HTML de envío de prueba de formato</comment>
+  </data>
+  <data name="RutaPlantillaAlertaDocumentoDIAN" xml:space="preserve">
+    <value>emails\\plantilla_notifica_alertas_documentos_DIAN.html</value>
+    <comment>Ruta de la plantilla de Alerta de inconsistencias de Documento en la DIAN</comment>
+  </data>
+  <data name="CarpetaCertificadosDigitales" xml:space="preserve">
+    <value>certificados</value>
+    <comment>Carpeta para guardar los certificados digitales para la firma de documentos electrónicos.</comment>
+  </data>
+  <data name="RutaPlantillaConfirmacionEmail" xml:space="preserve">
+    <value>emails\\plantilla_confirmacion_email.html</value>
+    <comment>Ruta de la plantilla Html que contiene la confirmación del email</comment>
+  </data>
+  <data name="RutaPaginaQRHabilitacionDIAN" xml:space="preserve">
+    <value>https://catalogo-vpfe-hab.dian.gov.co/document/searchqr?documentkey=</value>
+    <comment>Pagina que permite consultar el documento enviado en la DIAN enviando el parametro CUFE</comment>
+  </data>
+  <data name="RutaPaginaQRProduccionDIAN" xml:space="preserve">
+    <value>https://catalogo-vpfe.dian.gov.co/document/searchqr?documentkey=</value>
+    <comment>Pagina que permite consultar el documento enviado en la DIAN enviando el parametro CUFE</comment>
+  </data>
+  <data name="CarpetaDocumentosDebug" xml:space="preserve">
+    <value>Debug</value>
+    <comment>Carpeta para guardar las peticiones de documentos electronicos que envian los Facturadores electronicos y se necesitan para validaciones.</comment>
+  </data>
+  <data name="IdAplicativoPagosE" xml:space="preserve">
+    <value>1</value>
+    <comment>Id de aplicativo para Pagos Electrónicos</comment>
+  </data>
+  <data name="RutaPlantillaHtmlNotifInconsistencias" xml:space="preserve">
+    <value>emails\\plantilla_notificacion_inconsistencias_interoperabilidad.html</value>
+    <comment>Ruta de la plantilla Html de envío notificación de inconsistencias de interoperabilidad</comment>
+  </data>
+  <data name="PaginaRestablecerClavePagos" xml:space="preserve">
+    <value>/Views/Login/RestablecerClavePagos.aspx?id_seguridad={id_seguridad}</value>
+    <comment>Ruta de redireccion página restablecer contraseña para usuarios de Pagos</comment>
+  </data>
+  <data name="RutaPlantillaRestablecerPagos" xml:space="preserve">
+    <value>emails\\plantilla_restablecer_clave_pagos.html</value>
+    <comment>Ruta de la plantilla Html de envío restablecer contraseña para usuarios de Pagos</comment>
+  </data>
+  <data name="RutaPlantillaBienvenidaAdquirientePagos" xml:space="preserve">
+    <value>emails\\plantilla_bienvenida_adquiriente_pagos.html</value>
+    <comment>Ruta de la plantilla Html de envío de bienvenida Adquiriente Pagos</comment>
+  </data>
+  <data name="RutaPlantillaNuevoUsuarioPagos" xml:space="preserve">
+    <value>emails\\plantilla_nuevo_usuario_pagos .html</value>
+    <comment>Ruta de la plantilla para nuevos usuarios de Pagos</comment>
+  </data>
+  <data name="AsuntoEmailNuevoUsuarioPagos" xml:space="preserve">
+    <value>Nuevo Usuario en Plataforma de Pagos de Facturación Electrónica</value>
+    <comment>Asunto del correo que le llega al facturador cuando se registra un nuevo usuario</comment>
+  </data>
+  <data name="PaginaConfirmacionRegistroUsuarioPagos" xml:space="preserve">
+    <value>/Views/Pages/ConfirmacionUsuarioPagos.aspx?id_seguridad={id_seguridad}</value>
+    <comment>Pagina para la confirmación de usuarios nuevos en el modulo de pagos</comment>
+  </data>
+  <data name="AsuntoEmailBienvenidaPagos" xml:space="preserve">
+    <value>Acceso Plataforma de Pagos de Facturación Electrónica</value>
+    <comment>Asunto para la bienvenida de usuarios al portal de pagos de factura electronica</comment>
+  </data>
+  <data name="CarpetaFacturaElectronicaTmp" xml:space="preserve">
+    <value>facturaelectronica_tmp</value>
+  </data>
+  <data name="RutaInteroperabilidadEmision" xml:space="preserve">
+    <value>interoperabilidad\operacion\emision\</value>
+    <comment>Ruta fisica para el proceso de emision de los documentos a interoperabilidad</comment>
+  </data>
+</root>

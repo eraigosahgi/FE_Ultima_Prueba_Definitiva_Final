@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A966A394-F6CC-482F-87A4-56EC1AF05E5E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LibreriaGlobalHGInet</RootNamespace>
+    <AssemblyName>LibreriaGlobalHGInet</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Renci.SshNet, Version=2020.0.1.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\packages\SSH.NET.2020.0.1\lib\net40\Renci.SshNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_GlobalResources\RadGrid.Main.designer.cs">
+      <DependentUpon>RadGrid.Main.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="App_GlobalResources\RadGrid.Main.es.designer.cs">
+      <DependentUpon>RadGrid.Main.es.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Dms\Dms.cs" />
+    <Compile Include="Enumerables\Aplicacion\CodigosAplicativo.cs" />
+    <Compile Include="Enumerables\EstadoVerificacionEmail.cs" />
+    <Compile Include="Enumerables\PagosEnLinea\EstadoPago.cs" />
+    <Compile Include="Enumerables\PagosEnLinea\FormasPago.cs" />
+    <Compile Include="Enumerables\PagosEnLinea\FranquiciaPago.cs" />
+    <Compile Include="Enumerables\PagosEnLinea\TipoPagoRecibo.cs" />
+    <Compile Include="Enumerables\PagosEnLinea\TipoPasarela.cs" />
+    <Compile Include="Enumerables\ParametrosProductoMovil.cs" />
+    <Compile Include="Enumerables\ServiciosWeb\ArticuloPara.cs" />
+    <Compile Include="Enumerables\ServiciosWeb\GestionDocumento.cs" />
+    <Compile Include="Enumerables\ServiciosWeb\Maestros.cs" />
+    <Compile Include="Enumerables\TipoExpresion.cs" />
+    <Compile Include="Enumerables\Licencia\TipoBloqueo.cs" />
+    <Compile Include="Error\CodigoError.cs" />
+    <Compile Include="Error\Error.cs" />
+    <Compile Include="Error\TipoError.cs" />
+    <Compile Include="Formato\Coleccion.cs" />
+    <Compile Include="Formato\Colores.cs" />
+    <Compile Include="Formato\StringWriterUtf8.cs" />
+    <Compile Include="Formato\Texto.cs" />
+    <Compile Include="Funciones\Arbol.cs" />
+    <Compile Include="Funciones\ConvertirObjeto.cs" />
+    <Compile Include="Funciones\Enumeracion.cs" />
+    <Compile Include="Funciones\Excepcion.cs" />
+    <Compile Include="Funciones\Fecha.cs" />
+    <Compile Include="Funciones\InfoConfiguracionServer.cs" />
+    <Compile Include="Funciones\Numero.cs" />
+    <Compile Include="Funciones\Pdf.cs" />
+    <Compile Include="General\Archivo.cs" />
+    <Compile Include="Formato\ConfiguracionRegional.cs" />
+    <Compile Include="General\Certificado.cs" />
+    <Compile Include="General\Clienteftp.cs" />
+    <Compile Include="General\Directorio.cs" />
+    <Compile Include="General\Encriptar.cs" />
+    <Compile Include="General\Imagen.cs" />
+    <Compile Include="General\IpAddress.cs" />
+    <Compile Include="General\Json.cs" />
+    <Compile Include="General\NotificacionCodigo.cs" />
+    <Compile Include="General\PeticionHttp.cs" />
+    <Compile Include="General\ServerConexiones.cs" />
+    <Compile Include="HgiNet\Controladores\Ctl_CloudMensajeria.cs" />
+    <Compile Include="HgiNet\Controladores\Ctl_ObtenerParametros.cs" />
+    <Compile Include="HgiNet\Controladores\Ctl_ValidacionesLicencia.cs" />
+    <Compile Include="HgiNet\Controladores\FacturaElectronica\Ctl_CalculoCufe.cs" />
+    <Compile Include="HgiNet\Funciones\ValidarRespuestas.cs" />
+    <Compile Include="Logs\LogExcepcion.cs" />
+    <Compile Include="General\WebHtml.cs" />
+    <Compile Include="HgiNet\Aplicativo.cs" />
+    <Compile Include="HgiNet\AplicativoEnum.cs" />
+    <Compile Include="HgiNet\Edicion.cs" />
+    <Compile Include="HgiNet\FuncionesIdentificacion.cs" />
+    <Compile Include="Mail\ArchivoUrl.cs" />
+    <Compile Include="Mail\Mail.cs" />
+    <Compile Include="General\Seguridad.cs" />
+    <Compile Include="Logs\MensajeCategoria.cs" />
+    <Compile Include="Mail\TipoCorreo.cs" />
+    <Compile Include="ObjetosComunes\FacturaE_Documento.cs" />
+    <Compile Include="ObjetosComunes\Licenciamiento\AutenticacionRespuesta.cs" />
+    <Compile Include="ObjetosComunes\Licenciamiento\InformacionLicencia.cs" />
+    <Compile Include="ObjetosComunes\Licenciamiento\Notificacion.cs" />
+    <Compile Include="ObjetosComunes\Licenciamiento\RespuestaLicenciamiento.cs" />
+    <Compile Include="ObjetosComunes\Licenciamiento\ValidarLicencia.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Adjunto.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Destinatario.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\DestinatarioSms.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Enums\MensajeEstado.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Enums\MensajeIdResultado.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Enums\TipoDestinatario.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Peticion\MensajeAdjunto.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Peticion\MensajeDestinatario.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Respuesta\Base\ItemDatos.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Respuesta\Base\Respuesta.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Respuesta\Base\RespuestaError.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Respuesta\MensajeDatos.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Respuesta\MensajeEnvio.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Mail\Respuesta\MensajeHistorial.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\MensajeContenido.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\MensajeContenidoSms.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\MensajeResumen.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\MensajeResumenGlobal.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\MensajeSeguimiento.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\MensajeValidarEmail.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Sms\Peticion\Mensaje.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Sms\Respuesta\MensajeDatos.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Sms\Respuesta\MensajeDatosVector.cs" />
+    <Compile Include="ObjetosComunes\Mensajeria\Sms\Respuesta\MensajeEnvio.cs" />
+    <Compile Include="ObjetosComunes\PagosEnLinea\Cliente.cs" />
+    <Compile Include="ObjetosComunes\PagosEnLinea\ConfigPasarelas.cs" />
+    <Compile Include="ObjetosComunes\PagosEnLinea\Pago.cs" />
+    <Compile Include="ObjetosComunes\PagosEnLinea\TblPasarelaPagosPI.cs" />
+    <Compile Include="ObjetosComunes\PagosEnLinea\VerificaPago.cs" />
+    <Compile Include="ObjetosComunes\PagosEnLinea\VerificaPagoDetalle.cs" />
+    <Compile Include="ObjetosComunes\ParametrosHGI\ObjParametrosAnyo.cs" />
+    <Compile Include="Parametros\ParametroEstructura.cs" />
+    <Compile Include="Parametros\Parametro.cs" />
+    <Compile Include="General\Xml.cs" />
+    <Compile Include="Logs\RegistroLog.cs" />
+    <Compile Include="Logs\LogArchivo.cs" />
+    <Compile Include="Logs\LogClase.cs" />
+    <Compile Include="Logs\LogDetalle.cs" />
+    <Compile Include="Logs\LogMensaje.cs" />
+    <Compile Include="Logs\MensajeAccion.cs" />
+    <Compile Include="Logs\MensajeTipo.cs" />
+    <Compile Include="Parametros\ParametroRegistro.cs" />
+    <Compile Include="Parametros\ParametroXml.cs" />
+    <Compile Include="Peticiones\ClienteRest.cs" />
+    <Compile Include="Peticiones\Parametros.cs" />
+    <Compile Include="Peticiones\TipoPeticiones.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\RecursoMensajes.Designer.cs">
+      <DependentUpon>RecursoMensajes.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\RecursoArchivosParametros.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RecursoArchivosParametros.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\RecursoDms.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RecursoDms.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\RadGrid.Main.es.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>RadGrid.Main.es.designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_GlobalResources\RadGrid.Main.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>RadGrid.Main.designer.cs</LastGenOutput>
+    </Content>
+    <EmbeddedResource Include="Properties\RecursoMensajes.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecursoMensajes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\RecursoArchivosParametros.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecursoArchivosParametros.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\RecursoDms.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecursoDms.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ObjetosComunes\Mensajeria\Sms\Respuesta\respuesta.json" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

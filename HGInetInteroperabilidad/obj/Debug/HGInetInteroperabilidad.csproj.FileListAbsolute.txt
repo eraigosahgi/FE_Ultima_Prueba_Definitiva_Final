@@ -1,0 +1,306 @@
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetInteroperabilidad.dll.config
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetInteroperabilidad.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetInteroperabilidad.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\BouncyCastle.Crypto.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGICtrlUtilidades.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetDIANServicios.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectonicaController.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectonicaData.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetUBL.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetUBLv2_1.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\LibreriaGlobalHGInet.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MailKit.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MimeKit.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Newtonsoft.Json.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\OpenPop.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\System.Buffers.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Microsoft.Web.Services3.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetUtilidadAzure.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetFirmaDigital.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Telerik.Reporting.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetFacturaEReports.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectronicaAudit.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExtreme.AspNet.Data.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExtreme.AspNet.Mvc.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\EntityFramework.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\EntityFramework.SqlServer.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraReports.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MongoDB.Driver.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MongoDB.Bson.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MongoDB.Driver.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Renci.SshNet.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\itextsharp.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Microsoft.WindowsAzure.Storage.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Printing.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Data.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\System.Web.Http.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\System.Web.WebPages.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraCharts.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Xpo.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.DataAccess.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Sparkline.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.CodeParser.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.RichEdit.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Office.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraGauges.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.PivotGrid.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Charts.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Pdf.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\System.Net.Http.Formatting.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Microsoft.Web.Infrastructure.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\System.Web.WebPages.Deployment.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Images.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetDIANServicios.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectonicaController.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectonicaData.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetUBLv2_1.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetUBL.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\LibreriaGlobalHGInet.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\BouncyCastle.Crypto.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MailKit.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MailKit.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MimeKit.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MimeKit.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Newtonsoft.Json.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\System.Buffers.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetUtilidadAzure.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetFirmaDigital.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Telerik.Reporting.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Telerik.Reporting.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetFacturaEReports.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectronicaAudit.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\EntityFramework.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\EntityFramework.SqlServer.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraReports.v18.2.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MongoDB.Driver.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MongoDB.Bson.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\MongoDB.Driver.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Renci.SshNet.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\itextsharp.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Microsoft.WindowsAzure.Storage.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Microsoft.WindowsAzure.Storage.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Printing.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Data.v18.2.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\System.Web.Http.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\System.Web.WebPages.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraCharts.v18.2.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Xpo.v18.2.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.DataAccess.v18.2.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Sparkline.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.RichEdit.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Office.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraGauges.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.PivotGrid.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\DevExpress.Pdf.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\System.Net.Http.Formatting.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\Microsoft.Web.Infrastructure.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\System.Web.WebPages.Deployment.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.XtraReports.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.XtraReports.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.XtraReports.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.XtraReports.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Printing.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Printing.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Printing.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Printing.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Data.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Data.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Data.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Data.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\System.Web.Http.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\System.Web.WebPages.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.XtraCharts.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.XtraCharts.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.XtraCharts.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.XtraCharts.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Xpo.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Xpo.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Xpo.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Xpo.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.DataAccess.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.DataAccess.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.DataAccess.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.DataAccess.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Sparkline.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Sparkline.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Sparkline.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Sparkline.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.RichEdit.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.RichEdit.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.RichEdit.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.RichEdit.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Office.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Office.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Office.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Office.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.XtraGauges.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.XtraGauges.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.XtraGauges.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.XtraGauges.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.PivotGrid.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.PivotGrid.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.PivotGrid.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.PivotGrid.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Pdf.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Pdf.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Pdf.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Pdf.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\System.Net.Http.Formatting.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\Microsoft.Web.Infrastructure.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\bin\Debug\es\System.Web.WebPages.Deployment.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\obj\Debug\HGInetInteroperabilidad.csprojResolveAssemblyReference.cache
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\obj\Debug\HGInetInteroperabilidad.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo\HGInetInteroperabilidad\obj\Debug\HGInetInteroperabilidad.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetInteroperabilidad.dll.config
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetInteroperabilidad.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetInteroperabilidad.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\BouncyCastle.Crypto.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGICtrlUtilidades.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetDIANServicios.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectonicaController.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectonicaData.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetUBL.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetUBLv2_1.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\LibreriaGlobalHGInet.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MailKit.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MimeKit.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Newtonsoft.Json.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\OpenPop.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\System.Buffers.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Microsoft.Web.Services3.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetUtilidadAzure.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetFirmaDigital.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExtreme.AspNet.Data.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExtreme.AspNet.Mvc.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\EntityFramework.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectronicaAudit.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Telerik.Reporting.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetFacturaEReports.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\EntityFramework.SqlServer.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraReports.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MongoDB.Driver.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MongoDB.Bson.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MongoDB.Driver.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Renci.SshNet.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\itextsharp.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Microsoft.WindowsAzure.Storage.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\System.Web.Http.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\System.Web.WebPages.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Printing.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Data.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraCharts.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Xpo.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.DataAccess.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Sparkline.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.CodeParser.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.RichEdit.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Office.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraGauges.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.PivotGrid.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Charts.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\System.Net.Http.Formatting.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Microsoft.Web.Infrastructure.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\System.Web.WebPages.Deployment.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Pdf.v18.2.Core.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Images.v18.2.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetDIANServicios.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectonicaController.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectonicaData.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetUBLv2_1.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetUBL.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\LibreriaGlobalHGInet.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\BouncyCastle.Crypto.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MailKit.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MailKit.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MimeKit.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MimeKit.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Newtonsoft.Json.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\System.Buffers.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetUtilidadAzure.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetFirmaDigital.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\EntityFramework.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetMiFacturaElectronicaAudit.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Telerik.Reporting.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Telerik.Reporting.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\HGInetFacturaEReports.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\EntityFramework.SqlServer.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraReports.v18.2.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MongoDB.Driver.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MongoDB.Bson.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\MongoDB.Driver.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Renci.SshNet.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\itextsharp.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Microsoft.WindowsAzure.Storage.pdb
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Microsoft.WindowsAzure.Storage.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\System.Web.Http.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\System.Web.WebPages.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Printing.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Data.v18.2.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraCharts.v18.2.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Xpo.v18.2.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.DataAccess.v18.2.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Sparkline.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.RichEdit.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Office.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.XtraGauges.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.PivotGrid.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\System.Net.Http.Formatting.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\Microsoft.Web.Infrastructure.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\System.Web.WebPages.Deployment.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\DevExpress.Pdf.v18.2.Core.xml
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.XtraReports.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.XtraReports.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.XtraReports.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.XtraReports.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\System.Web.Http.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\System.Web.WebPages.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Printing.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Printing.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Printing.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Printing.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Data.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Data.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Data.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Data.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.XtraCharts.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.XtraCharts.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.XtraCharts.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.XtraCharts.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Xpo.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Xpo.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Xpo.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Xpo.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.DataAccess.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.DataAccess.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.DataAccess.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.DataAccess.v18.2.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Sparkline.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Sparkline.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Sparkline.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Sparkline.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.RichEdit.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.RichEdit.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.RichEdit.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.RichEdit.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Office.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Office.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Office.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Office.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.XtraGauges.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.XtraGauges.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.XtraGauges.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.XtraGauges.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.PivotGrid.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.PivotGrid.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.PivotGrid.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.PivotGrid.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\System.Net.Http.Formatting.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\Microsoft.Web.Infrastructure.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\System.Web.WebPages.Deployment.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\de\DevExpress.Pdf.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\es\DevExpress.Pdf.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ja\DevExpress.Pdf.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\bin\Debug\ru\DevExpress.Pdf.v18.2.Core.resources.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\obj\Debug\HGInetInteroperabilidad.csprojResolveAssemblyReference.cache
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\obj\Debug\HGInetInteroperabilidad.dll
+E:\Desarrollo\jflores\Proyectos\HGINetMiFacturaElectronica\Tronco\Codigo - copia\HGInetInteroperabilidad\obj\Debug\HGInetInteroperabilidad.pdb
