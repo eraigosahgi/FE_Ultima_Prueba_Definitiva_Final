@@ -1010,6 +1010,44 @@ namespace HGInetInteroperabilidad.Procesos
 
 						throw new ApplicationException(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico", Path.GetFileName(ruta_xml)));
 					}
+
+					if (obj_attach_serializado.Attachment.ExternalReference == null)
+					{
+						try
+						{
+							mensajes = new List<string>();
+							mensajes.Add(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico", Path.GetFileName(ruta_xml)));
+
+							//ReEnviarCorreoError(ruta_archi_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archi_mail, true, emision);
+
+						}
+						catch (Exception e)
+						{
+						}
+
+						throw new ApplicationException(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico", Path.GetFileName(ruta_xml)));
+					}
+
+					if (obj_attach_serializado.Attachment.ExternalReference.Description == null)
+					{
+						try
+						{
+							mensajes = new List<string>();
+							mensajes.Add(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico", Path.GetFileName(ruta_xml)));
+
+							//ReEnviarCorreoError(ruta_archi_mail, mensajes);
+
+							RechazarCorreo(mensajes, ruta_archi_mail, true, emision);
+
+						}
+						catch (Exception e)
+						{
+						}
+
+						throw new ApplicationException(string.Format("El archivo {0} no cumple con la estructura establecida en el Anexo técnico", Path.GetFileName(ruta_xml)));
+					}
 				}
 				catch (Exception ex)
 				{

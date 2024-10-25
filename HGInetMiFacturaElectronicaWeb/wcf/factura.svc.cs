@@ -100,6 +100,44 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				{
 				}
 
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (FechaInicio >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					List<FacturaConsulta> datosH = new List<FacturaConsulta>();
+
+					datosH = ctl_documento.ObtenerHisPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal, Procesados_ERP);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+
+					//Almacena la petición
+					try
+					{
+						Task tarea = Peticion.GuardarPeticionAsync("ObtenerHisPorFechasAdquiriente", DataKey, Identificacion, FechaInicio.ToString(), FechaFinal.ToString(), respuesta.Count.ToString());
+					}
+					catch (Exception)
+					{
+					}
+				}
+
 				return respuesta;
 
 			}
@@ -187,6 +225,35 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				}
 				catch (Exception)
 				{
+				}
+
+				if (respuesta == null || respuesta.Count == 0)
+				{
+					List<FacturaConsulta> datosH = new List<FacturaConsulta>();
+
+					datosH = ctl_documento.ObtenerHisPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros, Facturador);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+
+					//Almacena la petición
+					try
+					{
+						Task tarea = Peticion.GuardarPeticionAsync("ObtenerHisPorIdSeguridadAdquiriente", DataKey, Identificacion, CodigosRegistros, respuesta.Count.ToString());
+					}
+					catch (Exception)
+					{
+					}
 				}
 
 				return respuesta;

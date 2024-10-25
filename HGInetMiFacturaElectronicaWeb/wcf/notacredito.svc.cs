@@ -83,6 +83,35 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
 				// obtiene los datos
 				respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal);
 
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (FechaInicio >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					List<NotaCreditoConsulta> datosH = new List<NotaCreditoConsulta>();
+
+					datosH = ctl_documento.ObtenerHisPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
+
 				return respuesta;
 
 			}
@@ -122,7 +151,27 @@ namespace HGInetMiFacturaElectronicaWeb.wcf
                 // obtiene los datos
                 respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros, Facturador);
 
-                return respuesta;
+				if (respuesta == null || respuesta.Count == 0)
+				{
+					List<NotaCreditoConsulta> datosH = new List<NotaCreditoConsulta>();
+
+					datosH = ctl_documento.ObtenerHisPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros, Facturador);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
+
+				return respuesta;
 
             }
             catch (Exception exec)

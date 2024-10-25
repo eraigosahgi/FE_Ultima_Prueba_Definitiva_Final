@@ -2954,6 +2954,7 @@
     <Compile Include="ApiServicios\Controller\Services\NominaController.cs" />
     <Compile Include="ApiServicios\Controller\Services\NotacreditoController.cs" />
     <Compile Include="ApiServicios\Controller\Services\NotadebitoController.cs" />
+    <Compile Include="ApiServicios\Controller\Services\PagosApiController.cs" />
     <Compile Include="ApiServicios\Controller\Services\ResolucionController.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Services\AlertasController.cs" />
@@ -3745,7 +3746,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61429</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61439/</IISUrl>
+          <IISUrl>http://localhost:61428/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

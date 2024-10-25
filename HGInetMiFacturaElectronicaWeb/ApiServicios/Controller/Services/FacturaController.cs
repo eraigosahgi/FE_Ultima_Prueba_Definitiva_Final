@@ -3,8 +3,10 @@ using HGInetMiFacturaElectonicaController.Registros;
 using HGInetMiFacturaElectonicaData.ModeloServicio;
 using HGInetMiFacturaElectronicaWeb.Controllers.Services;
 using LibreriaGlobalHGInet.Error;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -78,6 +80,62 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 				{
 				}
 
+				DateTime fecha_corte = new DateTime(2024, 01, 01, 00, 00, 00);
+
+				bool obtener_historico = true;
+
+				if (FechaInicio >= fecha_corte)
+				{
+					obtener_historico = false;
+				}
+
+				if (obtener_historico == true)
+				{
+					List<FacturaConsulta> datosH = new List<FacturaConsulta>();
+
+					datosH = ctl_documento.ObtenerHisPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal, Procesados_ERP);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+				}
+
+				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/Factura/ObtenerHisPorFechasAdquiriente")]
+		public HttpResponseMessage ObtenerHisPorFechasAdquiriente(string Identificacion, DateTime FechaInicio, DateTime FechaFinal, int Procesados_ERP = 0)
+		{
+			try
+			{
+
+				DateTime fecha_corte = new DateTime(2023, 12, 31, 00, 00, 00);
+
+				if (FechaFinal >= fecha_corte)
+					FechaFinal = fecha_corte;
+
+				Ctl_Factura ctl_documento = new Ctl_Factura();
+
+				// obtiene los datos
+				List<FacturaConsulta> respuesta = ctl_documento.ObtenerPorFechasAdquiriente(Identificacion, FechaInicio, FechaFinal, Procesados_ERP);
+ 
+
 				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
 			}
 			catch (Exception exec)
@@ -119,6 +177,57 @@ namespace HGInetMiFacturaElectronicaWeb.ApiServicios.Controller.Services
 				catch (Exception)
 				{
 				}
+
+				if (respuesta == null || respuesta.Count == 0)
+				{
+					List<FacturaConsulta> datosH = new List<FacturaConsulta>();
+
+					datosH = ctl_documento.ObtenerHisPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros, Facturador);
+
+					if (datosH != null && datosH.Count > 0)
+					{
+						if (respuesta != null && respuesta.Count > 0)
+						{
+							respuesta.AddRange(datosH);
+						}
+						else
+						{
+							respuesta = datosH;
+						}
+
+					}
+
+					//Almacena la petición
+					try
+					{
+						Task tarea = Peticion.GuardarPeticionAsync("ObtenerHisPorFechasAdquiriente", DataKey, Identificacion, CodigosRegistros, respuesta.Count.ToString());
+					}
+					catch (Exception)
+					{
+					}
+				}
+
+				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
+			}
+			catch (Exception exec)
+			{
+				Error error = new Error(CodigoError.VALIDACION, exec);
+				return Request.CreateResponse(HttpStatusCode.Conflict, exec.Message);
+			}
+		}
+
+		[HttpGet]
+		[Route("Api/Factura/ObtenerHisPorIdSeguridadAdquiriente")]
+		public HttpResponseMessage ObtenerHisPorIdSeguridadAdquiriente(string Identificacion, string CodigosRegistros, bool Facturador = false)
+		{
+			try
+			{
+				List<FacturaConsulta> respuesta = new List<FacturaConsulta>();
+
+				Ctl_Factura ctl_documento = new Ctl_Factura();
+
+				// obtiene los datos
+				respuesta = ctl_documento.ObtenerPorIdSeguridadAdquiriente(Identificacion, CodigosRegistros, Facturador);
 
 				return Request.CreateResponse(HttpStatusCode.OK, respuesta);
 			}

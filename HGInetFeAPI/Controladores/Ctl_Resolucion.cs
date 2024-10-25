@@ -193,6 +193,11 @@ namespace HGInetFeAPI
 			if (string.IsNullOrEmpty(Resolucion.SetIdDian))
 				throw new ApplicationException("Parámetro SetIdDian de tipo string inválido.");
 
+			// configura la cadena de autenticación para la ejecución del servicio web en SHA1
+			string dataKey = Ctl_Utilidades.Encriptar_SHA512(string.Format("{0}{1}", Serial, Identificacion));
+
+			Resolucion.DataKey = dataKey;
+
 			string vcData = JsonConvert.SerializeObject(Resolucion);
 			byte[] vtDataStream = Encoding.UTF8.GetBytes(vcData);
 

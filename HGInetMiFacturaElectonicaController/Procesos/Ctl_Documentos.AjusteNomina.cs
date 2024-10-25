@@ -304,17 +304,33 @@ namespace HGInetMiFacturaElectonicaController.Procesos
 
 				if (ListaPlanes == null)
 				{
+					bool generar_alerta = true;
+
+					if (facturador_electronico.IntCobroPostPago == 1)
+					{
+						Planestransacciones.GestionPlanesPostpago(facturador_electronico.StrIdentificacion, Constantes.NitResolucionconPrefijo, Constantes.NitResolucionconPrefijo, false, false, Sucursal_Obligado);
+
+						ListaPlanes = Planestransacciones.ObtenerPlanesActivos(facturador_electronico.StrIdentificacion, documentos.Count(), TipoDocPlanes.Nomina.GetHashCode(), Sucursal_Obligado);
+
+						if (ListaPlanes != null && ListaPlanes.Count > 0)
+							generar_alerta = false;
+					}
+
 					///Validación de alertas y notificaciones
-					try
+					if (generar_alerta == true)
 					{
-						Ctl_Alertas controlador = new Ctl_Alertas();
-						controlador.alertaSinSaldo(facturador_electronico.StrIdentificacion);
+						try
+						{
+							Ctl_Alertas controlador = new Ctl_Alertas();
+							controlador.alertaSinSaldo(facturador_electronico.StrIdentificacion);
+						}
+						catch (Exception excepcion)
+						{
+							LogExcepcion.Guardar(excepcion);
+						}
+						throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
 					}
-					catch (Exception excepcion)
-					{
-						LogExcepcion.Guardar(excepcion);
-					}
-					throw new ApplicationException("No se encontró saldo disponible para procesar los documentos");
+
 				}
 
 
