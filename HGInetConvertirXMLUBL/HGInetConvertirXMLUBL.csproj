@@ -31,13 +31,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HGInetMiFacturaElectonicaData">
-      <HintPath>..\HGInetMiFacturaElectonicaData\bin\Debug\HGInetMiFacturaElectonicaData.dll</HintPath>
+      <HintPath>..\HGInetMiFacturaElectonicaData\obj\Debug\HGInetMiFacturaElectonicaData.dll</HintPath>
     </Reference>
     <Reference Include="HGInetUBLv2_1">
       <HintPath>..\HGInetUBLv2_1\bin\Debug\HGInetUBLv2_1.dll</HintPath>
     </Reference>
     <Reference Include="LibreriaGlobalHGInet">
-      <HintPath>..\LibreriaGlobalHGInet\bin\Debug\LibreriaGlobalHGInet.dll</HintPath>
+      <HintPath>..\LibreriaGlobalHGInet\obj\Debug\LibreriaGlobalHGInet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
