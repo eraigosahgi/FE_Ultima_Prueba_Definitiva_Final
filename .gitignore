@@ -16,6 +16,8 @@
 # Mono auto generated files
 mono_crash.*
 
+
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -396,3 +398,12 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Ignorar todas las carpetas Logs en todo el proyecto
+Logs/
+**/Logs/
+
+# Excluir la carpeta Logs dentro de LibreriaGlobalHGInet
+!LibreriaGlobalHGInet/
+!LibreriaGlobalHGInet/Logs/
+!LibreriaGlobalHGInet/Logs/*.cs
